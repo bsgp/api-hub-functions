@@ -38,6 +38,7 @@ iHub과 github 연동을 위한 test repo 입니다.
 
    #### [create - 새로운 branch에 commit 생성](https://docs.github.com/en/rest/git/refs?apiVersion=2022-11-28#create-a-reference)
 <img width="1440" alt="스크린샷 2023-08-01 오후 2 52 08" src="https://github.com/bsgp/ihub-management-test/assets/81503846/245b3e84-7386-4d37-83e9-f98822eec5bb">
+   
    - body의 `ref`는 새로운 branch의 name 값 입니다. (ex: ref/heads/{branch 명})
    - `sha`값은 3번 응답의 `sha` 입니다.
    
