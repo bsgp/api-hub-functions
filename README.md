@@ -21,5 +21,10 @@ iHub과 github 연동을 위한 test repo 입니다.
 ### 2. [tree 생성](https://docs.github.com/en/rest/git/trees?apiVersion=2022-11-28#create-a-tree)
 <img width="1440" alt="스크린샷 2023-08-01 오후 4 51 18" src="https://github.com/bsgp/ihub-management-test/assets/81503846/851accd4-ddba-45ca-a4ee-19118fc70490">
 
-   - body의 `basr_tree`는 1번 응답값 `commit.commit.tree.sha` 입니다.
+   - body의 `base_tree`는 1번 응답값 `commit.commit.tree.sha` 입니다.
+
+### 3. [commit 생성](https://docs.github.com/en/rest/git/commits?apiVersion=2022-11-28#create-a-commit)
+<img width="1440" alt="스크린샷 2023-08-01 오후 4 55 32" src="https://github.com/bsgp/ihub-management-test/assets/81503846/f257fc10-947b-4bc4-8733-4d3fab2b1a5f">
+
+   - body의 `tree` 값은 2번 응답의 `sha` 값 입니다. `parent` 값은 1번 응답의 `commit.sha` 값 입니다.
 
