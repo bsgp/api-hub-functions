@@ -13,6 +13,7 @@ iHub과 github 연동을 위한 test repo 입니다.
    <img width="1552" alt="스크린샷 2023-08-02 오전 10 52 19" src="https://github.com/bsgp/ihub-management-test/assets/81503846/7eac15f4-0adc-49d3-9734-3ee793a13d73">
        
    - `base_tree` 에 1번에서 받아온 `commit.sha` 를 넣어줍니다.
+   - branch 생성 후 tree 생성하는 경우에 branch 생성 응답값 `object.sha` 를 `base_tree` 에 넣어준다.
 
 ## [Commit 생성](https://docs.github.com/en/rest/git/commits?apiVersion=2022-11-28#create-a-commit)
 <img width="1552" alt="스크린샷 2023-08-02 오전 10 58 47" src="https://github.com/bsgp/ihub-management-test/assets/81503846/7e0347a7-1eb8-45e7-94e4-a6453829ec1a">
