@@ -19,7 +19,7 @@ iHub과 github 연동을 위한 test repo 입니다.
 <img width="1552" alt="스크린샷 2023-08-02 오전 10 58 47" src="https://github.com/bsgp/ihub-management-test/assets/81503846/7e0347a7-1eb8-45e7-94e4-a6453829ec1a">
 
 - `parents` 에 **Tree 생성 2번**의 `base_tree` 를 넣어줍니다.
-- `tree`에 **Tree 생성** 2번에서 받아온 `sha` 를 넣어줍니다.
+- `tree`에 **Tree 생성 2번**에서 받아온 `sha` 를 넣어줍니다.
 
 ## [Branch 생성](https://docs.github.com/en/rest/git/refs?apiVersion=2022-11-28#create-a-reference)
 <img width="1552" alt="스크린샷 2023-08-02 오전 11 07 16" src="https://github.com/bsgp/ihub-management-test/assets/81503846/87217edf-7738-478a-b912-b3a303f249a7">
