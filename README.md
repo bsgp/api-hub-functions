@@ -28,6 +28,12 @@ iHub과 github 연동을 위한 test repo 입니다.
 - 커밋 후 새로운 branch 등록하는 경우 `sha`에 **Commit 생성**에서 받아온 `sha` 를 넣어줍니다.
 - 커밋 전 새로운 branch 만드는 경우 `sha`에 **Tree 생성 1번**에서 받아온 `commit.sha` 를 넣어줍니다.
 
+## [Branch 업데이트](https://docs.github.com/en/rest/git/refs?apiVersion=2022-11-28#update-a-reference)
+<img width="1552" alt="스크린샷 2023-08-02 오후 2 51 53" src="https://github.com/bsgp/ihub-management-test/assets/81503846/50faa616-fe4c-4c46-a9ce-4ff29e21fc1a">
+
+- `sha` 에는 **Commit 생성**후 받은 `sha` 를 넣어줍니다.
+
+
 ## [PR 요청](https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#create-a-pull-request)
 <img width="1552" alt="스크린샷 2023-08-02 오전 11 16 50" src="https://github.com/bsgp/ihub-management-test/assets/81503846/e24b4fbc-27e3-4ca3-9e9b-13f04d1f6368">
 
