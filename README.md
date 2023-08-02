@@ -30,6 +30,11 @@ iHub과 github 연동을 위한 test repo 입니다.
 ## [PR 요청](https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#create-a-pull-request)
 <img width="1552" alt="스크린샷 2023-08-02 오전 11 16 50" src="https://github.com/bsgp/ihub-management-test/assets/81503846/e24b4fbc-27e3-4ca3-9e9b-13f04d1f6368">
 
+## [PR merge](https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#merge-a-pull-request)
+<img width="1552" alt="스크린샷 2023-08-02 오전 11 32 50" src="https://github.com/bsgp/ihub-management-test/assets/81503846/1c07b0dc-1451-4fe5-a466-f6fe411d1d0f">
+
+- params 에 `PULL_NUMBER`는 **PR 요청** 의 응답값 중 `number` 값을 입력합니다.
+
 
 
 
