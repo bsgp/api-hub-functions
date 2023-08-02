@@ -25,7 +25,7 @@ iHub과 github 연동을 위한 test repo 입니다.
 <img width="1552" alt="스크린샷 2023-08-02 오전 11 07 16" src="https://github.com/bsgp/ihub-management-test/assets/81503846/87217edf-7738-478a-b912-b3a303f249a7">
 
 - `ref`에 새로 만들어질 branch 명을 입력합니다. (ex: refs/heads/{branch name})
-- `sha`에 **Commit 생성** 에서 받아온 `sha` 를 넣어줍니다.
+- `sha`에 **Commit 생성**에서 받아온 `sha` 를 넣어줍니다.
 
 ## [PR 요청](https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#create-a-pull-request)
 <img width="1552" alt="스크린샷 2023-08-02 오전 11 16 50" src="https://github.com/bsgp/ihub-management-test/assets/81503846/e24b4fbc-27e3-4ca3-9e9b-13f04d1f6368">
@@ -33,7 +33,7 @@ iHub과 github 연동을 위한 test repo 입니다.
 ## [PR merge](https://docs.github.com/en/rest/pulls/pulls?apiVersion=2022-11-28#merge-a-pull-request)
 <img width="1552" alt="스크린샷 2023-08-02 오전 11 32 50" src="https://github.com/bsgp/ihub-management-test/assets/81503846/1c07b0dc-1451-4fe5-a466-f6fe411d1d0f">
 
-- params 에 `PULL_NUMBER`는 **PR 요청** 의 응답값 중 `number` 값을 입력합니다.
+- params 에 `PULL_NUMBER`는 **PR 요청**의 응답값 중 `number` 값을 입력합니다.
 
 
 
