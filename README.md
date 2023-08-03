@@ -43,6 +43,11 @@ iHub과 github 연동을 위한 test repo 입니다.
 - params 에 `PULL_NUMBER`는 **PR 요청**의 응답값 중 `number` 값을 입력합니다.
 
 
+## Contents Upload(https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28#create-or-update-file-contents)
+<img width="1552" alt="스크린샷 2023-08-03 오전 10 13 10" src="https://github.com/bsgp/ihub-management-test/assets/81503846/7e04b018-cb0d-4f6d-ab4d-ea2543af3d36">
+
+
+
 
 
 
