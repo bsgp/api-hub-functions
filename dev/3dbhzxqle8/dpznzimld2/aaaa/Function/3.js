@@ -1,3 +1,3 @@
 module.exports = async () => {
-  // function@!1
-};
+  // function@!11
+}
