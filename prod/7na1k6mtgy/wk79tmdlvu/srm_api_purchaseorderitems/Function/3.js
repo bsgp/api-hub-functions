@@ -14,7 +14,7 @@ module.exports = async (draft, { request, odata }) => {
     shipToLocation,
   } = request.body;
 
-  const expand = ["PO", "PO/SellerParty/SellerPartyDisplayName", "PO/Item"];
+  const expand = ["PO", "PO/SellerParty"];
 
   const filter = [];
 
@@ -23,7 +23,7 @@ module.exports = async (draft, { request, odata }) => {
   }
   if (deliveryStatus) {
     //if (deliveryStatus === "3") {
-    filter.push(`DeliveryProcessingStatusCode eq '${deliveryStatus}'`);
+    filter.push(`PurchaseOrderDeliveryStatusCode eq '${deliveryStatus}'`);
     //} else {
     //  filter.push(`DeliveryProcessingStatusCode  '${deliveryStatus}'`);
     //}
@@ -34,8 +34,8 @@ module.exports = async (draft, { request, odata }) => {
   if (orderDateFrom && orderDateTo) {
     filter.push(
       [
-        `PO/CreationDate ge datetimeoffset'${orderDateFrom}T00:00:00Z'`,
-        `PO/CreationDate le datetimeoffset'${orderDateTo}T23:59:59Z'`,
+        `PO/OrderedDateTime ge datetimeoffset'${orderDateFrom}T00:00:00Z'`,
+        `PO/OrderedDateTime le datetimeoffset'${orderDateTo}T23:59:59Z'`,
       ].join(" and ")
     );
   }
@@ -45,8 +45,8 @@ module.exports = async (draft, { request, odata }) => {
   if (startDateFrom && startDateTo) {
     filter.push(
       [
-        `StartDateTime ge datetimeoffset'${startDateFrom}T00:00:00Z'`,
-        `StartDateTime le datetimeoffset'${startDateTo}T23:59:59Z'`,
+        `PO/CreationDate ge datetimeoffset'${startDateFrom}T00:00:00Z'`,
+        `PO/CreationDate le datetimeoffset'${startDateTo}T23:59:59Z'`,
       ].join(" and ")
     );
   }
