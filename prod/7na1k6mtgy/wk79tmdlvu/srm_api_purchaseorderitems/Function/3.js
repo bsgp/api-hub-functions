@@ -14,11 +14,7 @@ module.exports = async (draft, { request, odata }) => {
     shipToLocation,
   } = request.body;
 
-  const expand = [
-    "PO",
-    "PO/SellerParty/SellerPartyDisplayName",
-    "PO/Item",
-  ];
+  const expand = ["PO", "PO/SellerParty/SellerPartyDisplayName", "PO/Item"];
 
   const filter = [];
 
@@ -94,7 +90,7 @@ module.exports = async (draft, { request, odata }) => {
       index: idx + 1,
       materialID: item.Description + "/n" + item.ProductID,
       //orderQuantity: item.BaseQuantity,
-      poItemNumber: item.Item.ID,
+      poItemNumber: item.PO.Item.ID,
       purchaseOrderID: item.PO.ID,
       shipToLocation: item.ShipToLocationID,
       startDate: Date(item.StartDateTime).toISOString(),
