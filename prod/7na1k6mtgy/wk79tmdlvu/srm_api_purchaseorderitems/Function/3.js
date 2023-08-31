@@ -23,7 +23,7 @@ module.exports = async (draft, { request, odata }) => {
   }
   if (deliveryStatus) {
     //if (deliveryStatus === "3") {
-      filter.push(`DeliveryProcessingStatusCode eq '${deliveryStatus}'`);
+    filter.push(`DeliveryProcessingStatusCode eq '${deliveryStatus}'`);
     //} else {
     //  filter.push(`DeliveryProcessingStatusCode  '${deliveryStatus}'`);
     //}
