@@ -1,7 +1,7 @@
 module.exports = async (draft, { file }) => {
   const tables = {
     sample: {
-      name: "SAMPLE_0",
+      name: "sample_0",
       desc: "Spark sample DB",
     },
     test: {
@@ -13,7 +13,6 @@ module.exports = async (draft, { file }) => {
   const tableConfig = await file.upload("config/tables.json", tables, {
     gzip: true,
   });
-
   draft.json.tables = tables;
   draft.response.body = { tableConfig };
 };
