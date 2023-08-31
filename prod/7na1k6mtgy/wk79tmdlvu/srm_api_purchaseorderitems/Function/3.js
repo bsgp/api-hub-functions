@@ -94,8 +94,11 @@ module.exports = async (draft, { request, odata }) => {
       shipToLocation: item.ShipToLocationID,
       startDate: Date(item.StartDateTime),
       supplierText: item.PO.SellerParty.FormattedName,
-      unitPrice: [item.Amount,[item.currencyCode,item.unitCode].join("/")].join(" "),
-      supplierAmount: [item.NetAmount , item.currencyCode].join(" "),
+      unitPrice: [
+        item.Amount,
+        [item.currencyCode, item.unitCode].join("/"),
+      ].join(" "),
+      supplierAmount: [item.NetAmount, item.currencyCode].join(" "),
       //restQuantity
       //idnQuantity
       //returnQuantity
