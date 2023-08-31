@@ -105,8 +105,8 @@ module.exports = async (draft, { request, odata }) => {
 
   draft.response.body = {
     odataURL,
-    purchaseOrderItems: conversion,
-    purchaseOrderItemResults,
+    purchaseOrderItems: purchaseOrderItemResults,
+    conversion: conversion,
     //purchaseOrderItems: [{}],
     // __count,
   };
