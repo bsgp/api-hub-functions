@@ -84,7 +84,6 @@ module.exports = async (draft, { request, odata }) => {
     return {
       ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
       confirmIndicatior: item.PO.SRM001_KUT,
-      //deliveredQuantity: item.TotalDeliveredQuantity,
       deliveryStatusText: item.PurchaseOrderDeliveryStatusCodeText,
       index: idx + 1,
       materialID: [item.Description, item.ProductID].join("\n"),
@@ -95,9 +94,9 @@ module.exports = async (draft, { request, odata }) => {
       startDate: Date(item.StartDateTime),
       supplierText: item.PO.SellerParty.FormattedName,
       unitPrice: item.Amount,
-
       supplierAmount: item.NetAmount,
       restQuantity: item.Quantity,
+      //deliveredQuantity: item.TotalDeliveredQuantity,
       //idnQuantity
       //returnQuantity
       //itemDesc
