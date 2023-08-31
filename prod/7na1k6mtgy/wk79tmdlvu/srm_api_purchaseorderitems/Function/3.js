@@ -17,7 +17,6 @@ module.exports = async (draft, { request, odata }) => {
   const expand = [
     "PO",
     "PO/SellerParty/SellerPartyDisplayName",
-    "Material",
     "PO/Item",
     // "PO/EmployeeResponsibleParty",
     // "PO/PurchaseOrderText",
@@ -101,15 +100,15 @@ module.exports = async (draft, { request, odata }) => {
       //deliveredQuantity: item.TotalDeliveredQuantity,
       deliveryStatusText: item.PurchaseOrderDeliveryStatusCodeText,
       index: idx + 1,
-      materialID: item.Description + item.ProductID,
+      materialID: item.Description +"/n"+ item.ProductID,
       //orderQuantity: item.BaseQuantity,
-      poItemNumber: item.PO.ObjectID,
+      poItemNumber: item.Item.ID,
       purchaseOrderID: item.PO.ID,
       shipToLocation: item.ShipToLocationID,
       startDate: Date(item.StartDateTime),
       supplierText: item.PO.SellerParty.FormattedName,
-      //unitPrice
-      //supplierAmount
+      unitPrice: item.Amount,
+      supplierAmount : item.NetAmount
       //restQuantity
       //idnQuantity
       //returnQuantity
