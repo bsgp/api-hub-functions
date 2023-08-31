@@ -90,7 +90,7 @@ module.exports = async (draft, { request, odata }) => {
       index: idx + 1,
       materialID: item.Description + "/n" + item.ProductID,
       //orderQuantity: item.BaseQuantity,
-      poItemNumber: item.PO.Item.ID,
+     // poItemNumber: item.Item.ID,
       purchaseOrderID: item.PO.ID,
       shipToLocation: item.ShipToLocationID,
       startDate: Date(item.StartDateTime).toISOString(),
