@@ -88,17 +88,16 @@ module.exports = async (draft, { request, odata }) => {
       deliveryStatusText: item.PurchaseOrderDeliveryStatusCodeText,
       index: idx + 1,
       materialID: [item.Description, item.ProductID].join("\n"),
-      //orderQuantity: item.BaseQuantity,
+      orderQuantity: item.Quantity,
       poItemNumber: item.ID,
       purchaseOrderID: item.PO.ID,
       shipToLocation: item.ShipToLocationID,
       startDate: Date(item.StartDateTime),
       supplierText: item.PO.SellerParty.FormattedName,
-      unitPrice: 
-        item.Amount,
-        
+      unitPrice: item.Amount,
+
       supplierAmount: item.NetAmount,
-      //restQuantity
+      restQuantity: item.Quantity,
       //idnQuantity
       //returnQuantity
       //itemDesc
