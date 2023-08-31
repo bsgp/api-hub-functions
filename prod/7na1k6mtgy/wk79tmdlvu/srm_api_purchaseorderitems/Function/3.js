@@ -14,7 +14,20 @@ module.exports = async (draft, { request, odata }) => {
     shipToLocation,
   } = request.body;
 
-  const expand = ["PO", "PO/SellerParty/SellerPartyDisplayName"];
+  const expand = [
+    "PO",
+    "PO/SellerParty/SellerPartyDisplayName",
+    // "ItemShipToAddress",
+    // "PO/BillToParty",
+    // "PO/EmployeeResponsibleParty",
+    // "PO/PurchaseOrderText",
+    // "PO/PurchaseOrderAttachmentFolder",
+    // "PurchaseOrderItemScheduleLine",
+    // "PurchaseOrderItemScheduleLine/Item",
+    // "PurchaseOrderItemText",
+    // "PurchaseOrderReceivingItemSite",
+    // "PurchaseOrderShipToItemLocation",
+  ];
 
   const filter = [];
 
@@ -81,9 +94,33 @@ module.exports = async (draft, { request, odata }) => {
   const purchaseOrderItemResults = queryResult.d.results;
   //draft.json.purchaseOrderItems = purchaseOrderItems;
 
+  const conversion = purchaseOrderItemResults.map((item, idx) => {
+    return {
+      ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
+      confirmIndicatior: item.PO.SRM001_KUT,
+      deliveredQuantity: item.TotalDeliveredQuantity,
+      deliveryStatusText: item.PurchaseOrderDeliveryStatusCodeText,
+      index: idx + 1,
+      materialID: item.ObjectID,
+      orderQuantity: item.BaseQuantity,
+      poItemNumber: item.PO.ObjectID,
+      purchaseOrderID: item.PO.ID,
+      shipToLocation: item.ShipToLocationID,
+      startDate: item.StartDateTime,
+      supplierText: item.PO.SellerParty.FormattedName,
+      //unitPrice
+      //supplierAmount
+      //restQuantity
+      //idnQuantity
+      //returnQuantity
+      //itemDesc
+    };
+  });
+
   draft.response.body = {
     odataURL,
-    purchaseOrderItems: purchaseOrderItemResults,
+    purchaseOrderItems: conversion,
+    purchaseOrderItemResults,
     //purchaseOrderItems: [{}],
     // __count,
   };
