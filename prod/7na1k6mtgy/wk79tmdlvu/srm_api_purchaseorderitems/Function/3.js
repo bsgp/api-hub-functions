@@ -86,7 +86,7 @@ module.exports = async (draft, { request, odata }) => {
       confirmIndicatior: item.PO.SRM001_KUT,
       deliveryStatusText: item.PurchaseOrderDeliveryStatusCodeText,
       index: idx + 1,
-      materialID: [item.Description, item.ProductID].join("\n"),
+      materialID: [item.Description, item.ProductID].join("&nbsp;"),
       orderQuantity: item.Quantity,
       poItemNumber: item.ID,
       purchaseOrderID: item.PO.ID,
