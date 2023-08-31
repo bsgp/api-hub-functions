@@ -106,7 +106,7 @@ module.exports = async (draft, { request, odata }) => {
       poItemNumber: item.PO.ObjectID,
       purchaseOrderID: item.PO.ID,
       shipToLocation: item.ShipToLocationID,
-      startDate: item.StartDateTime,
+      startDate: Date(item.StartDateTime),
       supplierText: item.PO.SellerParty.FormattedName,
       //unitPrice
       //supplierAmount
