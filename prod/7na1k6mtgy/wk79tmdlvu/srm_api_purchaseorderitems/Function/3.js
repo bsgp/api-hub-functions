@@ -18,14 +18,6 @@ module.exports = async (draft, { request, odata }) => {
     "PO",
     "PO/SellerParty/SellerPartyDisplayName",
     "PO/Item",
-    // "PO/EmployeeResponsibleParty",
-    // "PO/PurchaseOrderText",
-    // "PO/PurchaseOrderAttachmentFolder",
-    // "PurchaseOrderItemScheduleLine",
-    // "PurchaseOrderItemScheduleLine/Item",
-    // "PurchaseOrderItemText",
-    // "PurchaseOrderReceivingItemSite",
-    // "PurchaseOrderShipToItemLocation",
   ];
 
   const filter = [];
@@ -100,15 +92,15 @@ module.exports = async (draft, { request, odata }) => {
       //deliveredQuantity: item.TotalDeliveredQuantity,
       deliveryStatusText: item.PurchaseOrderDeliveryStatusCodeText,
       index: idx + 1,
-      materialID: item.Description +"/n"+ item.ProductID,
+      materialID: item.Description + "/n" + item.ProductID,
       //orderQuantity: item.BaseQuantity,
       poItemNumber: item.Item.ID,
       purchaseOrderID: item.PO.ID,
       shipToLocation: item.ShipToLocationID,
-      startDate: Date(item.StartDateTime),
+      startDate: Date(item.StartDateTime).toISOString(),
       supplierText: item.PO.SellerParty.FormattedName,
       unitPrice: item.Amount,
-      supplierAmount : item.NetAmount
+      supplierAmount: item.NetAmount,
       //restQuantity
       //idnQuantity
       //returnQuantity
