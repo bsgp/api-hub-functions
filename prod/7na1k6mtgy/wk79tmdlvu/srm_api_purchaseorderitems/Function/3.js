@@ -79,7 +79,7 @@ module.exports = async (draft, { request, odata }) => {
   //const __count = Number(queryResult.d.__count);
 
   const purchaseOrderItemResults = queryResult.d.results;
-  //draft.json.purchaseOrderItems = purchaseOrderItems;
+ 
 
   const conversion = purchaseOrderItemResults.map((item, idx) => {
     return {
