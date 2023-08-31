@@ -1,0 +1,36 @@
+module.exports = async (draft) => {
+  draft.pipe.json.rfcFunctionName = "ZFI_IF_CREATE_BP";
+  draft.pipe.json.rfcParamsGenerator = `return {
+        I_UIDNT: each.I_UIDNT,
+        I_UTEXT: each.I_UTEXT,
+        I_SYSID: each.I_SYSID,
+        I_GUBUN: each.I_GUBUN,
+        IS_BP: {
+          BUKRS: each.BUKRS,
+          PARTNER: each.PARTNER,
+          BU_GROUP: each.BU_GROUP,
+          NAME_ORG1: each.NAME_ORG1,
+          BU_SORT1: each.BU_SORT1,
+          PSTLZ: each.PSTLZ,
+          ORT01: each.ORT01,
+          STRAS: each.STRAS,
+          TELF1: each.TELF1,
+          SMTP_ADDR: each.SMTP_ADDR,
+          STCD1: each.STCD1,
+          STCD2: each.STCD2,
+          J_1KFTBUS: each.J_1KFTBUS,
+          J_1KFTIND: each.J_1KFTIND,
+          J_1KFREPRE: each.J_1KFREPRE,
+          BANKL: each.BANKL,
+          BANKN: each.BANKN,
+          KOINH: each.KOINH,
+          AKONT: each.AKONT,
+          ZTERM: each.ZTERM,
+          ZWELS: each.ZWELS,
+          FDGRV: each.FDGRV,
+          VZSKZ: each.VZSKZ,
+          BUSAB: each.BUSAB,
+          LOEVM: each.LOEVM,
+        },
+      };`;
+};
