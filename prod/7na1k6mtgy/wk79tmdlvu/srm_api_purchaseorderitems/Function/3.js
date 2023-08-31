@@ -79,7 +79,6 @@ module.exports = async (draft, { request, odata }) => {
   //const __count = Number(queryResult.d.__count);
 
   const purchaseOrderItemResults = queryResult.d.results;
- 
 
   const conversion = purchaseOrderItemResults.map((item, idx) => {
     return {
@@ -88,7 +87,7 @@ module.exports = async (draft, { request, odata }) => {
       //deliveredQuantity: item.TotalDeliveredQuantity,
       deliveryStatusText: item.PurchaseOrderDeliveryStatusCodeText,
       index: idx + 1,
-      materialID: item.Description + item.ProductID,
+      materialID: item.Description,
       //orderQuantity: item.BaseQuantity,
       // poItemNumber: item.Item.ID,
       purchaseOrderID: item.PO.ID,
