@@ -11,10 +11,10 @@ module.exports = async (draft, { request, odata }) => {
     startDateFrom,
     startDateTo,
     supplierID,
-    shipToLocation,
+    shipToLocationID,
   } = request.body;
 
-  const expand = ["PO", "PO/SellerParty"];
+  const expand = ["PO", "PO/SellerParty"].join(",");
 
   const filter = [];
 
@@ -23,7 +23,7 @@ module.exports = async (draft, { request, odata }) => {
   }
   if (deliveryStatus) {
     if (deliveryStatus === "3") {
-    filter.push(`PurchaseOrderDeliveryStatusCode eq '${deliveryStatus}'`);
+      filter.push(`PurchaseOrderDeliveryStatusCode eq '${deliveryStatus}'`);
     } else {
       filter.push(`PurchaseOrderDeliveryStatusCode le '${deliveryStatus}'`);
     }
@@ -53,8 +53,8 @@ module.exports = async (draft, { request, odata }) => {
   if (supplierID) {
     filter.push(`PO/SellerParty/PartyID eq '${supplierID}'`);
   }
-  if (shipToLocation) {
-    filter.push(`ShipToLocationID eq '${shipToLocation}'`);
+  if (shipToLocationID) {
+    filter.push(`ShipToLocationID eq '${shipToLocationID}'`);
   }
 
   const queryParameters = [
