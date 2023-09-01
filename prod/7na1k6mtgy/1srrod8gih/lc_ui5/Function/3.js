@@ -1,4 +1,7 @@
-module.exports = async (draft, { request, dynamodb, zip, unzip, makeid }) => {
+module.exports = async (
+  draft,
+  { request, dynamodb, zip, unzip, makeid, isTruthy }
+) => {
   const { id, description, title, paths } = request.body;
   const tableName = ["lc_ui5", request.stage].join("_");
   const binaryAttributes = [
@@ -40,7 +43,7 @@ module.exports = async (draft, { request, dynamodb, zip, unzip, makeid }) => {
         const data = {
           description,
           title,
-          paths: paths || [],
+          paths,
           ...binaryAttributes.reduce((acc, key) => {
             if (request.body[key] !== undefined) {
               acc[key] = zip(JSON.stringify(request.body[key]));
@@ -52,15 +55,21 @@ module.exports = async (draft, { request, dynamodb, zip, unzip, makeid }) => {
         let resId;
         if (id) {
           resId = id;
+
+          const metaOperations = {};
+          const metaSets = {};
+          if (isTruthy(data.paths)) {
+            metaOperations.paths = "ADD";
+            metaSets.paths = "string";
+          }
+
           await dynamodb.updateItem(
             tableName,
             { pkid: "meta", skid: id },
             data,
             {
-              operations: {
-                paths: "ADD",
-              },
-              sets: { paths: "string" },
+              operations: metaOperations,
+              sets: metaSets,
               conditions: {
                 skid: {
                   operation: "=",
@@ -72,12 +81,18 @@ module.exports = async (draft, { request, dynamodb, zip, unzip, makeid }) => {
           );
         } else {
           resId = makeid(10);
+
+          const metaSets = {};
+          if (isTruthy(data.paths)) {
+            metaSets.paths = "string";
+          }
+
           await dynamodb.insertItem(
             tableName,
             { pkid: "meta", skid: resId },
             data,
             {
-              sets: { paths: "string" },
+              sets: metaSets,
               useCustomerRole: false,
             }
           );
