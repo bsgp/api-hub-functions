@@ -59,7 +59,8 @@ module.exports = async (draft, { request, odata }) => {
 
   const queryParameters = [
     `$expand=${expand}`,
-    `$filter=${filter.join("&$filter=")}`,
+    `$filter=(${filter.join(") and (")})`,
+    //`$filter=${filter.join("&$filter=")}`,
     "$top=200",
     "$inlinecount=allpages",
     "$format=json",
