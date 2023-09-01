@@ -34,8 +34,8 @@ module.exports = async (draft, { request, odata }) => {
   if (orderDateFrom && orderDateTo) {
     filter.push(
       [
-        `PO/OrderedDateTime ge datetimeoffset'${orderDateFrom}T00:00:00Z'`,
-        `PO/OrderedDateTime le datetimeoffset'${orderDateTo}T23:59:59Z'`,
+        `PO/CreationDate ge datetimeoffset'${orderDateFrom}T00:00:00Z'`,
+        `PO/CreationDate le datetimeoffset'${orderDateTo}T23:59:59Z'`,
       ].join(" and ")
     );
   }
@@ -45,8 +45,8 @@ module.exports = async (draft, { request, odata }) => {
   if (startDateFrom && startDateTo) {
     filter.push(
       [
-        `PO/CreationDate ge datetimeoffset'${startDateFrom}T00:00:00Z'`,
-        `PO/CreationDate le datetimeoffset'${startDateTo}T23:59:59Z'`,
+        `PO/StartDateTime ge datetimeoffset'${startDateFrom}T00:00:00Z'`,
+        `PO/StartDateTime le datetimeoffset'${startDateTo}T23:59:59Z'`,
       ].join(" and ")
     );
   }
