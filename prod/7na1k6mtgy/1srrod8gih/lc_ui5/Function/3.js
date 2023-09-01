@@ -77,9 +77,6 @@ module.exports = async (draft, { request, dynamodb, zip, unzip, makeid }) => {
             { pkid: "meta", skid: resId },
             data,
             {
-              operations: {
-                paths: "ADD",
-              },
               sets: { paths: "string" },
               useCustomerRole: false,
             }
