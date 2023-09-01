@@ -14,12 +14,12 @@ module.exports = async (draft, { request, odata }) => {
     shipToLocationID,
   } = request.body;
 
-  const expand = ["PO", "PO/SellerParty"].join(",");
+  const expand = ["Item", "SellerParty"].join(",");
 
   const filter = [];
 
   if (confirmIndicatior) {
-    filter.push(`PO/SRM001_KUT eq '${confirmIndicatior}'`);
+    filter.push(`SRM001_KUT eq '${confirmIndicatior}'`);
   }
   if (deliveryStatus) {
     if (deliveryStatus === "3") {
@@ -29,32 +29,32 @@ module.exports = async (draft, { request, odata }) => {
     }
   }
   if (materialID) {
-    filter.push(`ProductID eq '${materialID}'`);
+    filter.push(`Item/ProductID eq '${materialID}'`);
   }
   if (orderDateFrom && orderDateTo) {
     filter.push(
       [
-        `PO/OrderedDateTime ge datetimeoffset'${orderDateFrom}T00:00:00Z'`,
-        `PO/OrderedDateTime le datetimeoffset'${orderDateTo}T23:59:59Z'`,
+        `OrderedDateTime ge datetimeoffset'${orderDateFrom}T00:00:00Z'`,
+        `OrderedDateTime le datetimeoffset'${orderDateTo}T23:59:59Z'`,
       ].join(" and ")
     );
   }
   if (purchaseOrderID) {
-    filter.push(`PO/ID eq '${purchaseOrderID}'`);
+    filter.push(`ID eq '${purchaseOrderID}'`);
   }
   if (startDateFrom && startDateTo) {
     filter.push(
       [
-        `PO/CreationDate ge datetimeoffset'${startDateFrom}T00:00:00Z'`,
-        `PO/CreationDate le datetimeoffset'${startDateTo}T23:59:59Z'`,
+        `CreationDate ge datetimeoffset'${startDateFrom}T00:00:00Z'`,
+        `CreationDate le datetimeoffset'${startDateTo}T23:59:59Z'`,
       ].join(" and ")
     );
   }
   if (supplierID) {
-    filter.push(`PO/SellerParty/PartyID eq '${supplierID}'`);
+    filter.push(`SellerParty/PartyID eq '${supplierID}'`);
   }
   if (shipToLocationID) {
-    filter.push(`ShipToLocationID eq '${shipToLocationID}'`);
+    filter.push(`Item/ShipToLocationID eq '${shipToLocationID}'`);
   }
 
   const queryParameters = [
@@ -68,7 +68,7 @@ module.exports = async (draft, { request, odata }) => {
 
   const queryString = queryParameters.join("&");
 
-  const odataService = [url, "bsg_purchaseorder/ItemCollection"].join("/");
+  const odataService = [url, "bsg_purchaseorder/POCollection"].join("/");
   const odataURL = [odataService, queryString].join("?");
 
   const queryResult = await odata.get({
