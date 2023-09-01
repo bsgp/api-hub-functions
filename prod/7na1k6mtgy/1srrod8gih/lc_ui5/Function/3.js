@@ -1,5 +1,5 @@
-module.exports = async (draft, { request, dynamodb, zip, unzip }) => {
-  const { path: uriPath, description, title } = request.body;
+module.exports = async (draft, { request, dynamodb, zip, unzip, makeid }) => {
+  const { id, description, title, paths } = request.body;
   const tableName = ["lc_ui5", request.stage].join("_");
   const binaryAttributes = [
     "forms",
@@ -20,38 +20,92 @@ module.exports = async (draft, { request, dynamodb, zip, unzip }) => {
           });
         }
 
-        await dynamodb.updateItem(
-          tableName,
-          { pkid: "path", skid: uriPath },
-          {
-            path: uriPath,
-            description,
-            title,
-            ...binaryAttributes.reduce((acc, key) => {
-              if (request.body[key] !== undefined) {
-                acc[key] = zip(JSON.stringify(request.body[key]));
-              }
-              return acc;
-            }, {}),
-          },
-          { useCustomerRole: false }
-        );
+        // await dynamodb.updateItem(
+        //   tableName,
+        //   { pkid: "path", skid: uriPath },
+        //   {
+        //     path: uriPath,
+        //     description,
+        //     title,
+        //     ...binaryAttributes.reduce((acc, key) => {
+        //       if (request.body[key] !== undefined) {
+        //         acc[key] = zip(JSON.stringify(request.body[key]));
+        //       }
+        //       return acc;
+        //     }, {}),
+        //   },
+        //   { useCustomerRole: false }
+        // );
 
+        const data = {
+          description,
+          title,
+          paths: paths || [],
+          ...binaryAttributes.reduce((acc, key) => {
+            if (request.body[key] !== undefined) {
+              acc[key] = zip(JSON.stringify(request.body[key]));
+            }
+            return acc;
+          }, {}),
+        };
+
+        let resId;
+        if (id) {
+          resId = id;
+          await dynamodb.updateItem(
+            tableName,
+            { pkid: "meta", skid: id },
+            data,
+            {
+              operations: {
+                paths: "ADD",
+              },
+              sets: { paths: "string" },
+              conditions: {
+                skid: {
+                  operation: "=",
+                  value: id,
+                },
+              },
+              useCustomerRole: false,
+            }
+          );
+        } else {
+          resId = makeid(10);
+          await dynamodb.insertItem(
+            tableName,
+            { pkid: "meta", skid: resId },
+            data,
+            {
+              operations: {
+                paths: "ADD",
+              },
+              sets: { paths: "string" },
+              useCustomerRole: false,
+            }
+          );
+        }
         draft.response.body = {
-          path: uriPath,
+          id: resId,
         };
       }
       break;
     case "GET":
       {
-        if (uriPath === "*") {
+        if (id === "*") {
+          // const results = await dynamodb.query(
+          //   tableName,
+          //   { pkid: "path" },
+          //   {},
+          //   { useCustomerRole: false }
+          // );
+
           const results = await dynamodb.query(
             tableName,
-            { pkid: "path" },
+            { pkid: "meta" },
             {},
             { useCustomerRole: false }
           );
-
           draft.response.body = {
             count: results.length,
             list: results.map((result) => ({
@@ -62,23 +116,29 @@ module.exports = async (draft, { request, dynamodb, zip, unzip }) => {
               }, {}),
             })),
           };
-        } else if (!uriPath) {
-          throw new Error("Path must not be empty");
+          // } else if (!uriPath) {
+          //   throw new Error("Path must not be empty");
         } else {
+          // const result = await dynamodb.getItem(
+          //   tableName,
+          //   { pkid: "path", skid: uriPath },
+          //   { useCustomerRole: false }
+          // );
+
           const result = await dynamodb.getItem(
             tableName,
-            { pkid: "path", skid: uriPath },
+            { pkid: "meta", skid: id },
             { useCustomerRole: false }
           );
           if (result === undefined) {
-            const newError = new Error("No metadata for the requested path");
+            const newError = new Error("No metadata found");
             newError.errorCode = "NO_META";
             throw newError;
           }
 
           draft.response.body = {
             ...result,
-            path: uriPath,
+            id,
             ...binaryAttributes.reduce((acc, key) => {
               if (result[key] !== undefined) {
                 acc[key] = JSON.parse(unzip(result[key]));
