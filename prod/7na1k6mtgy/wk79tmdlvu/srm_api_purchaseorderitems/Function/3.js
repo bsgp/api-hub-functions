@@ -82,7 +82,6 @@ module.exports = async (draft, { request, odata }) => {
 
   const conversion = purchaseOrderItemResults.map((item, idx) => {
     const date = getDate(item.StartDateTime);
-
     return {
       ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
       confirmIndicatior: item.PO.SRM001_KUT,
@@ -116,9 +115,9 @@ module.exports = async (draft, { request, odata }) => {
   function getDate(date) {
     const today = new Date(date.replace(/^\/Date\(/, "").replace(")/", ""));
 
-    const year = today.getFullYear();
-    const month = (today.getMonth() + 1).toString().padStart(2, "0");
-    const day = today.getDate().toString().padStart(2, "0");
+    const year = today.getFullYear().toString();
+    const month = (today.getMonth() + 1).toString().padStart(2, "0").toString();
+    const day = today.getDate().toString().padStart(2, "0").toString();
 
     const dateString = year + "-" + month + "-" + day;
 
