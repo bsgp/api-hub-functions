@@ -81,7 +81,7 @@ module.exports = async (draft, { request, odata }) => {
   const purchaseOrderItemResults = queryResult.d.results;
 
   const conversion = purchaseOrderItemResults.map((item, idx) => {
-    const convDate = convertDate(item.StartDateTime);
+    const date = getDate(item.StartDateTime);
 
     return {
       ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
@@ -93,7 +93,7 @@ module.exports = async (draft, { request, odata }) => {
       poItemNumber: item.ID,
       purchaseOrderID: item.PO.ID,
       shipToLocation: item.ShipToLocationID,
-      startDate: convDate, //item.StartDateTime,
+      startDate: date, //item.StartDateTime,
       supplierText: item.PO.SellerParty.FormattedName,
       unitPrice: item.Amount,
       supplierAmount: item.NetAmount,
@@ -113,8 +113,8 @@ module.exports = async (draft, { request, odata }) => {
     // __count,
   };
 
-  function convertDate(date) {
-    const today = new Date(date);
+  function getDate(date) {
+    const today = date.replace("/Date(", "").replace(")/", "");
 
     const year = today.getFullYear(); // 2023
     const month = (today.getMonth() + 1).toString().padStart(2, "0"); // 06
