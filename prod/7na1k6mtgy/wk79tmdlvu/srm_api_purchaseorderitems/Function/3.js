@@ -81,6 +81,7 @@ module.exports = async (draft, { request, odata }) => {
   const purchaseOrderItemResults = queryResult.d.results;
 
   const conversion = purchaseOrderItemResults.map((item, idx) => {
+    const convDate = convertDate(item.StartDateTime);
     return {
       ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
       confirmIndicatior: item.PO.SRM001_KUT,
@@ -91,7 +92,7 @@ module.exports = async (draft, { request, odata }) => {
       poItemNumber: item.ID,
       purchaseOrderID: item.PO.ID,
       shipToLocation: item.ShipToLocationID,
-      startDate: item.StartDateTime,
+      startDate: convDate, //item.StartDateTime,
       supplierText: item.PO.SellerParty.FormattedName,
       unitPrice: item.Amount,
       supplierAmount: item.NetAmount,
@@ -110,4 +111,12 @@ module.exports = async (draft, { request, odata }) => {
     //purchaseOrderItems: [{}],
     // __count,
   };
+
+  function convertDate(date) {
+    const year = date.getFullYear();
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ("0" + date.getDate()).slice(-2);
+    const dateStr = `${year}-${month}-${day}`;
+    return dateStr;
+  }
 };
