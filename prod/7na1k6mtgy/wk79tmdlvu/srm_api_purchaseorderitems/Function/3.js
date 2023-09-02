@@ -82,6 +82,7 @@ module.exports = async (draft, { request, odata }) => {
 
   const conversion = purchaseOrderItemResults.map((item, idx) => {
     const convDate = convertDate(item.StartDateTime);
+
     return {
       ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
       confirmIndicatior: item.PO.SRM001_KUT,
@@ -114,10 +115,13 @@ module.exports = async (draft, { request, odata }) => {
 
   function convertDate(date) {
     const today = new Date(date);
-    const year = today.getFullYear();
-    const month = (today.getMonth() + 1).toString().padStart(2, "0");
-    const day = today.getDate().toString().padStart(2, "0");
-    const dateStr = `${year}-${month}-${day}`;
-    return dateStr;
+
+    const year = today.getFullYear(); // 2023
+    const month = (today.getMonth() + 1).toString().padStart(2, "0"); // 06
+    const day = today.getDate().toString().padStart(2, "0"); // 18
+
+    const dateString = year + "-" + month + "-" + day; // 2023-06-18
+
+    return dateString;
   }
 };
