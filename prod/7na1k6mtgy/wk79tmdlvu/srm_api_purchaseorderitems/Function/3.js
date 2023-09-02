@@ -114,7 +114,7 @@ module.exports = async (draft, { request, odata }) => {
   };
 
   function getDate(date) {
-    const today = Date(date.replace("/Date(", "").replace(")/", ""));
+    const today = new Date(date.replace(/^\/Date\(/, "").replace(")/", ""));
 
     const year = today.getFullYear();
     const month = (today.getMonth() + 1).toString().padStart(2, "0");
