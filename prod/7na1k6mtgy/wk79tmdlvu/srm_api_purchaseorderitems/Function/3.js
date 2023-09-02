@@ -112,10 +112,10 @@ module.exports = async (draft, { request, odata }) => {
     // __count,
   };
 
-  function convertDate(date) {
-    const year = date.getFullYear();
-    const month = ("0" + (date.getMonth() + 1)).slice(-2);
-    const day = ("0" + date.getDate()).slice(-2);
+  function convertDate(today) {
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, "0");
+    const day = today.getDate().toString().padStart(2, "0");
     const dateStr = `${year}-${month}-${day}`;
     return dateStr;
   }
