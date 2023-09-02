@@ -45,8 +45,8 @@ module.exports = async (draft, { request, odata }) => {
   if (startDateFrom && startDateTo) {
     filter.push(
       [
-        `PO/StartDateTime ge datetimeoffset'${startDateFrom}T00:00:00Z'`,
-        `PO/StartDateTime le datetimeoffset'${startDateTo}T23:59:59Z'`,
+        `StartDateTime ge datetimeoffset'${startDateFrom}T00:00:00Z'`,
+        `StartDateTime le datetimeoffset'${startDateTo}T23:59:59Z'`,
       ].join(" and ")
     );
   }
