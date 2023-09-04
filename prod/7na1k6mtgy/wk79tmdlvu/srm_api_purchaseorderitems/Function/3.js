@@ -81,22 +81,25 @@ module.exports = async (draft, { request, odata }) => {
   const purchaseOrderItemResults = queryResult.d.results;
 
   const conversion = purchaseOrderItemResults.map((item, idx) => {
-    const date = convDate(item.StartDateTime);
     return {
       ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
       confirmIndicatior: item.PO.SRM001_KUT,
       deliveryStatusText: item.PurchaseOrderDeliveryStatusCodeText,
       index: idx + 1,
-      materialID: item.Description,
+      materialID: item.ProductID, //item.Description,
       orderQuantity: item.Quantity,
       poItemNumber: item.ID,
       purchaseOrderID: item.PO.ID,
       shipToLocation: item.ShipToLocationID,
-      startDate: date, //item.StartDateTime,
+      startDate: convDate(item.StartDateTime), //item.StartDateTime,
       supplierText: item.PO.SellerParty.FormattedName,
       unitPrice: item.Amount,
       supplierAmount: item.NetAmount,
       restQuantity: item.Quantity,
+      unitText: item.BaseQuantityUnitCode,
+      currency: item.currencyCode,
+      materialText: item.Description,
+
       //deliveredQuantity: item.TotalDeliveredQuantity,
       //idnQuantity
       //returnQuantity
