@@ -141,7 +141,12 @@ module.exports = async (
             })),
           };
         } else if (id) {
-          const result = await fn.getMetaById(id, {});
+          const result = await fn.getMetaById(id, {
+            dynamodb,
+            tableName,
+            binaryAttributes,
+            unzip,
+          });
           draft.response.body = result;
         } else if (uriPath) {
           const resultPath = await dynamodb.getItem(
