@@ -134,13 +134,7 @@ module.exports = async (
 
           draft.response.body = {
             count: results.length,
-            list: results.map((result) => ({
-              ...result,
-              ...binaryAttributes.reduce((acc, key) => {
-                acc[key] = undefined;
-                return acc;
-              }, {}),
-            })),
+            list: results,
           };
         } else if (id) {
           const result = await fn.getMetaById(id, {
