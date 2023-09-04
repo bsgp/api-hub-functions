@@ -81,6 +81,7 @@ module.exports = async (draft, { request, odata }) => {
   const purchaseOrderItemResults = queryResult.d.results;
 
   const conversion = purchaseOrderItemResults.map((item, idx) => {
+    const date = getDate(item.StartDateTime);
     return {
       ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
       confirmIndicatior: item.PO.SRM001_KUT,
@@ -91,7 +92,7 @@ module.exports = async (draft, { request, odata }) => {
       poItemNumber: item.ID,
       purchaseOrderID: item.PO.ID,
       shipToLocation: item.ShipToLocationID,
-      startDate: item.StartDateTime,
+      startDate: date, //item.StartDateTime,
       supplierText: item.PO.SellerParty.FormattedName,
       unitPrice: item.Amount,
       supplierAmount: item.NetAmount,
@@ -110,4 +111,11 @@ module.exports = async (draft, { request, odata }) => {
     //purchaseOrderItems: [{}],
     // __count,
   };
+
+  function getDate(startDate) {
+    const dateStr = startDate.replace(/^\/Date\(/, "").replace(")/", "");
+    const date = new Date(dateStr);
+    const year = date.getFullYear();
+    return year;
+  }
 };
