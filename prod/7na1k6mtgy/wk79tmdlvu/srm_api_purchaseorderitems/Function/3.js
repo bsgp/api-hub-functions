@@ -95,11 +95,11 @@ module.exports = async (draft, { request, odata }) => {
       unitPrice: item.Amount,
       supplierAmount: item.NetAmount,
       orderQuantity: item.Quantity, //발주수량
-      restQuantity: item.Quantity, //발주잔량
+      // restQuantity: item.Quantity, //발주잔량
       unitText: item.BaseQuantityUnitCode,
       currency: item.currencyCode,
       materialText: item.Description,
-      deliveredQuantity: item.TotalDeliveredQuantity, //입고수량량
+      deliveredQuantity: item.TotalDeliveredQuantity, //입고수량
       //idnQuantity
       //returnQuantity
       //itemDesc
