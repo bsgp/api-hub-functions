@@ -1,6 +1,6 @@
 module.exports = async (
   draft,
-  { request, dynamodb, zip, unzip, makeid, isFalsy }
+  { request, dynamodb, zip, unzip, makeid, isFalsy, fn }
 ) => {
   const { id, description, title, paths, path: uriPath } = request.body;
   const tableName = ["lc_ui5", request.stage].join("_");
@@ -141,39 +141,8 @@ module.exports = async (
             })),
           };
         } else if (id) {
-          const result = await dynamodb.getItem(
-            tableName,
-            { pkid: "meta", skid: id },
-            { useCustomerRole: false }
-          );
-
-          let paths;
-          if (result.paths && result.paths.length > 0) {
-            paths = await dynamodb.batchGetItem(
-              tableName,
-              result.paths.map((path) => ({ pkid: "path", skid: path })),
-              { useCustomerRole: false }
-            );
-          }
-
-          if (result === undefined) {
-            const newError = new Error("No metadata found");
-            newError.errorCode = "NO_META";
-            throw newError;
-          }
-
-          draft.response.body = {
-            ...result,
-            id,
-            paths,
-            ...binaryAttributes.reduce((acc, key) => {
-              if (result[key] !== undefined) {
-                acc[key] = JSON.parse(unzip(result[key]));
-              }
-
-              return acc;
-            }, {}),
-          };
+          const result = await fn.getMetaById(id, {});
+          draft.response.body = result;
         } else if (uriPath) {
           const resultPath = await dynamodb.getItem(
             tableName,
