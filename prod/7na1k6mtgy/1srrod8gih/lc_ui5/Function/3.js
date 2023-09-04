@@ -99,7 +99,7 @@ module.exports = async (
               type: "Update",
               keys: { pkid: "path", skid: path.value },
               values: {
-                path: path.value,
+                value: path.value,
                 title: path.title,
                 metaId: resId,
               },
