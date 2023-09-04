@@ -1,6 +1,6 @@
-module.exports.getMetaById = async (
+const getMetaById = async (
   id,
-  { dynamodb, tableName, binaryAttributes, unzip }
+  { dynamodb, tableName, binaryAttributes, unzip, includePaths = true }
 ) => {
   const result = await dynamodb.getItem(
     tableName,
@@ -9,12 +9,14 @@ module.exports.getMetaById = async (
   );
 
   let paths;
-  if (result.paths && result.paths.length > 0) {
-    paths = await dynamodb.batchGetItem(
-      tableName,
-      result.paths.map((path) => ({ pkid: "path", skid: path })),
-      { useCustomerRole: false }
-    );
+  if (includePaths === true) {
+    if (result.paths && result.paths.length > 0) {
+      paths = await dynamodb.batchGetItem(
+        tableName,
+        result.paths.map((path) => ({ pkid: "path", skid: path })),
+        { useCustomerRole: false }
+      );
+    }
   }
 
   if (result === undefined) {
@@ -25,7 +27,6 @@ module.exports.getMetaById = async (
 
   return {
     ...result,
-    id,
     paths,
     ...binaryAttributes.reduce((acc, key) => {
       if (result[key] !== undefined) {
@@ -36,6 +37,7 @@ module.exports.getMetaById = async (
     }, {}),
   };
 };
+module.exports.getMetaById = getMetaById;
 
 module.exports.getMetaByPath = async (
   path,
@@ -51,27 +53,14 @@ module.exports.getMetaByPath = async (
     throw new Error("NOT Found Path");
   }
 
-  const result = await dynamodb.getItem(
+  const result = await getMetaById(resultPath.metaId, {
+    dynamodb,
     tableName,
-    { pkid: "meta", skid: resultPath.metaId },
-    { useCustomerRole: false }
-  );
-
-  if (result === undefined) {
-    const newError = new Error("No metadata found");
-    newError.errorCode = "NO_META";
-    throw newError;
-  }
-
-  return {
-    ...result,
     paths,
-    ...binaryAttributes.reduce((acc, key) => {
-      if (result[key] !== undefined) {
-        acc[key] = JSON.parse(unzip(result[key]));
-      }
+    binaryAttributes,
+    unzip,
+    includePaths: false,
+  });
 
-      return acc;
-    }, {}),
-  };
+  return result;
 };
