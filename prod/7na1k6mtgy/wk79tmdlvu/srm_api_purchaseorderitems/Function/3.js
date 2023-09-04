@@ -94,13 +94,12 @@ module.exports = async (draft, { request, odata }) => {
       startDate: convDate(item.StartDateTime), //item.StartDateTime,
       supplierText: item.PO.SellerParty.FormattedName,
       unitPrice: item.Amount,
-      supplierAmount: item.NetAmount,
+      //supplierAmount: item.NetAmount,
       restQuantity: item.Quantity,
       unitText: item.BaseQuantityUnitCode,
       currency: item.currencyCode,
       materialText: item.Description,
-
-      //deliveredQuantity: item.TotalDeliveredQuantity,
+      deliveredQuantity: item.TotalDeliveredQuantity,
       //idnQuantity
       //returnQuantity
       //itemDesc
