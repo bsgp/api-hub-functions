@@ -31,7 +31,7 @@ module.exports = async (draft, { request, sql }) => {
         `${commentsHistoryName}.name AS history_name`,
       ])
       .where({
-        [`${commentsName}.deleted`]: false,
+        //      [`${commentsName}.deleted`]: false,
         [`${commentsName}.menu_id`]: menu,
       })
       .leftJoin(
