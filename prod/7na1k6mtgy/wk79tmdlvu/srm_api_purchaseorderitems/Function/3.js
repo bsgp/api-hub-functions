@@ -87,19 +87,19 @@ module.exports = async (draft, { request, odata }) => {
       deliveryStatusText: item.PurchaseOrderDeliveryStatusCodeText,
       index: idx + 1,
       materialID: item.ProductID, //item.Description,
-      orderQuantity: item.Quantity,
       poItemNumber: item.ID,
       purchaseOrderID: item.PO.ID,
       shipToLocation: item.ShipToLocationID,
       startDate: convDate(item.StartDateTime), //item.StartDateTime,
       supplierText: item.PO.SellerParty.FormattedName,
       unitPrice: item.Amount,
-      //supplierAmount: item.NetAmount,
-      restQuantity: item.Quantity,
+      supplierAmount: item.NetAmount,
+      orderQuantity: item.Quantity, //발주수량
+      restQuantity: item.Quantity, //발주잔량
       unitText: item.BaseQuantityUnitCode,
       currency: item.currencyCode,
       materialText: item.Description,
-      deliveredQuantity: item.TotalDeliveredQuantity,
+      deliveredQuantity: item.TotalDeliveredQuantity, //입고수량량
       //idnQuantity
       //returnQuantity
       //itemDesc
