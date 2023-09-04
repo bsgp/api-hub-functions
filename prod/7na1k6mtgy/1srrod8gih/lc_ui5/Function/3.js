@@ -38,7 +38,9 @@ module.exports = async (
           delete data.paths;
         }
 
-        const filteredPaths = data.paths && paths.filter((path) => path.value);
+        const filteredPaths = data.paths
+          ? paths.filter((path) => path.value)
+          : [];
 
         if (filteredPaths.length > 0) {
           data.paths = filteredPaths.map((path) => path.value);
