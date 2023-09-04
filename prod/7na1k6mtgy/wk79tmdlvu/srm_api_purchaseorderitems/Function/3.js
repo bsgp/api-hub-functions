@@ -81,7 +81,7 @@ module.exports = async (draft, { request, odata }) => {
   const purchaseOrderItemResults = queryResult.d.results;
 
   const conversion = purchaseOrderItemResults.map((item, idx) => {
-    const date = getDate(item.StartDateTime);
+    const date = convDate(item.StartDateTime);
     return {
       ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
       confirmIndicatior: item.PO.SRM001_KUT,
@@ -112,7 +112,7 @@ module.exports = async (draft, { request, odata }) => {
     // __count,
   };
 
-  function getDate(startDate) {
+  function convDate(startDate) {
     const numberString = startDate.replace(/^\/Date\(/, "").replace(")/", "");
     const date = new Date(parseInt(numberString, 10));
     const year = date.getFullYear();
