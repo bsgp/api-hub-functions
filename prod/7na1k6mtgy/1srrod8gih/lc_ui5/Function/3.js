@@ -2,7 +2,7 @@ module.exports = async (
   draft,
   { request, dynamodb, zip, unzip, makeid, isFalsy }
 ) => {
-  const { id, description, title, paths } = request.body;
+  const { id, description, title, paths, path: uriPath } = request.body;
   const tableName = ["lc_ui5", request.stage].join("_");
   const binaryAttributes = [
     "forms",
@@ -60,7 +60,7 @@ module.exports = async (
           await dynamodb.updateItem(
             tableName,
             { pkid: "meta", skid: id },
-            data,
+            { ...data, id: resId },
             {
               operations: metaOperations,
               sets: metaSets,
@@ -84,7 +84,7 @@ module.exports = async (
           await dynamodb.insertItem(
             tableName,
             { pkid: "meta", skid: resId },
-            data,
+            { ...data, id: resId },
             {
               sets: metaSets,
               useCustomerRole: false,
@@ -140,15 +140,7 @@ module.exports = async (
               }, {}),
             })),
           };
-          // } else if (!uriPath) {
-          //   throw new Error("Path must not be empty");
-        } else {
-          // const result = await dynamodb.getItem(
-          //   tableName,
-          //   { pkid: "path", skid: uriPath },
-          //   { useCustomerRole: false }
-          // );
-
+        } else if (id) {
           const result = await dynamodb.getItem(
             tableName,
             { pkid: "meta", skid: id },
@@ -182,6 +174,42 @@ module.exports = async (
               return acc;
             }, {}),
           };
+        } else if (uriPath) {
+          const resultPath = await dynamodb.getItem(
+            tableName,
+            { pkid: "path", skid: uriPath },
+            { useCustomerRole: false }
+          );
+
+          if (!resultPath) {
+            throw new Error("NOT Found Path");
+          }
+
+          const result = await dynamodb.getItem(
+            tableName,
+            { pkid: "meta", skid: resultPath.metaId },
+            { useCustomerRole: false }
+          );
+
+          if (result === undefined) {
+            const newError = new Error("No metadata found");
+            newError.errorCode = "NO_META";
+            throw newError;
+          }
+
+          draft.response.body = {
+            ...result,
+            paths,
+            ...binaryAttributes.reduce((acc, key) => {
+              if (result[key] !== undefined) {
+                acc[key] = JSON.parse(unzip(result[key]));
+              }
+
+              return acc;
+            }, {}),
+          };
+        } else {
+          throw new Error("Invalid GET Request");
         }
       }
       break;
