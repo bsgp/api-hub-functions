@@ -1,6 +1,7 @@
-module.exports.getMetaById = async (id, context) => {
-  const { dynamodb, tableName, binaryAttributes, unzip } = context;
-
+module.exports.getMetaById = async (
+  id,
+  { dynamodb, tableName, binaryAttributes, unzip }
+) => {
   const result = await dynamodb.getItem(
     tableName,
     { pkid: "meta", skid: id },
