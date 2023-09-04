@@ -110,9 +110,14 @@ module.exports = async (
           );
         }
 
-        draft.response.body = {
-          id: resId,
-        };
+        const result = await fn.getMetaById(resId, {
+          dynamodb,
+          tableName,
+          binaryAttributes,
+          unzip,
+        });
+
+        draft.response.body = result;
       }
       break;
     case "GET":
