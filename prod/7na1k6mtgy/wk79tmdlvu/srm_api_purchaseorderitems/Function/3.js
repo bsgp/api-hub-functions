@@ -114,8 +114,9 @@ module.exports = async (draft, { request, odata }) => {
 
   function getDate(startDate) {
     const dateStr = startDate.replace(/^\/Date\(/, "").replace(")/", "");
-    const date = Date(dateStr);
-    const month = date.getMonth();
-    return month;
+    const date = new Date(parseInt(dateStr, 10));
+    //const month = date.getMonth();
+
+    return date;
   }
 };
