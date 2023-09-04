@@ -92,7 +92,7 @@ module.exports = async (draft, { request, odata }) => {
       shipToLocation: item.ShipToLocationID,
       startDate: convDate(item.StartDateTime), //item.StartDateTime,
       supplierText: item.PO.SellerParty.FormattedName,
-      unitPrice: item.Amount,
+      unitPrice: item.ListUnitPriceAmount, //item.Amount,
       supplierAmount: item.NetAmount,
       orderQuantity: item.Quantity, //발주수량
       // restQuantity: item.Quantity, //발주잔량
