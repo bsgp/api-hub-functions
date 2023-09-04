@@ -149,39 +149,14 @@ module.exports = async (
           });
           draft.response.body = result;
         } else if (uriPath) {
-          const resultPath = await dynamodb.getItem(
+          const result = await fn.getMetaByPath(uriPath, {
+            dynamodb,
             tableName,
-            { pkid: "path", skid: uriPath },
-            { useCustomerRole: false }
-          );
-
-          if (!resultPath) {
-            throw new Error("NOT Found Path");
-          }
-
-          const result = await dynamodb.getItem(
-            tableName,
-            { pkid: "meta", skid: resultPath.metaId },
-            { useCustomerRole: false }
-          );
-
-          if (result === undefined) {
-            const newError = new Error("No metadata found");
-            newError.errorCode = "NO_META";
-            throw newError;
-          }
-
-          draft.response.body = {
-            ...result,
             paths,
-            ...binaryAttributes.reduce((acc, key) => {
-              if (result[key] !== undefined) {
-                acc[key] = JSON.parse(unzip(result[key]));
-              }
-
-              return acc;
-            }, {}),
-          };
+            binaryAttributes,
+            unzip,
+          });
+          draft.response.body = result;
         } else {
           throw new Error("Invalid GET Request");
         }
