@@ -1,6 +1,6 @@
 module.exports = async (
   draft,
-  { request, dynamodb, zip, unzip, makeid, isTruthy }
+  { request, dynamodb, zip, unzip, makeid, isFalsy }
 ) => {
   const { id, description, title, paths } = request.body;
   const tableName = ["lc_ui5", request.stage].join("_");
@@ -51,6 +51,9 @@ module.exports = async (
             return acc;
           }, {}),
         };
+        if (isFalsy(data.paths)) {
+          delete data.paths;
+        }
 
         let resId;
         if (id) {
@@ -58,7 +61,7 @@ module.exports = async (
 
           const metaOperations = {};
           const metaSets = {};
-          if (isTruthy(data.paths)) {
+          if (data.paths) {
             metaOperations.paths = "ADD";
             metaSets.paths = "string";
           }
@@ -83,7 +86,7 @@ module.exports = async (
           resId = makeid(10);
 
           const metaSets = {};
-          if (isTruthy(data.paths)) {
+          if (data.paths) {
             metaSets.paths = "string";
           }
 
