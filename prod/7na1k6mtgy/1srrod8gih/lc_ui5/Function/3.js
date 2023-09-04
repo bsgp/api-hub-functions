@@ -23,23 +23,6 @@ module.exports = async (
           });
         }
 
-        // await dynamodb.updateItem(
-        //   tableName,
-        //   { pkid: "path", skid: uriPath },
-        //   {
-        //     path: uriPath,
-        //     description,
-        //     title,
-        //     ...binaryAttributes.reduce((acc, key) => {
-        //       if (request.body[key] !== undefined) {
-        //         acc[key] = zip(JSON.stringify(request.body[key]));
-        //       }
-        //       return acc;
-        //     }, {}),
-        //   },
-        //   { useCustomerRole: false }
-        // );
-
         const data = {
           description,
           title,
@@ -52,6 +35,14 @@ module.exports = async (
           }, {}),
         };
         if (isFalsy(data.paths)) {
+          delete data.paths;
+        }
+
+        const filteredPaths = data.paths && paths.filter((path) => path.value);
+
+        if (filteredPaths.length > 0) {
+          data.paths = filteredPaths.map((path) => path.value);
+        } else {
           delete data.paths;
         }
 
@@ -100,6 +91,23 @@ module.exports = async (
             }
           );
         }
+
+        if (filteredPaths.length > 0) {
+          await dynamodb.transaction(
+            filteredPaths.map((path) => ({
+              tableName,
+              type: "Update",
+              keys: { pkid: "path", skid: path.value },
+              values: {
+                path: path.value,
+                title: path.title,
+                metaId: resId,
+              },
+            })),
+            { useCustomerRole: false }
+          );
+        }
+
         draft.response.body = {
           id: resId,
         };
