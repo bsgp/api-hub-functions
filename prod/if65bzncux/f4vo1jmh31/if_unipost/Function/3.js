@@ -15,6 +15,9 @@ module.exports = async (draft, { restApi, tryit, fn }) => {
     headers: {
       secretKey,
     },
+    body: {
+      usId: "bsg_cont_work01",
+    },
   });
 
   draft.response.body = {
