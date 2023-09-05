@@ -1,4 +1,4 @@
-module.exports = async (draft, { restApi }) => {
+module.exports = async (draft, { restApi, tryit, fn }) => {
   // const params = new URLSearchParams();
   // params.set("bukrs", "2000");
   // params.set("date_from", "20220801");
@@ -6,14 +6,19 @@ module.exports = async (draft, { restApi }) => {
   // params.set("dctyp", "BZM01");
   // const queryString = params.toString();
 
+  const secretKey = await fn.getSecretKey({ restApi, tryit });
+
   const result = await restApi.post({
-    url: ["https://contdev.unipost.co.kr/unicloud/cont/api/getSecretKey"].join(
-      "?"
-    ),
+    url: [
+      "https://contdev.unipost.co.kr/unicloud/cont/api/getContUserToken",
+    ].join("?"),
     headers: {
-      clientKey: "51147370C5A742709F3EB95213CFBE30",
+      secretKey,
     },
   });
 
-  draft.response.body = result;
+  draft.response.body = {
+    secretKey,
+    result,
+  };
 };
