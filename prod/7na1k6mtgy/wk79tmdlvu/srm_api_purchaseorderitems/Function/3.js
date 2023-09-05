@@ -1,6 +1,8 @@
 module.exports = async (draft, { request, odata }) => {
   const { url, username, password } = draft.json;
 
+  const idn = draft.json.idn || [];
+
   const {
     confirmIndicatior,
     deliveryStatus,
@@ -94,15 +96,15 @@ module.exports = async (draft, { request, odata }) => {
       supplierText: item.PO.SellerParty.FormattedName,
       unitPrice: item.ListUnitPriceAmount, //item.Amount,
       supplierAmount: item.NetAmount,
-      orderQuantity: item.Quantity, //발주수량
-      // restQuantity: item.Quantity, //발주잔량
       unitText: item.BaseQuantityUnitCode,
       currency: item.currencyCode,
       materialText: item.Description,
+      orderQuantity: item.Quantity, //발주수량
       deliveredQuantity: item.TotalDeliveredQuantity, //입고수량
-      //idnQuantity
-      //returnQuantity
-      //itemDesc
+      idnQuantity: idn, //납품예정수량
+      // restQuantity: item.Quantity, //발주잔량
+      //returnQuantity: , //반품수량
+      //itemDesc:  //비고
     };
   });
 
