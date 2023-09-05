@@ -427,6 +427,7 @@ module.exports = async (draft, { request }) => {
       break;
     case "IF-PMM-WC01":
       draft.response.body = {
+        ...draft.response.body,
         plants: draft.response.body.ET_DATA.filter(
           (item, idx) =>
             draft.response.body.ET_DATA.findIndex(
@@ -437,7 +438,6 @@ module.exports = async (draft, { request }) => {
           key: item.ARBPL,
           text: item.KTEXT,
         })),
-        body: { ...draft.response.body },
       };
       break;
     case "IF-PMM-EQ01": {
