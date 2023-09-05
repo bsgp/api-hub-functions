@@ -138,19 +138,26 @@ module.exports = async (draft, { file }) => {
       // UrlPath: "/gz/erp/iffibzm.do",
       Path: "/uni_contract_webhook",
     },
-    ["IF-FI-BZM02"]: {
-      Type: "API",
-      Name: "SPOINT",
-      TriggeredBy: "SAP",
-      UrlPath: "/gz/erp/iffibzm.do",
-      Path: "/bzm",
+    ["IF-FI-001"]: {
+      Type: "RFC",
+      Name: "ZFI_IF_STD_CODE",
+      TriggeredBy: "G-PRO",
+      // UrlPath: "/gz/erp/iffibzm.do",
+      Path: "/rfc",
     },
-    ["IF-SD-BZ001"]: {
-      Type: "API",
-      Name: "MATERIALS",
-      TriggeredBy: "SAP",
-      UrlPath: "/gz/erp/sap_account.do",
-      Path: "/bzm",
+    ["IF-FI-002"]: {
+      Type: "RFC",
+      Name: "ZFI_IF_GWP_FIDOC",
+      TriggeredBy: "G-PRO",
+      // UrlPath: "/gz/erp/iffibzm.do",
+      Path: "/rfc",
+    },
+    ["IF-FI-021"]: {
+      Type: "RFC",
+      Name: "ZFI_IF_GWP_FIDOC_APLV",
+      TriggeredBy: "G-PRO",
+      // UrlPath: "/gz/erp/iffibzm.do",
+      Path: "/rfc",
     },
     ["IF-SD-BZ002"]: {
       Type: "API",
