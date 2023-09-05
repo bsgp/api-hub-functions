@@ -427,6 +427,7 @@ module.exports = async (draft, { request }) => {
       break;
     case "IF-PMM-WC01":
       draft.response.body = {
+        ET_DATA: draft.response.body.ET_DATA.map((it) => ({ ...it })),
         plants: draft.response.body.ET_DATA.filter(
           (item, idx) =>
             draft.response.body.ET_DATA.findIndex(
