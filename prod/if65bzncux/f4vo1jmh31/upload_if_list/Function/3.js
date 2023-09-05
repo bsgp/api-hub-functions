@@ -131,12 +131,12 @@ module.exports = async (draft, { file }) => {
       "IF-SD-ACC": "MEMBER_PLATFORM",
       "IF-CO-SAC": "GDRBI",
     },
-    ["IF-FI-BZM01"]: {
-      Type: "API",
-      Name: "PG",
-      TriggeredBy: "SAP",
-      UrlPath: "/gz/erp/iffibzm.do",
-      Path: "/bzm",
+    ["IF-CT-011"]: {
+      Type: "WEBHOOK",
+      Name: "CT_CHANGED",
+      TriggeredBy: "UNIPOST",
+      // UrlPath: "/gz/erp/iffibzm.do",
+      Path: "/uni_contract_webhook",
     },
     ["IF-FI-BZM02"]: {
       Type: "API",
