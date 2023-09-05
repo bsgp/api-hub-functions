@@ -249,13 +249,10 @@ module.exports = async (draft, { request, file, lib, env }) => {
     }
   }
 
-  if (ifObj.TriggeredBy !== "SAP") {
-    // 2022.09.26 골프존에서 내부 의견으로 결정하여 Name을 점검하지 않기로 함.
-    if (request.body.Function.Name !== ifObj.Name) {
-      return resFalsyError(
-        `body.Function.Name의 값이 정확한 인터페이스 정보와 일치하지 않습니다.`
-      );
-    }
+  if (request.body.Function.Name !== ifObj.Name) {
+    return resFalsyError(
+      `body.Function.Name의 값이 정확한 인터페이스 정보와 일치하지 않습니다.`
+    );
   }
 
   if (ifObj.Type === "RFC" || ifObj.RfcName) {
