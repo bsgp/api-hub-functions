@@ -13,6 +13,7 @@ module.exports = async (draft, { restApi, tryit, fn }) => {
       "https://contdev.unipost.co.kr/unicloud/cont/api/getContUserToken",
     ].join("?"),
     headers: {
+      "content-type": "application/json;charset=UTF-8",
       secretKey,
     },
     body: {
