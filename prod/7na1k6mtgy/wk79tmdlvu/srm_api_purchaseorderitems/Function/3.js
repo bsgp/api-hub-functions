@@ -1,8 +1,7 @@
 module.exports = async (draft, { request, odata }) => {
   const { url, username, password } = draft.json;
 
-  const idn = draft.json.idn || [];
-
+  const idn = draft.json;
   const {
     confirmIndicatior,
     deliveryStatus,
