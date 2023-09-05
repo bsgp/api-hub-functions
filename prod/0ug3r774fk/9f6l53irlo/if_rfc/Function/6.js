@@ -437,7 +437,7 @@ module.exports = async (draft, { request }) => {
           key: item.ARBPL,
           text: item.KTEXT,
         })),
-        body: draft.response.body,
+        body: { ...draft.response.body },
       };
       break;
     case "IF-PMM-EQ01": {
