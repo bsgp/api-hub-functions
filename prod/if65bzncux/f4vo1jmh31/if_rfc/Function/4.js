@@ -26,7 +26,11 @@ module.exports = async (draft, { request, rfc, clone, kst }) => {
   );
 
   if (result.body.result === undefined) {
-    draft.response.body = result;
+    if (result.statusCode) {
+      draft.response = result;
+    } else {
+      draft.response.body = result;
+    }
     draft.json.terminateFlow = true;
   } else if (
     !result.body.result.E_STATUS ||
