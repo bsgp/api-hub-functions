@@ -148,14 +148,14 @@ module.exports = async (draft, { file }) => {
     ["IF-FI-002"]: {
       Type: "RFC",
       Name: "ZFI_IF_GWP_FIDOC",
-      TriggeredBy: "G-PRO",
+      TriggeredBy: "SAP",
       // UrlPath: "/gz/erp/iffibzm.do",
       Path: "/rfc",
     },
     ["IF-FI-021"]: {
       Type: "RFC",
       Name: "ZFI_IF_GWP_FIDOC_APLV",
-      TriggeredBy: "G-PRO",
+      TriggeredBy: "SAP",
       // UrlPath: "/gz/erp/iffibzm.do",
       Path: "/rfc",
     },
