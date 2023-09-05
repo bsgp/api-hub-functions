@@ -35,7 +35,7 @@ module.exports = async (draft, { request, rfc, clone, kst }) => {
     draft.json.rfcResult = result;
     draft.response.body = {
       E_STATUS: "E",
-      E_MESSAGE: "RFC 결과에 E_STATUS, E_MESSAGE가 없습니다",
+      E_MESSAGE: "RFC 결과에 E_STATUS, E_MESSAGE가 없습니다, RFC를 수정하세요",
     };
   } else {
     draft.response.body = result.body.result;
