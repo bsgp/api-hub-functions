@@ -39,9 +39,9 @@ module.exports = async (draft, context) => {
     const purchaseOrderItems = queryPurchaseOrderItems
       .sort((valueA, valueB) => {
         if (valueB.StartDateTime === valueA.StartDateTime) {
-          if (valueB.item.PO.ID === valueA.item.PO.ID) {
-            return valueB.item.ID - valueA.item.ID;
-          } else return valueB.item.PO.ID - valueA.item.PO.ID;
+          if (valueB.PO.ID === valueA.PO.ID) {
+            return valueB.ID - valueA.ID;
+          } else return valueB.PO.ID - valueA.PO.ID;
         } else
           return (
             Number(valueB.StartDateTime.replace(/^\/Date\(|\)\//g, "")) -
