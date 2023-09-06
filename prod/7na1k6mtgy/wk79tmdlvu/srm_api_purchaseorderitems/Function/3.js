@@ -84,22 +84,7 @@ module.exports = async (draft, { request, odata }) => {
         item.ProductID,
         item.PO.ID
       );
-      // const service =
-      //[url, "bsg_inbound_notify/ItemDocPOCollection"].join("/");
-      // const query =
-      //   `&$expand=Item,Item/DeliveryQuantity` +
-      //   `&$filter=(Item/ProductID eq '${item.ProductID}')` +
-      //   `and (ID eq '${item.PO.ID}')` +
-      //   `&$format=json`;
 
-      // const quantityOdataURL = [service, query].join("?");
-
-      // const quantityResult = await odata.get({
-      //   url: quantityOdataURL,
-      //   username,
-      //   password,
-      // });
-      // const quantityResults = quantityResult.d.results;
       return {
         ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
         confirmIndicatior: item.PO.SRM001_KUT,
@@ -149,34 +134,23 @@ module.exports = async (draft, { request, odata }) => {
     purchaseID
   ) {
     let service, query;
-    switch (thirdPartyDealIndicator) {
-      case true: {
-        service = [url, "bsg_inbound_notify/ItemDocPOCollection"].join("/");
-        query =
-          `&$expand=Item,Item/DeliveryQuantity` +
-          `&$filter=(Item/ProductID eq '${productID}')` +
-          `and (ID eq '${purchaseID}')` +
-          `&$format=json`;
-        break;
-      }
-      case false: {
-        service = [url, "bsg_gsa/PurchaseOrderItemReferenceCollection"].join(
-          "/"
-        );
-        query =
-          `&$expand=Item` +
-          `&$filter=(Item/ProductID eq '${productID}')` +
-          `and (ID eq '${purchaseID}')` +
-          `&$format=json`;
-        break;
-      }
+
+    if (thirdPartyDealIndicator) {
+      service = [url, "bsg_inbound_notify/ItemDocPOCollection"].join("/");
+      query =
+        `&$expand=Item,Item/DeliveryQuantity` +
+        `&$filter=(Item/ProductID eq '${productID}')` +
+        `and (ID eq '${purchaseID}')` +
+        `&$format=json`;
+    } else {
+      service = [url, "bsg_gsa/PurchaseOrderItemReferenceCollection"].join("/");
+      query =
+        `&$expand=Item` +
+        `&$filter=(Item/ProductID eq '${productID}')` +
+        `and (ID eq '${purchaseID}')` +
+        `&$format=json`;
     }
     //const service = [url, "bsg_inbound_notify/ItemDocPOCollection"].join("/");
-    //const query =
-    //  `&$expand=Item,Item/DeliveryQuantity` +
-    //  `&$filter=(Item/ProductID eq '${productID}')` +
-    //  `and (ID eq '${purchaseID}')` +
-    // `&$format=json`;
 
     const idnOdataURL = [service, query].join("?");
 
