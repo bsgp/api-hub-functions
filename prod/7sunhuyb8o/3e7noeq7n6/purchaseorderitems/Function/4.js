@@ -98,6 +98,7 @@ module.exports = async (draft, context) => {
           orderQuantity: item.Quantity,
           // restQuantity,
           // scheduledQuantity,
+          isScheduled: scheduleLine.length > 0,
           scheduleLine,
           deliveredQuantity: item.TotalDeliveredQuantity,
           // deliveryClose,
@@ -107,7 +108,6 @@ module.exports = async (draft, context) => {
           unitCode: item.unitCode,
           supplyAmount: item.NetAmount,
           taxAmount: item.TaxAmount,
-          totalAmount: Number(item.NetAmount) + Number(item.TaxAmount),
           itemNote,
           purchaseOrderText: (itemNote || {}).text,
         };
