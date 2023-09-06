@@ -79,11 +79,11 @@ module.exports = async (draft, { request, odata }) => {
 
   const conversion = await Promise.all(
     purchaseOrderItemResults.map(async (item, idx) => {
-      const scheduledQuantity = await getScheduledQuantity(
+      const { sum: scheduledQuantity } = await getScheduledQuantity(
         item,
         item.ProductID,
         item.PO.ID
-      ).sum;
+      );
 
       return {
         ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
