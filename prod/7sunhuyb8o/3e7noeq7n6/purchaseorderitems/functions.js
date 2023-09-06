@@ -103,6 +103,15 @@ const getPO_ItemFilterParams = (params = {}, dayjs) => {
           -9
         )}Z')`
       : ``,
+    // params.supplierID
+    // ? `(PO/SellerPartyID eq '${params.supplierID.toUpperCase()}')`
+    // : "",
+    params.shipToLocationID
+      ? [
+          `(PurchaseOrderShipToItemLocation/LocationID`,
+          `'${params.shipToLocationID}')`,
+        ].join(" eq ")
+      : "",
     params.supplierID
       ? `(PO/SellerPartyID eq '${params.supplierID.toUpperCase()}')`
       : "",
