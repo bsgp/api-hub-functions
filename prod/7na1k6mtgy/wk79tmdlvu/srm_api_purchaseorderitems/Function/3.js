@@ -78,7 +78,7 @@ module.exports = async (draft, { request, odata }) => {
   const purchaseOrderItemResults = queryResult.d.results;
   const conversion = await Promise.all(
     purchaseOrderItemResults.map(async (item, idx) => {
-      const idnQuantity = getIdnQuantity(item.ProductID, item.PO.ID);
+      const idnQuantity = await getIdnQuantity(item.ProductID, item.PO.ID);
       // const service =
       //[url, "bsg_inbound_notify/ItemDocPOCollection"].join("/");
       // const query =
