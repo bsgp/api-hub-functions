@@ -136,11 +136,11 @@ module.exports = async (draft, { request, odata }) => {
       password,
     });
     const quantityResults = quantityResult.d.results;
-    let sumQuantity = 0;
-    const quantity = quantityResults.map((item) => {
-      sumQuantity += item.Item.DeliveryQuantity.Quantity;
-      return sumQuantity;
-    });
-    return quantity;
+    //const sumQuantity = 0;
+    //const quantity = quantityResults.map((item) => {
+    //  sumQuantity += item.Item.DeliveryQuantity.Quantity;
+    //  return sumQuantity;
+    //});
+    return quantityResults;
   }
 };
