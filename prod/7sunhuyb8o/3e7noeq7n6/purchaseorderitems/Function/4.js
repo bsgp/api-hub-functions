@@ -38,8 +38,8 @@ module.exports = async (draft, { fn, dayjs, odata, user }) => {
     const purchaseOrderItems = queryPurchaseOrderItems.map((item, idx) => {
       return {
         index: idx + 1,
-        ThirdPartyDealIndicator: "",
-        confirmIndicatior: "",
+        ThirdPartyDealIndicator: false,
+        confirmIndicatior: false,
         deliveryStatusText: "",
         startDate: "",
         shipToLocation: "",
