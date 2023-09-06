@@ -80,7 +80,7 @@ module.exports = async (draft, { request, odata }) => {
   const conversion = await Promise.all(
     purchaseOrderItemResults.map(async (item, idx) => {
       const scheduledQuantity = await getScheduledQuantity(
-        item.ThirdPartyDealIndicator,
+        item,
         item.ProductID,
         item.PO.ID
       );
@@ -128,29 +128,24 @@ module.exports = async (draft, { request, odata }) => {
     const dateString = year + "-" + month + "-" + day;
     return dateString;
   }
-  async function getScheduledQuantity(
-    thirdPartyDealIndicator,
-    productID,
-    purchaseID
-  ) {
-    //let service, query;
+  async function getScheduledQuantity(itemData, productID, purchaseID) {
+    let service, query;
 
-    //if (!thirdPartyDealIndicator) {
-    const service = [url, "bsg_inbound_notify/ItemDocPOCollection"].join("/");
-    const query =
-      `&$expand=Item,Item/DeliveryQuantity` +
-      `&$filter=(Item/ProductID eq '${productID}')` +
-      `and (ID eq '${purchaseID}')` +
-      `&$format=json`;
-    // } else {
-    //   service = [url,
-    //"bsg_gsa/PurchaseOrderItemReferenceCollection"].join("/");
-    //   query =
-    //     `&$expand=Item` +
-    //     `&$filter=(Item/ProductID eq '${productID}')` +
-    //     `and (ID eq '${purchaseID}')` +
-    //     `&$format=json`;
-    // }
+    if (!itemData.DirectMaterialIndicator) {
+      service = [url, "bsg_gsa/PurchaseOrderItemReferenceCollection"].join("/");
+      query =
+        `&$expand=Item` +
+        `&$filter=(Item/ProductID eq '${productID}')` +
+        `and (ID eq '${purchaseID}')` +
+        `&$format=json`;
+    } else {
+      service = [url, "bsg_inbound_notify/ItemDocPOCollection"].join("/");
+      query =
+        `&$expand=Item,Item/DeliveryQuantity` +
+        `&$filter=(Item/ProductID eq '${productID}')` +
+        `and (ID eq '${purchaseID}')` +
+        `&$format=json`;
+    }
 
     const idnOdataURL = [service, query].join("?");
 
