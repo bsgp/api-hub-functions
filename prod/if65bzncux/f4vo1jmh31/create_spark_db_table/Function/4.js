@@ -2,7 +2,7 @@ module.exports = async (draft, { sql }) => {
   /** set spec */
   const spec = draft.json.tables.sample;
 
-  const mysql = sql("mysql");
+  const mysql = sql("mysql", { useCustomRole: false });
   const result = await mysql.table
     .create(spec.name, function (table) {
       table.charset("utf8mb4");
