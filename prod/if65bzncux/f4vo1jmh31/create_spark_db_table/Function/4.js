@@ -1,7 +1,7 @@
 module.exports = async (draft, { sql }) => {
   /** set spec */
   const spec = draft.json.tables.sample;
-  // , { useCustomRole: false }
+
   const mysql = sql("mysql", { useCustomRole: false });
   const result = await mysql.table
     .create(spec.name, function (table) {
@@ -13,9 +13,8 @@ module.exports = async (draft, { sql }) => {
     })
     .run();
 
-  // draft.response.body[spec.name] =
-  //   result.statusCode === 200 ? "Succeed" : result.body;
-  draft.response.body[spec.name] = result;
+  draft.response.body[spec.name] =
+    result.statusCode === 200 ? "Succeed" : result.body;
 
   // table.boolean("deleted").notNullable().defaultTo(false);
   // table.datetime("created_at", { precision: 6 }).defaultTo(mysql.fn.now(6));
