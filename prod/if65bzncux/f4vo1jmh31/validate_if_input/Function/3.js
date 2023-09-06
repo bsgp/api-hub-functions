@@ -237,6 +237,12 @@ module.exports = async (draft, { request, file, lib, env }) => {
     );
   }
 
+  if (request.body.Function.SysId !== ifObj.TriggeredBy) {
+    return resFalsyError(
+      `body.Function.SysId의 값이 정확한 인터페이스 정보와 일치하지 않습니다.`
+    );
+  }
+
   if (request.path && ifObj.Path) {
     if (request.path === "unknown") {
       // pass
