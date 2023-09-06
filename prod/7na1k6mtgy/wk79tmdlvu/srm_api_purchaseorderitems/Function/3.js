@@ -76,10 +76,11 @@ module.exports = async (draft, { request, odata }) => {
   });
 
   const purchaseOrderItemResults = queryResult.d.results;
+
   const conversion = await Promise.all(
     purchaseOrderItemResults.map(async (item, idx) => {
       const idnQuantity = await getIdnQuantity(
-        item.item.DirectMaterialIndicator,
+        item.item.ThirdPartyDealIndicator,
         item.ProductID,
         item.PO.ID
       );
@@ -104,11 +105,11 @@ module.exports = async (draft, { request, odata }) => {
         confirmIndicatior: item.PO.SRM001_KUT,
         deliveryStatusText: item.PurchaseOrderDeliveryStatusCodeText,
         index: idx + 1,
-        materialID: item.ProductID, //item.Description,
+        materialID: item.ProductID,
         poItemNumber: item.ID,
         purchaseOrderID: item.PO.ID,
         shipToLocation: item.ShipToLocationID,
-        startDate: convDate(item.StartDateTime), //item.StartDateTime,
+        startDate: convDate(item.StartDateTime),
         supplierText: item.PO.SellerParty.FormattedName,
         unitPrice: item.ListUnitPriceAmount, //item.Amount,
         supplierAmount: item.NetAmount,
@@ -143,12 +144,12 @@ module.exports = async (draft, { request, odata }) => {
     return dateString;
   }
   async function getIdnQuantity(
-    DirectMaterialIndicator,
+    thirdPartyDealIndicator,
     productID,
     purchaseID
   ) {
     let service, query;
-    switch (DirectMaterialIndicator) {
+    switch (thirdPartyDealIndicator) {
       case true: {
         service = [url, "bsg_inbound_notify/ItemDocPOCollection"].join("/");
         query =
