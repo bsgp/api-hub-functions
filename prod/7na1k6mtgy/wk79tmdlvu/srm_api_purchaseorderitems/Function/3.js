@@ -83,7 +83,7 @@ module.exports = async (draft, { request, odata }) => {
         item,
         item.ProductID,
         item.PO.ID
-      );
+      ).sum;
 
       return {
         ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
