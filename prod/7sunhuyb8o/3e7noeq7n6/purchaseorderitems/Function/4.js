@@ -1,5 +1,6 @@
 module.exports = async (draft, { fn, dayjs, odata }) => {
-  const { params, username, password } = draft.json.params;
+  const { params } = draft.json.params;
+  const { username, password } = draft.json;
   try {
     const queryStringObj = fn.getPO_ItemParams(params, dayjs);
     const queryString = Object.keys(queryStringObj)
