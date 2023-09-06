@@ -39,8 +39,8 @@ module.exports = async (draft, context) => {
     const purchaseOrderItems = queryPurchaseOrderItems
       .sort(
         (valueA, valueB) =>
-          fn.convDate(dayjs, valueB.StartDateTime, "YYYY-MM-DDTHH:mm") -
-          fn.convDate(dayjs, valueA.StartDateTime, "YYYY-MM-DDTHH:mm")
+          Number(valueB.StartDateTime.replace(/^\/Date\(|\)\//g, "")) -
+          Number(valueA.StartDateTime.replace(/^\/Date\(|\)\//g, ""))
       )
       .map((item, idx) => {
         const po = item.PO || {};
