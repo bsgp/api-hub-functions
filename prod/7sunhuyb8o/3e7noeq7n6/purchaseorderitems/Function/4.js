@@ -30,6 +30,8 @@ module.exports = async (draft, { fn, dayjs, odata }) => {
       params,
       url: po_url,
       queryPO_Item,
+      username,
+      password,
     };
   } catch (error) {
     draft.response.body = {
