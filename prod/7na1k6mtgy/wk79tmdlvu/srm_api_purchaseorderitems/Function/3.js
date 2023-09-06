@@ -80,7 +80,7 @@ module.exports = async (draft, { request, odata }) => {
   const conversion = await Promise.all(
     purchaseOrderItemResults.map(async (item, idx) => {
       const idnQuantity = await getIdnQuantity(
-        item.item.ThirdPartyDealIndicator,
+        item.ThirdPartyDealIndicator,
         item.ProductID,
         item.PO.ID
       );
