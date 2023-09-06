@@ -76,10 +76,8 @@ module.exports = async (draft, { request, odata }) => {
   });
 
   const purchaseOrderItemResults = queryResult.d.results;
-  let qq;
   const conversion = purchaseOrderItemResults.map((item, idx) => {
     const idnQuantity = getIdnQuantity(item.ProductID, item.PO.ID);
-    qq = idnQuantity;
     return {
       ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
       confirmIndicatior: item.PO.SRM001_KUT,
@@ -109,7 +107,6 @@ module.exports = async (draft, { request, odata }) => {
     odataURL,
     purchaseOrderItems: conversion,
     purchaseOrderItemResults,
-    qq,
     //purchaseOrderItems: [{}],
     // __count,
   };
@@ -132,17 +129,17 @@ module.exports = async (draft, { request, odata }) => {
 
     const quantityOdataURL = [service, query].join("?");
 
-    const quantityResult = await odata.get({
-      url: quantityOdataURL,
-      username,
-      password,
-    });
-    const quantityResults = quantityResult.d.results;
+    //const quantityResult = await odata.get({
+    //  url: quantityOdataURL,
+    //  username,
+    //  password,
+    //});
+    //const quantityResults = quantityResult.d.results;
     //const sumQuantity = 0;
     //const quantity = quantityResults.map((item) => {
     //  sumQuantity += item.Item.DeliveryQuantity.Quantity;
     //  return sumQuantity;
     //});
-    return quantityResults;
+    return quantityOdataURL;
   }
 };
