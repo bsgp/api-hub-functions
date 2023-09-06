@@ -40,8 +40,8 @@ module.exports = async (draft, context) => {
       .sort((valueA, valueB) => {
         if (valueB.StartDateTime === valueA.StartDateTime) {
           if (valueB.PO.ID === valueA.PO.ID) {
-            return valueB.ID - valueA.ID;
-          } else return valueB.PO.ID - valueA.PO.ID;
+            return valueA.ID - valueB.ID;
+          } else return valueA.PO.ID - valueB.PO.ID;
         } else
           return (
             Number(valueB.StartDateTime.replace(/^\/Date\(|\)\//g, "")) -
