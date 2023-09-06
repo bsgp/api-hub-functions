@@ -17,17 +17,25 @@ module.exports = async (draft, { fn, dayjs, odata, user }) => {
     const queryPO_Item = await fn
       .fetchAll(odata, odataParams)
       .then(({ result = [] }) => result);
-    const queryPurchaseOrderItems = queryPO_Item.filter((po) => {
-      const userID = `${user.id}`;
+    const queryPurchaseOrderItems = queryPO_Item.filter((poItem) => {
       return (
         !params.isSupplier ||
-        (params.isSupplier && po.PO.SellerPartyID === userID.toUpperCase())
+        (params.isSupplier && poItem.PO.SellerPartyID === user.id.toUpperCase())
       );
     });
+
+    const poList = queryPurchaseOrderItems.reduce((acc, curr) => {
+      if (!acc.includes(curr.PO.ID)) {
+        acc.push(curr.PO.ID);
+      }
+      return acc;
+    }, []);
+
     draft.response.body = {
       params,
       po_url: odataParams.url,
       queryPurchaseOrderItems,
+      poList,
     };
   } catch (error) {
     draft.response.body = {
