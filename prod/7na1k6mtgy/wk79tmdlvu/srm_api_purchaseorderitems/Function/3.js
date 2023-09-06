@@ -135,7 +135,7 @@ module.exports = async (draft, { request, odata }) => {
   ) {
     let service, query;
 
-    if (thirdPartyDealIndicator) {
+    if (!thirdPartyDealIndicator) {
       service = [url, "bsg_inbound_notify/ItemDocPOCollection"].join("/");
       query =
         `&$expand=Item,Item/DeliveryQuantity` +
@@ -161,9 +161,16 @@ module.exports = async (draft, { request, odata }) => {
     });
     const idnResults = idnResult.d.results;
 
-    const sumQuantity = idnResults.reduce((acc, item) => {
-      return acc + Number(item.Item.DeliveryQuantity.Quantity);
-    }, 0);
+    let sumQuantity;
+    if (!thirdPartyDealIndicator) {
+      sumQuantity = idnResults.reduce((acc, item) => {
+        return acc + Number(item.Item.DeliveryQuantity.Quantity);
+      }, 0);
+    } else {
+      sumQuantity = idnResults.reduce((acc, item) => {
+        return acc + Number(item.Item.Quantity);
+      }, 0);
+    }
     return sumQuantity;
   }
 };
