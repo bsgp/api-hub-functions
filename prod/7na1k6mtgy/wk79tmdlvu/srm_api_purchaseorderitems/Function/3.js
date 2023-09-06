@@ -79,7 +79,7 @@ module.exports = async (draft, { request, odata }) => {
 
   const conversion = await Promise.all(
     purchaseOrderItemResults.map(async (item, idx) => {
-      const idnQuantity = await getIdnQuantity(
+      const scheduledQuantity = await getScheduledQuantity(
         item.ThirdPartyDealIndicator,
         item.ProductID,
         item.PO.ID
@@ -103,8 +103,8 @@ module.exports = async (draft, { request, odata }) => {
         materialText: item.Description,
         orderQuantity: item.Quantity, //발주수량
         deliveredQuantity: item.TotalDeliveredQuantity, //입고수량
-        idnQuantity: idnQuantity, //납품예정수량
-        restQuantity: item.Quantity - idnQuantity, //발주잔량
+        idnQuantity: scheduledQuantity, //납품예정수량
+        restQuantity: item.Quantity - scheduledQuantity, //발주잔량
         //returnQuantity: , //반품수량
         //itemDesc:  //비고
       };
@@ -128,28 +128,29 @@ module.exports = async (draft, { request, odata }) => {
     const dateString = year + "-" + month + "-" + day;
     return dateString;
   }
-  async function getIdnQuantity(
+  async function getScheduledQuantity(
     thirdPartyDealIndicator,
     productID,
     purchaseID
   ) {
-    let service, query;
+    //let service, query;
 
-    if (!thirdPartyDealIndicator) {
-      service = [url, "bsg_inbound_notify/ItemDocPOCollection"].join("/");
-      query =
-        `&$expand=Item,Item/DeliveryQuantity` +
-        `&$filter=(Item/ProductID eq '${productID}')` +
-        `and (ID eq '${purchaseID}')` +
-        `&$format=json`;
-    } else {
-      service = [url, "bsg_gsa/PurchaseOrderItemReferenceCollection"].join("/");
-      query =
-        `&$expand=Item` +
-        `&$filter=(Item/ProductID eq '${productID}')` +
-        `and (ID eq '${purchaseID}')` +
-        `&$format=json`;
-    }
+    //if (!thirdPartyDealIndicator) {
+    const service = [url, "bsg_inbound_notify/ItemDocPOCollection"].join("/");
+    const query =
+      `&$expand=Item,Item/DeliveryQuantity` +
+      `&$filter=(Item/ProductID eq '${productID}')` +
+      `and (ID eq '${purchaseID}')` +
+      `&$format=json`;
+    // } else {
+    //   service = [url,
+    //"bsg_gsa/PurchaseOrderItemReferenceCollection"].join("/");
+    //   query =
+    //     `&$expand=Item` +
+    //     `&$filter=(Item/ProductID eq '${productID}')` +
+    //     `and (ID eq '${purchaseID}')` +
+    //     `&$format=json`;
+    // }
 
     const idnOdataURL = [service, query].join("?");
 
