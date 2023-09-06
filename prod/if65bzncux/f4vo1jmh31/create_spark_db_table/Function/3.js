@@ -1,7 +1,7 @@
 module.exports = async (draft, { file }) => {
   const tables = {
     sample: {
-      name: "sample_0",
+      name: "sample_1",
       desc: "Spark sample DB",
     },
     test: {
