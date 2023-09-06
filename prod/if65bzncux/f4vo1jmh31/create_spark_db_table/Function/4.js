@@ -1,10 +1,10 @@
 module.exports = async (draft, { sql }) => {
   /** set spec */
   const spec = draft.json.tables.sample;
-
-  // const mysql = sql("mysql");
-  const result = await sql("mysql", { useCustomRole: false })
-    .table.create(spec.name, function (table) {
+  // , { useCustomRole: false }
+  const mysql = sql("mysql");
+  const result = await mysql.table
+    .create(spec.name, function (table) {
       table.charset("utf8mb4");
       table.string("id").notNullable();
       table.string("text").defaultTo("");
