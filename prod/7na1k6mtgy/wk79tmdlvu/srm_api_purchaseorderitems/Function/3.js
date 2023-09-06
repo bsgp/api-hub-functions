@@ -131,17 +131,21 @@ module.exports = async (draft, { request, odata }) => {
 
     const quantityOdataURL = [service, query].join("?");
 
-    const quantityResult = await odata.get({
-      url: quantityOdataURL,
-      username,
-      password,
-    });
-    const quantityResults = quantityResult.d.results;
-    //const sumQuantity = 0;
-    //const quantity = quantityResults.map((item) => {
-    //  sumQuantity += item.Item.DeliveryQuantity.Quantity;
-    //  return sumQuantity;
-    //});
-    return quantityResults;
+    try {
+      const quantityResult = await odata.get({
+        url: quantityOdataURL,
+        username,
+        password,
+      });
+      const quantityResults = quantityResult.d.results;
+      //const sumQuantity = 0;
+      //const quantity = quantityResults.map((item) => {
+      //  sumQuantity += item.Item.DeliveryQuantity.Quantity;
+      //  return sumQuantity;
+      //});
+      return quantityResults;
+    } catch (e) {
+      return e;
+    }
   }
 };
