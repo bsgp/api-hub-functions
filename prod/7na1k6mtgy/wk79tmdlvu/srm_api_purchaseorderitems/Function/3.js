@@ -121,7 +121,7 @@ module.exports = async (draft, { request, odata }) => {
     return dateString;
   }
 
-  async function getIdnQuantity(productID, purchaseID) {
+  function getIdnQuantity(productID, purchaseID) {
     const service = [url, "bsg_inbound_notify/ItemDocPOCollection"].join("/");
     const query =
       `&$expand=Item,Item/DeliveryQuantity` +
@@ -131,17 +131,17 @@ module.exports = async (draft, { request, odata }) => {
 
     const quantityOdataURL = [service, query].join("?");
 
-    const quantityResult = await odata.get({
-      url: quantityOdataURL,
-      username,
-      password,
-    });
-    const quantityResults = quantityResult.d.results;
+    //const quantityResult = await odata.get({
+    //  url: quantityOdataURL,
+    //  username,
+    //  password,
+    //});
+    //const quantityResults = quantityResult.d.results;
     //const sumQuantity = 0;
     //const quantity = quantityResults.map((item) => {
     //  sumQuantity += item.Item.DeliveryQuantity.Quantity;
     //  return sumQuantity;
     //});
-    return quantityResults;
+    return quantityOdataURL;
   }
 };
