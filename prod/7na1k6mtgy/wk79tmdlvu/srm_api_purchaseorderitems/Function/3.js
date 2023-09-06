@@ -121,7 +121,7 @@ module.exports = async (draft, { request, odata }) => {
     return dateString;
   }
 
-  async function getIdnQuantity(productID, purchaseID) {
+  function getIdnQuantity(productID, purchaseID) {
     const service = [url, "bsg_inbound_notify/ItemDocPOCollection"].join("/");
     const query =
       `&$expand=Item,Item/DeliveryQuantity` +
