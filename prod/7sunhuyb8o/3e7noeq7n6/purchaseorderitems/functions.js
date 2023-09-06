@@ -30,7 +30,7 @@ module.exports.getChunks = (array = []) => {
   return chunks;
 };
 
-const convDate = (dayjs, dateStr, format = "YYYY-MM-DD") => {
+const convDate = (dayjs, dateStr, format = "YYYY-MM-DD", hour = 0) => {
   if (!dateStr) {
     return "";
   }
@@ -45,7 +45,7 @@ const convDate = (dayjs, dateStr, format = "YYYY-MM-DD") => {
       } else date = numberString;
     }
   }
-  return dayjs(date).add(9, "hour").format(format);
+  return dayjs(date).add(hour, "hour").format(format);
 };
 
 module.exports.convDate = convDate;
@@ -78,22 +78,26 @@ const getPO_ItemFilterParams = (params = {}, dayjs) => {
       ? `(StartDateTime ge datetimeoffset'${convDate(
           dayjs,
           params.startDateFrom,
-          "YYYY-MM-DDTHH:mm:ss.SSS"
+          "YYYY-MM-DDTHH:mm:ss.SSS",
+          -9
         )}Z' and StartDateTime le datetimeoffset'${convDate(
           dayjs,
           params.startDateTo,
-          "YYYY-MM-DDT23:59:59"
+          "YYYY-MM-DDT23:59:59",
+          -9
         )}Z')`
       : ``,
     params.orderDateFrom && params.orderDateTo
       ? `(PO/CreationDate ge datetimeoffset'${convDate(
           dayjs,
           params.orderDateFrom,
-          "YYYY-MM-DDTHH:mm:ss.SSS"
+          "YYYY-MM-DDTHH:mm:ss.SSS",
+          -9
         )}Z' and PO/CreationDate le datetimeoffset'${convDate(
           dayjs,
           params.orderDateTo,
-          "YYYY-MM-DDT23:59:59"
+          "YYYY-MM-DDT23:59:59",
+          -9
         )}Z')`
       : ``,
     params.supplierID
