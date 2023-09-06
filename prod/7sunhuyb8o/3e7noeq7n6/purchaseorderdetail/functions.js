@@ -132,7 +132,6 @@ module.exports.getPurchaseOrderParams = (params, dayjs) => {
       "EmployeeResponsibleParty/EmployeeResponsiblePartyDisplayName",
       "Item",
       "Item/PurchaseOrderItemScheduleLine",
-      "Item/PurchaseOrderReceivingItemSite",
       "Item/PurchaseOrderItemAttachmentFolder",
       "Item/PurchaseOrderShipToItemLocation/AddressSnapshotPostalAddress",
       "Item/PurchaseOrderItemText",
