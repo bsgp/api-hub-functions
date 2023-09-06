@@ -154,10 +154,10 @@ module.exports = async (draft, { request, odata }) => {
       password,
     });
     const quantityResults = quantityResult.d.results;
-    let sum = 0;
-    const sumQuantity = quantityResults.map((item) => {
-      sum = sum + Number(item.Item.DeliveryQuantity.Quantity);
-    });
+
+    const sumQuantity = quantityResults.reduce((acc, item) => {
+      return acc + Number(item.Item.DeliveryQuantity.Quantity);
+    }, 0);
     return sumQuantity;
   }
 };
