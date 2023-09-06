@@ -157,32 +157,37 @@ module.exports = async (draft, { request, odata }) => {
     const idnResults = idnResult.d.results;
 
     //let sumQuantity;
-    if (!itemData.DirectMaterialIndicator) {
-      return idnResults.reduce(
-        (acc, curr) => {
-          const quantity = curr.Item.Quantity || 0;
+    switch (itemData.DirectMaterialIndicator) {
+      case true: {
+        return idnResults.reduce(
+          (acc, curr) => {
+            const idnObj = curr.InboundDelivery;
+            //const rCode = idnObj.ReleaseStatusCode;
+            //const dPCode = idnObj.DeliveryProcessingStatusCode;
+            const cCode = idnObj.CancellationStatusCode;
+            const qtyObj = curr.Item.DeliveryQuantity;
+            if (cCode === "1") {
+              acc.sum = Number(qtyObj.Quantity) + acc.sum;
+            }
+            return acc;
+          },
+          { sum: 0 }
+        );
+      }
+      case false: {
+        return idnResults.reduce(
+          (acc, curr) => {
+            const quantity = curr.Item.Quantity || 0;
 
-          acc.sum = Number(quantity) + acc.sum;
+            acc.sum = Number(quantity) + acc.sum;
 
-          return acc;
-        },
-        { sum: 0 }
-      );
-    } else {
-      return idnResults.reduce(
-        (acc, curr) => {
-          const idnObj = curr.InboundDelivery;
-          //const rCode = idnObj.ReleaseStatusCode;
-          //const dPCode = idnObj.DeliveryProcessingStatusCode;
-          const cCode = idnObj.CancellationStatusCode;
-          const qtyObj = curr.Item.DeliveryQuantity;
-          if (cCode === "1") {
-            acc.sum = Number(qtyObj.Quantity) + acc.sum;
-          }
-          return acc;
-        },
-        { sum: 0 }
-      );
+            return acc;
+          },
+          { sum: 0 }
+        );
+      }
+      default:
+        return { sum: 0 };
     }
   }
   //return idnResults;
