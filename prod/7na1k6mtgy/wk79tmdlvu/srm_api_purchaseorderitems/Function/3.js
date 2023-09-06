@@ -161,40 +161,30 @@ module.exports = async (draft, { request, odata }) => {
       return idnResults.reduce(
         (acc, curr) => {
           const quantity = curr.Item.Quantity || 0;
-          if (curr.GSA.ReleaseStatusCode === "1") {
-            acc.delivery = Number(quantity) + acc.delivery;
-          }
-          if (curr.GSA.ReleaseStatusCode === "3") {
-            acc.delivered = Number(quantity) + acc.delivered;
-          }
+
+          acc.sum = Number(quantity) + acc.sum;
+
           return acc;
         },
-        { delivery: 0, delivered: 0 }
+        { sum: 0 }
       );
     } else {
       return idnResults.reduce(
         (acc, curr) => {
           const idnObj = curr.InboundDelivery;
-          const rCode = idnObj.ReleaseStatusCode;
-          const dPCode = idnObj.DeliveryProcessingStatusCode;
+          //const rCode = idnObj.ReleaseStatusCode;
+          //const dPCode = idnObj.DeliveryProcessingStatusCode;
           const cCode = idnObj.CancellationStatusCode;
           const qtyObj = curr.Item.DeliveryQuantity;
           if (cCode === "1") {
-            if (rCode === "3" && ["2", "3"].includes(dPCode)) {
-              acc.delivered = Number(qtyObj.Quantity) + acc.delivered;
-            }
-            if (rCode === "3" && dPCode === "1") {
-              acc.delivery = Number(qtyObj.Quantity) + acc.delivery;
-            }
-            if (rCode === "1" && dPCode === "1") {
-              acc.delivery = Number(qtyObj.Quantity) + acc.delivery;
-            }
+            acc.sum = Number(qtyObj.Quantity) + acc.sum;
           }
           return acc;
         },
-        { delivery: 0, delivered: 0 }
+        { sum: 0 }
       );
     }
-    //return idnResults;
   }
+  //return idnResults;
+  //}
 };
