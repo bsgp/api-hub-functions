@@ -130,7 +130,6 @@ module.exports.getPO_ItemParams = (params, dayjs) => {
       "PO/PurchaseOrderText",
       "PurchaseOrderItemScheduleLine",
       "PurchaseOrderItemText",
-      "PurchaseOrderReceivingItemSite",
       "PurchaseOrderShipToItemLocation/AddressSnapshotPostalAddress",
     ],
   };
