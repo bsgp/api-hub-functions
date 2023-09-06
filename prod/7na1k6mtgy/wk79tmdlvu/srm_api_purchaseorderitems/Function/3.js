@@ -156,7 +156,7 @@ module.exports = async (draft, { request, odata }) => {
     const quantityResults = quantityResult.d.results;
     let sum;
     const sumQuantity = quantityResults.map((item) => {
-      sum += item.Item.DeliveryQuantity.Quantity;
+      sum += Number(item.Item.DeliveryQuantity.Quantity);
       return sum;
     });
     return sumQuantity;
