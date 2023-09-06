@@ -69,14 +69,14 @@ module.exports = async (draft, context) => {
         return {
           index: idx + 1,
           objectID: item.ObjectID,
-          purchaseOrderID: item.PO.ID,
+          purchaseOrderID: po.ID,
           poItemNumber: item.ID,
           materialID: item.ProductID,
           materialText: item.FULL_NAME_KUT || item.Description,
           categoryID: item.ProductCategoryInternalID,
           supplier: po.SellerParty.PartyID,
           supplierText: po.SellerParty.FormattedName, // 공급처
-          // confirmIndicatior: ,
+          confirmIndicatior: po.POCONFIRM_KUT === "102",
           chargeDivision:
             (item.ChargeDivision_KUT === "103" && item.ChargeDivision_KUT) ||
             "",
