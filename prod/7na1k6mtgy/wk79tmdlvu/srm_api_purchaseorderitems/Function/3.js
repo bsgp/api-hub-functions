@@ -161,9 +161,7 @@ module.exports = async (draft, { request, odata }) => {
       return idnResults.reduce(
         (acc, curr) => {
           const quantity = curr.Item.Quantity || 0;
-
           acc.sum = Number(quantity) + acc.sum;
-
           return acc;
         },
         { sum: 0 }
