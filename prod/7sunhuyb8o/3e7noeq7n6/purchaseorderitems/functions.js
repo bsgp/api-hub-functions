@@ -45,8 +45,8 @@ const getPO_ItemFilterParams = (params = {}, dayjs) => {
   }
 
   const _filter = [
-    params.confirmIndicatior === "true" ? `POCONFIRM_KUT eq '102'` : ``,
-    params.confirmIndicatior === "false" ? `POCONFIRM_KUT eq '101'` : ``,
+    params.confirmIndicatior === "true" ? `PO/POCONFIRM_KUT eq '102'` : ``,
+    params.confirmIndicatior === "false" ? `PO/POCONFIRM_KUT eq '101'` : ``,
     (() => {
       const ds = parseInt(params.deliveryStatus);
       if (params.deliveryStatus) {
@@ -63,32 +63,31 @@ const getPO_ItemFilterParams = (params = {}, dayjs) => {
         return "";
       }
     })(),
-    // TODO: 공급사 조회 FILTER 추가(20.05.19)
-    params.supplierID
-      ? `(SellerParty/PartyID eq '${params.supplierID.toUpperCase()}')`
-      : "",
-    params.confirmDateFrom && params.confirmDateTo
-      ? `(CONFIRMDATE_KUT ge datetimeoffset'${convDate(
+    params.startDateFrom && params.startDateTo
+      ? `(StartDateTime ge datetimeoffset'${convDate(
           dayjs,
-          params.confirmDateFrom,
+          params.startDateFrom,
           "YYYY-MM-DDTHH:mm:ss.SSS"
-        )}Z' and CONFIRMDATE_KUT le datetimeoffset'${convDate(
+        )}Z' and StartDateTime le datetimeoffset'${convDate(
           dayjs,
-          params.confirmDateTo,
+          params.startDateTo,
           "YYYY-MM-DDT23:59:59"
         )}Z')`
       : ``,
     params.orderDateFrom && params.orderDateTo
-      ? `(CreationDate ge datetimeoffset'${convDate(
+      ? `(PO/CreationDate ge datetimeoffset'${convDate(
           dayjs,
           params.orderDateFrom,
           "YYYY-MM-DDTHH:mm:ss.SSS"
-        )}Z' and CreationDate le datetimeoffset'${convDate(
+        )}Z' and PO/CreationDate le datetimeoffset'${convDate(
           dayjs,
           params.orderDateTo,
           "YYYY-MM-DDT23:59:59"
         )}Z')`
       : ``,
+    params.supplierID
+      ? `(PO/SellerPartyID eq '${params.supplierID.toUpperCase()}')`
+      : "",
     // [
     //   "(PurchaseOrderLifeCycleStatusCode eq '6'",
     //   "PurchaseOrderLifeCycleStatusCode eq '7'",
