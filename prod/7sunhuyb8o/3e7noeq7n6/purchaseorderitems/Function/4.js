@@ -98,7 +98,7 @@ module.exports = async (draft, context) => {
           orderQuantity: item.Quantity,
           // restQuantity,
           // scheduledQuantity,
-          isScheduled: scheduleLine.length > 0,
+          isScheduled: scheduleLine.length > 1,
           scheduleLine,
           deliveredQuantity: item.TotalDeliveredQuantity,
           // deliveryClose,
