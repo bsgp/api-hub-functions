@@ -89,12 +89,12 @@ const getPO_ItemFilterParams = (params = {}, dayjs) => {
           "YYYY-MM-DDT23:59:59"
         )}Z')`
       : ``,
-    [
-      "(PurchaseOrderLifeCycleStatusCode eq '6'",
-      "PurchaseOrderLifeCycleStatusCode eq '7'",
-      "PurchaseOrderLifeCycleStatusCode eq '9'",
-      "PurchaseOrderLifeCycleStatusCode eq '10')",
-    ].join(" or "),
+    // [
+    //   "(PurchaseOrderLifeCycleStatusCode eq '6'",
+    //   "PurchaseOrderLifeCycleStatusCode eq '7'",
+    //   "PurchaseOrderLifeCycleStatusCode eq '9'",
+    //   "PurchaseOrderLifeCycleStatusCode eq '10')",
+    // ].join(" or "),
   ];
 
   if (params.purchaseOrderID) {
