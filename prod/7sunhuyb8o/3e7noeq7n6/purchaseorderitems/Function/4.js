@@ -1,4 +1,5 @@
-module.exports = async (draft, { fn, dayjs, odata, user }) => {
+module.exports = async (draft, context) => {
+  const { fn, dayjs, odata, user, tryit, defined } = context;
   const { params } = draft.json.params;
   const { rootURL, username, password } = draft.json;
   try {
@@ -36,28 +37,64 @@ module.exports = async (draft, { fn, dayjs, odata, user }) => {
      */
 
     const purchaseOrderItems = queryPurchaseOrderItems.map((item, idx) => {
+      const po = item.PO || {};
+      const scheduleLine = tryit(
+        () =>
+          item.PurchaseOrderItemScheduleLine.map((sl) => ({
+            index: sl.ID,
+            quantity: sl.Quantity,
+            unitCodeText: sl.unitCodeText,
+            date: fn.convDate(dayjs, sl.StartDateTime),
+          })),
+        []
+      );
+      const itemNote = convNote(defined(item.PurchaseOrderItemText, [])).find(
+        (text) => text.typeCode === "10014"
+      );
+      const shipTo = item.PurchaseOrderShipToItemLocation || {};
+      const shipToAddress = (shipTo.AddressSnapshotPostalAddress || [])[0];
       return {
         index: idx + 1,
-        ThirdPartyDealIndicator: false,
-        confirmIndicatior: false,
-        deliveryStatusText: "",
-        startDate: "",
-        shipToLocation: "",
+        objectID: item.ObjectID,
         purchaseOrderID: item.PO.ID,
         poItemNumber: item.ID,
         materialID: item.ProductID,
-        materialText: "",
-        supplierText: "",
-        unitPrice: "",
-        currency: "",
-        unitText: "",
-        supplierAmount: "",
-        orderQuantity: "",
-        idnQuantity: "",
-        restQuantity: "",
-        deliveredQuantity: "",
-        returnQuantity: "",
-        itemDesc: "",
+        materialText: item.FULL_NAME_KUT || item.Description,
+        categoryID: item.ProductCategoryInternalID,
+        supplier: po.SellerParty.PartyID,
+        supplierText: po.SellerParty.FormattedName, // 공급처
+        chargeDivision:
+          (item.ChargeDivision_KUT === "103" && item.ChargeDivision_KUT) || "",
+        itemproductStandard: item.ProductStandard_KUT,
+        productStandard: item.ProductStandard_KUT,
+        manufacturer: item.Manufacturer_KUT,
+        processType: "",
+        supplyStatusText: item.PurchaseOrderDeliveryStatusCodeText,
+        startDate: fn.convDate(dayjs, item.StartDateTime),
+        orderSiteID: shipTo.LocationID,
+        orderSite: shipTo.Name,
+        orderSiteZIP: shipToAddress.StreetPostalCode,
+        orderSiteAddress: [
+          `${shipTo.Name} -`,
+          shipToAddress.RegionCodeText,
+          shipToAddress.CityName,
+          shipToAddress.StreetName,
+        ],
+        orderQuantity: item.Quantity,
+        // restQuantity,
+        // scheduledQuantity,
+        scheduleLine,
+        deliveredQuantity: item.TotalDeliveredQuantity,
+        // deliveryClose,
+        unitPrice: item.ListUnitPriceAmount,
+        currency: item.currencyCodeText,
+        unit: item.unitCodeText,
+        unitCode: item.unitCode,
+        supplyAmount: item.NetAmount,
+        taxAmount: item.TaxAmount,
+        totalAmount: Number(item.NetAmount) + Number(item.TaxAmount),
+        itemNote,
+        purchaseOrderText: (itemNote || {}).text,
       };
     });
 
@@ -74,5 +111,16 @@ module.exports = async (draft, { fn, dayjs, odata, user }) => {
       E_STATUS: "F",
       E_MESSAGE: error.message,
     };
+  }
+  function convNote(arr = []) {
+    return arr.map((text) => ({
+      objectID: text.ObjectID,
+      createdBy: text.CreatedBy,
+      createdOn: fn.convDate(dayjs, text.CreatedOn),
+      updatedOn: fn.convDate(dayjs, text.UpdatedOn),
+      typeCode: text.TypeCode,
+      typeCodeText: text.TypeCodeText,
+      text: text.Text,
+    }));
   }
 };
