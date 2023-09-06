@@ -88,12 +88,10 @@ const getPO_ItemFilterParams = (params = {}, dayjs) => {
     params.supplierID
       ? `(PO/SellerPartyID eq '${params.supplierID.toUpperCase()}')`
       : "",
-    // [
-    //   "(PurchaseOrderLifeCycleStatusCode eq '6'",
-    //   "PurchaseOrderLifeCycleStatusCode eq '7'",
-    //   "PurchaseOrderLifeCycleStatusCode eq '9'",
-    //   "PurchaseOrderLifeCycleStatusCode eq '10')",
-    // ].join(" or "),
+    [
+      "(PurchaseOrderDeliveryStatusCode eq '1'",
+      "PurchaseOrderDeliveryStatusCode eq '2')",
+    ].join(" or "),
   ];
 
   if (params.purchaseOrderID) {
