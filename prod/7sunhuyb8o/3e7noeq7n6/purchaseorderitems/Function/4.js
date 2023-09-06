@@ -114,6 +114,7 @@ module.exports = async (draft, context) => {
     draft.response.body = {
       params,
       po_url: odataParams.url,
+      sample: queryPurchaseOrderItems[0],
       purchaseOrderItems,
       poList,
     };
