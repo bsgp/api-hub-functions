@@ -76,6 +76,7 @@ module.exports = async (draft, context) => {
           categoryID: item.ProductCategoryInternalID,
           supplier: po.SellerParty.PartyID,
           supplierText: po.SellerParty.FormattedName, // 공급처
+          // confirmIndicatior: ,
           chargeDivision:
             (item.ChargeDivision_KUT === "103" && item.ChargeDivision_KUT) ||
             "",
