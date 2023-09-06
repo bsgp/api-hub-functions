@@ -115,7 +115,7 @@ const getPurchaseOrdersFilterParams = (params = {}, dayjs) => {
   return _filter.filter(Boolean);
 };
 
-module.exports.getPurchaseOrderParams = (params, dayjs) => {
+module.exports.getPO_ItemParams = (params, dayjs) => {
   const filter = getPurchaseOrdersFilterParams(params, dayjs);
   return {
     "sap-language": "ko",
