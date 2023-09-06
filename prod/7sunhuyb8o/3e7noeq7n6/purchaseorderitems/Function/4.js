@@ -37,11 +37,17 @@ module.exports = async (draft, context) => {
      */
 
     const purchaseOrderItems = queryPurchaseOrderItems
-      .sort(
-        (valueA, valueB) =>
-          Number(valueB.StartDateTime.replace(/^\/Date\(|\)\//g, "")) -
-          Number(valueA.StartDateTime.replace(/^\/Date\(|\)\//g, ""))
-      )
+      .sort((valueA, valueB) => {
+        if (valueB.StartDateTime === valueA.StartDateTime) {
+          if (valueB.item.PO.ID === valueA.item.PO.ID) {
+            return valueB.item.ID - valueA.item.ID;
+          } else return valueB.item.PO.ID - valueA.item.PO.ID;
+        } else
+          return (
+            Number(valueB.StartDateTime.replace(/^\/Date\(|\)\//g, "")) -
+            Number(valueA.StartDateTime.replace(/^\/Date\(|\)\//g, ""))
+          );
+      })
       .map((item, idx) => {
         const po = item.PO || {};
         const scheduleLine = tryit(
