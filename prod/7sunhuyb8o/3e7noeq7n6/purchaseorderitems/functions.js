@@ -39,7 +39,7 @@ const convDate = (dayjs, dateStr, format = "YYYY-MM-DD") => {
 
 module.exports.convDate = convDate;
 
-const getPurchaseOrdersFilterParams = (params = {}, dayjs) => {
+const getPO_ItemFilterParams = (params = {}, dayjs) => {
   if (Object.entries(params).length === 0 && params.constructor === Object) {
     throw new Error("검색 조건이 없습니다.");
   }
@@ -116,7 +116,7 @@ const getPurchaseOrdersFilterParams = (params = {}, dayjs) => {
 };
 
 module.exports.getPO_ItemParams = (params, dayjs) => {
-  const filter = getPurchaseOrdersFilterParams(params, dayjs);
+  const filter = getPO_ItemFilterParams(params, dayjs);
   return {
     "sap-language": "ko",
     $orderby: "ID desc",
