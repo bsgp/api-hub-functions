@@ -156,16 +156,45 @@ module.exports = async (draft, { request, odata }) => {
     });
     const idnResults = idnResult.d.results;
 
-    // let sumQuantity;
-    // if (!itemData.DirectMaterialIndicator) {
-    //   sumQuantity = idnResults.reduce((acc, item) => {
-    //     return acc + Number(item.Item.Quantity);
-    //   }, 0);
-    // } else {
-    //   sumQuantity = idnResults.reduce((acc, item) => {
-    //     return acc + Number(item.Item.DeliveryQuantity.Quantity);
-    //   }, 0);
-    // }
-    return idnResults;
+    //let sumQuantity;
+    if (!itemData.DirectMaterialIndicator) {
+      return idnResults.reduce(
+        (acc, curr) => {
+          const quantity = curr.Item.Quantity || 0;
+          if (curr.GSA.ReleaseStatusCode === "1") {
+            acc.delivery = Number(quantity) + acc.delivery;
+          }
+          if (curr.GSA.ReleaseStatusCode === "3") {
+            acc.delivered = Number(quantity) + acc.delivered;
+          }
+          return acc;
+        },
+        { delivery: 0, delivered: 0 }
+      );
+    } else {
+      return idnResults.reduce(
+        (acc, curr) => {
+          const idnObj = curr.InboundDelivery;
+          const rCode = idnObj.ReleaseStatusCode;
+          const dPCode = idnObj.DeliveryProcessingStatusCode;
+          const cCode = idnObj.CancellationStatusCode;
+          const qtyObj = curr.Item.DeliveryQuantity;
+          if (cCode === "1") {
+            if (rCode === "3" && ["2", "3"].includes(dPCode)) {
+              acc.delivered = Number(qtyObj.Quantity) + acc.delivered;
+            }
+            if (rCode === "3" && dPCode === "1") {
+              acc.delivery = Number(qtyObj.Quantity) + acc.delivery;
+            }
+            if (rCode === "1" && dPCode === "1") {
+              acc.delivery = Number(qtyObj.Quantity) + acc.delivery;
+            }
+          }
+          return acc;
+        },
+        { delivery: 0, delivered: 0 }
+      );
+    }
+    //return idnResults;
   }
 };
