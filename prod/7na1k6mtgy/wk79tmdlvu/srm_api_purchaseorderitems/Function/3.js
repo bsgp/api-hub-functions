@@ -150,7 +150,6 @@ module.exports = async (draft, { request, odata }) => {
         `and (ID eq '${purchaseID}')` +
         `&$format=json`;
     }
-    //const service = [url, "bsg_inbound_notify/ItemDocPOCollection"].join("/");
 
     const idnOdataURL = [service, query].join("?");
 
@@ -161,16 +160,16 @@ module.exports = async (draft, { request, odata }) => {
     });
     const idnResults = idnResult.d.results;
 
-    let sumQuantity;
-    if (!thirdPartyDealIndicator) {
-      sumQuantity = idnResults.reduce((acc, item) => {
-        return acc + Number(item.Item.DeliveryQuantity.Quantity);
-      }, 0);
-    } else {
-      sumQuantity = idnResults.reduce((acc, item) => {
-        return acc + Number(item.Item.Quantity);
-      }, 0);
-    }
-    return sumQuantity;
+    // let sumQuantity;
+    // if (!thirdPartyDealIndicator) {
+    //   sumQuantity = idnResults.reduce((acc, item) => {
+    //     return acc + Number(item.Item.DeliveryQuantity.Quantity);
+    //   }, 0);
+    // } else {
+    //   sumQuantity = idnResults.reduce((acc, item) => {
+    //     return acc + Number(item.Item.Quantity);
+    //   }, 0);
+    // }
+    return idnResults;
   }
 };
