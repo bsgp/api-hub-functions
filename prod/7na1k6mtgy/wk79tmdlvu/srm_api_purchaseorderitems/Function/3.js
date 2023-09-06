@@ -154,11 +154,11 @@ module.exports = async (draft, { request, odata }) => {
       password,
     });
     const quantityResults = quantityResult.d.results;
-    // let sum=0;
-    // const sumQuantity = quantityResults.map((item) => {
-    //   sum += Number(item.Item.DeliveryQuantity.Quantity);
-    //   return sum;
-    // });
-    return quantityResults;
+    let sum = 0;
+    const sumQuantity = quantityResults.map((item) => {
+      sum = sum + Number(item.Item.DeliveryQuantity.Quantity);
+      return sum;
+    });
+    return sumQuantity;
   }
 };
