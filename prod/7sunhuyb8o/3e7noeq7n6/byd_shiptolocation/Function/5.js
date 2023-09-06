@@ -54,6 +54,7 @@ module.exports = async (draft, { odata, file }) => {
       list.push({
         locationID: lArea.ID,
         id: lArea.ID,
+        key: lArea.ID,
         text: lArea.Name || lArea.ID,
       });
       return list;
