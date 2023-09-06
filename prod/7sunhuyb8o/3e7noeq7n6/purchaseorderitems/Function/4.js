@@ -44,8 +44,8 @@ module.exports = async (draft, context) => {
           } else return valueA.PO.ID - valueB.PO.ID;
         } else
           return (
-            Number(valueB.StartDateTime.replace(/^\/Date\(|\)\//g, "")) -
-            Number(valueA.StartDateTime.replace(/^\/Date\(|\)\//g, ""))
+            Number(valueA.StartDateTime.replace(/^\/Date\(|\)\//g, "")) -
+            Number(valueB.StartDateTime.replace(/^\/Date\(|\)\//g, ""))
           );
       })
       .map((item, idx) => {
