@@ -95,7 +95,7 @@ module.exports = async (draft, { request, odata }) => {
       currency: item.currencyCode,
       materialText: item.Description,
       orderQuantity: item.Quantity, //발주수량
-      deliveredQuantity: item.TotalDeliveredQuantity, //입고수량
+      deliveredQuantity: item, //item.TotalDeliveredQuantity, //입고수량
       idnQuantity, //납품예정수량
       // restQuantity: item.Quantity, //발주잔량
       //returnQuantity: , //반품수량
@@ -131,21 +131,17 @@ module.exports = async (draft, { request, odata }) => {
 
     const quantityOdataURL = [service, query].join("?");
 
-    try {
-      const quantityResult = await odata.get({
-        url: quantityOdataURL,
-        username,
-        password,
-      });
-      const quantityResults = quantityResult.d.results;
-      //const sumQuantity = 0;
-      //const quantity = quantityResults.map((item) => {
-      //  sumQuantity += item.Item.DeliveryQuantity.Quantity;
-      //  return sumQuantity;
-      //});
-      return quantityResults;
-    } catch (e) {
-      return e;
-    }
+    const quantityResult = await odata.get({
+      url: quantityOdataURL,
+      username,
+      password,
+    });
+    const quantityResults = quantityResult.d.results;
+    //const sumQuantity = 0;
+    //const quantity = quantityResults.map((item) => {
+    //  sumQuantity += item.Item.DeliveryQuantity.Quantity;
+    //  return sumQuantity;
+    //});
+    return quantityResults;
   }
 };
