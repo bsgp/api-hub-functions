@@ -145,3 +145,79 @@ module.exports.getPO_ItemParams = (params, dayjs) => {
     ],
   };
 };
+
+const getIDN_FilterParams = (params, dayjs) => {
+  const _filter = [
+    "ItemPurchaseOrderReference/TypeCode eq '001'",
+    "InboundDelivery/CancellationStatusCode ne '4'",
+    (() => {
+      if (params.creationDateFrom && params.creationDateTo) {
+        const conversionFn = (date) =>
+          convDate(dayjs, date, `YYYY-MM-DDTHH:mm:ss[Z]`, -9);
+        const sDateTime = conversionFn(`${params.creationDateFrom}T00:00:00Z`);
+        const eDateTime = conversionFn(`${params.creationDateTo}T23:59:59Z`);
+        return [
+          `(InboundDelivery/CreationDateTime ge datetimeoffset'${sDateTime}'`,
+          `InboundDelivery/CreationDateTime le datetimeoffset'${eDateTime}')`,
+        ].join(" and ");
+      } else return "";
+    })(),
+    (() => {
+      if (params.idnID) {
+        const filterIDs = params.idnID
+          .replace(/ /g, "")
+          .split(",")
+          .map((idnID) => `InboundDelivery/ID eq '${idnID}'`)
+          .join(" or ");
+        return `(${filterIDs})`;
+      } else return "";
+    })(),
+    (() => {
+      if (params.purchaseOrderID) {
+        const filterIDs = params.purchaseOrderID
+          .replace(/ /g, "")
+          .split(",")
+          .map(
+            (purchaseOrderID) =>
+              `ItemPurchaseOrderReference/ID eq '${purchaseOrderID}'`
+          )
+          .join(" or ");
+        return `(${filterIDs})`;
+      } else return "";
+    })(),
+    (() => {
+      if (params.supplierID) {
+        return params.supplierID
+          .replace(/ /g, "")
+          .toUpperCase()
+          .split(",")
+          .map((supplierID) => `ItemSellerParty/PartyID eq '${supplierID}'`)
+          .join(" or ");
+      } else return "";
+    })(),
+  ];
+
+  return _filter.filter(Boolean);
+};
+
+module.exports.getIDN_Params = (params, dayjs) => {
+  const filter = getIDN_FilterParams(params, dayjs);
+  return {
+    "sap-language": "ko",
+    $top: "1000",
+    $format: "json",
+    $inlinecount: "allpages",
+    $filter: `(${filter.join(") and (")})`,
+    $expand: [
+      "InboundDelivery/InboundDeliveryArrivalPeriod",
+      [
+        "InboundDelivery/InboundDeliveryShipToLocation/LocationLocation",
+        "ShipToLocationAddressSnapshot/ShipToLocationPostalAddress",
+      ].join("/"),
+      "InboundDelivery/InboundDeliveryText",
+      "ItemSellerParty/SellerPartyDisplayName",
+      "InboundDeliveryDeliveryQuantity",
+      "ItemPurchaseOrderReference",
+    ],
+  };
+};
