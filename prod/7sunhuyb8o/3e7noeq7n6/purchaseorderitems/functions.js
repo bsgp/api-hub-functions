@@ -20,6 +20,16 @@ module.exports.fetchAll = async (odata, { url, username, password }) => {
   }
 };
 
+module.exports.getChunks = (array = []) => {
+  const chunkSize = 50;
+  const chunks = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    const chunk = array.slice(i, i + chunkSize);
+    chunks.push(chunk);
+  }
+  return chunks;
+};
+
 const convDate = (dayjs, dateStr, format = "YYYY-MM-DD") => {
   if (!dateStr) {
     return "";
