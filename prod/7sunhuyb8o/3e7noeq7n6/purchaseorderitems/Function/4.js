@@ -37,6 +37,7 @@ module.exports = async (draft, context) => {
      */
 
     const purchaseOrderItems = queryPurchaseOrderItems
+      .filter((item) => item.ChargeDivision_KUT !== "103")
       .sort((valueA, valueB) => {
         if (valueB.StartDateTime === valueA.StartDateTime) {
           if (valueB.PO.ID === valueA.PO.ID) {
