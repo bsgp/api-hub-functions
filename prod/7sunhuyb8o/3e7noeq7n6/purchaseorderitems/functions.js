@@ -103,9 +103,9 @@ const getPO_ItemFilterParams = (params = {}, dayjs) => {
           -9
         )}Z')`
       : ``,
-    // params.materialID
-    // ? `(ProductID eq '${params.materialID.toUpperCase()}')`
-    // : "",
+    params.materialID
+      ? `(ProductID eq '${params.materialID.toUpperCase()}')`
+      : "",
     params.shipToLocationID
       ? [
           `(PurchaseOrderShipToItemLocation/LocationID`,
