@@ -79,7 +79,7 @@ module.exports = async (draft, { request, odata }) => {
 
   const conversion = await Promise.all(
     purchaseOrderItemResults.map(async (item, idx) => {
-      const scheduledQuantity = await getScheduledQuantity(
+      const { sum: scheduledQuantity } = await getScheduledQuantity(
         item,
         item.ProductID,
         item.PO.ID
@@ -156,34 +156,35 @@ module.exports = async (draft, { request, odata }) => {
     });
     const idnResults = idnResult.d.results;
 
-    //   if (!itemData.DirectMaterialIndicator) {
-    //     return idnResults.reduce(
-    //       (acc, curr) => {
-    //         const quantity = curr.Item.Quantity || 0;
+    //let sumQuantity;
+    if (!itemData.DirectMaterialIndicator) {
+      return idnResults.reduce(
+        (acc, curr) => {
+          const quantity = curr.Item.Quantity || 0;
 
-    //         acc.sum = Number(quantity) + acc.sum;
+          acc.sum = Number(quantity) + acc.sum;
 
-    //         return acc;
-    //       },
-    //       { sum: 0 }
-    //     );
-    //   } else {
-    //     return idnResults.reduce(
-    //       (acc, curr) => {
-    //         const idnObj = curr.InboundDelivery;
-    //         //const rCode = idnObj.ReleaseStatusCode;
-    //         //const dPCode = idnObj.DeliveryProcessingStatusCode;
-    //         const cCode = idnObj.CancellationStatusCode;
-    //         const qtyObj = curr.Item.DeliveryQuantity;
-    //         if (cCode === "1") {
-    //           acc.sum = Number(qtyObj.Quantity) + acc.sum;
-    //         }
-    //         return acc;
-    //       },
-    //       { sum: 0 }
-    //     );
-    //   }
-    // }
-    return idnResults;
+          return acc;
+        },
+        { sum: 0 }
+      );
+    } else {
+      return idnResults.reduce(
+        (acc, curr) => {
+          const idnObj = curr.InboundDelivery;
+          //const rCode = idnObj.ReleaseStatusCode;
+          //const dPCode = idnObj.DeliveryProcessingStatusCode;
+          const cCode = idnObj.CancellationStatusCode;
+          const qtyObj = curr.Item.DeliveryQuantity;
+          if (cCode === "1") {
+            acc.sum = Number(qtyObj.Quantity) + acc.sum;
+          }
+          return acc;
+        },
+        { sum: 0 }
+      );
+    }
   }
+  //return idnResults;
+  //}
 };
