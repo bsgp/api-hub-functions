@@ -141,7 +141,7 @@ module.exports = async (draft, { request, odata }) => {
     } else {
       service = [url, "bsg_inbound_notify/ItemDocPOCollection"].join("/");
       query =
-        `&$expand=Item,Item/DeliveryQuantity` +
+        `&$expand=Item,Item/DeliveryQuantity,InboundDelivery` +
         `&$filter=(Item/ProductID eq '${productID}')` +
         `and (ID eq '${purchaseID}')` +
         `&$format=json`;
