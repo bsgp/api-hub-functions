@@ -78,22 +78,23 @@ module.exports = async (draft, { request, odata }) => {
   const purchaseOrderItemResults = queryResult.d.results;
   const conversion = await Promise.all(
     purchaseOrderItemResults.map(async (item, idx) => {
-      //const idnQuantity = getIdnQuantity(item.ProductID, item.PO.ID);
-      const service = [url, "bsg_inbound_notify/ItemDocPOCollection"].join("/");
-      const query =
-        `&$expand=Item,Item/DeliveryQuantity` +
-        `&$filter=(Item/ProductID eq '${item.ProductID}')` +
-        `and (ID eq '${item.PO.ID}')` +
-        `&$format=json`;
+      const idnQuantity = getIdnQuantity(item.ProductID, item.PO.ID);
+      // const service =
+      //[url, "bsg_inbound_notify/ItemDocPOCollection"].join("/");
+      // const query =
+      //   `&$expand=Item,Item/DeliveryQuantity` +
+      //   `&$filter=(Item/ProductID eq '${item.ProductID}')` +
+      //   `and (ID eq '${item.PO.ID}')` +
+      //   `&$format=json`;
 
-      const quantityOdataURL = [service, query].join("?");
+      // const quantityOdataURL = [service, query].join("?");
 
-      const quantityResult = await odata.get({
-        url: quantityOdataURL,
-        username,
-        password,
-      });
-      const quantityResults = quantityResult.d.results;
+      // const quantityResult = await odata.get({
+      //   url: quantityOdataURL,
+      //   username,
+      //   password,
+      // });
+      // const quantityResults = quantityResult.d.results;
       return {
         ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
         confirmIndicatior: item.PO.SRM001_KUT,
@@ -112,7 +113,7 @@ module.exports = async (draft, { request, odata }) => {
         materialText: item.Description,
         orderQuantity: item.Quantity, //발주수량
         deliveredQuantity: item.TotalDeliveredQuantity, //입고수량
-        idnQuantity: quantityResults, //납품예정수량
+        idnQuantity: idnQuantity, //납품예정수량
         // restQuantity: item.Quantity, //발주잔량
         //returnQuantity: , //반품수량
         //itemDesc:  //비고
@@ -136,5 +137,28 @@ module.exports = async (draft, { request, odata }) => {
     const day = date.getDate().toString().padStart(2, "0");
     const dateString = year + "-" + month + "-" + day;
     return dateString;
+  }
+  async function getIdnQuantity(productID, purchaseID) {
+    const service = [url, "bsg_inbound_notify/ItemDocPOCollection"].join("/");
+    const query =
+      `&$expand=Item,Item/DeliveryQuantity` +
+      `&$filter=(Item/ProductID eq '${productID}')` +
+      `and (ID eq '${purchaseID}')` +
+      `&$format=json`;
+
+    const quantityOdataURL = [service, query].join("?");
+
+    const quantityResult = await odata.get({
+      url: quantityOdataURL,
+      username,
+      password,
+    });
+    const quantityResults = quantityResult.d.results;
+    let sum;
+    const sumQuantity = quantityResults.map((item) => {
+      sum += item.Item.DeliveryQuantity.Quantity;
+      return sum;
+    });
+    return sumQuantity;
   }
 };
