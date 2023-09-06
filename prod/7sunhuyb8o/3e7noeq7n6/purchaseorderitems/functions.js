@@ -30,7 +30,7 @@ module.exports.getChunks = (array = []) => {
   return chunks;
 };
 
-const convDate = (dayjs, dateStr, format = "YYYY-MM-DD", hour = 0) => {
+const convDate = (dayjs, dateStr, format = "YYYY-MM-DD", hour = 9) => {
   if (!dateStr) {
     return "";
   }
