@@ -2,8 +2,9 @@ module.exports.fetchAll = async (odata, { url, username, password }) => {
   // url에 skip이 들어가 있으면 안됨, $top이 있어도 전체 data를 받아옴
   const getData = (skip = 0) =>
     odata.get({ url: `${url}&$skip=${skip}`, username, password });
+  let fetchData;
   try {
-    const fetchData = await getData();
+    fetchData = await getData();
     if (Number(fetchData.d.__count) === fetchData.d.results.length) {
       return { result: fetchData.d.results };
     } else {
@@ -15,7 +16,7 @@ module.exports.fetchAll = async (odata, { url, username, password }) => {
       return { result: data };
     }
   } catch (error) {
-    return { errorMsg: error.message, result: [], url };
+    return { errorMsg: error.message, result: [], url, fetchData };
   }
 };
 
