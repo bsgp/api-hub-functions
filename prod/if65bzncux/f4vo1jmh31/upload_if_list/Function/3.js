@@ -59,6 +59,12 @@ module.exports = async (draft, { file }) => {
       TriggeredBy: "G_PRO",
       Path: "/rfc",
     },
+    ["IF-CO-003"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_CCTR_LIST",
+      TriggeredBy: "CONTRACT",
+      Path: "/rfc",
+    },
     ["IF-CO-004"]: {
       Type: "RFC",
       Name: "ZCO_IF_ORDER_LIST",
