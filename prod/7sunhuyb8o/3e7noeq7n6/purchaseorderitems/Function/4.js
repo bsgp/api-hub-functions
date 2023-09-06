@@ -31,10 +31,40 @@ module.exports = async (draft, { fn, dayjs, odata, user }) => {
       return acc;
     }, []);
 
+    /**
+     * conversion
+     */
+
+    const purchaseOrderItems = queryPurchaseOrderItems.map((item, idx) => {
+      return {
+        index: idx + 1,
+        ThirdPartyDealIndicator: "",
+        confirmIndicatior: "",
+        deliveryStatusText: "",
+        startDate: "",
+        shipToLocation: "",
+        purchaseOrderID: item.PO.ID,
+        poItemNumber: item.ID,
+        materialID: item.ProductID,
+        materialText: "",
+        supplierText: "",
+        unitPrice: "",
+        currency: "",
+        unitText: "",
+        supplierAmount: "",
+        orderQuantity: "",
+        idnQuantity: "",
+        restQuantity: "",
+        deliveredQuantity: "",
+        returnQuantity: "",
+        itemDesc: "",
+      };
+    });
+
     draft.response.body = {
       params,
       po_url: odataParams.url,
-      queryPurchaseOrderItems,
+      purchaseOrderItems,
       poList,
     };
   } catch (error) {
