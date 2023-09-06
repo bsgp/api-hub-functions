@@ -159,22 +159,35 @@ module.exports = async (draft, { request, odata }) => {
     const idnResults = idnResult.d.results;
 
     if (!itemData.DirectMaterialIndicator) {
+      //비재고
       return idnResults.reduce(
         (acc, curr) => {
           const quantity = curr.Item.Quantity || 0;
-          acc.sum = Number(quantity) + acc.sum;
+          if (curr.GSA.ReleaseStatusCode === "1") {
+            acc.sum = Number(quantity) + acc.sum;
+          }
+          //acc.sum = Number(quantity) + acc.sum;
           return acc;
         },
         { sum: 0 }
       );
     } else {
+      //재고
       return idnResults.reduce(
         (acc, curr) => {
           const idnObj = curr.InboundDelivery;
           const cCode = idnObj.CancellationStatusCode;
+          const rCode = idnObj.ReleaseStatusCode;
+          const dPCode = idnObj.DeliveryProcessingStatusCode;
           const qtyObj = curr.Item.DeliveryQuantity;
           if (cCode === "1") {
-            acc.sum = Number(qtyObj.Quantity) + acc.sum;
+            if (rCode === "3" && dPCode === "1") {
+              acc.sum = Number(qtyObj.Quantity) + acc.sum;
+            }
+            if (rCode === "1" && dPCode === "1") {
+              acc.sum = Number(qtyObj.Quantity) + acc.sum;
+            }
+            //acc.sum = Number(qtyObj.Quantity) + acc.sum;
           }
           return acc;
         },
