@@ -156,16 +156,16 @@ module.exports = async (draft, { request, odata }) => {
     });
     const idnResults = idnResult.d.results;
 
-    // let sumQuantity;
-    // if (!thirdPartyDealIndicator) {
-    //   sumQuantity = idnResults.reduce((acc, item) => {
-    //     return acc + Number(item.Item.DeliveryQuantity.Quantity);
-    //   }, 0);
-    // } else {
-    //   sumQuantity = idnResults.reduce((acc, item) => {
-    //     return acc + Number(item.Item.Quantity);
-    //   }, 0);
-    // }
-    return idnResults;
+    let sumQuantity;
+    if (!itemData.DirectMaterialIndicator) {
+      sumQuantity = idnResults.reduce((acc, item) => {
+        return acc + Number(item.Item.DeliveryQuantity.Quantity);
+      }, 0);
+    } else {
+      sumQuantity = idnResults.reduce((acc, item) => {
+        return acc + Number(item.Item.Quantity);
+      }, 0);
+    }
+    return sumQuantity;
   }
 };
