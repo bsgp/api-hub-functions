@@ -70,7 +70,7 @@ module.exports = async (draft, context) => {
         manufacturer: item.Manufacturer_KUT,
         processType: "",
         supplyStatusText: item.PurchaseOrderDeliveryStatusCodeText,
-        startDate: fn.convDate(dayjs, item.StartDateTime),
+        startDate: fn.convDate(dayjs, item.StartDateTime, "YYYY-MM-DDTHH:mm"),
         orderSiteID: shipTo.LocationID,
         orderSite: shipTo.Name,
         orderSiteZIP: shipToAddress.StreetPostalCode,
