@@ -1,4 +1,4 @@
-module.exports = async (draft, { fn, dayjs, odata }) => {
+module.exports = async (draft, { fn, dayjs, odata, user }) => {
   const { params } = draft.json.params;
   const { username, password } = draft.json;
   try {
@@ -12,27 +12,26 @@ module.exports = async (draft, { fn, dayjs, odata }) => {
       queryString,
     ].join("");
 
-    const queryPO_Item = await fn.fetchAll(odata, {
-      url: po_url,
-      username,
-      password,
+    const queryPO_Item = await fn
+      .fetchAll(odata, {
+        url: po_url,
+        username,
+        password,
+      })
+      .then(({ result = [] }) => result);
+    const queryPurchaseOrderItems = queryPO_Item.filter((po) => {
+      const userID = `${user.id}`;
+      return (
+        !params.isSupplier ||
+        (params.isSupplier && po.PO.SellerPartyID === userID.toUpperCase())
+      );
     });
-    //   .then(({ result = [] }) => result);
-    // const queryPurchaseOrderItems = queryPO_Item.filter((po) => {
-    //   const userID = `${user.id}`;
-    //   return (
-    //     !params.isSupplier ||
-    //     (params.isSupplier && po.PO.SellerPartyID === userID.toUpperCase())
-    //   );
-    // });
 
     draft.response.body = {
       ...draft.response.body,
       params,
       url: po_url,
-      queryPO_Item,
-      username,
-      password,
+      queryPurchaseOrderItems,
     };
   } catch (error) {
     draft.response.body = {
