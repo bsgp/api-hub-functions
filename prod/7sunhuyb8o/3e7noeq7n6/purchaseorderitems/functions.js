@@ -71,7 +71,10 @@ const getPO_ItemFilterParams = (params = {}, dayjs) => {
           return `PurchaseOrderDeliveryStatusCode eq '${ds}'`;
         }
       } else {
-        return "";
+        return [
+          "(PurchaseOrderDeliveryStatusCode eq '1'",
+          "PurchaseOrderDeliveryStatusCode eq '2')",
+        ].join(" or ");
       }
     })(),
     params.startDateFrom && params.startDateTo
@@ -103,10 +106,6 @@ const getPO_ItemFilterParams = (params = {}, dayjs) => {
     params.supplierID
       ? `(PO/SellerPartyID eq '${params.supplierID.toUpperCase()}')`
       : "",
-    [
-      "(PurchaseOrderDeliveryStatusCode eq '1'",
-      "PurchaseOrderDeliveryStatusCode eq '2')",
-    ].join(" or "),
   ];
 
   if (params.purchaseOrderID) {
