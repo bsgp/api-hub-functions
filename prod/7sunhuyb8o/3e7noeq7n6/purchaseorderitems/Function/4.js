@@ -7,9 +7,9 @@ module.exports = async (draft, { fn, dayjs, odata, user }) => {
       .map((key) => `${key}=${queryStringObj[key]}`)
       .join("&");
 
-    const collection = "/bsg_purchaseorder/ItemCollection?";
+    const poItemCollection = "/bsg_purchaseorder/ItemCollection?";
     const odataParams = {
-      url: [rootURL, collection, queryString].join(""),
+      url: [rootURL, poItemCollection, queryString].join(""),
       username,
       password,
     };
@@ -25,7 +25,6 @@ module.exports = async (draft, { fn, dayjs, odata, user }) => {
       );
     });
     draft.response.body = {
-      ...draft.response.body,
       params,
       po_url: odataParams.url,
       queryPurchaseOrderItems,
