@@ -159,11 +159,11 @@ module.exports = async (draft, { request, odata }) => {
     let sumQuantity;
     if (!itemData.DirectMaterialIndicator) {
       sumQuantity = idnResults.reduce((acc, item) => {
-        return acc + Number(item.Item.DeliveryQuantity.Quantity);
+        return acc + Number(item.Item.Quantity);
       }, 0);
     } else {
       sumQuantity = idnResults.reduce((acc, item) => {
-        return acc + Number(item.Item.Quantity);
+        return acc + Number(item.Item.DeliveryQuantity.Quantity);
       }, 0);
     }
     return sumQuantity;
