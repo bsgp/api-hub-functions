@@ -15,7 +15,7 @@ module.exports = async (draft, { sql }) => {
 
   // draft.response.body[spec.name] =
   //   result.statusCode === 200 ? "Succeed" : result.body;
-  draft.response.body[spec.name] = result.body;
+  draft.response.body[spec.name] = result;
 
   // table.boolean("deleted").notNullable().defaultTo(false);
   // table.datetime("created_at", { precision: 6 }).defaultTo(mysql.fn.now(6));
