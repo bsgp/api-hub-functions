@@ -47,15 +47,16 @@ module.exports = async (draft, context) => {
   }
 
   //commentHistory 추가
+  const newCommentHistory = {
+    menu_id: data.menu_id,
+    comment_id: data.comment_id,
+    history_id: makeid(6),
+    name: "deleted",
+    new_value: true,
+    old_value: false,
+  };
   const historyResult = await builder
-    .insert(commentsHistoryName, {
-      menu_id: data.menu_id,
-      comment_id: data.comment_id,
-      history_id: makeid(6),
-      name: "deleted",
-      new_value: true,
-      old_value: false,
-    })
+    .insert(commentsHistoryName, newCommentHistory)
     .run();
   if (historyResult.statusCode !== 200) {
     draft.response.body = {
@@ -69,6 +70,7 @@ module.exports = async (draft, context) => {
   draft.response.body = {
     E_STATUS: "S",
     E_MESSAGE: `data patch success`,
+    history: newCommentHistory,
   };
 
   return;
