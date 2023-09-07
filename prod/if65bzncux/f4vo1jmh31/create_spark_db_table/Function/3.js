@@ -1,4 +1,11 @@
 module.exports = async (draft, { file }) => {
+  const lastestTableConfig = await file.get("config/tables.json", {
+    gzip: true,
+  });
+  /**
+   * db 업데이트 시
+   * table name의 number++ && function update
+   */
   const tables = {
     change: {
       name: "change_0",
@@ -30,9 +37,9 @@ module.exports = async (draft, { file }) => {
     },
   };
 
-  const tableConfig = await file.upload("config/tables.json", tables, {
+  const newTableConfig = await file.upload("config/tables.json", tables, {
     gzip: true,
   });
   draft.json.tables = tables;
-  draft.response.body = { tableConfig };
+  draft.response.body = { lastestTableConfig, tableConfig: newTableConfig };
 };
