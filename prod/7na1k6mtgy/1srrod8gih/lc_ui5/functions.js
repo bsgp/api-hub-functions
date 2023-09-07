@@ -64,3 +64,98 @@ module.exports.getMetaByPath = async (
 
   return result;
 };
+
+module.exports.saveMeta = async (
+  body,
+  { dynamodb, tableName, binaryAttributes, zip, isFalsy, makeid }
+) => {
+  const { id, description, title, paths } = body;
+
+  const data = {
+    description,
+    title,
+    paths,
+    ...binaryAttributes.reduce((acc, key) => {
+      if (body[key] !== undefined) {
+        acc[key] = zip(JSON.stringify(body[key]));
+      }
+      return acc;
+    }, {}),
+  };
+  if (isFalsy(data.paths)) {
+    delete data.paths;
+  }
+
+  const filteredPaths = data.paths ? paths.filter((path) => path.value) : [];
+
+  if (filteredPaths.length > 0) {
+    data.paths = filteredPaths.map((path) => path.value);
+  } else {
+    delete data.paths;
+  }
+
+  let resId;
+  let result;
+  if (id) {
+    resId = id;
+
+    const metaOperations = {};
+    const metaSets = {};
+    if (data.paths) {
+      metaOperations.paths = "ADD";
+      metaSets.paths = "string";
+    }
+
+    result = await dynamodb.updateItem(
+      tableName,
+      { pkid: "meta", skid: id },
+      { ...data, id: resId },
+      {
+        operations: metaOperations,
+        sets: metaSets,
+        conditions: {
+          skid: {
+            operation: "=",
+            value: id,
+          },
+        },
+        useCustomerRole: false,
+      }
+    );
+  } else {
+    resId = makeid(10);
+
+    const metaSets = {};
+    if (data.paths) {
+      metaSets.paths = "string";
+    }
+
+    result = await dynamodb.insertItem(
+      tableName,
+      { pkid: "meta", skid: resId },
+      { ...data, id: resId },
+      {
+        sets: metaSets,
+        useCustomerRole: false,
+      }
+    );
+  }
+
+  if (filteredPaths.length > 0) {
+    await dynamodb.transaction(
+      filteredPaths.map((path) => ({
+        tableName,
+        type: "Update",
+        keys: { pkid: "path", skid: path.value },
+        values: {
+          value: path.value,
+          title: path.title,
+          metaId: resId,
+        },
+      })),
+      { useCustomerRole: false }
+    );
+  }
+
+  return result;
+};
