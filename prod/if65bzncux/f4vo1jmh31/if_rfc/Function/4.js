@@ -12,7 +12,7 @@ module.exports = async (draft, { request, rfc, clone, kst }) => {
 
   const rfcReqData = clone(request.body.Data);
   rfcReqData.IS_HEADER = {
-    IFID: request.body.Function.InterfaceId,
+    IFID: request.body.InterfaceId,
     IFTRACKINGID: crypto.randomUUID(),
     IFDATE: kst.format("YYYYMMDD"),
     IFTIME: kst.format("HHmmss"),
