@@ -1,4 +1,8 @@
 module.exports = async (draft, { sql }) => {
+  /**
+   * db 업데이트 시
+   * table name의 number++ && function#4 schema update
+   */
   /** set spec */
   const spec = draft.json.tables.sample;
 
