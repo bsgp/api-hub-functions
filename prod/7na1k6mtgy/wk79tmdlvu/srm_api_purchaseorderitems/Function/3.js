@@ -79,12 +79,13 @@ module.exports = async (draft, { request, odata }) => {
 
   const conversion = await Promise.all(
     purchaseOrderItemResults.map(async (item, idx) => {
-      const {
-        delivery: scheduledQuantity,
-        cancel: returnQuantity,
-        idnResults: idnResults,
-        cCode: cCode,
-      } = await getQuantity(item, item.ProductID, item.PO.ID);
+      const cCode = await getQuantity(item, item.ProductID, item.PO.ID);
+      // const {
+      //   delivery: scheduledQuantity,
+      //   cancel: returnQuantity,
+      //   idnResults: idnResults,
+      // } = await getQuantity(item, item.ProductID, item.PO.ID);
+
       // const scheduledQuantity = await getQuantity(
       //   item,
       //   item.ProductID,
@@ -110,14 +111,12 @@ module.exports = async (draft, { request, odata }) => {
         materialText: item.Description,
         orderQuantity: item.Quantity, //발주수량
         deliveredQuantity: item.TotalDeliveredQuantity, //입고수량
-        idnQuantity: scheduledQuantity, //납품예정수량
-        restQuantity:
-          //item.Quantity - item.TotalDeliveredQuantity - scheduledQuantity,
-          item.Quantity - item.TotalDeliveredQuantity - scheduledQuantity,
-        returnQuantity: returnQuantity, //반품수량
+        idnQuantity: cCode, //scheduledQuantity, //납품예정수량
+        //restQuantity:
+        //  item.Quantity - item.TotalDeliveredQuantity - scheduledQuantity,
+        //returnQuantity: returnQuantity, //반품수량
         //itemDesc:  //비고
-        idnResults,
-        cCode: cCode,
+        //idnResults,
       };
     })
   );
@@ -205,12 +204,13 @@ module.exports = async (draft, { request, odata }) => {
         },
         { delivery: 0, cancel: 0 }
       );
+      return quantityResult;
     }
-    return {
-      delivery: quantityResult.delivery,
-      cancel: quantityResult.cancel,
-      idnResults: idnResults,
-    };
+    // return {
+    //   delivery: quantityResult.delivery,
+    //   cancel: quantityResult.cancel,
+    //   idnResults: idnResults,
+    // };
   }
   //   return idnResults;
   // }
