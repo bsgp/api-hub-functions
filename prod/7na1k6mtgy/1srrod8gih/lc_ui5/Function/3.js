@@ -63,6 +63,12 @@ module.exports = async (
         }
       }
       break;
+    case "PUT":
+      {
+        const { copyMetaToDev } = request.body;
+        await fn.doCopyMetaToDev(copyMetaToDev);
+      }
+      break;
     default:
       break;
   }
