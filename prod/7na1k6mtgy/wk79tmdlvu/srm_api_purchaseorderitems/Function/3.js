@@ -79,8 +79,13 @@ module.exports = async (draft, { request, odata }) => {
 
   const conversion = await Promise.all(
     purchaseOrderItemResults.map(async (item, idx) => {
-      const { delivery: scheduledQuantity, cancel: returnQuantity } =
-        await getScheduledQuantity(item, item.ProductID, item.PO.ID);
+      // const { delivery: scheduledQuantity, cancel: returnQuantity } =
+      //   await getQuantity(item, item.ProductID, item.PO.ID);
+      const scheduledQuantity = await getQuantity(
+        item,
+        item.ProductID,
+        item.PO.ID
+      );
 
       return {
         ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
@@ -103,7 +108,7 @@ module.exports = async (draft, { request, odata }) => {
         idnQuantity: scheduledQuantity, //납품예정수량
         restQuantity:
           item.Quantity - item.TotalDeliveredQuantity - scheduledQuantity,
-        returnQuantity: returnQuantity, //반품수량
+        //returnQuantity: returnQuantity, //반품수량
         //itemDesc:  //비고
       };
     })
@@ -127,7 +132,7 @@ module.exports = async (draft, { request, odata }) => {
     return dateString;
   }
 
-  async function getScheduledQuantity(itemData, productID, purchaseID) {
+  async function getQuantity(itemData, productID, purchaseID) {
     let service, query;
 
     if (!itemData.DirectMaterialIndicator) {
@@ -155,42 +160,42 @@ module.exports = async (draft, { request, odata }) => {
     });
     const idnResults = idnResult.d.results;
 
-    if (!itemData.DirectMaterialIndicator) {
-      //비재고
-      return idnResults.reduce(
-        (acc, curr) => {
-          const quantity = curr.Item.Quantity || 0;
-          if (curr.GSA.ReleaseStatusCode === "1") {
-            acc.delivery += Number(quantity);
-          }
-          if (curr.GSA.CancellationStatusCode !== "1") {
-            acc.cancel += Number(quantity);
-          }
-          return acc;
-        },
-        { delivery: 0, cancel: 0 }
-      );
-    } else {
-      //재고
-      return idnResults.reduce(
-        (acc, curr) => {
-          const idnObj = curr.InboundDelivery;
-          const cCode = idnObj.CancellationStatusCode;
-          const dPCode = idnObj.DeliveryProcessingStatusCode;
-          const qtyObj = curr.Item.DeliveryQuantity;
-          if (cCode === "1") {
-            if (dPCode === "1") {
-              acc.delivery += Number(qtyObj.Quantity);
-            }
-          } else {
-            acc.cancel += Number(qtyObj.Quantity);
-          }
-          return acc;
-        },
-        { delivery: 0, cancel: 0 }
-      );
-    }
+    //   if (!itemData.DirectMaterialIndicator) {
+    //     //비재고
+    //     return idnResults.reduce(
+    //       (acc, curr) => {
+    //         const quantity = curr.Item.Quantity || 0;
+    //         if (curr.GSA.ReleaseStatusCode === "1") {
+    //           acc.delivery += Number(quantity);
+    //         }
+    //         if (curr.GSA.CancellationStatusCode !== "1") {
+    //           acc.cancel += Number(quantity);
+    //         }
+    //         return acc;
+    //       },
+    //       { delivery: 0, cancel: 0 }
+    //     );
+    //   } else {
+    //     //재고
+    //     return idnResults.reduce(
+    //       (acc, curr) => {
+    //         const idnObj = curr.InboundDelivery;
+    //         const cCode = idnObj.CancellationStatusCode;
+    //         const dPCode = idnObj.DeliveryProcessingStatusCode;
+    //         const qtyObj = curr.Item.DeliveryQuantity;
+    //         if (cCode === "1") {
+    //           if (dPCode === "1") {
+    //             acc.delivery += Number(qtyObj.Quantity);
+    //           }
+    //         } else {
+    //           acc.cancel += Number(qtyObj.Quantity);
+    //         }
+    //         return acc;
+    //       },
+    //       { delivery: 0, cancel: 0 }
+    //     );
+    //   }
+    // }
+    return idnResults;
   }
-  //   return idnResults;
-  // }
 };
