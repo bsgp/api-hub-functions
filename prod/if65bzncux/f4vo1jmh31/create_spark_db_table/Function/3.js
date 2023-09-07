@@ -7,11 +7,11 @@ module.exports = async (draft, { file }) => {
    */
   const tables = {
     change: {
-      name: "change_0",
+      name: "change_999",
       desc: "Spark DB change history table",
     },
     contract: {
-      name: "contract_0",
+      name: "contract_999",
       desc: "Contract info DB table",
     },
     ref_doc: {
