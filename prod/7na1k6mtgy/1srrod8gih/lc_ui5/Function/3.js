@@ -65,8 +65,12 @@ module.exports = async (
       break;
     case "PUT":
       {
-        const { copyMetaToDev } = request.body;
-        await fn.doCopyMetaToDev(copyMetaToDev);
+        const { copyMetaToDev, updatePath } = request.body;
+        if (copyMetaToDev) {
+          await fn.doCopyMetaToDev(copyMetaToDev);
+        } else if (updatePath) {
+          await fn.doUpdatePath(updatePath, { dynamodb, tableName });
+        }
       }
       break;
     default:
