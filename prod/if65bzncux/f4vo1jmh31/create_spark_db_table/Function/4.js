@@ -18,6 +18,7 @@ module.exports = async (draft, { fn, sql, makeid }) => {
         .run();
       draft.response.body[spec.name] =
         result.statusCode === 200 ? "Succeed" : result.body;
+      return true;
     })
   );
 };
