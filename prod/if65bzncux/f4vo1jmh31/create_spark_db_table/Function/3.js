@@ -8,7 +8,7 @@ module.exports = async (draft, { file }) => {
   const lastestTableConfig = (configFile && JSON.parse(configFile)) || {};
   /**
    * db 업데이트 시
-   * table name의 number++ && function update
+   * table name의 number++ && function#4 schema update
    */
   const tables = {
     change: {
