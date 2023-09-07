@@ -9,6 +9,10 @@ module.exports = async (draft, { fn, sql, makeid }) => {
   await Promise.all(
     Object.keys(changed).map(async (tableKey) => {
       const spec = changed[tableKey];
+      if (!fn[tableKey]) {
+        draft.response.body[spec.name] = "schema not exist";
+        return false;
+      }
       const result = await mysql.table
         .create(spec.name, fn[tableKey]({ mysql, makeid }))
         .run();
