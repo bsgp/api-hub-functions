@@ -79,7 +79,7 @@ module.exports = async (draft, { request, odata }) => {
 
   const conversion = await Promise.all(
     purchaseOrderItemResults.map(async (item, idx) => {
-      const cCode = await getQuantity(item, item.ProductID, item.PO.ID);
+      const { cCode } = await getQuantity(item, item.ProductID, item.PO.ID);
       // const {
       //   delivery: scheduledQuantity,
       //   cancel: returnQuantity,
@@ -205,7 +205,7 @@ module.exports = async (draft, { request, odata }) => {
         },
         { delivery: 0, cancel: 0, code: "" }
       );
-      return quantityResult;
+      return quantityResult.code;
     }
     // return {
     //   delivery: quantityResult.delivery,
