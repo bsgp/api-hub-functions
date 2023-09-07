@@ -12,31 +12,31 @@ module.exports = async (draft, { file }) => {
    */
   const tables = {
     change: {
-      name: "change_1",
+      name: "change_2",
       desc: "Spark DB change history table",
     },
     contract: {
-      name: "contract_1",
+      name: "contract_2",
       desc: "Contract info DB table",
     },
     ref_doc: {
-      name: "ref_doc_1",
+      name: "ref_doc_2",
       desc: "Reference document(MM,FI) info DB table",
     },
     cost_object: {
-      name: "cost_object_1",
+      name: "cost_object_2",
       desc: "WBS, CostCenter info DB table",
     },
     bill: {
-      name: "bill_1",
+      name: "bill_2",
       desc: "bill reson text DB",
     },
     party: {
-      name: "party_1",
+      name: "party_2",
       desc: "Party(supplier, customer) info DB",
     },
     letter_appr: {
-      name: "letter_appr_1",
+      name: "letter_appr_2",
       desc: "groupware letter approval info DB",
     },
   };
