@@ -4,17 +4,18 @@
  */
 /** TABLE: change */
 module.exports.change =
-  ({ mysql }) =>
+  ({ mysql, makeid }) =>
   (table) => {
     table.charset("utf8mb4");
 
-    table.string("type", 10).notNullable();
-    table.string("row_key", 20).notNullable();
-    table.string("id", 5).notNullable();
+    table.string("type", 10).notNullable(); // Master, Contract, Project, Bill..
+    table.string("row_key", 20).notNullable(); // 행의 키필드.join("#")
+    table.string("id", 5).defaultTo(makeid(5)); // makeid()
 
-    table.string("changed_by", 30).defaultTo("");
+    table.string("changed_by", 30).defaultTo(""); // 변경자
     table.datetime("changed_at", { precision: 6 }).defaultTo(mysql.fn.now(6));
-    table.json("content");
+    // 변경일시
+    table.json("content"); // json 타입
 
     table.primary(["type", "row_key", "id"]);
   };
