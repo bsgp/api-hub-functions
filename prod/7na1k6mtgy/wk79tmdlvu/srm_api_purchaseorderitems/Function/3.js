@@ -79,7 +79,11 @@ module.exports = async (draft, { request, odata }) => {
 
   const conversion = await Promise.all(
     purchaseOrderItemResults.map(async (item, idx) => {
-      const { cCode } = await getQuantity(item, item.ProductID, item.PO.ID);
+      const { cCode: cCode } = await getQuantity(
+        item,
+        item.ProductID,
+        item.PO.ID
+      );
       // const {
       //   delivery: scheduledQuantity,
       //   cancel: returnQuantity,
@@ -201,11 +205,11 @@ module.exports = async (draft, { request, odata }) => {
           //   acc.cancel += Number(qtyObj.Quantity);
           // }
           acc.code = [acc.code, cCode].join("&");
-          return acc.code;
+          return acc;
         },
         { delivery: 0, cancel: 0, code: "" }
       );
-      return quantityResult.code;
+      return { cCode: quantityResult.code };
     }
     // return {
     //   delivery: quantityResult.delivery,
