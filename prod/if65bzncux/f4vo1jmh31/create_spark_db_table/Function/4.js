@@ -1,28 +1,17 @@
-module.exports = async (draft, { sql }) => {
+module.exports = async (draft, { fn, sql }) => {
   /**
    * db 업데이트 시
-   * function#3 table name의 number++ && function#4 schema update
+   * function#3 table name의 number++ && functions schema update
    */
-  /** set spec */
-  const spec = draft.json.tables.sample;
-
   const mysql = sql("mysql", { useCustomRole: false });
-  const result = await mysql.table
-    .create(spec.name, function (table) {
-      table.charset("utf8mb4");
-      table.string("id").notNullable();
-      table.string("text").defaultTo("");
+  const changed = draft.json.changed;
 
-      table.primary(["id"]);
+  await Promise.all(
+    Object.keys(changed).map(async (tableKey) => {
+      const spec = changed[tableKey];
+      const result = await mysql.table.create(spec.name, fn[tableKey]).run();
+      draft.response.body[spec.name] =
+        result.statusCode === 200 ? "Succeed" : result.body;
     })
-    .run();
-
-  draft.response.body[spec.name] =
-    result.statusCode === 200 ? "Succeed" : result.body;
-
-  // table.boolean("deleted").notNullable().defaultTo(false);
-  // table.datetime("created_at", { precision: 6 }).defaultTo(mysql.fn.now(6));
-  // table.datetime("updated_at", { precision: 6 }).defaultTo(mysql.fn.now(6));
-  // table.string("created_by").defaultTo("");
-  // table.string("updated_by").defaultTo("");
+  );
 };
