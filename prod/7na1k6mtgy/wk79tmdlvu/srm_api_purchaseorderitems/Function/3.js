@@ -181,12 +181,12 @@ module.exports = async (draft, { request, odata }) => {
           const dPCode = idnObj.DeliveryProcessingStatusCode;
           const qtyObj = curr.Item.DeliveryQuantity;
           const ptCode = idnObj.ProcessingTypeCode;
-          if (cCode === "1") {
+          if (cCode === "1" && ptCode !== "CRD") {
             // if (rCode === "3" && dPCode === "1") {
             //   acc.sum = Number(qtyObj.Quantity) + acc.sum;
             // }
             //if (rCode === "1" && dPCode === "1") {
-            if (dPCode === "1" && ptCode !== "CRD") {
+            if (dPCode === "1") {
               acc.sum = Number(qtyObj.Quantity) + acc.sum;
             }
             //acc.sum = Number(qtyObj.Quantity) + acc.sum;
