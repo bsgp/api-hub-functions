@@ -32,7 +32,7 @@ module.exports.contract = () => (table) => {
   table.string("curr_key", 5).defaultTo("");
   table.decimal("dmbtr", 23, 2).defaultTo(0);
   table.decimal("dmbtr_local", 23, 2).defaultTo(0);
-  table.string("dmbtr_local", 5).defaultTo("");
+  table.string("curr_local", 5).defaultTo("");
   table.string("status", 3).defaultTo("");
 
   table.primary(["id"]);
