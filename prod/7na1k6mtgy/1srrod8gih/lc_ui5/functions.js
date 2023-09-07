@@ -175,7 +175,10 @@ module.exports.getAllMeta = async ({ dynamodb, tableName }) => {
   return results;
 };
 
-module.exports.updatePath = async (data, { dynamodb, tableName, isFalsy }) => {
+module.exports.doUpdatePath = async (
+  data,
+  { dynamodb, tableName, isFalsy }
+) => {
   const { id, path, oldPath } = data;
   const optionalData = ["title"].reduce((acc, key) => {
     if (data[key] !== undefined) {
