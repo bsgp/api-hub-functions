@@ -82,7 +82,7 @@ module.exports = async (draft, { request, odata }) => {
       const {
         delivery: scheduledQuantity,
         cancel: returnQuantity,
-        idnResult: idnResult,
+        idnResults: idnResults,
       } = await getQuantity(item, item.ProductID, item.PO.ID);
       // const scheduledQuantity = await getQuantity(
       //   item,
@@ -113,7 +113,7 @@ module.exports = async (draft, { request, odata }) => {
           item.Quantity - item.TotalDeliveredQuantity - scheduledQuantity,
         returnQuantity: returnQuantity, //반품수량
         //itemDesc:  //비고
-        idnResult,
+        idnResults,
       };
     })
   );
@@ -210,7 +210,7 @@ module.exports = async (draft, { request, odata }) => {
     return {
       delivery: quantityResult.delivery,
       cancel: quantityResult.cancel,
-      idnResults,
+      idnResults: idnResults,
     };
   }
   //   return idnResults;
