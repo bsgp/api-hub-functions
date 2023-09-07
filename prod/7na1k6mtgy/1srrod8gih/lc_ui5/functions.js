@@ -1,6 +1,8 @@
+const binaryAttributes = ["forms", "functions", "tables", "headers", "dialogs"];
+
 const getMetaById = async (
   id,
-  { dynamodb, tableName, binaryAttributes, unzip, includePaths = true }
+  { dynamodb, tableName, unzip, includePaths = true }
 ) => {
   const result = await dynamodb.getItem(
     tableName,
@@ -41,7 +43,7 @@ module.exports.getMetaById = getMetaById;
 
 module.exports.getMetaByPath = async (
   path,
-  { dynamodb, tableName, paths, binaryAttributes, unzip }
+  { dynamodb, tableName, paths, unzip }
 ) => {
   const resultPath = await dynamodb.getItem(
     tableName,
@@ -67,7 +69,7 @@ module.exports.getMetaByPath = async (
 
 module.exports.saveMeta = async (
   body,
-  { dynamodb, tableName, binaryAttributes, zip, isFalsy, makeid }
+  { dynamodb, tableName, zip, isFalsy, makeid }
 ) => {
   const { id, description, title, paths } = body;
 
