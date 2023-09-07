@@ -186,11 +186,10 @@ module.exports = async (draft, { request, odata }) => {
       );
     } else {
       //재고
-      let cCode = "";
       quantityResult = idnResults.reduce(
         (acc, curr) => {
           const idnObj = curr.InboundDelivery;
-          cCode = idnObj.CancellationStatusCode;
+          const cCode = idnObj.CancellationStatusCode;
           const dPCode = idnObj.DeliveryProcessingStatusCode;
           const qtyObj = curr.Item.DeliveryQuantity;
           if (cCode === "1") {
@@ -202,9 +201,9 @@ module.exports = async (draft, { request, odata }) => {
           } else {
             acc.cancel += Number(qtyObj.Quantity);
           }
-          return acc;
+          return cCode;
         },
-        { delivery: 0, cancel: 0, cCode: cCode }
+        { delivery: 0, cancel: 0 }
       );
     }
     return {
