@@ -99,16 +99,16 @@ module.exports.party =
   ({ makeid }) =>
   (table) => {
     table.charset("utf8mb4");
-    //
+
     table.string("contract_id", 10).notNullable();
     table.string("id", 5).defaultTo(makeid(5));
-    //
+
     table.string("stems10_cn", 1).defaultTo("");
     table.string("stems10_ko", 1).defaultTo("");
     table.string("name", 100).defaultTo("");
     table.string("id", 36).defaultTo("");
     table.string("type", 5).defaultTo("");
-    //
+
     table.primary(["contract_id", "id"]);
   };
 
@@ -117,10 +117,9 @@ module.exports.letter_appr =
   ({ makeid }) =>
   (table) => {
     table.charset("utf8mb4");
-    //
+
     table.string("contract_id", 10).notNullable();
     table.string("id", 5).defaultTo(makeid(5));
-    //
-    //
+
     table.primary(["contract_id", "id"]);
   };
