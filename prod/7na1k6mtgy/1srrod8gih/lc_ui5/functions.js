@@ -324,7 +324,7 @@ module.exports.doUpdatePath = async (
       await dynamodb.updateItem(
         tableName,
         { pkid: "meta", skid: id },
-        { paths: [path] },
+        { paths: [oldPath] },
         {
           operations: {
             paths: "-",
