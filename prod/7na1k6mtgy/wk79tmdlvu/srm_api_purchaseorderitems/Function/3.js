@@ -83,12 +83,15 @@ module.exports = async (draft, { request, odata }) => {
         delivery: scheduledQuantity,
         cancel: returnQuantity,
         idnResults: idnResults,
+        cCode: cCode,
+        dPCode: dPCode,
       } = await getQuantity(item, item.ProductID, item.PO.ID);
       // const scheduledQuantity = await getQuantity(
       //   item,
       //   item.ProductID,
       //   item.PO.ID
       // );
+      //let restQuantity; //item.Quantity - item.TotalDeliveredQuantity
 
       return {
         ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
@@ -110,10 +113,13 @@ module.exports = async (draft, { request, odata }) => {
         deliveredQuantity: item.TotalDeliveredQuantity, //입고수량
         idnQuantity: scheduledQuantity, //납품예정수량
         restQuantity:
+          //item.Quantity - item.TotalDeliveredQuantity - scheduledQuantity,
           item.Quantity - item.TotalDeliveredQuantity - scheduledQuantity,
         returnQuantity: returnQuantity, //반품수량
         //itemDesc:  //비고
         idnResults,
+        cCode,
+        dPCode,
       };
     })
   );
@@ -182,21 +188,17 @@ module.exports = async (draft, { request, odata }) => {
       );
     } else {
       //재고
+      let cCode = "";
       quantityResult = idnResults.reduce(
         (acc, curr) => {
           const idnObj = curr.InboundDelivery;
-          const cCode = idnObj.CancellationStatusCode;
-          const rCode = idnObj.ReleaseStatusCode;
+          cCode = idnObj.CancellationStatusCode;
           const dPCode = idnObj.DeliveryProcessingStatusCode;
           const qtyObj = curr.Item.DeliveryQuantity;
           if (cCode === "1") {
-            // if (dPCode === "1") {
-            //   acc.delivery += Number(qtyObj.Quantity);
-            // }
-            if (rCode === "3" && dPCode === "1") {
-              acc.delivery += Number(qtyObj.Quantity);
-            }
-            if (rCode === "1" && dPCode === "1") {
+            //Not Canceled
+            if (dPCode === "1") {
+              //Not started
               acc.delivery += Number(qtyObj.Quantity);
             }
           } else {
@@ -204,7 +206,7 @@ module.exports = async (draft, { request, odata }) => {
           }
           return acc;
         },
-        { delivery: 0, cancel: 0 }
+        { delivery: 0, cancel: 0, cCode: cCode }
       );
     }
     return {
