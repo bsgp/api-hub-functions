@@ -79,11 +79,8 @@ module.exports = async (draft, { request, odata }) => {
 
   const conversion = await Promise.all(
     purchaseOrderItemResults.map(async (item, idx) => {
-      const scheduledQuantity = await getScheduledQuantity(
-        item,
-        item.ProductID,
-        item.PO.ID
-      );
+      const { delivery: scheduledQuantity, cancel: returnQuantity } =
+        await getScheduledQuantity(item, item.ProductID, item.PO.ID);
 
       return {
         ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
@@ -106,7 +103,7 @@ module.exports = async (draft, { request, odata }) => {
         idnQuantity: scheduledQuantity, //납품예정수량
         restQuantity:
           item.Quantity - item.TotalDeliveredQuantity - scheduledQuantity,
-        //returnQuantity: , //반품수량
+        returnQuantity: returnQuantity, //반품수량
         //itemDesc:  //비고
       };
     })
@@ -160,35 +157,38 @@ module.exports = async (draft, { request, odata }) => {
 
     if (!itemData.DirectMaterialIndicator) {
       //비재고
-      return idnResults.reduce((acc, curr) => {
-        const quantity = curr.Item.Quantity || 0;
-        if (curr.GSA.ReleaseStatusCode === "1") {
-          acc += Number(quantity);
-        }
-        //acc.sum = Number(quantity) + acc.sum;
-        return acc;
-      }, 0);
+      return idnResults.reduce(
+        (acc, curr) => {
+          const quantity = curr.Item.Quantity || 0;
+          if (curr.GSA.ReleaseStatusCode === "1") {
+            acc.delivery += Number(quantity);
+          }
+          if (curr.GSA.CancellationStatusCode !== "1") {
+            acc.cancel += Number(quantity);
+          }
+          return acc;
+        },
+        { delivery: 0, cancel: 0 }
+      );
     } else {
       //재고
-      return idnResults.reduce((acc, curr) => {
-        const idnObj = curr.InboundDelivery;
-        const cCode = idnObj.CancellationStatusCode;
-        //const rCode = idnObj.ReleaseStatusCode;
-        const dPCode = idnObj.DeliveryProcessingStatusCode;
-        const qtyObj = curr.Item.DeliveryQuantity;
-        const ptCode = idnObj.ProcessingTypeCode;
-        if (cCode === "1" && ptCode !== "CRD") {
-          // if (rCode === "3" && dPCode === "1") {
-          //   acc.sum = Number(qtyObj.Quantity) + acc.sum;
-          // }
-          //if (rCode === "1" && dPCode === "1") {
-          if (dPCode === "1") {
-            acc += Number(qtyObj.Quantity);
+      return idnResults.reduce(
+        (acc, curr) => {
+          const idnObj = curr.InboundDelivery;
+          const cCode = idnObj.CancellationStatusCode;
+          const dPCode = idnObj.DeliveryProcessingStatusCode;
+          const qtyObj = curr.Item.DeliveryQuantity;
+          if (cCode === "1") {
+            if (dPCode === "1") {
+              acc.delivery += Number(qtyObj.Quantity);
+            }
+          } else {
+            acc.cancel += Number(qtyObj.Quantity);
           }
-          //acc.sum = Number(qtyObj.Quantity) + acc.sum;
-        }
-        return acc;
-      }, 0);
+          return acc;
+        },
+        { delivery: 0, cancel: 0 }
+      );
     }
   }
   //   return idnResults;
