@@ -45,19 +45,7 @@ module.exports = async (
       {
         const { id, paths, path: uriPath } = request.body;
         if (id === "*") {
-          // const results = await dynamodb.query(
-          //   tableName,
-          //   { pkid: "path" },
-          //   {},
-          //   { useCustomerRole: false }
-          // );
-
-          const results = await dynamodb.query(
-            tableName,
-            { pkid: "meta" },
-            {},
-            { useCustomerRole: false }
-          );
+          const results = await fn.getAllMeta({ dynamodb, tableName });
 
           draft.response.body = {
             count: results.length,
