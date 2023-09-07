@@ -69,7 +69,11 @@ module.exports = async (
         if (copyMetaToDev) {
           await fn.doCopyMetaToDev(copyMetaToDev);
         } else if (updatePath) {
-          await fn.doUpdatePath(updatePath, { dynamodb, tableName });
+          const result = await fn.doUpdatePath(updatePath, {
+            dynamodb,
+            tableName,
+          });
+          draft.response.body = result;
         }
       }
       break;
