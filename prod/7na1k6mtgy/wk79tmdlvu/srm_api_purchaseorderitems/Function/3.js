@@ -84,7 +84,6 @@ module.exports = async (draft, { request, odata }) => {
         cancel: returnQuantity,
         idnResults: idnResults,
         cCode: cCode,
-        dPCode: dPCode,
       } = await getQuantity(item, item.ProductID, item.PO.ID);
       // const scheduledQuantity = await getQuantity(
       //   item,
@@ -118,8 +117,7 @@ module.exports = async (draft, { request, odata }) => {
         returnQuantity: returnQuantity, //반품수량
         //itemDesc:  //비고
         idnResults,
-        cCode,
-        dPCode,
+        cCode: cCode,
       };
     })
   );
