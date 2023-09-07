@@ -2,7 +2,8 @@ module.exports = async (
   draft,
   { request, dynamodb, zip, unzip, makeid, isFalsy, fn }
 ) => {
-  const tableName = ["lc_ui5", request.stage].join("_");
+  const tablePrefix = "lc_ui5";
+  const tableName = [tablePrefix, request.stage].join("_");
 
   switch (request.method) {
     case "POST":
