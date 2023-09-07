@@ -184,7 +184,8 @@ module.exports = async (draft, { request, odata }) => {
             if (rCode === "3" && dPCode === "1") {
               acc.sum = Number(qtyObj.Quantity) + acc.sum;
             }
-            if (rCode === "1" && dPCode === "1") {
+            //if (rCode === "1" && dPCode === "1") {
+            if (rCode === "1") {
               acc.sum = Number(qtyObj.Quantity) + acc.sum;
             }
             //acc.sum = Number(qtyObj.Quantity) + acc.sum;
