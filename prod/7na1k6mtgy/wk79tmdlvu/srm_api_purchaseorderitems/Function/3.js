@@ -79,7 +79,7 @@ module.exports = async (draft, { request, odata }) => {
 
   const conversion = await Promise.all(
     purchaseOrderItemResults.map(async (item, idx) => {
-      const { cCode: cCode } = await getQuantity(
+      const { dPCode: dPCode } = await getQuantity(
         item,
         item.ProductID,
         item.PO.ID
@@ -115,7 +115,7 @@ module.exports = async (draft, { request, odata }) => {
         materialText: item.Description,
         orderQuantity: item.Quantity, //발주수량
         deliveredQuantity: item.TotalDeliveredQuantity, //입고수량
-        idnQuantity: cCode, //scheduledQuantity, //납품예정수량
+        idnQuantity: dPCode, //scheduledQuantity, //납품예정수량
         //restQuantity:
         //  item.Quantity - item.TotalDeliveredQuantity - scheduledQuantity,
         //returnQuantity: returnQuantity, //반품수량
@@ -192,8 +192,8 @@ module.exports = async (draft, { request, odata }) => {
       quantityResult = idnResults.reduce(
         (acc, curr) => {
           const idnObj = curr.InboundDelivery;
-          const cCode = idnObj.CancellationStatusCode;
-          //const dPCode = idnObj.DeliveryProcessingStatusCode;
+          //const cCode = idnObj.CancellationStatusCode;
+          const dPCode = idnObj.DeliveryProcessingStatusCode;
           //const qtyObj = curr.Item.DeliveryQuantity;
           // if (cCode === "1") {
           //   //Not Canceled
@@ -204,12 +204,12 @@ module.exports = async (draft, { request, odata }) => {
           // } else {
           //   acc.cancel += Number(qtyObj.Quantity);
           // }
-          acc.code = [acc.code, cCode].join("&");
+          acc.code = [acc.code, dPCode].join("&");
           return acc;
         },
         { delivery: 0, cancel: 0, code: "" }
       );
-      return { cCode: quantityResult.code };
+      return { dPCode: quantityResult.code };
     }
     // return {
     //   delivery: quantityResult.delivery,
