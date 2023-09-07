@@ -1,8 +1,6 @@
 module.exports = async (draft, { file }) => {
-  const lastestTableConfigFile = await file.get("config/tables.json", {
-    gziped: true,
-  });
-  const lastestTableConfig = JSON.parse(lastestTableConfigFile);
+  const configFile = await file.get("config/tables.json", { gziped: true });
+  const lastestTableConfig = JSON.parse(configFile);
   /**
    * db 업데이트 시
    * table name의 number++ && function update
