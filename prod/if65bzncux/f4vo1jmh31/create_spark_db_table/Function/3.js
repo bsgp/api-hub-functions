@@ -1,6 +1,11 @@
 module.exports = async (draft, { file }) => {
-  const configFile = await file.get("config/tables1.json", { gziped: true });
-  const lastestTableConfig = JSON.parse(configFile);
+  let configFile;
+  try {
+    configFile = await file.get("config/tables1.json", { gziped: true });
+  } catch (err) {
+    draft.response.body = { configFileMessage: "new Config file created" };
+  }
+  const lastestTableConfig = (configFile && JSON.parse(configFile)) || {};
   draft.response.body = { lastestTableConfig };
 };
 // module.exports = async (draft, { file }) => {
