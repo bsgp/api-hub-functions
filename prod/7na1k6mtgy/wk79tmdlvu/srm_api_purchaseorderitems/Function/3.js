@@ -180,12 +180,13 @@ module.exports = async (draft, { request, odata }) => {
           //const rCode = idnObj.ReleaseStatusCode;
           const dPCode = idnObj.DeliveryProcessingStatusCode;
           const qtyObj = curr.Item.DeliveryQuantity;
+          const ptCode = idnObj.ProcessingTypeCode;
           if (cCode === "1") {
             // if (rCode === "3" && dPCode === "1") {
             //   acc.sum = Number(qtyObj.Quantity) + acc.sum;
             // }
             //if (rCode === "1" && dPCode === "1") {
-            if (dPCode === "1") {
+            if (dPCode === "1" && ptCode !== "CRD") {
               acc.sum = Number(qtyObj.Quantity) + acc.sum;
             }
             //acc.sum = Number(qtyObj.Quantity) + acc.sum;
