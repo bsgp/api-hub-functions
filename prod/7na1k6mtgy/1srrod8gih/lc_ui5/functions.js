@@ -290,7 +290,12 @@ module.exports.updatePath = async (data, { dynamodb, tableName, isFalsy }) => {
       }
     }
 
-    const newDataPath = { ...dataOldPath, metaId: id, path, ...optionalData };
+    const newDataPath = {
+      ...dataOldPath,
+      metaId: id,
+      value: path,
+      ...optionalData,
+    };
 
     const result = await dynamodb.insertItem(
       tableName,
@@ -300,6 +305,37 @@ module.exports.updatePath = async (data, { dynamodb, tableName, isFalsy }) => {
         useCustomerRole: false,
       }
     );
+
+    await dynamodb.updateItem(
+      tableName,
+      { pkid: "meta", skid: id },
+      { paths: [path] },
+      {
+        operations: {
+          paths: "+",
+        },
+        sets: {
+          paths: "string",
+        },
+        useCustomerRole: false,
+      }
+    );
+    if (dataOldPath) {
+      await dynamodb.updateItem(
+        tableName,
+        { pkid: "meta", skid: id },
+        { paths: [path] },
+        {
+          operations: {
+            paths: "-",
+          },
+          sets: {
+            paths: "string",
+          },
+          useCustomerRole: false,
+        }
+      );
+    }
     return result;
   }
 };
