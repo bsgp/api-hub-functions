@@ -71,12 +71,12 @@ module.exports.saveMeta = async (
   body,
   { dynamodb, tableName, zip, isFalsy, makeid }
 ) => {
-  const { id, description, title, paths } = body;
+  const { id, description, title } = body;
 
   const data = {
     description,
     title,
-    paths,
+    paths: [],
     ...binaryAttributes.reduce((acc, key) => {
       if (body[key] !== undefined) {
         acc[key] = zip(JSON.stringify(body[key]));
@@ -88,7 +88,9 @@ module.exports.saveMeta = async (
     delete data.paths;
   }
 
-  const filteredPaths = data.paths ? paths.filter((path) => path.value) : [];
+  const filteredPaths = data.paths
+    ? data.paths.filter((path) => path.value)
+    : [];
 
   if (filteredPaths.length > 0) {
     data.paths = filteredPaths.map((path) => path.value);
