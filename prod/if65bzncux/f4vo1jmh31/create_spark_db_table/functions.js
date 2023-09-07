@@ -1,5 +1,4 @@
-/**
- */
+/** TABLE: change */
 module.exports.change =
   ({ mysql }) =>
   (table) => {
@@ -16,8 +15,7 @@ module.exports.change =
     table.primary(["type", "row_key", "id"]);
   };
 
-/**
- */
+/** TABLE: contract */
 module.exports.contract = () => (table) => {
   table.charset("utf8mb4");
 
@@ -40,8 +38,7 @@ module.exports.contract = () => (table) => {
   table.primary(["id"]);
 };
 
-/**
- */
+/** TABLE: ref_doc */
 module.exports.ref_doc =
   ({ makeid }) =>
   (table) => {
@@ -57,8 +54,7 @@ module.exports.ref_doc =
     table.primary(["contract_id", "id"]);
   };
 
-/**
- */
+/** TABLE: cost_object */
 module.exports.cost_object =
   ({ makeid }) =>
   (table) => {
@@ -79,8 +75,7 @@ module.exports.cost_object =
     table.primary(["contract_id", "id"]);
   };
 
-/**
- */
+/** TABLE: bill */
 module.exports.bill =
   ({ makeid }) =>
   (table) => {
@@ -99,8 +94,7 @@ module.exports.bill =
     table.primary(["contract_id", "id"]);
   };
 
-/**
- */
+/** TABLE: party */
 module.exports.party =
   ({ makeid }) =>
   (table) => {
@@ -118,8 +112,7 @@ module.exports.party =
     table.primary(["contract_id", "id"]);
   };
 
-/**
- */
+/** TABLE: letter_appr */
 module.exports.letter_appr =
   ({ makeid }) =>
   (table) => {
