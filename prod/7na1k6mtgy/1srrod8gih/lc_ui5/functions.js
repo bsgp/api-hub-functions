@@ -18,6 +18,7 @@ const getMetaById = async (
         result.paths.map((path) => ({ pkid: "path", skid: path })),
         { useCustomerRole: false }
       );
+      paths = paths.map((path) => ({ ...path, oldPath: path.value }));
     }
   }
 
@@ -41,10 +42,7 @@ const getMetaById = async (
 };
 module.exports.getMetaById = getMetaById;
 
-module.exports.getMetaByPath = async (
-  path,
-  { dynamodb, tableName, paths, unzip }
-) => {
+module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
   const resultPath = await dynamodb.getItem(
     tableName,
     { pkid: "path", skid: path },
@@ -58,7 +56,6 @@ module.exports.getMetaByPath = async (
   const result = await getMetaById(resultPath.metaId, {
     dynamodb,
     tableName,
-    paths,
     binaryAttributes,
     unzip,
     includePaths: false,
