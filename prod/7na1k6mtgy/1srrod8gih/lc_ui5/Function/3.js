@@ -2,7 +2,6 @@ module.exports = async (
   draft,
   { request, dynamodb, zip, unzip, makeid, isFalsy, fn }
 ) => {
-  const { id, paths, path: uriPath } = request.body;
   const tableName = ["lc_ui5", request.stage].join("_");
   const binaryAttributes = [
     "forms",
@@ -44,6 +43,7 @@ module.exports = async (
       break;
     case "GET":
       {
+        const { id, paths, path: uriPath } = request.body;
         if (id === "*") {
           // const results = await dynamodb.query(
           //   tableName,
