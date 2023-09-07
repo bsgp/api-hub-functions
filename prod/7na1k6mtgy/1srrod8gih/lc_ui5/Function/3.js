@@ -3,13 +3,6 @@ module.exports = async (
   { request, dynamodb, zip, unzip, makeid, isFalsy, fn }
 ) => {
   const tableName = ["lc_ui5", request.stage].join("_");
-  const binaryAttributes = [
-    "forms",
-    "functions",
-    "tables",
-    "headers",
-    "dialogs",
-  ];
 
   switch (request.method) {
     case "POST":
@@ -25,7 +18,6 @@ module.exports = async (
         const saveResult = await fn.saveMeta(request.body, {
           dynamodb,
           tableName,
-          binaryAttributes,
           zip,
           isFalsy,
           makeid,
@@ -34,7 +26,6 @@ module.exports = async (
         const result = await fn.getMetaById(saveResult.id, {
           dynamodb,
           tableName,
-          binaryAttributes,
           unzip,
         });
 
@@ -55,7 +46,6 @@ module.exports = async (
           const result = await fn.getMetaById(id, {
             dynamodb,
             tableName,
-            binaryAttributes,
             unzip,
           });
           draft.response.body = result;
@@ -64,7 +54,6 @@ module.exports = async (
             dynamodb,
             tableName,
             paths,
-            binaryAttributes,
             unzip,
           });
           draft.response.body = result;
