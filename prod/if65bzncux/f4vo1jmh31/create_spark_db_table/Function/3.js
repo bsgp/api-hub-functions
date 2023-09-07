@@ -39,6 +39,16 @@ module.exports = async (draft, { file }) => {
   const newTableConfig = await file.upload("config/tables.json", tables, {
     gzip: true,
   });
+
+  const changed = Object.keys(tables).reduce((acc, curr) => {
+    if (
+      !lastestTableConfig[curr] ||
+      tables[curr].name !== lastestTableConfig[curr].name
+    ) {
+      acc[curr] = tables[curr];
+    }
+    return acc;
+  }, {});
   draft.json.tables = tables;
-  draft.response.body = { lastestTableConfig, tableConfig: newTableConfig };
+  draft.response.body = { tableConfig: newTableConfig, changed };
 };
