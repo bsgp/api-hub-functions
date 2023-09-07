@@ -159,3 +159,14 @@ module.exports.saveMeta = async (
 
   return result;
 };
+
+module.exports.getAllMeta = async ({ dynamodb, tableName }) => {
+  const results = await dynamodb.query(
+    tableName,
+    { pkid: "meta" },
+    {},
+    { useCustomerRole: false }
+  );
+
+  return results;
+};
