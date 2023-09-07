@@ -25,7 +25,12 @@ module.exports = async (draft, { request, rfc, clone, kst }) => {
     { version: "750" }
   );
 
-  if (result.body.result === undefined) {
+  if (result.body.errorMessage && result.body.key === "RFC_INVALID_PARAMETER") {
+    draft.response.body = {
+      E_STATUS: "E",
+      E_MESSAGE: `${result.body.key}: ${result.body.errorMessage}`,
+    };
+  } else if (result.body.result === undefined) {
     if (result.statusCode) {
       draft.response = result;
     } else {
