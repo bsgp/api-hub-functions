@@ -106,7 +106,7 @@ module.exports.party =
     table.string("stems10_cn", 1).defaultTo("");
     table.string("stems10_ko", 1).defaultTo("");
     table.string("name", 100).defaultTo("");
-    table.string("id", 36).defaultTo("");
+    table.string("ref_id", 36).defaultTo("");
     table.string("type", 5).defaultTo("");
 
     table.primary(["contract_id", "id"]);
