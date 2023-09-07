@@ -9,7 +9,9 @@ module.exports = async (draft, { fn, sql }) => {
   await Promise.all(
     Object.keys(changed).map(async (tableKey) => {
       const spec = changed[tableKey];
-      const result = await mysql.table.create(spec.name, fn[tableKey]).run();
+      const result = await mysql.table
+        .create(spec.name, fn[tableKey](mysql))
+        .run();
       draft.response.body[spec.name] =
         result.statusCode === 200 ? "Succeed" : result.body;
     })
