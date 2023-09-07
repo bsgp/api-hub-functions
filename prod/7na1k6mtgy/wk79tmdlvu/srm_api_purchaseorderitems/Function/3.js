@@ -189,20 +189,21 @@ module.exports = async (draft, { request, odata }) => {
         (acc, curr) => {
           const idnObj = curr.InboundDelivery;
           const cCode = idnObj.CancellationStatusCode;
-          const dPCode = idnObj.DeliveryProcessingStatusCode;
-          const qtyObj = curr.Item.DeliveryQuantity;
-          if (cCode === "1") {
-            //Not Canceled
-            if (dPCode === "1") {
-              //Not started
-              acc.delivery += Number(qtyObj.Quantity);
-            }
-          } else {
-            acc.cancel += Number(qtyObj.Quantity);
-          }
-          return cCode;
+          //const dPCode = idnObj.DeliveryProcessingStatusCode;
+          //const qtyObj = curr.Item.DeliveryQuantity;
+          // if (cCode === "1") {
+          //   //Not Canceled
+          //   if (dPCode === "1") {
+          //     //Not started
+          //     acc.delivery += Number(qtyObj.Quantity);
+          //   }
+          // } else {
+          //   acc.cancel += Number(qtyObj.Quantity);
+          // }
+          acc.code = [acc.code, cCode].join("&");
+          return acc.code;
         },
-        { delivery: 0, cancel: 0 }
+        { delivery: 0, cancel: 0, code: "" }
       );
       return quantityResult;
     }
