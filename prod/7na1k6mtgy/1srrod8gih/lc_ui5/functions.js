@@ -172,3 +172,132 @@ module.exports.getAllMeta = async ({ dynamodb, tableName }) => {
 
   return results;
 };
+
+module.exports.updatePath = async (data, { dynamodb, tableName, isFalsy }) => {
+  const { id, path, oldPath } = data;
+  const optionalData = ["title"].reduce((acc, key) => {
+    if (data[key] !== undefined) {
+      acc[key] = data[key];
+    }
+    return acc;
+  }, {});
+
+  if (!id) {
+    throw new Error("id is required");
+  }
+
+  if (!path) {
+    throw new Error("path is required");
+  }
+
+  // get path from db;
+  // if path exists:
+  //   if (!path.metaId):
+  //     return errorMessage =
+  //       {path} exists but not relative with any meta,
+  //       remove db record since it is invalid db record;
+  //   else:
+  //     if(path.metaId === id):
+  //       if(oldPath && path !== oldPath):
+  //         throw error = {path} already exists in this meta;
+  //       else:
+  //         update db set title;
+  //     else:
+  //       return errorMessage =
+  //         {path} is relative with meta {metaId}
+  // else:
+  //   if(oldPath):
+  //     get oldPath from db;
+  //   insert {...oldPath, metaId: id, path, title}
+
+  const resultPath = await dynamodb.getItem(
+    tableName,
+    { pkid: "path", skid: path },
+    { useCustomerRole: false }
+  );
+
+  if (resultPath) {
+    if (!resultPath.metaId) {
+      throw new Error(
+        [
+          path,
+          "exists but not related to any meta,",
+          "remove from db since this is invalid db record",
+        ].join(" ")
+      );
+    } else {
+      if (resultPath.metaId === id) {
+        if (oldPath && path !== oldPath) {
+          throw new Error([path, "already exists in this meta"].join(" "));
+        } else {
+          if (isFalsy(optionalData)) {
+            throw new Error("Nothing to do with payload");
+          } else {
+            const result = await dynamodb.updateItem(
+              tableName,
+              { pkid: "path", skid: path },
+              optionalData,
+              {
+                conditions: {
+                  metaId: {
+                    operation: "=",
+                    value: id,
+                  },
+                },
+                useCustomerRole: false,
+              }
+            );
+            return result;
+          }
+        }
+      } else {
+        throw new Error(
+          [path, "is relative with meta", resultPath.metaId].join(" ")
+        );
+      }
+    }
+  } else {
+    let dataOldPath;
+    if (oldPath) {
+      dataOldPath = await dynamodb.getItem(
+        tableName,
+        { pkid: "path", skid: oldPath },
+        { useCustomerRole: false }
+      );
+      if (dataOldPath) {
+        if (dataOldPath.metaId && dataOldPath.metaId !== id) {
+          throw new Error(
+            [
+              "Can not replace",
+              oldPath,
+              "which exists in other meta",
+              dataOldPath.metaId,
+              "with",
+              path,
+            ].join(" ")
+          );
+        }
+
+        await dynamodb.deleteItem(
+          tableName,
+          { pkid: "path", skid: oldPath },
+          { useCustomerRole: false }
+        );
+      } else {
+        throw new Error(["Old path", oldPath, "does not exist"].join(" "));
+      }
+    }
+
+    const newDataPath = { ...dataOldPath, metaId: id, path, ...optionalData };
+
+    const result = await dynamodb.insertItem(
+      tableName,
+      { pkid: "path", skid: path },
+      newDataPath,
+      {
+        useCustomerRole: false,
+      }
+    );
+    return result;
+  }
+};
