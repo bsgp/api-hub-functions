@@ -67,6 +67,7 @@ module.exports = async (draft, context) => {
     return;
   }
 
+  console.log("historyResult", historyResult);
   draft.response.body = {
     E_STATUS: "S",
     E_MESSAGE: `data patch success`,
