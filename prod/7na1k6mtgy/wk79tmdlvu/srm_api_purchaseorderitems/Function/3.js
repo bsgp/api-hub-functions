@@ -76,9 +76,11 @@ module.exports = async (draft, { request, odata }) => {
   });
 
   const purchaseOrderItemResults = queryResult.d.results;
+  let isFirstOccurrence;
 
   const filterItem = purchaseOrderItemResults.map((item, idx, arr) => {
-    const isFirstOccurrence = arr.findIndex((v) => v.ObjectID) === idx;
+    isFirstOccurrence =
+      arr.findIndex((item) => item.ObjectID === item.ObjectID) === idx;
     if (isFirstOccurrence) {
       return item;
     } else {
@@ -129,6 +131,7 @@ module.exports = async (draft, { request, odata }) => {
         returnQuantity: returnQuantity, //반품수량
         //itemDesc:  //비고
         idnResults,
+        isFirstOccurrence,
       };
     })
   );
