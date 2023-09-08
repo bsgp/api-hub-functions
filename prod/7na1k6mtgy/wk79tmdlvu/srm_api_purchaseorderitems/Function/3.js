@@ -79,12 +79,12 @@ module.exports = async (draft, { request, odata }) => {
 
   const conversion = await Promise.all(
     purchaseOrderItemResults.map(async (item, idx) => {
-      // const {
-      //   delivery: scheduledQuantity,
-      //   cancel: returnQuantity,
-      //   idnResults: idn,
-      // } = await getQuantity(item, idx + 1);
-      const idn = await getQuantity(item);
+      const {
+        delivery: scheduledQuantity,
+        cancel: returnQuantity,
+        idnResults: idn,
+      } = await getQuantity(item);
+      //const idn = await getQuantity(item);
 
       return {
         ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
@@ -104,15 +104,14 @@ module.exports = async (draft, { request, odata }) => {
         materialText: item.Description,
         orderQuantity: item.Quantity, //발주수량
         deliveredQuantity: item.TotalDeliveredQuantity, //입고수량
-        //idnQuantity: scheduledQuantity, //납품예정수량
-        // restQuantity:
-        //   Math.round(
-        //     (item.Quantity - item.TotalDeliveredQuantity - scheduledQuantity)
-        //*
-        //       1000
-        //   ) / 1000,
+        idnQuantity: scheduledQuantity, //납품예정수량
+        restQuantity:
+          Math.round(
+            (item.Quantity - item.TotalDeliveredQuantity - scheduledQuantity) *
+              1000
+          ) / 1000,
 
-        //returnQuantity: returnQuantity, //반품수량
+        returnQuantity: returnQuantity, //반품수량
         //itemDesc:  //비고
         idn,
       };
@@ -136,7 +135,6 @@ module.exports = async (draft, { request, odata }) => {
   }
 
   async function getQuantity(itemData) {
-    //  async function getQuantity(itemData, index) {
     let service, expand;
     if (!itemData.DirectMaterialIndicator) {
       //비자재
@@ -163,51 +161,51 @@ module.exports = async (draft, { request, odata }) => {
     });
     const idnResults = idnResult.d.results;
 
-    //   let quantityResult;
+    let quantityResult;
 
-    //   if (!itemData.DirectMaterialIndicator) {
-    //     //비자재
-    //     quantityResult = idnResults.reduce(
-    //       (acc, curr) => {
-    //         const quantity = curr.Item.Quantity || 0;
-    //         if (curr.GSA.ReleaseStatusCode === "1") {
-    //           acc.delivery += Number(quantity);
-    //         }
-    //         // if (curr.GSA.CancellationStatusCode !== "1") {
-    //         //   acc.cancel += Number(quantity);
-    //         // }
-    //         return acc;
-    //       },
-    //       { delivery: 0, cancel: 0 }
-    //     );
-    //   } else {
-    //     //자재
-    //     quantityResult = idnResults.reduce(
-    //       (acc, curr) => {
-    //         const idnObj = curr.InboundDelivery;
-    //         const cCode = idnObj.CancellationStatusCode;
-    //         const dPCode = idnObj.DeliveryProcessingStatusCode;
-    //         const qtyObj = curr.Item.DeliveryQuantity;
-    //         if (cCode === "1") {
-    //           //Not Canceled
-    //           if (dPCode === "1") {
-    //             //Not started
-    //             acc.delivery += Number(qtyObj.Quantity);
-    //           }
-    //         } else {
-    //           acc.cancel += Number(qtyObj.Quantity);
-    //         }
-    //         return acc;
-    //       },
-    //       { delivery: 0, cancel: 0 }
-    //     );
-    //   }
-    //   return {
-    //     delivery: quantityResult.delivery,
-    //     cancel: quantityResult.cancel,
-    //     idnResults: idnResults,
-    //   };
-    // }
-    return idnResults;
+    if (!itemData.DirectMaterialIndicator) {
+      //비자재
+      quantityResult = idnResults.reduce(
+        (acc, curr) => {
+          const quantity = curr.Item.Quantity || 0;
+          if (curr.GSA.ReleaseStatusCode === "1") {
+            acc.delivery += Number(quantity);
+          }
+          // if (curr.GSA.CancellationStatusCode !== "1") {
+          //   acc.cancel += Number(quantity);
+          // }
+          return acc;
+        },
+        { delivery: 0, cancel: 0 }
+      );
+    } else {
+      //자재
+      quantityResult = idnResults.reduce(
+        (acc, curr) => {
+          const idnObj = curr.InboundDelivery;
+          const cCode = idnObj.CancellationStatusCode;
+          const dPCode = idnObj.DeliveryProcessingStatusCode;
+          const qtyObj = curr.Item.DeliveryQuantity;
+          if (cCode === "1") {
+            //Not Canceled
+            if (dPCode === "1") {
+              //Not started
+              acc.delivery += Number(qtyObj.Quantity);
+            }
+          } else {
+            acc.cancel += Number(qtyObj.Quantity);
+          }
+          return acc;
+        },
+        { delivery: 0, cancel: 0 }
+      );
+    }
+    return {
+      delivery: quantityResult.delivery,
+      cancel: quantityResult.cancel,
+      idnResults: idnResults,
+    };
   }
+  //   return idnResults;
+  // }
 };
