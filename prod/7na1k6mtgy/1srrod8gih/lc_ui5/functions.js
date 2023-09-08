@@ -64,7 +64,7 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
   return result;
 };
 
-module.exports.saveMeta = async (
+const saveMeta = async (
   body,
   { dynamodb, tableName, zip, isFalsy, makeid }
 ) => {
@@ -160,6 +160,7 @@ module.exports.saveMeta = async (
 
   return result;
 };
+module.exports.saveMeta = saveMeta;
 
 module.exports.getAllMeta = async ({ dynamodb, tableName }) => {
   const results = await dynamodb.query(
@@ -172,10 +173,7 @@ module.exports.getAllMeta = async ({ dynamodb, tableName }) => {
   return results;
 };
 
-module.exports.doUpdatePath = async (
-  data,
-  { dynamodb, tableName, isFalsy }
-) => {
+const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
   const { id, path, oldPath } = data;
   const optionalData = ["title"].reduce((acc, key) => {
     if (data[key] !== undefined) {
@@ -338,4 +336,38 @@ module.exports.doUpdatePath = async (
     }
     return result;
   }
+};
+module.exports.doUpdatePath = doUpdatePath;
+
+module.exports.doCopyMetaToDev = async (
+  copyMetaToDev,
+  { dynamodb, tableName, devTableName, unzip, zip, isFalsy, makeid }
+) => {
+  const { id } = copyMetaToDev;
+  const metaData = await getMetaById(id, { dynamodb, tableName, unzip });
+
+  await saveMeta(metaData, {
+    dynamodb,
+    tableName: devTableName,
+    zip,
+    isFalsy,
+    makeid,
+  });
+
+  if (isFalsy(metaData.paths)) {
+    // pass
+  } else {
+    for (let idx = 0; idx < metaData.paths.length; idx += 1) {
+      const path = metaData.paths[idx];
+
+      await doUpdatePath(
+        { id: path.metaId, path: path.value, ...path },
+        { dynamodb, tableName: devTableName, isFalsy }
+      );
+    }
+  }
+
+  return {
+    message: "복사 완료",
+  };
 };
