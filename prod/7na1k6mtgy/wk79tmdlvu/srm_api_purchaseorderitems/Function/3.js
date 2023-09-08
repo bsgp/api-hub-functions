@@ -166,6 +166,7 @@ module.exports = async (draft, { request, odata }) => {
         `&$expand=Item,Item/DeliveryQuantity,InboundDelivery` +
         `&$filter=(Item/ProductID eq '${productID}')` +
         `and (ID eq '${purchaseID}')` +
+        `and (ItemID eq '${index}')` +
         `&$format=json`;
     }
 
