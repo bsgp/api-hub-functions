@@ -164,7 +164,9 @@ module.exports = async (draft, { request, odata }) => {
       username,
       password,
     });
-    const idnResults = idnResult.d.results;
+    const idnResults = idnResult.d.results.filter(
+      (item, idx) => idnResult.d.results.indexOf(item.ObjectID) === idx
+    );
     let quantityResult;
 
     if (!itemData.DirectMaterialIndicator) {
