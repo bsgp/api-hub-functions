@@ -85,9 +85,10 @@ module.exports = async (draft, { request, odata }) => {
         idnResults: idn,
       } = await getQuantity(item);
 
-      const note = item.PurchaseOrderItemText.reduce((acc, val) => {
-        acc = acc + val.Text;
-      }, "");
+      const note = item.PurchaseOrderItemText.reduce(
+        (acc, val) => acc + val.Text,
+        ""
+      );
 
       return {
         ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
