@@ -79,7 +79,7 @@ module.exports = async (draft, { request, odata }) => {
 
   const filterItem = purchaseOrderItemResults.map((item, idx) => {
     if (purchaseOrderItemResults.inndexOf(item.ObjectID) !== idx) {
-      item[idx] = {};
+      //item[idx] = {};
     }
   });
 
