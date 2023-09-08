@@ -125,8 +125,9 @@ module.exports = async (draft, { request, odata }) => {
         orderQuantity: item.Quantity, //발주수량
         deliveredQuantity: item.TotalDeliveredQuantity, //입고수량
         idnQuantity: scheduledQuantity, //납품예정수량
-        restQuantity:
-          item.Quantity - item.TotalDeliveredQuantity - scheduledQuantity,
+        restQuantity: Math.round(
+          item.Quantity - item.TotalDeliveredQuantity - scheduledQuantity
+        ),
         returnQuantity: returnQuantity, //반품수량
         //itemDesc:  //비고
         idnResults,
