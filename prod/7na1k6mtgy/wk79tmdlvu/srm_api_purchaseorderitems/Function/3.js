@@ -84,7 +84,10 @@ module.exports = async (draft, { request, odata }) => {
         cancel: returnQuantity,
         idnResults: idn,
       } = await getQuantity(item);
-      //const idn = await getQuantity(item);
+
+      const note = item.PurchaseOrderItemText.Text.reduce((acc, val) => {
+        acc = acc + val;
+      }, "");
 
       return {
         ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
@@ -112,7 +115,7 @@ module.exports = async (draft, { request, odata }) => {
           ) / 1000,
 
         returnQuantity: returnQuantity, //반품수량
-        itemDesc: item.PurchaseOrderItemText.Text, //비고
+        itemDesc: note, //비고
         idn,
       };
     })
