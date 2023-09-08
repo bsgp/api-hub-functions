@@ -85,9 +85,13 @@ module.exports = async (draft, { request, odata }) => {
         idnResults: idn,
       } = await getQuantity(item);
 
-      const note = item.PurchaseOrderItemText.reduce(
-        (acc, val) => [acc, val.Text].join(" "),
-        ""
+      // const note = item.PurchaseOrderItemText.reduce(
+      //   (acc, val, textIdx) => `${textIdx} : ${val} ` + acc,
+      //   ""
+      // );
+
+      const note = item.PurchaseOrderItemText.map(
+        (val, textIdx) => `${textIdx} : ${val}`
       );
 
       return {
