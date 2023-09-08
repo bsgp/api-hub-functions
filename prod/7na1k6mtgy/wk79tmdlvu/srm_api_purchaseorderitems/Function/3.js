@@ -78,6 +78,7 @@ module.exports = async (draft, { request, odata }) => {
   const purchaseOrderItemResults = queryResult.d.results;
 
   let isFirstOccurrence;
+  //중복 item 제거
   const filterItem = purchaseOrderItemResults.map((item, idx, arr) => {
     isFirstOccurrence =
       arr.findIndex((v) => v.ProductID === item.ProductID) === idx;
@@ -97,14 +98,9 @@ module.exports = async (draft, { request, odata }) => {
       } = await getQuantity(
         filterItem[idx],
         filterItem[idx].ProductID,
-        filterItem[idx].PO.ID
+        filterItem[idx].PO.ID,
+        idx + 1
       );
-      // const scheduledQuantity = await getQuantity(
-      //   item,
-      //   item.ProductID,
-      //   item.PO.ID
-      // );
-      //let restQuantity; //item.Quantity - item.TotalDeliveredQuantity
 
       return {
         ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
@@ -153,7 +149,7 @@ module.exports = async (draft, { request, odata }) => {
     return dateString;
   }
 
-  async function getQuantity(itemData, productID, purchaseID) {
+  async function getQuantity(itemData, productID, purchaseID, index) {
     let service, query;
 
     if (!itemData.DirectMaterialIndicator) {
@@ -162,6 +158,7 @@ module.exports = async (draft, { request, odata }) => {
         `&$expand=Item` +
         `&$filter=(Item/ProductID eq '${productID}')` +
         `and (ID eq '${purchaseID}')` +
+        `and (ItemID eq '${index}')` +
         `&$format=json`;
     } else {
       service = [url, "bsg_inbound_notify/ItemDocPOCollection"].join("/");
