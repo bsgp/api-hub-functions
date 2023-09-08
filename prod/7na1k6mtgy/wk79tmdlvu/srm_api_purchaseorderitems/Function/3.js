@@ -154,30 +154,27 @@ module.exports = async (draft, { request, odata }) => {
   }
 
   async function getQuantity(itemData, productID, purchaseID, index) {
-    let service, query;
-
+    let service, expand;
     if (!itemData.DirectMaterialIndicator) {
+      //비재고
       service = [url, "bsg_gsa/PurchaseOrderItemReferenceCollection"].join("/");
-      query =
-        `&$expand=Item` +
-        `&$filter=(Item/ProductID eq '${productID}')` +
-        `and (ID eq '${purchaseID}')` +
-        `and (ItemID eq '${index}')` +
-        `&$format=json`;
+      expand = "Item";
     } else {
+      //재고
       service = [url, "bsg_inbound_notify/ItemDocPOCollection"].join("/");
-      query =
-        `&$expand=Item,Item/DeliveryQuantity,InboundDelivery` +
-        `&$filter=(Item/ProductID eq '${productID}')` +
-        `and (ID eq '${purchaseID}')` +
-        `and (ItemID eq '${index}')` +
-        `&$format=json`;
+      expand = "Item,Item/DeliveryQuantity,InboundDelivery";
     }
+    const query =
+      `&$expand=${expand}` +
+      `&$filter=(Item/ProductID eq '${productID}')` +
+      `and (ID eq '${purchaseID}')` +
+      `and (ItemID eq '${index}')` +
+      `&$format=json`;
 
-    const idnOdataURL = [service, query].join("?");
+    const quaOdataURL = [service, query].join("?");
 
     const idnResult = await odata.get({
-      url: idnOdataURL,
+      url: quaOdataURL,
       username,
       password,
     });
