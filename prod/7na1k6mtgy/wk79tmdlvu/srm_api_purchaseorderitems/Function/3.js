@@ -91,7 +91,7 @@ module.exports = async (draft, { request, odata }) => {
       // );
 
       const note = item.PurchaseOrderItemText.map(
-        (val, textIdx) => `${textIdx} : ${val}`
+        (val, textIdx) => `${textIdx + 1} : ${val.Text}`
       );
 
       return {
