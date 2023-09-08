@@ -77,30 +77,34 @@ module.exports = async (draft, { request, odata }) => {
 
   const purchaseOrderItemResults = queryResult.d.results;
 
-  let isFirstOccurrence;
-  //중복 item 제거
-  const filterItem = purchaseOrderItemResults.map((item, idx, arr) => {
-    isFirstOccurrence =
-      arr.findIndex((v) => v.ProductID === item.ProductID) === idx;
-    if (isFirstOccurrence) {
-      return item;
-    } else {
-      return { ProductID: null, PO: { ID: null } };
-    }
-  });
+  // let isFirstOccurrence;
+  // const filterItem = purchaseOrderItemResults.map((item, idx, arr) => {
+  //   isFirstOccurrence =
+  //     arr.findIndex((v) => v.ProductID === item.ProductID) === idx;
+  //   if (isFirstOccurrence) {
+  //     return item;
+  //   } else {
+  //     return { ProductID: null, PO: { ID: null } };
+  //   }
+  // });
 
   const conversion = await Promise.all(
     purchaseOrderItemResults.map(async (item, idx) => {
+      // const {
+      //   delivery: scheduledQuantity,
+      //   cancel: returnQuantity,
+      //   idnResults: idnResults,
+      // } = await getQuantity(
+      //   filterItem[idx],
+      //   filterItem[idx].ProductID,
+      //   filterItem[idx].PO.ID,
+      //   idx + 1
+      // );
       const {
         delivery: scheduledQuantity,
         cancel: returnQuantity,
         idnResults: idnResults,
-      } = await getQuantity(
-        filterItem[idx],
-        filterItem[idx].ProductID,
-        filterItem[idx].PO.ID,
-        idx + 1
-      );
+      } = await getQuantity(item, item.ProductID, item.PO.ID, idx + 1);
 
       return {
         ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
