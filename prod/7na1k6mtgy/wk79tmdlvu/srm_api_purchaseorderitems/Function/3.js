@@ -14,7 +14,7 @@ module.exports = async (draft, { request, odata }) => {
     shipToLocationID,
   } = request.body;
 
-  const expand = ["PO", "PO/SellerParty"].join(",");
+  const expand = ["PO", "PO/SellerParty,PurchaseOrderItemText"].join(",");
 
   const filter = [];
 
@@ -112,7 +112,7 @@ module.exports = async (draft, { request, odata }) => {
           ) / 1000,
 
         returnQuantity: returnQuantity, //반품수량
-        //itemDesc:  //비고
+        itemDesc: item.PurchaseOrderItemText.Text, //비고
         idn,
       };
     })
