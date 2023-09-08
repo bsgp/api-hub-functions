@@ -84,9 +84,8 @@ module.exports = async (draft, { request, odata }) => {
     //   return {};
     // }
     const { ObjectID } = item;
-
     const isFirstOccurrence =
-      arr.findIndex((v) => v.ObjectID === ObjectID) === idx;
+      arr.findIndex((item) => item.ObjectID === ObjectID) === idx;
 
     if (isFirstOccurrence) {
       return item;
