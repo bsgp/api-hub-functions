@@ -72,6 +72,10 @@ module.exports = async (
             dynamodb,
             tableName,
             devTableName,
+            unzip,
+            zip,
+            isFalsy,
+            makeid,
           });
         } else if (updatePath) {
           const result = await fn.doUpdatePath(updatePath, {
