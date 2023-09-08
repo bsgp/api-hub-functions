@@ -80,7 +80,7 @@ module.exports = async (draft, { request, odata }) => {
   let isFirstOccurrence;
   const filterItem = purchaseOrderItemResults.map((item, idx, arr) => {
     isFirstOccurrence =
-      arr.findIndex((v) => v.ObjectID === item.ObjectID) === idx;
+      arr.findIndex((v) => v.ProductID === item.ProductID) === idx;
     if (isFirstOccurrence) {
       return item;
     } else {
