@@ -76,11 +76,11 @@ module.exports = async (draft, { request, odata }) => {
   });
 
   const purchaseOrderItemResults = queryResult.d.results;
+
   const filterItem = purchaseOrderItemResults.map((item, idx) => {
-    if (purchaseOrderItemResults.inndexOf(item.ObjectID) === idx) {
+    if (purchaseOrderItemResults.inndexOf(item.ObjectID) !== idx) {
       item[idx] = {};
     }
-    return item;
   });
 
   const conversion = await Promise.all(
