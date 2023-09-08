@@ -151,7 +151,7 @@ module.exports = async (draft, { request, odata }) => {
       `&$expand=${expand}` +
       `&$filter=(Item/ProductID eq '${itemData.ProductID}')` +
       `and(ID eq '${itemData.PO.ID}')` +
-      //`and(ItemID eq '${index}')` +
+      `and(ItemID eq '${itemData.ID}')` +
       `&$format=json`;
 
     const quaOdataURL = [service, query].join("?");
