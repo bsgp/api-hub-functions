@@ -84,7 +84,7 @@ module.exports = async (draft, { request, odata }) => {
       //   cancel: returnQuantity,
       //   idnResults: idn,
       // } = await getQuantity(item, idx + 1);
-      const idn = await getQuantity(item, idx + 1);
+      const idn = await getQuantity(item);
 
       return {
         ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
