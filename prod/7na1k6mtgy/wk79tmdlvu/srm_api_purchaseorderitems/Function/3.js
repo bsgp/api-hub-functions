@@ -82,7 +82,7 @@ module.exports = async (draft, { request, odata }) => {
       const {
         delivery: scheduledQuantity,
         cancel: returnQuantity,
-        idnResults: idnResults,
+        idnResults: idn,
       } = await getQuantity(item, idx + 1);
 
       return {
@@ -112,7 +112,7 @@ module.exports = async (draft, { request, odata }) => {
 
         returnQuantity: returnQuantity, //반품수량
         //itemDesc:  //비고
-        idnResults,
+        idn,
       };
     })
   );
