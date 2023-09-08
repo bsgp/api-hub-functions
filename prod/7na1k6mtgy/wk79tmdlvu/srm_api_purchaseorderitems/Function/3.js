@@ -126,7 +126,6 @@ module.exports = async (draft, { request, odata }) => {
         deliveredQuantity: item.TotalDeliveredQuantity, //입고수량
         idnQuantity: scheduledQuantity, //납품예정수량
         restQuantity:
-          //item.Quantity - item.TotalDeliveredQuantity - scheduledQuantity,
           item.Quantity - item.TotalDeliveredQuantity - scheduledQuantity,
         returnQuantity: returnQuantity, //반품수량
         //itemDesc:  //비고
@@ -156,11 +155,11 @@ module.exports = async (draft, { request, odata }) => {
   async function getQuantity(itemData, productID, purchaseID, index) {
     let service, expand;
     if (!itemData.DirectMaterialIndicator) {
-      //비재고
+      //비자재
       service = [url, "bsg_gsa/PurchaseOrderItemReferenceCollection"].join("/");
-      expand = "Item";
+      expand = "Item,GSA";
     } else {
-      //재고
+      //자재
       service = [url, "bsg_inbound_notify/ItemDocPOCollection"].join("/");
       expand = "Item,Item/DeliveryQuantity,InboundDelivery";
     }
@@ -183,22 +182,22 @@ module.exports = async (draft, { request, odata }) => {
     let quantityResult;
 
     if (!itemData.DirectMaterialIndicator) {
-      //비재고
+      //비자재
       quantityResult = idnResults.reduce(
         (acc, curr) => {
           const quantity = curr.Item.Quantity || 0;
           if (curr.GSA.ReleaseStatusCode === "1") {
             acc.delivery += Number(quantity);
           }
-          if (curr.GSA.CancellationStatusCode !== "1") {
-            acc.cancel += Number(quantity);
-          }
+          // if (curr.GSA.CancellationStatusCode !== "1") {
+          //   acc.cancel += Number(quantity);
+          // }
           return acc;
         },
         { delivery: 0, cancel: 0 }
       );
     } else {
-      //재고
+      //자재
       quantityResult = idnResults.reduce(
         (acc, curr) => {
           const idnObj = curr.InboundDelivery;
