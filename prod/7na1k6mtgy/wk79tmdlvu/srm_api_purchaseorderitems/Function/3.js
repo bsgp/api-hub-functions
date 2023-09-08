@@ -77,24 +77,28 @@ module.exports = async (draft, { request, odata }) => {
 
   const purchaseOrderItemResults = queryResult.d.results;
 
-  // let isFirstOccurrence;
-  // const filterItem = purchaseOrderItemResults.map((item, idx, arr) => {
-  //   isFirstOccurrence =
-  //     arr.findIndex((item) => item.ObjectID === item.ObjectID) === idx;
-  //   if (isFirstOccurrence) {
-  //     return item;
-  //   } else {
-  //     return { ProductID: null, PO: { ID: null } };
-  //   }
-  // });
+  let isFirstOccurrence;
+  const filterItem = purchaseOrderItemResults.map((item, idx, arr) => {
+    isFirstOccurrence =
+      arr.findIndex((v) => v.ObjectID === item.ObjectID) === idx;
+    if (isFirstOccurrence) {
+      return item;
+    } else {
+      return { ProductID: null, PO: { ID: null } };
+    }
+  });
 
   const conversion = await Promise.all(
-    purchaseOrderItemResults.map(async (item, idx, arr) => {
+    purchaseOrderItemResults.map(async (item, idx) => {
       const {
         delivery: scheduledQuantity,
         cancel: returnQuantity,
         idnResults: idnResults,
-      } = await getQuantity(arr[idx], arr[idx].ProductID, arr[idx].PO.ID);
+      } = await getQuantity(
+        filterItem[idx],
+        filterItem[idx].ProductID,
+        filterItem[idx].PO.ID
+      );
       // const scheduledQuantity = await getQuantity(
       //   item,
       //   item.ProductID,
