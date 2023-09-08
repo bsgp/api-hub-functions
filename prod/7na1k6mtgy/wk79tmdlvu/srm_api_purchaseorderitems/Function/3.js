@@ -76,6 +76,12 @@ module.exports = async (draft, { request, odata }) => {
   });
 
   const purchaseOrderItemResults = queryResult.d.results;
+  const filterItem = purchaseOrderItemResults.map((item, idx) => {
+    if (purchaseOrderItemResults.inndexOf(item.ObjectID) === idx) {
+      item[idx] = {};
+    }
+    return item;
+  });
 
   const conversion = await Promise.all(
     purchaseOrderItemResults.map(async (item, idx) => {
@@ -83,7 +89,11 @@ module.exports = async (draft, { request, odata }) => {
         delivery: scheduledQuantity,
         cancel: returnQuantity,
         idnResults: idnResults,
-      } = await getQuantity(item, item.ProductID, item.PO.ID);
+      } = await getQuantity(
+        filterItem[idx],
+        filterItem[idx].ProductID,
+        filterItem[idx].PO.ID
+      );
       // const scheduledQuantity = await getQuantity(
       //   item,
       //   item.ProductID,
