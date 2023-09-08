@@ -78,14 +78,8 @@ module.exports = async (draft, { request, odata }) => {
   const purchaseOrderItemResults = queryResult.d.results;
 
   const filterItem = purchaseOrderItemResults.map((item, idx, arr) => {
-    // if (purchaseOrderItemResults.inndexOf(item.ObjectID) === idx) {
-    //   return item;
-    // } else {
-    //   return {};
-    // }
-    const { ObjectID } = item;
     const isFirstOccurrence =
-      arr.findIndex((item) => item.ObjectID === ObjectID) === idx;
+      arr.findIndex((item) => item.ObjectID === item.ObjectID) === idx;
 
     if (isFirstOccurrence) {
       return item;
