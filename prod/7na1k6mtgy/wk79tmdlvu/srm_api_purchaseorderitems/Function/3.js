@@ -135,7 +135,8 @@ module.exports = async (draft, { request, odata }) => {
     return dateString;
   }
 
-  async function getQuantity(itemData, index) {
+  async function getQuantity(itemData) {
+    //  async function getQuantity(itemData, index) {
     let service, expand;
     if (!itemData.DirectMaterialIndicator) {
       //비자재
@@ -150,7 +151,7 @@ module.exports = async (draft, { request, odata }) => {
       `&$expand=${expand}` +
       `&$filter=(Item/ProductID eq '${itemData.ProductID}')` +
       `and(ID eq '${itemData.PO.ID}')` +
-      `and(ItemID eq '${index}')` +
+      //`and(ItemID eq '${index}')` +
       `&$format=json`;
 
     const quaOdataURL = [service, query].join("?");
