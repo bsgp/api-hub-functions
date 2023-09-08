@@ -131,6 +131,7 @@ module.exports = async (draft, { request, odata }) => {
           ) *
             1000) /
           1000,
+
         returnQuantity: returnQuantity, //반품수량
         //itemDesc:  //비고
         idnResults,
