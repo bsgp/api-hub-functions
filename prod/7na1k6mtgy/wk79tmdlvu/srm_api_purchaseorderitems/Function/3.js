@@ -89,7 +89,7 @@ module.exports = async (draft, { request, odata }) => {
     if (isFirstOccurrence) {
       return item;
     } else {
-      return {}; // 중복된 ObjectID에 해당하는 경우 빈 객체로 반환
+      return { ProductID: null, PO: { ID: null } };
     }
   });
 
