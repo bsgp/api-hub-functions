@@ -85,14 +85,15 @@ module.exports = async (draft, { request, odata }) => {
         idnResults: idn,
       } = await getQuantity(item);
 
-      // const note = item.PurchaseOrderItemText.reduce(
-      //   (acc, val, textIdx) => `${textIdx} : ${val} ` + acc,
-      //   ""
-      // );
+      const note = item.PurchaseOrderItemText.reduce(
+        (acc, val, textIdx) => (acc = acc + `${textIdx + 1} : ${val.Text}`),
 
-      const note = item.PurchaseOrderItemText.map(
-        (val, textIdx) => `${textIdx + 1} : ${val.Text}`
+        ""
       );
+
+      // const note = item.PurchaseOrderItemText.map(
+      //   (val, textIdx) => `${textIdx + 1} : ${val.Text}`
+      // );
 
       return {
         ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
