@@ -77,11 +77,19 @@ module.exports = async (draft, { request, odata }) => {
 
   const purchaseOrderItemResults = queryResult.d.results;
 
-  const filterItem = purchaseOrderItemResults.map((item, idx) => {
-    if (purchaseOrderItemResults.inndexOf(item.ObjectID) === idx) {
+  const filterItem = purchaseOrderItemResults.map((item, idx, arr) => {
+    // if (purchaseOrderItemResults.inndexOf(item.ObjectID) === idx) {
+    //   return item;
+    // } else {
+    //   return {};
+    // }
+    const isFirstOccurrence =
+      arr.findIndex((item) => item.ObjectID === item.ObjectID) === idx;
+
+    if (isFirstOccurrence) {
       return item;
     } else {
-      return {};
+      return {}; // 중복된 ObjectID에 해당하는 경우 빈 객체로 반환
     }
   });
 
