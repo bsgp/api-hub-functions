@@ -155,12 +155,12 @@ module.exports = async (draft, { request, odata }) => {
 
     const quaOdataURL = [service, query].join("?");
 
-    const idnResult = await odata.get({
-      url: quaOdataURL,
-      username,
-      password,
-    });
-    const idnResults = idnResult.d.results;
+    // const idnResult = await odata.get({
+    //   url: quaOdataURL,
+    //   username,
+    //   password,
+    // });
+    // const idnResults = idnResult.d.results;
 
     //   let quantityResult;
 
@@ -207,6 +207,6 @@ module.exports = async (draft, { request, odata }) => {
     //     idnResults: idnResults,
     //   };
     // }
-    return idnResults;
+    return quaOdataURL;
   }
 };
