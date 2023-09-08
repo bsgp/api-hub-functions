@@ -86,7 +86,7 @@ module.exports = async (draft, { request, odata }) => {
       } = await getQuantity(item);
 
       const note = item.PurchaseOrderItemText.reduce(
-        (acc, val) => acc + "<br>" + val.Text,
+        (acc, val) => acc + /\n/g + val.Text,
         ""
       );
 
