@@ -4,6 +4,7 @@ module.exports = async (
 ) => {
   const tablePrefix = "lc_ui5";
   const tableName = [tablePrefix, request.stage].join("_");
+  const devTableName = [tablePrefix, "dev"].join("_");
 
   switch (request.method) {
     case "POST":
@@ -67,7 +68,11 @@ module.exports = async (
       {
         const { copyMetaToDev, updatePath } = request.body;
         if (copyMetaToDev) {
-          await fn.doCopyMetaToDev(copyMetaToDev);
+          await fn.doCopyMetaToDev(copyMetaToDev, {
+            dynamodb,
+            tableName,
+            devTableName,
+          });
         } else if (updatePath) {
           const result = await fn.doUpdatePath(updatePath, {
             dynamodb,
