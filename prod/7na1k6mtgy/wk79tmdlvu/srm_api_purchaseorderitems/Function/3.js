@@ -164,11 +164,8 @@ module.exports = async (draft, { request, odata }) => {
       username,
       password,
     });
-    const idnResults1 = idnResult.d.results;
+    const idnResults = idnResult.d.results;
 
-    const idnResults = idnResults1.filter(
-      (item, idx) => idnResults1.indexOf(item.ObjectID) === idx
-    );
     let quantityResult;
 
     if (!itemData.DirectMaterialIndicator) {
