@@ -85,11 +85,11 @@ module.exports = async (draft, { request, odata }) => {
         idnResults: idn,
       } = await getQuantity(item);
 
-      const note = item.PurchaseOrderItemText.reduce(
-        (acc, val, textIdx) => (acc = acc + `${textIdx + 1} : ${val.Text}, `),
+      // const note = item.PurchaseOrderItemText.reduce(
+      //   (acc, val, textIdx) => (acc = acc + `${textIdx + 1} : ${val.Text}, `)
 
-        ""
-      );
+      //   ""
+      // );
 
       // const note = item.PurchaseOrderItemText.map(
       //   (val, textIdx) => `${textIdx + 1} : ${val.Text}`
@@ -121,7 +121,7 @@ module.exports = async (draft, { request, odata }) => {
           ) / 1000,
 
         returnQuantity: returnQuantity, //반품수량
-        itemDesc: note, //비고
+        itemDesc: item.PurchaseOrderItemText, //비고
         idn,
       };
     })
