@@ -87,10 +87,6 @@ module.exports = async (draft, { request, odata }) => {
 
       const note = item.PurchaseOrderItemText.map((item) => item.Text);
 
-      // const note = item.PurchaseOrderItemText.map(
-      //   (val, textIdx) => `${textIdx + 1} : ${val.Text}`
-      // );
-
       return {
         ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
         confirmIndicatior: item.PO.SRM001_KUT,
@@ -176,9 +172,6 @@ module.exports = async (draft, { request, odata }) => {
           if (curr.GSA.ReleaseStatusCode === "1") {
             acc.delivery += Number(quantity);
           }
-          // if (curr.GSA.CancellationStatusCode !== "1") {
-          //   acc.cancel += Number(quantity);
-          // }
           return acc;
         },
         { delivery: 0, cancel: 0 }
