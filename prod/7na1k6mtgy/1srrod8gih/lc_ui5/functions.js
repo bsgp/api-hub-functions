@@ -18,7 +18,7 @@ const getMetaById = async (
         result.paths.map((path) => ({ pkid: "path", skid: path })),
         { useCustomerRole: false }
       );
-      paths = paths.map((path) => ({ ...path, oldPath: path.value }));
+      // paths = paths.map((path) => ({ ...path, oldPath: path.value }));
     }
   }
 
