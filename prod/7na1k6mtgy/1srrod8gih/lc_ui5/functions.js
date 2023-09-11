@@ -114,12 +114,12 @@ const saveMeta = async (
       {
         operations: metaOperations,
         sets: metaSets,
-        conditions: {
-          skid: {
-            operation: "=",
-            value: id,
-          },
-        },
+        // conditions: {
+        //   skid: {
+        //     operation: "=",
+        //     value: id,
+        //   },
+        // },
         useCustomerRole: false,
       }
     );
