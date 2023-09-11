@@ -68,7 +68,7 @@ module.exports = async (
       {
         const { copyMetaToDev, updatePath } = request.body;
         if (copyMetaToDev) {
-          await fn.doCopyMetaToDev(copyMetaToDev, {
+          const result = await fn.doCopyMetaToDev(copyMetaToDev, {
             dynamodb,
             tableName,
             devTableName,
@@ -77,6 +77,7 @@ module.exports = async (
             isFalsy,
             makeid,
           });
+          draft.response.body = result;
         } else if (updatePath) {
           const result = await fn.doUpdatePath(updatePath, {
             dynamodb,
