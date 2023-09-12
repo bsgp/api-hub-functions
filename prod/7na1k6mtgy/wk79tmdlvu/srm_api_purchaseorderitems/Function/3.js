@@ -14,11 +14,7 @@ module.exports = async (draft, { request, odata }) => {
     shipToLocationID,
   } = request.body;
 
-  const expand = [
-    "PO",
-    "PO/SellerParty,PurchaseOrderItemText",
-    "PO/PurchaseOrderItemScheduleLine",
-  ].join(",");
+  const expand = ["PO", "PO/SellerParty,PurchaseOrderItemText"].join(",");
 
   const filter = [];
 
@@ -79,7 +75,7 @@ module.exports = async (draft, { request, odata }) => {
     password,
   });
 
-  const purchaseOrderItemResults = queryResult.d;
+  const purchaseOrderItemResults = queryResult.d.results;
 
   const conversion = await Promise.all(
     purchaseOrderItemResults.map(async (item, idx) => {
