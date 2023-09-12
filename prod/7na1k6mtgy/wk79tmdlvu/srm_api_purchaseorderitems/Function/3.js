@@ -82,7 +82,7 @@ module.exports = async (draft, { request, odata }) => {
       const {
         delivery: scheduledQuantity,
         cancel: returnQuantity,
-        idnResults: idn,
+        results: idn,
       } = await getQuantity(item);
 
       const note = item.PurchaseOrderItemText.map((item) => item.Text);
@@ -155,18 +155,18 @@ module.exports = async (draft, { request, odata }) => {
 
     const quaOdataURL = [service, query].join("?");
 
-    const idnResult = await odata.get({
+    const result = await odata.get({
       url: quaOdataURL,
       username,
       password,
     });
-    const idnResults = idnResult.d.results;
+    const results = result.d.results;
 
     let quantityResult;
 
     if (!itemData.DirectMaterialIndicator) {
       //비자재
-      quantityResult = idnResults.reduce(
+      quantityResult = results.reduce(
         (acc, curr) => {
           const quantity = curr.Item.Quantity || 0;
           if (curr.GSA.ReleaseStatusCode === "1") {
@@ -178,7 +178,7 @@ module.exports = async (draft, { request, odata }) => {
       );
     } else {
       //자재
-      quantityResult = idnResults.reduce(
+      quantityResult = results.reduce(
         (acc, curr) => {
           const idnObj = curr.InboundDelivery;
           const cCode = idnObj.CancellationStatusCode;
@@ -201,9 +201,7 @@ module.exports = async (draft, { request, odata }) => {
     return {
       delivery: quantityResult.delivery,
       cancel: quantityResult.cancel,
-      idnResults: idnResults,
+      results: results,
     };
   }
-  //   return idnResults;
-  // }
 };
