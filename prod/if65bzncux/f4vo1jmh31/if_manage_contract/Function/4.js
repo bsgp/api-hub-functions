@@ -5,7 +5,13 @@ module.exports = async (draft, { lib, request }) => {
     case "IF-CT-101":
       draft.response.body = {
         ...draft.json.newData,
-        contract: { type: "P" },
+        contract: {
+          type: "P",
+          partyList: [],
+          costObjectList: [],
+          billList: [],
+          attachmentList: [],
+        },
         E_STATUS: "S",
         E_MESSAGE: "TEST",
       };
