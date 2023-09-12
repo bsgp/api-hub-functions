@@ -17,7 +17,7 @@ module.exports = async (draft, { request, odata }) => {
   const expand = [
     "PO",
     "PO/SellerParty,PurchaseOrderItemText",
-    "PurchaseOrderItemScheduleLine",
+    "PO/PurchaseOrderItemScheduleLine",
   ].join(",");
 
   const filter = [];
@@ -92,6 +92,7 @@ module.exports = async (draft, { request, odata }) => {
       const note = item.PurchaseOrderItemText.map((item) => item.Text);
 
       return {
+        isScheduled: true,
         ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
         confirmIndicatior: item.PO.SRM001_KUT,
         deliveryStatusText: item.PurchaseOrderDeliveryStatusCodeText,
@@ -105,7 +106,7 @@ module.exports = async (draft, { request, odata }) => {
         supplierText: item.PO.SellerParty.FormattedName,
         unitPrice: item.ListUnitPriceAmount, //item.Amount,
         supplierAmount: item.NetAmount,
-        unitText: item.BaseQuantityUnitCode,
+        unit: item.BaseQuantityUnitCode,
         currency: item.currencyCode,
         orderQuantity: item.Quantity, //발주수량
         deliveredQuantity: item.TotalDeliveredQuantity, //입고수량
