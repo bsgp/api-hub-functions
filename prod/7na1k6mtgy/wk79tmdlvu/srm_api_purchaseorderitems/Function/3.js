@@ -14,7 +14,11 @@ module.exports = async (draft, { request, odata }) => {
     shipToLocationID,
   } = request.body;
 
-  const expand = ["PO", "PO/SellerParty,PurchaseOrderItemText"].join(",");
+  const expand = [
+    "PO",
+    "PO/SellerParty,PurchaseOrderItemText",
+    "PurchaseOrderItemScheduleLine",
+  ].join(",");
 
   const filter = [];
 
