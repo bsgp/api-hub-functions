@@ -104,7 +104,8 @@ module.exports = async (draft, { request, odata }) => {
         supplierText: item.PO.SellerParty.FormattedName,
         //supplyStatusText: item.PO.SellerParty.FormattedName,
         unitPrice: item.ListUnitPriceAmount, //item.Amount,
-        supplierAmount: item.NetAmount,
+        //supplierAmount: item.NetAmount,
+        supplyAmount: item.NetAmount,
         unit: item.BaseQuantityUnitCode,
         currency: item.currencyCode,
         orderQuantity: item.Quantity, //발주수량
