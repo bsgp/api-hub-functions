@@ -111,6 +111,12 @@ module.exports = async (draft, { file }) => {
     //   Name: "OEPROFITLOSS_GDRA_LOG",
     //   RfcName: "ZCO_IF_SAC02",
     // },
+    ["IF-CT-101"]: {
+      Type: "DB",
+      Name: "GET_DATA_FROM_DB",
+      // RfcName: "",
+      TriggeredBy: "SUPPORT",
+    },
   };
 
   await file.upload("if/list.json", interfaces, { gzip: true });
