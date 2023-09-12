@@ -16,7 +16,7 @@ module.exports = async (draft, { file }) => {
       Type: "RFC",
       Name: "ZEIS_MM_04",
       PartitionKey: "ignore",
-      FileKey: "P_DATE",
+      FileKey: "CPUDT",
     },
     ["IF-CO-001"]: {
       Type: "RFC",
