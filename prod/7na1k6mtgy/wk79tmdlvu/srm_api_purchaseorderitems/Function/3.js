@@ -22,11 +22,11 @@ module.exports = async (draft, { request, odata }) => {
     filter.push(`PO/SRM001_KUT eq '${confirmIndicatior}'`);
   }
   if (deliveryStatus) {
-    if (deliveryStatus === "3") {
-      filter.push(`PurchaseOrderDeliveryStatusCode eq '${deliveryStatus}'`);
-    } else {
-      filter.push(`PurchaseOrderDeliveryStatusCode le '${deliveryStatus}'`);
-    }
+    //if (deliveryStatus === "3") {
+    filter.push(`PurchaseOrderDeliveryStatusCode eq '${deliveryStatus}'`);
+    //} else {
+    //  filter.push(`PurchaseOrderDeliveryStatusCode le '${deliveryStatus}'`);
+    // }
   }
   if (materialID) {
     filter.push(`ProductID eq '${materialID}'`);
