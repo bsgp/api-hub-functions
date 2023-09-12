@@ -92,15 +92,16 @@ module.exports = async (draft, { request, odata }) => {
       const note = item.PurchaseOrderItemText.map((item) => item.Text);
 
       return {
+        index: idx + 1,
         isScheduled: true,
-        ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
+        //ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
         confirmIndicatior: item.PO.SRM001_KUT,
         deliveryStatusText: item.PurchaseOrderDeliveryStatusCodeText,
-        index: idx + 1,
         materialID: item.ProductID,
         materialText: item.Description,
         poItemNumber: item.ID,
         purchaseOrderID: item.PO.ID,
+        //supplyStatusText:
         shipToLocation: item.ShipToLocationID,
         startDate: convDate(item.StartDateTime),
         supplierText: item.PO.SellerParty.FormattedName,
