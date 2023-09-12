@@ -82,7 +82,7 @@ module.exports = async (draft, { request, odata }) => {
       const {
         delivery: scheduledQuantity,
         cancel: returnQuantity,
-        results: idn,
+        idnResults: idn,
       } = await getQuantity(item);
 
       const note = item.PurchaseOrderItemText.map((item) => item.Text);
@@ -160,13 +160,13 @@ module.exports = async (draft, { request, odata }) => {
       username,
       password,
     });
-    const results = result.d.results;
+    const idnResults = result.d.results;
 
     let quantityResult;
 
     if (!itemData.DirectMaterialIndicator) {
       //비자재
-      quantityResult = results.reduce(
+      quantityResult = idnResults.reduce(
         (acc, curr) => {
           const quantity = curr.Item.Quantity || 0;
           if (curr.GSA.ReleaseStatusCode === "1") {
@@ -178,7 +178,7 @@ module.exports = async (draft, { request, odata }) => {
       );
     } else {
       //자재
-      quantityResult = results.reduce(
+      quantityResult = idnResults.reduce(
         (acc, curr) => {
           const idnObj = curr.InboundDelivery;
           const cCode = idnObj.CancellationStatusCode;
@@ -201,7 +201,7 @@ module.exports = async (draft, { request, odata }) => {
     return {
       delivery: quantityResult.delivery,
       cancel: quantityResult.cancel,
-      results: results,
+      idnResults: idnResults,
     };
   }
 };
