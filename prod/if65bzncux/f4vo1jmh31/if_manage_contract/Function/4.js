@@ -4,7 +4,7 @@ module.exports = async (draft, { lib, request }) => {
   switch (request.body.InterfaceId) {
     case "IF-CT-101":
       draft.response.body = {
-        ...draft.json.newData,
+        request_contractID: draft.json.newData.contractID,
         contract: {
           type: "P",
           partyList: [],
