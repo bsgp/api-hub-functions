@@ -117,6 +117,18 @@ module.exports = async (draft, { file }) => {
       RfcName: "",
       TriggeredBy: "SUPPORT",
     },
+    ["IF-CT-102"]: {
+      Type: "RFC",
+      Name: "POST_DATA_TO_DB",
+      RfcName: "",
+      TriggeredBy: "SUPPORT",
+    },
+    ["IF-CT-103"]: {
+      Type: "RFC",
+      Name: "PATCH_DATA_OF_DB",
+      RfcName: "",
+      TriggeredBy: "SUPPORT",
+    },
   };
 
   await file.upload("if/list.json", interfaces, { gzip: true });
