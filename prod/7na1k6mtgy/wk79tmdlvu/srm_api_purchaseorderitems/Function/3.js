@@ -79,7 +79,7 @@ module.exports = async (draft, { request, odata }) => {
     password,
   });
 
-  const purchaseOrderItemResults = queryResult.d.results;
+  const purchaseOrderItemResults = queryResult.d;
 
   const conversion = await Promise.all(
     purchaseOrderItemResults.map(async (item, idx) => {
@@ -93,8 +93,8 @@ module.exports = async (draft, { request, odata }) => {
 
       return {
         index: idx + 1,
-        //isScheduled: true,
-        ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
+        isScheduled: true,
+        //ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
         confirmIndicatior: item.PO.SRM001_KUT,
         deliveryStatusText: item.PurchaseOrderDeliveryStatusCodeText,
         materialID: item.ProductID,
