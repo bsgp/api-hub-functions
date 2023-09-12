@@ -112,9 +112,9 @@ module.exports = async (draft, { file }) => {
     //   RfcName: "ZCO_IF_SAC02",
     // },
     ["IF-CT-101"]: {
-      Type: "DB",
+      Type: "RFC",
       Name: "GET_DATA_FROM_DB",
-      // RfcName: "",
+      RfcName: "",
       TriggeredBy: "SUPPORT",
     },
   };
