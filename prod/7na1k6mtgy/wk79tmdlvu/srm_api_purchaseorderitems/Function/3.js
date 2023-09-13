@@ -93,7 +93,7 @@ module.exports = async (draft, { request, odata }) => {
 
       return {
         index: idx + 1,
-        isScheduled: item.PurchaseOrderDeliveryStatusCodeText,
+        isScheduled: false,
         //ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
         confirmIndicatior: item.PO.SRM001_KUT,
         //deliveryStatusText: item.PurchaseOrderDeliveryStatusCodeText,
@@ -109,7 +109,7 @@ module.exports = async (draft, { request, odata }) => {
         //supplyStatusText: item.PO.SellerParty.FormattedName,
         unitPrice: item.ListUnitPriceAmount, //item.Amount,
         manufacturer: item.PO.BillToParty.FormattedName,
-        //supplierAmount: item.NetAmount,
+        //itemproductStandard:
         supplyAmount: item.NetAmount,
         unit: item.BaseQuantityUnitCode,
         currency: item.currencyCode,
