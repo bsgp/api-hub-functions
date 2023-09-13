@@ -93,7 +93,7 @@ module.exports = async (draft, { request, odata }) => {
 
       return {
         index: idx + 1,
-        isScheduled: false,
+        isScheduled: "false",
         //ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
         confirmIndicatior: item.PO.SRM001_KUT,
         //deliveryStatusText: item.PurchaseOrderDeliveryStatusCodeText,
