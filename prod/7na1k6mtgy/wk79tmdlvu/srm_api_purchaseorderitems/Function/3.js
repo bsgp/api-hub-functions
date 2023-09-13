@@ -27,11 +27,7 @@ module.exports = async (draft, { request, odata }) => {
     filter.push(`PO/SRM001_KUT eq '${confirmIndicatior}'`);
   }
   if (deliveryStatus) {
-    //if (deliveryStatus === "3") {
     filter.push(`PurchaseOrderDeliveryStatusCode eq '${deliveryStatus}'`);
-    //} else {
-    //  filter.push(`PurchaseOrderDeliveryStatusCode le '${deliveryStatus}'`);
-    // }
   }
   if (materialID) {
     filter.push(`ProductID eq '${materialID}'`);
@@ -94,7 +90,7 @@ module.exports = async (draft, { request, odata }) => {
 
       return {
         index: idx + 1,
-        isScheduled: "분할 납품",
+        isScheduled: item.PO.SRM002_KUT,
         //ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
         confirmIndicatior: item.PO.SRM001_KUT,
         //deliveryStatusText: item.PurchaseOrderDeliveryStatusCodeText,
