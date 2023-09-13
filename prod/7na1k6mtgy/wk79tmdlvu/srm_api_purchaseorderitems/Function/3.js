@@ -14,7 +14,11 @@ module.exports = async (draft, { request, odata }) => {
     shipToLocationID,
   } = request.body;
 
-  const expand = ["PO", "PO/SellerParty,PurchaseOrderItemText"].join(",");
+  const expand = [
+    "PO",
+    "PO/SellerParty,PurchaseOrderItemText",
+    " PO/BillToParty",
+  ].join(",");
 
   const filter = [];
 
@@ -104,6 +108,7 @@ module.exports = async (draft, { request, odata }) => {
         supplierText: item.PO.SellerParty.FormattedName,
         //supplyStatusText: item.PO.SellerParty.FormattedName,
         unitPrice: item.ListUnitPriceAmount, //item.Amount,
+        manufacturer: item.PO.BillToParty.FormattedName,
         //supplierAmount: item.NetAmount,
         supplyAmount: item.NetAmount,
         unit: item.BaseQuantityUnitCode,
