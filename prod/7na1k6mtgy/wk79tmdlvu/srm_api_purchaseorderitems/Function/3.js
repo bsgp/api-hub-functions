@@ -18,6 +18,7 @@ module.exports = async (draft, { request, odata }) => {
     "PO",
     "PO/SellerParty,PurchaseOrderItemText",
     "PO/BillToParty",
+    "PurchaseOrderShipToItemLocation",
   ].join(",");
 
   const filter = [];
@@ -102,8 +103,8 @@ module.exports = async (draft, { request, odata }) => {
         materialText: item.Description,
         poItemNumber: item.ID,
         purchaseOrderID: item.PO.ID,
-        //shipToLocation: item.ShipToLocationID,
-        orderSite: item.ShipToLocationID,
+        orderSite: item.PurchaseOrderShipToItemLocation.Name,
+        //item.ShipToLocationID,
         startDate: convDate(item.StartDateTime),
         supplierText: item.PO.SellerParty.FormattedName,
         //supplyStatusText: item.PO.SellerParty.FormattedName,
