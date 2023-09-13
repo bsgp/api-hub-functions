@@ -136,7 +136,7 @@ module.exports = async (draft, { request, odata }) => {
     const numberString = startDate.replace(/^\/Date\(/, "").replace(")/", "");
     const date = new Date(parseInt(numberString, 10));
     const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // 06
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const day = date.getDate().toString().padStart(2, "0");
     const dateString = year + "-" + month + "-" + day;
     return dateString;
@@ -192,9 +192,7 @@ module.exports = async (draft, { request, odata }) => {
           const dPCode = idnObj.DeliveryProcessingStatusCode;
           const qtyObj = curr.Item.DeliveryQuantity;
           if (cCode === "1") {
-            //Not Canceled
             if (dPCode === "1") {
-              //Not started
               acc.delivery += Number(qtyObj.Quantity);
             }
           } else {
