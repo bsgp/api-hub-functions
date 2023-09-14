@@ -1,6 +1,13 @@
-module.exports = async (draft, { lib, request }) => {
+module.exports = async (draft, { lib, file, request }) => {
   const { clone } = lib;
   draft.json.newData = clone(request.body.Data);
+
+  const tables = await file.get("config/tables.json", {
+    gziped: true,
+    toJSON: true,
+  });
+  draft.json.tables = tables;
+
   switch (request.body.InterfaceId) {
     case "IF-CT-101": // GET
       draft.json.nextNodeKey = "Function#5";
