@@ -98,8 +98,8 @@ module.exports = async (draft, { request, odata }) => {
 
       return {
         index: idx + 1,
-        isScheduled: { path: scheduleLine },
-        //scheduleLine: scheduleLine,
+        //isScheduled: { path: scheduleLine },
+        scheduleLine: scheduleLine,
         //item.PurchaseOrderItemScheduleLine.StartDateTime,
         confirmIndicatior: item.PO.SRM001_KUT,
         supplyStatusText: item.PurchaseOrderDeliveryStatusCodeText,
