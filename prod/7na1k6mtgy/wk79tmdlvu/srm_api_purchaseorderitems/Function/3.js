@@ -91,10 +91,8 @@ module.exports = async (draft, { request, odata }) => {
 
       return {
         index: idx + 1,
-        isScheduled: item.PurchaseOrderItemScheduleLine,
-        //ThirdPartyDealIndicator: item.ThirdPartyDealIndicator,
+        isScheduled: item.PurchaseOrderItemScheduleLine.StartDateTime,
         confirmIndicatior: item.PO.SRM001_KUT,
-        //deliveryStatusText: item.PurchaseOrderDeliveryStatusCodeText,
         supplyStatusText: item.PurchaseOrderDeliveryStatusCodeText,
         materialID: item.ProductID,
         materialText: item.Description,
@@ -103,9 +101,8 @@ module.exports = async (draft, { request, odata }) => {
         orderSite: item.PurchaseOrderShipToItemLocation.Name,
         startDate: convDate(item.StartDateTime),
         supplierText: item.PO.SellerParty.FormattedName,
-        //supplyStatusText: item.PO.SellerParty.FormattedName,
-        unitPrice: item.ListUnitPriceAmount, //item.Amount,
-        manufacturer: item.PO.BillToParty.FormattedName,
+        unitPrice: item.ListUnitPriceAmount,
+        //manufacturer: item.PO.BillToParty.FormattedName,
         //itemproductStandard:
         supplyAmount: item.NetAmount,
         unit: item.BaseQuantityUnitCode,
