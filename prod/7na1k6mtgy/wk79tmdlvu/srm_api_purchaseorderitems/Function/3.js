@@ -91,7 +91,7 @@ module.exports = async (draft, { request, odata }) => {
 
       return {
         index: idx + 1,
-        isScheduled: item.PurchaseOrderItemScheduleLine.__metadata.uri,
+        isScheduled: item.PurchaseOrderItemScheduleLine.__metadata,
         confirmIndicatior: item.PO.SRM001_KUT,
         supplyStatusText: item.PurchaseOrderDeliveryStatusCodeText,
         materialID: item.ProductID,
