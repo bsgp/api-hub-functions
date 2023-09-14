@@ -129,6 +129,12 @@ module.exports = async (draft, { file }) => {
       RfcName: "",
       TriggeredBy: "SUPPORT",
     },
+    ["IF-FU-101"]: {
+      Type: "RFC",
+      Name: "FILE_UPLOAD",
+      RfcName: "",
+      TriggeredBy: "SUPPORT",
+    },
   };
 
   await file.upload("if/list.json", interfaces, { gzip: true });
