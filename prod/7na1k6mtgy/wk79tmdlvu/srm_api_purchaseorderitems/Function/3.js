@@ -17,7 +17,6 @@ module.exports = async (draft, { request, odata }) => {
   const expand = [
     "PO",
     "PO/SellerParty,PurchaseOrderItemText",
-    "PO/BillToParty",
     "PurchaseOrderShipToItemLocation",
     "PurchaseOrderItemScheduleLine",
   ].join(",");
