@@ -90,7 +90,7 @@ module.exports = async (draft, { request, odata }) => {
       const note = item.PurchaseOrderItemText.map((item) => item.Text);
       const scheduleLine = item.PurchaseOrderItemScheduleLine.map((item) => {
         return {
-          date: item.StartDateTime,
+          date: convDate(item.StartDateTime),
           quantity: item.Quantity,
           unitCodeText: item.unitCode,
         };
@@ -98,9 +98,7 @@ module.exports = async (draft, { request, odata }) => {
 
       return {
         index: idx + 1,
-        //isScheduled: { path: scheduleLine },
         scheduleLine: scheduleLine,
-        //item.PurchaseOrderItemScheduleLine.StartDateTime,
         confirmIndicatior: item.PO.SRM001_KUT,
         supplyStatusText: item.PurchaseOrderDeliveryStatusCodeText,
         materialID: item.ProductID,
