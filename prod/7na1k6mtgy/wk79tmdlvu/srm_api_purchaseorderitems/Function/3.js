@@ -109,20 +109,18 @@ module.exports = async (draft, { request, odata }) => {
         startDate: convDate(item.StartDateTime),
         supplierText: item.PO.SellerParty.FormattedName,
         unitPrice: item.ListUnitPriceAmount,
-        //manufacturer: item.PO.BillToParty.FormattedName,
-        //itemproductStandard:
         supplyAmount: item.NetAmount,
         unit: item.BaseQuantityUnitCode,
         currency: item.currencyCode,
         orderQuantity: item.Quantity, //발주수량
         deliveredQuantity: item.TotalDeliveredQuantity, //입고수량
         idnQuantity: scheduledQuantity, //납품예정수량
+        //발주잔량
         restQuantity:
           Math.round(
             (item.Quantity - item.TotalDeliveredQuantity - scheduledQuantity) *
               1000
           ) / 1000,
-
         returnQuantity: returnQuantity, //반품수량
         itemDesc: note, //비고
         idn,
