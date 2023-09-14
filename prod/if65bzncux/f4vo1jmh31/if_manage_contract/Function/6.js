@@ -3,6 +3,7 @@ module.exports = async (draft) => {
     request_contractID: draft.json.newData.contractID,
     contract: {
       type: "P",
+      contractID: "7775577",
       partyList: [],
       costObjectList: [],
       billList: [],
