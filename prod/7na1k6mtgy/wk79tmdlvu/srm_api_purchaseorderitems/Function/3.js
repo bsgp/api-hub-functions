@@ -88,7 +88,7 @@ module.exports = async (draft, { request, odata }) => {
       } = await getQuantity(item);
 
       const note = item.PurchaseOrderItemText.map((item) => item.Text);
-      const sScheduleLine = item.PurchaseOrderItemScheduleLine.map((item) => {
+      const scheduleLine = item.PurchaseOrderItemScheduleLine.map((item) => {
         return {
           date: item.StartDateTime,
           quantity: item.Quantity,
@@ -98,7 +98,7 @@ module.exports = async (draft, { request, odata }) => {
 
       return {
         index: idx + 1,
-        isScheduled: sScheduleLine,
+        isScheduled: scheduleLine,
         //item.PurchaseOrderItemScheduleLine.StartDateTime,
         confirmIndicatior: item.PO.SRM001_KUT,
         supplyStatusText: item.PurchaseOrderDeliveryStatusCodeText,
