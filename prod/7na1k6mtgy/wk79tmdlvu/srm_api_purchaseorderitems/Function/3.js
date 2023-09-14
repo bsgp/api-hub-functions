@@ -88,8 +88,8 @@ module.exports = async (draft, { request, odata }) => {
       } = await getQuantity(item);
 
       const note = item.PurchaseOrderItemText.map((item) => item.Text);
-      const scheduleLine = item.PurchaseOrderItemScheduleLine.map((item) =>
-        convDate(item.StartDateTime)
+      const scheduleLine = item.PurchaseOrderItemScheduleLine.map(
+        (item) => item.StartDateTime
       );
 
       return {
