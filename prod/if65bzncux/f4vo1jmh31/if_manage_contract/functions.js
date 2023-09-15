@@ -57,6 +57,7 @@ module.exports.getDB_Object = (data, key, contract_id) => {
       return data.partyList.map((item) => ({
         contract_id: contract_id || item.contract_id,
         id: item.id,
+        stems10: item.stems10,
         stems10_cn: item.stems10_cn,
         stems10_ko: item.stems10_ko,
         name: item.name,
