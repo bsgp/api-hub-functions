@@ -1,7 +1,7 @@
 module.exports.getDB_Object = (data, key, contract_id) => {
   if (key === "contract") {
     return {
-      id: data.form.id,
+      id: data.form.contractID,
       prod_date: data.form.prod_date,
       bukrs: data.form.bukrs,
       name: data.form.name,
