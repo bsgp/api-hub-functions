@@ -14,7 +14,7 @@ module.exports = async (draft, { sql, tryit }) => {
         .where("contract_id", "like", Number(newData.contractID))
         .run();
       const partyList = tryit(() => partyData.body.list, []);
-      contract = { ...contract, ...partyList };
+      contract = { ...contract, partyList };
     }
   }
 
