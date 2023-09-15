@@ -37,7 +37,7 @@ module.exports = async (draft, { fn, sql, tryit }) => {
   }
   draft.response.body = {
     E_STATUS: "S",
-    E_MESSAGE: "contract insert successfully",
+    E_MESSAGE: `계약번호: ${contractID}\n생성되었습니다`,
     contractID,
     contract: {
       ...queryResult.body.list[0],
