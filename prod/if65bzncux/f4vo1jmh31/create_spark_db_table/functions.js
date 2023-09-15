@@ -112,6 +112,7 @@ module.exports.party =
     table.string("contract_id", 10).notNullable();
     table.string("id", 5).defaultTo(makeid(5)); // makeid()
 
+    table.string("stems10", 1).defaultTo("");
     table.string("stems10_cn", 1).defaultTo("");
     // 甲(갑) 乙(을) 丙(병) 丁(정) 戊(무) 己(기) 庚(경) 辛(신) 壬(임) 癸(계)
     table.string("stems10_ko", 1).defaultTo("");
