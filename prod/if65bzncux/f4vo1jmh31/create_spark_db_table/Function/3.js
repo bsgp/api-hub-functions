@@ -32,7 +32,7 @@ module.exports = async (draft, { file }) => {
       desc: "bill reson text DB",
     },
     party: {
-      name: "party_3",
+      name: "party_4",
       desc: "Party(supplier, customer) info DB",
     },
     letter_appr: {
