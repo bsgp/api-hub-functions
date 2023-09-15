@@ -22,6 +22,6 @@ module.exports = async (draft, { sql, tryit }) => {
       ...contract,
     },
     E_STATUS: "S",
-    E_MESSAGE: "TEST",
+    E_MESSAGE: `계약번호: ${contract.contractID} 조회가\n완료되었습니다`,
   };
 };
