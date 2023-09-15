@@ -36,7 +36,7 @@ module.exports = async (draft, { fn, sql, tryit }) => {
     return;
   }
 
-  const partyArr = fn.getDB_Object(newData, "party");
+  const partyArr = fn.getDB_Object(newData, "party", contractID);
   const createParty = await sql("mysql", { useCustomRole: false })
     .insert(tables.party.name, partyArr)
     .run();
