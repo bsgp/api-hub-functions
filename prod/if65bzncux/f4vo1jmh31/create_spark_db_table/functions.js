@@ -55,6 +55,7 @@ module.exports.ref_doc =
     table.string("contract_id", 10).notNullable();
     table.string("id", 5).defaultTo(makeid(5)); // makeid()
 
+    table.string("index", 5).defaultTo("");
     table.string("type", 5).defaultTo(""); // MM, FI
     table.string("item_id", 5).defaultTo(""); // 아이템 ID
     table.string("doc_id", 36).defaultTo(""); // SAP 구매오더번호, 회계전표..
@@ -71,6 +72,7 @@ module.exports.cost_object =
     table.string("contract_id", 10).notNullable();
     table.string("id", 5).defaultTo(makeid(5)); // makeid()
 
+    table.string("index", 5).defaultTo("");
     table.string("type", 3).defaultTo(""); // 귀속처유형(WBS, 코스트센터)
     table.string("cost_object_id", 36).defaultTo(""); // 귀속처(WBS, 코스트센터)
     table.string("name", 100).defaultTo(""); // 귀속처 명
@@ -93,6 +95,7 @@ module.exports.bill =
     table.string("contract_id", 10).notNullable();
     table.string("id", 5).defaultTo(makeid(5)); // makeid()
 
+    table.string("index", 5).defaultTo("");
     table.string("cost_object_id", 36).defaultTo(""); // 귀속처
     table.string("reason_text", 200).defaultTo(""); // 미청구 사유
     table.decimal("dmbtr", 23, 2).defaultTo(0);
@@ -112,6 +115,7 @@ module.exports.party =
     table.string("contract_id", 10).notNullable();
     table.string("id", 5).defaultTo(makeid(5)); // makeid()
 
+    table.string("index", 5).defaultTo("");
     table.string("stems10", 1).defaultTo("");
     table.string("stems10_cn", 1).defaultTo("");
     // 甲(갑) 乙(을) 丙(병) 丁(정) 戊(무) 己(기) 庚(경) 辛(신) 壬(임) 癸(계)
