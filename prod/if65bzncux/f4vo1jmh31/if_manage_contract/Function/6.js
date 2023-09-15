@@ -5,38 +5,24 @@ module.exports = async (draft, { fn, sql }) => {
   const builder = sql("mysql").select(tables.contract.name);
   // const contractValidator = await builder.validator;
 
-  draft.response.body = {
-    table: tables.contract.name,
-    contract,
-    builder,
-    // contractValidator,
-  };
-  // if (!contractValidator(contract).isValid) {
-  //   draft.response.body = {
-  //     E_STATUS: "F",
-  //     E_MESSAGE: "Valid falied",
-  //   };
-  //   return;
-  // }
-
-  // const createContract = await builder
-  //   .insert(tables.contract.name, contract)
-  //   .run();
-  // if (createContract.statusCode === 200) {
-  //   draft.response.body = {
-  //     E_STATUS: "S",
-  //     E_MESSAGE: "contract insert successfully",
-  //     createContract,
-  //   };
-  // } else {
-  //   draft.response.body = {
-  //     E_STATUS: "F",
-  //     E_MESSAGE: `Failed save ${tables.contract.name}`,
-  //     createContract,
-  //   };
-  //   draft.response.statusCode = 400;
-  //   return;
-  // }
+  const createContract = await builder
+    .insert(tables.contract.name, contract)
+    .run();
+  if (createContract.statusCode === 200) {
+    draft.response.body = {
+      E_STATUS: "S",
+      E_MESSAGE: "contract insert successfully",
+      createContract,
+    };
+  } else {
+    draft.response.body = {
+      E_STATUS: "F",
+      E_MESSAGE: `Failed save ${tables.contract.name}`,
+      createContract,
+    };
+    draft.response.statusCode = 400;
+    return;
+  }
 
   // const ref_doc = [];
   // const cost_object = [];
