@@ -9,10 +9,15 @@ module.exports = async (draft, { fn, sql }) => {
     .insert(tables.contract.name, contract)
     .run();
   if (createContract.statusCode === 200) {
+    const query = sql("mysql", { useCustomRole: false })
+      .select(tables.contract.name)
+      .orderBy("ID", "desc")
+      .limit(1);
+    const queryResult = await query.run();
     draft.response.body = {
       E_STATUS: "S",
       E_MESSAGE: "contract insert successfully",
-      createContract,
+      queryResult,
     };
   } else {
     draft.response.body = {
