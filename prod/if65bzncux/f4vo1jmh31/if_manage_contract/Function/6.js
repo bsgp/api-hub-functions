@@ -2,10 +2,10 @@ module.exports = async (draft, { fn, sql }) => {
   const { tables, newData } = draft.json;
   const contract = fn.getDB_Object(newData, "contract");
 
-  const builder = sql("mysql").select(tables.contract.name);
+  // const builder = sql("mysql").select(tables.contract.name);
   // const contractValidator = await builder.validator;
 
-  const createContract = await builder
+  const createContract = await sql("mysql")
     .insert(tables.contract.name, contract)
     .run();
   if (createContract.statusCode === 200) {
