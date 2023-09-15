@@ -1,4 +1,4 @@
-module.exports.getDB_Object = (data, key) => {
+module.exports.getDB_Object = (data, key, contract_id) => {
   if (key === "contract") {
     return {
       id: data.form.id,
@@ -19,10 +19,26 @@ module.exports.getDB_Object = (data, key) => {
   }
   switch (key) {
     case "ref_doc": {
-      break;
+      return {
+        contract_id,
+        // type:
+        // item_id:
+        // doc_id:
+      };
     }
     case "cost_object": {
-      break;
+      return data.costObjectList.map((item) => ({
+        contract_id,
+        // id
+        type: item.type,
+        cost_object_id: item.cost_object_id,
+        name: item.name,
+        cost_type: item.cost_type,
+        dmbtr: item.dmbtr,
+        dmbtr_local: item.dmbtr_local,
+        start_date: item.start_date,
+        end_date: item.end_date,
+      }));
     }
     case "bill": {
       break;
