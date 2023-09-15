@@ -29,6 +29,9 @@ module.exports = async (draft, { fn, dayjs, env, odata, user }) => {
           (params.isSupplier && po.SellerParty.PartyID === userID.toUpperCase())
         );
       })
+      .filter((po) =>
+        ["6", "7", "9", "10"].includes(po.PurchaseOrderLifeCycleStatusCode)
+      )
       .map((po) => ({
         purchaseOrderID: po.ID, // 발주번호
         orderStatus: po.PurchaseOrderLifeCycleStatusCode, // 발주현황
