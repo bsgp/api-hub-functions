@@ -19,13 +19,17 @@ module.exports = async (draft, context) => {
     const queryPO = await fn
       .fetchAll(odata, { url: po_url, username, password })
       .then(({ result = [] }) => result);
-    const queryPurchaseOrders = queryPO.filter((po) => {
-      const userID = `${user.id}`;
-      return (
-        !params.isSupplier ||
-        (params.isSupplier && po.SellerParty.PartyID === userID.toUpperCase())
+    const queryPurchaseOrders = queryPO
+      .filter((po) => {
+        const userID = `${user.id}`;
+        return (
+          !params.isSupplier ||
+          (params.isSupplier && po.SellerParty.PartyID === userID.toUpperCase())
+        );
+      })
+      .filter((po) =>
+        ["6", "7", "9", "10"].includes(po.PurchaseOrderLifeCycleStatusCode)
       );
-    });
 
     draft.response.body.po_url = po_url;
     draft.response.body.queryPurchaseOrders = queryPurchaseOrders;
