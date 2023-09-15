@@ -40,6 +40,14 @@ module.exports = async (draft, { fn, sql, tryit }) => {
     E_MESSAGE: "contract insert successfully",
     queryResult,
     contractID,
+    contract: {
+      ...queryResult.body.list[0],
+      contractID,
+      partyList: [],
+      costObjectList: [],
+      billList: [],
+      attachmentList: [],
+    },
   };
 
   // const ref_doc = [];
