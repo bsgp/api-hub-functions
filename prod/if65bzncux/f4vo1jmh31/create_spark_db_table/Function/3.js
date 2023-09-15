@@ -20,19 +20,19 @@ module.exports = async (draft, { file }) => {
       desc: "Contract info DB table",
     },
     ref_doc: {
-      name: "ref_doc_3",
+      name: "ref_doc_4",
       desc: "Reference document(MM,FI) info DB table",
     },
     cost_object: {
-      name: "cost_object_3",
+      name: "cost_object_4",
       desc: "WBS, CostCenter info DB table",
     },
     bill: {
-      name: "bill_3",
+      name: "bill_4",
       desc: "bill reson text DB",
     },
     party: {
-      name: "party_4",
+      name: "party_5",
       desc: "Party(supplier, customer) info DB",
     },
     letter_appr: {
