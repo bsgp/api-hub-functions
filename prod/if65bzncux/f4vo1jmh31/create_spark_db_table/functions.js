@@ -128,6 +128,22 @@ module.exports.party =
     table.primary(["contract_id", "id"]);
   };
 
+/** TABLE: attachment */
+module.exports.attachment =
+  ({ makeid }) =>
+  (table) => {
+    table.charset("utf8mb4");
+
+    table.string("contract_id", 10).notNullable();
+    table.string("id", 5).defaultTo(makeid(5)); // makeid()
+
+    table.string("type", 40).defaultTo("");
+    table.string("name", 200).defaultTo("");
+    table.string("ext", 10).defaultTo("");
+
+    table.primary(["contract_id", "id"]);
+  };
+
 /** TABLE: letter_appr */
 module.exports.letter_appr =
   ({ makeid }) =>
