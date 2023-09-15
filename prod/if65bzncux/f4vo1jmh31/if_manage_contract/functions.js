@@ -1,7 +1,7 @@
 module.exports.getDB_Object = (data, key) => {
   if (key === "contract") {
     return {
-      // id
+      id: data.form.id,
       prod_date: data.form.prod_date,
       bukrs: data.form.bukrs,
       name: data.form.name,
@@ -16,5 +16,21 @@ module.exports.getDB_Object = (data, key) => {
       curr_local: data.form.curr_local,
       status: data.form.status,
     };
+  }
+  switch (key) {
+    case "ref_doc": {
+      break;
+    }
+    case "cost_object": {
+      break;
+    }
+    case "bill": {
+      break;
+    }
+    case "party": {
+      break;
+    }
+    default:
+      break;
   }
 };
