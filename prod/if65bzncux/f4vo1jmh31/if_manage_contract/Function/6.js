@@ -28,6 +28,7 @@ module.exports = async (draft) => {
 
   draft.response.body = {
     request_contractID: draft.json.newData.contractID,
+    tables: draft.json.tables,
     contract: {
       type: "P",
       contractID: "7775577",
