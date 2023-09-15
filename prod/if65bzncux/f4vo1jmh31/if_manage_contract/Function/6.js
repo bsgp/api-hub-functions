@@ -1,21 +1,26 @@
 module.exports = async (draft) => {
-  // const tables = draft.json.tables;
+  // const {tables,newData } = draft.json;
+  // const {form, partyList, costObjectList, billList, attachmentList} = newData
   // const contract = {
   //   // id:  auto increase
-  //   prod_date:
-  // bukrs
-  // name
-  // type
-  // start_date
-  // end_date
-  // renewal_ind
-  // renewal_period
-  // curr_key
-  // dmbtr
-  // dmbtr_local
-  // curr_local
-  // status
+  //   prod_date: form.prod_date,
+  // bukrs: form.bukrs,
+  // name: form.name,
+  // type: form.type,
+  // start_date: form.start_date,
+  // end_date: form.end_date,
+  // renewal_ind: form.renewal_ind,
+  // renewal_period: form.renewal_period,
+  // curr_key: form.curr_key,
+  // dmbtr: form.dmbtr,
+  // dmbtr_local: form.dmbtr_local,
+  // curr_local: form.curr_local,
+  // status: form.status
   // };
+
+  // const builder = sql("mysql");
+  // const contractValidator = await builder.validator(table);
+
   // const ref_doc = [];
   // const cost_object = [];
   // const bill = [];
