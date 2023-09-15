@@ -5,7 +5,7 @@ module.exports = async (draft, { fn, sql }) => {
   // const builder = sql("mysql").select(tables.contract.name);
   // const contractValidator = await builder.validator;
 
-  const createContract = sql("mysql", { useCustomRole: false })
+  const createContract = await sql("mysql", { useCustomRole: false })
     .insert(tables.contract.name, contract)
     .run();
   if (createContract.statusCode === 200) {
