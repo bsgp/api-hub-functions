@@ -54,7 +54,15 @@ module.exports.getDB_Object = (data, key, contract_id) => {
       }));
     }
     case "party": {
-      break;
+      return data.partyList.map((item) => ({
+        contract_id,
+        id: item.id,
+        stems10_cn: item.stems10_cn,
+        stems10_ko: item.stems10_ko,
+        name: item.name,
+        ref_id: item.ref_id,
+        type: item.type,
+      }));
     }
     default:
       break;
