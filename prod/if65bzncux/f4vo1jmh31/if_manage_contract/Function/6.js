@@ -38,7 +38,6 @@ module.exports = async (draft, { fn, sql, tryit }) => {
   draft.response.body = {
     E_STATUS: "S",
     E_MESSAGE: "contract insert successfully",
-    queryResult,
     contractID,
     contract: {
       ...queryResult.body.list[0],
