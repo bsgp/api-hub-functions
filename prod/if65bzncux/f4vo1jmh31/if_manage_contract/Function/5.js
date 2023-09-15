@@ -8,7 +8,7 @@ module.exports = async (draft, { sql, tryit }) => {
     const queryResult = await query.run();
     const contractID = tryit(() => queryResult.body.list[0].id, "");
     if (contractID) {
-      contract = { ...contract, ...queryResult.body.list[0] };
+      contract = { ...contract, ...queryResult.body.list[0], contractID };
     }
   }
 
