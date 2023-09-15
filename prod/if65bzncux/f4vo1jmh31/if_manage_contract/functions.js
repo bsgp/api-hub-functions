@@ -1,4 +1,4 @@
-module.exports.getDB_Object = (data, { key, contract_id, id }) => {
+module.exports.getDB_Object = (data, { key, contract_id, makeid }) => {
   if (key === "contract") {
     return {
       id: data.form.contractID,
@@ -21,7 +21,7 @@ module.exports.getDB_Object = (data, { key, contract_id, id }) => {
     case "ref_doc": {
       return data.billList.map((item) => ({
         contract_id: contract_id || item.contract_id,
-        id: id || item.id,
+        id: item.id || (makeid && makeid(5)),
         // type:
         // item_id:
         // doc_id:
@@ -30,7 +30,7 @@ module.exports.getDB_Object = (data, { key, contract_id, id }) => {
     case "cost_object": {
       return data.costObjectList.map((item) => ({
         contract_id: contract_id || item.contract_id,
-        id: id || item.id,
+        id: item.id || (makeid && makeid(5)),
         type: item.type,
         cost_object_id: item.cost_object_id,
         name: item.name,
@@ -44,7 +44,7 @@ module.exports.getDB_Object = (data, { key, contract_id, id }) => {
     case "bill": {
       return data.billList.map((item) => ({
         contract_id: contract_id || item.contract_id,
-        id: id || item.id,
+        id: item.id || (makeid && makeid(5)),
         cost_object_id: item.cost_object_id,
         reason_text: item.reason_text,
         dmbtr: (item.dmbtr || "").replace(/,/g, ""),
@@ -56,7 +56,7 @@ module.exports.getDB_Object = (data, { key, contract_id, id }) => {
     case "party": {
       return data.partyList.map((item) => ({
         contract_id: contract_id || item.contract_id,
-        id: id || item.id,
+        id: item.id || (makeid && makeid(5)),
         stems10: item.stems10,
         stems10_cn: item.stems10_cn,
         stems10_ko: item.stems10_ko,
