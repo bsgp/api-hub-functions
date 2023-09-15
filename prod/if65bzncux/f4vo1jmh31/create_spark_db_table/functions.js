@@ -25,7 +25,7 @@ module.exports.change =
 module.exports.contract = () => (table) => {
   table.charset("utf8mb4");
 
-  table.string("id", 10).notNullable();
+  table.increments("id");
 
   table.string("prod_date", 8).defaultTo(""); // 계약작성일
   table.string("bukrs", 4).defaultTo(""); // 회사코드(기본값: 로그인한 회사코드)
