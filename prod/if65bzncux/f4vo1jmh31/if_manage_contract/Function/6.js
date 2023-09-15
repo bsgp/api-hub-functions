@@ -35,6 +35,21 @@ module.exports = async (draft, { fn, sql, tryit }) => {
     draft.response.statusCode = 400;
     return;
   }
+
+  const partyArr = fn.getDB_Object(newData, "party");
+  const createParty = await sql("mysql", { useCustomRole: false })
+    .insert(tables.party.name, partyArr)
+    .run();
+  if (createParty.statusCode !== 200) {
+    draft.response.body = {
+      E_STATUS: "F",
+      E_MESSAGE: `Failed save ${tables.party.name}`,
+      createParty,
+    };
+    draft.response.statusCode = 400;
+    return;
+  }
+
   draft.response.body = {
     E_STATUS: "S",
     E_MESSAGE: `계약번호: ${contractID}\n생성되었습니다`,
