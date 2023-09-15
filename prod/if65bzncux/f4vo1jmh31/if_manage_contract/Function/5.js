@@ -11,7 +11,7 @@ module.exports = async (draft, { sql, tryit }) => {
       contract = { ...contract, ...queryResult.body.list[0], contractID };
       const partyData = await sql("mysql", { useCustomRole: false })
         .select(tables.party.name)
-        .where("contract_id", "like", Number(newData.contractID))
+        .where("contract_id", "like", newData.contractID)
         .run();
       const partyList = tryit(() => partyData.body.list, []);
       contract = { ...contract, partyList };
