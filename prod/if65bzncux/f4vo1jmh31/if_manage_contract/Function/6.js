@@ -1,7 +1,7 @@
 module.exports = async (draft, { fn, sql }) => {
   const { tables, newData } = draft.json;
   const contract = fn.getDB_Object(newData, "contract");
-  const builder = sql("mysql");
+  const builder = sql("mysql", { useCustomRole: false });
   const contractValidator = await builder.validator(tables.contract.name);
   if (!contractValidator(contract).isValid) {
     draft.response.body = {
