@@ -1,6 +1,6 @@
-module.exports = async (draft, { fn, sql, tryit }) => {
+module.exports = async (draft, { fn, sql, tryit, makeid }) => {
   const { tables, newData } = draft.json;
-  const contract = fn.getDB_Object(newData, "contract");
+  const contract = fn.getDB_Object(newData, { key: "contract" });
 
   // const builder = sql("mysql").select(tables.contract.name);
   // const contractValidator = await builder.validator;
@@ -36,7 +36,11 @@ module.exports = async (draft, { fn, sql, tryit }) => {
     return;
   }
 
-  const partyArr = fn.getDB_Object(newData, "party", contractID);
+  const partyArr = fn.getDB_Object(newData, {
+    key: "party",
+    contractID,
+    makeid,
+  });
   const createParty = await sql("mysql", { useCustomRole: false })
     .insert(tables.party.name, partyArr)
     .run();
