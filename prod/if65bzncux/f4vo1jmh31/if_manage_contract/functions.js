@@ -19,17 +19,18 @@ module.exports.getDB_Object = (data, key, contract_id) => {
   }
   switch (key) {
     case "ref_doc": {
-      return {
+      return data.billList.map((item) => ({
         contract_id,
+        id: item.id,
         // type:
         // item_id:
         // doc_id:
-      };
+      }));
     }
     case "cost_object": {
       return data.costObjectList.map((item) => ({
         contract_id,
-        // id
+        id: item.id,
         type: item.type,
         cost_object_id: item.cost_object_id,
         name: item.name,
@@ -41,7 +42,16 @@ module.exports.getDB_Object = (data, key, contract_id) => {
       }));
     }
     case "bill": {
-      break;
+      return data.billList.map((item) => ({
+        contract_id,
+        id: item.id,
+        cost_object_id: item.cost_object_id,
+        reason_text: item.reason_text,
+        dmbtr: item.dmbtr,
+        dmbtr_local: item.dmbtr_local,
+        curr_key: item.curr_key,
+        curr_local: item.curr_local,
+      }));
     }
     case "party": {
       break;
