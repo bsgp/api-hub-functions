@@ -16,7 +16,7 @@ module.exports = async (draft, { file }) => {
       desc: "Spark DB change history table",
     },
     contract: {
-      name: "contract_3",
+      name: "contract_4",
       desc: "Contract info DB table",
     },
     ref_doc: {
