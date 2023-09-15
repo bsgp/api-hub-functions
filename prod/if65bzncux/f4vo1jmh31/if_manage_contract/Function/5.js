@@ -9,6 +9,12 @@ module.exports = async (draft, { sql, tryit }) => {
     const contractID = tryit(() => queryResult.body.list[0].id, "");
     if (contractID) {
       contract = { ...contract, ...queryResult.body.list[0], contractID };
+      const partyData = await sql("mysql", { useCustomRole: false })
+        .select(tables.party.name)
+        .where("contract_id", "like", Number(newData.contractID))
+        .run();
+      const partyList = tryit(() => partyData.body.list, []);
+      contract = { ...contract, ...partyList };
     }
   }
 
