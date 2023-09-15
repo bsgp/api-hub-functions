@@ -22,6 +22,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
       return data.billList.map((item) => ({
         contract_id: contractID || item.contractID,
         id: item.id || (makeid && makeid(5)),
+        index: item.index,
         // type:
         // item_id:
         // doc_id:
@@ -31,6 +32,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
       return data.costObjectList.map((item) => ({
         contract_id: contractID || item.contractID,
         id: item.id || (makeid && makeid(5)),
+        index: item.index,
         type: item.type,
         cost_object_id: item.cost_object_id,
         name: item.name,
@@ -45,6 +47,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
       return data.billList.map((item) => ({
         contract_id: contractID || item.contractID,
         id: item.id || (makeid && makeid(5)),
+        index: item.index,
         cost_object_id: item.cost_object_id,
         reason_text: item.reason_text,
         dmbtr: (item.dmbtr || "").replace(/,/g, ""),
@@ -57,6 +60,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
       return data.partyList.map((item) => ({
         contract_id: contractID || item.contractID,
         id: item.id || (makeid && makeid(5)),
+        index: item.index,
         stems10: item.stems10,
         stems10_cn: item.stems10_cn,
         stems10_ko: item.stems10_ko,
