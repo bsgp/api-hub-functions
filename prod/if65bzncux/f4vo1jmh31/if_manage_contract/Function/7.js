@@ -78,8 +78,7 @@ module.exports = async (draft, { sql, tryit, fn }) => {
               before: "created",
               after: { ...item },
             });
-          }
-          if (item[field] !== beforeObj[field]) {
+          } else if (item[field] !== beforeObj[field]) {
             changeList.push({
               key: field,
               index: item.index,
