@@ -35,7 +35,7 @@ module.exports = async (draft, { sql, tryit, fn }) => {
 
   const changed = {};
   tableList.map((tableKey) => {
-    const tableData = fn.getDB_Object(newData, { key: tableKey });
+    const tableData = fn.getDB_Object(newData, { key: tableKey, contractID });
     changed[tableKey] = tableData;
   });
 
