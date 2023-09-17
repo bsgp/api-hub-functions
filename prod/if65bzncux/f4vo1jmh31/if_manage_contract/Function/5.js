@@ -9,7 +9,7 @@ module.exports = async (draft, { sql, tryit }) => {
     const contractID = tryit(() => queryResult.body.list[0].id, "");
     if (contractID) {
       contract = { ...contract, ...queryResult.body.list[0], contractID };
-      const tableList = [];
+      const tableList = [{ tableKey: "party", clientTableName: "partyList" }];
       await Promise.all(
         tableList.map(async ({ tableKey, clientTableName }) => {
           const queryTableData = await sql("mysql", { useCustomRole: false })
