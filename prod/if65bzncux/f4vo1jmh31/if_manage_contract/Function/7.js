@@ -58,35 +58,33 @@ module.exports = async (draft, { sql, tryit, fn }) => {
       fOrigin
         .filter((item) => !fChanged.find((it) => it.id === item.id))
         .forEach((item) =>
-          Object.keys(item).forEach((field) =>
-            changeList.push({
-              key: field,
-              index: item.index,
-              before: item,
-              after: "deleted",
-            })
-          )
+          changeList.push({
+            index: item.index,
+            before: item,
+            after: "deleted",
+          })
         );
       //find created || changed
       fChanged.forEach((item) => {
         const beforeObj = fOrigin.find((it) => it.id === item.id);
-        Object.keys(item).forEach((field) => {
-          if (!beforeObj) {
-            changeList.push({
-              key: field,
-              index: item.index,
-              before: "created",
-              after: { ...item },
-            });
-          } else if (item[field] !== beforeObj[field]) {
-            changeList.push({
-              key: field,
-              index: item.index,
-              before: { ...beforeObj },
-              after: { ...item },
-            });
-          }
-        });
+        if (!beforeObj) {
+          changeList.push({
+            index: item.index,
+            before: "created",
+            after: { ...item },
+          });
+        } else {
+          Object.keys(item).forEach((field) => {
+            if (item[field] !== beforeObj[field]) {
+              changeList.push({
+                key: field,
+                index: item.index,
+                before: { ...beforeObj },
+                after: { ...item },
+              });
+            }
+          });
+        }
       });
     }
     acc[tableKey] = changeList;
