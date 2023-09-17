@@ -59,6 +59,7 @@ module.exports.ref_doc =
     table.string("type", 5).defaultTo(""); // MM, FI
     table.string("item_id", 5).defaultTo(""); // 아이템 ID
     table.string("doc_id", 36).defaultTo(""); // SAP 구매오더번호, 회계전표..
+    table.boolean("deleted").defaultTo(false);
 
     table.primary(["contract_id", "id"]);
   };
@@ -82,6 +83,7 @@ module.exports.cost_object =
     table.decimal("dmbtr_local", 23, 2).defaultTo(0);
     table.string("start_date", 8).defaultTo(""); // 시작일
     table.string("end_date", 8).defaultTo(""); // 종료일
+    table.boolean("deleted").defaultTo(false);
 
     table.primary(["contract_id", "id"]);
   };
@@ -102,6 +104,7 @@ module.exports.bill =
     table.decimal("dmbtr_local", 23, 2).defaultTo(0);
     table.string("curr_key", 5).defaultTo("");
     table.string("curr_local", 5).defaultTo("");
+    table.boolean("deleted").defaultTo(false);
 
     table.primary(["contract_id", "id"]);
   };
@@ -124,6 +127,7 @@ module.exports.party =
     table.string("name", 100).defaultTo(""); // 상호
     table.string("ref_id", 36).defaultTo(""); // 회사 코드, BP코드
     table.string("type", 5).defaultTo(""); // 회사 타입
+    table.boolean("deleted").defaultTo(false);
 
     table.primary(["contract_id", "id"]);
   };
@@ -141,6 +145,7 @@ module.exports.attachment =
     table.string("type", 40).defaultTo("");
     table.string("name", 200).defaultTo("");
     table.string("ext", 10).defaultTo("");
+    table.boolean("deleted").defaultTo(false);
 
     table.primary(["contract_id", "id"]);
   };
