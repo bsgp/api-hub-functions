@@ -137,6 +137,7 @@ module.exports.attachment =
     table.string("contract_id", 10).notNullable();
     table.string("id", 5).defaultTo(makeid(5)); // makeid()
 
+    table.string("index", 5).defaultTo("");
     table.string("type", 40).defaultTo("");
     table.string("name", 200).defaultTo("");
     table.string("ext", 10).defaultTo("");
