@@ -1,4 +1,4 @@
-module.exports = async (draft, { sql, tryit }) => {
+module.exports = async (draft, { sql, tryit, fn }) => {
   const { tables, newData } = draft.json;
   const contractID = newData.form.contractID;
 
@@ -24,6 +24,12 @@ module.exports = async (draft, { sql, tryit }) => {
 
   const { contract, party, bill, cost_object, attachment } = origin; //ref_doc
 
+  const changed = {};
+  [...tableList, "contract"].map((tableKey) => {
+    const tableData = fn.getDB_Object(newData, { key: tableKey });
+    changed[tableKey] = tableData;
+  });
+
   draft.response.body = {
     request_contractID: contractID,
     contract: {
@@ -34,6 +40,8 @@ module.exports = async (draft, { sql, tryit }) => {
       billList: bill,
       attachmentList: attachment,
     },
+    origin,
+    changed,
     E_STATUS: "S",
     E_MESSAGE: `계약번호: ${origin.contractID}\n조회가\n완료되었습니다`,
   };
