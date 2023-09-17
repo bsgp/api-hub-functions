@@ -8,7 +8,7 @@ module.exports = async (draft, { sql, tryit }) => {
   const queryResult = await query.run();
 
   const tableList = ["party", "bill", "ref_doc", "cost_object", "attachment"];
-  const results = { contract: queryResult.body.list[0], contractID };
+  const origin = { contract: queryResult.body.list[0], contractID };
   await Promise.all(
     tableList.map(async (tableKey) => {
       const queryTableData = await sql("mysql", { useCustomRole: false })
@@ -17,24 +17,24 @@ module.exports = async (draft, { sql, tryit }) => {
         .orderBy("index", "asc")
         .run();
       const tableData = tryit(() => queryTableData.body.list, []);
-      results[tableKey] = tableData;
+      origin[tableKey] = tableData;
       return true;
     })
   );
 
-  const { contract, party, bill, cost_object, attachment } = results; //ref_doc
+  const { contract, party, bill, cost_object, attachment } = origin; //ref_doc
 
   draft.response.body = {
     request_contractID: contractID,
     contract: {
       ...contract,
-      contractID: results.contractID,
+      contractID: origin.contractID,
       partyList: party,
       costObjectList: cost_object,
       billList: bill,
       attachmentList: attachment,
     },
     E_STATUS: "S",
-    E_MESSAGE: `계약번호: ${results.contractID}\n조회가\n완료되었습니다`,
+    E_MESSAGE: `계약번호: ${origin.contractID}\n조회가\n완료되었습니다`,
   };
 };
