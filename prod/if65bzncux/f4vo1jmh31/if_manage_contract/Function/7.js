@@ -71,6 +71,14 @@ module.exports = async (draft, { sql, tryit, fn }) => {
       fChanged.forEach((item) => {
         const beforeObj = fOrigin.find((it) => it.id === item.id) || {};
         Object.keys(item).forEach((field) => {
+          if (!beforeObj) {
+            changeList.push({
+              key: field,
+              index: item.index,
+              before: "created",
+              after: { ...item },
+            });
+          }
           if (item[field] !== beforeObj[field]) {
             changeList.push({
               key: field,
