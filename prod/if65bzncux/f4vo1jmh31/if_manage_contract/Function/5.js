@@ -15,6 +15,7 @@ module.exports = async (draft, { sql, tryit }) => {
           const queryTableData = await sql("mysql", { useCustomRole: false })
             .select(tables[tableKey].name)
             .where("contract_id", "like", contractID)
+            .orderBy("index", "desc")
             .run();
           const tableData = tryit(() => queryTableData.body.list, []);
           results[tableKey] = tableData;
@@ -30,9 +31,9 @@ module.exports = async (draft, { sql, tryit }) => {
     contract: {
       ...contract,
       contractID: results.contractID,
-      partyList: party.sort((obj1, obj2) => obj1.index - obj2.index),
-      costObjectList: cost_object.sort((obj1, obj2) => obj1.index - obj2.index),
-      billList: bill.sort((obj1, obj2) => obj1.index - obj2.index),
+      partyList: party,
+      costObjectList: cost_object,
+      billList: bill,
       attachmentList: attachment,
     },
     E_STATUS: "S",
