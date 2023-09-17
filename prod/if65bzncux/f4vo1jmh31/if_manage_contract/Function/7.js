@@ -62,8 +62,8 @@ module.exports = async (draft, { sql, tryit, fn }) => {
             changeList.push({
               key: field,
               index: item.index,
-              before: item[field],
-              after: "",
+              before: item,
+              after: "deleted",
             })
           )
         );
@@ -75,8 +75,8 @@ module.exports = async (draft, { sql, tryit, fn }) => {
             changeList.push({
               key: field,
               index: item.index,
-              before: beforeObj[field] || "",
-              after: item[field],
+              before: { ...beforeObj },
+              after: { ...item },
             });
           }
         });
