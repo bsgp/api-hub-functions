@@ -36,37 +36,78 @@ module.exports = async (draft, { fn, sql, tryit, makeid }) => {
     return;
   }
 
-  const partyArr = fn.getDB_Object(newData, {
-    key: "party",
-    contractID,
-    makeid,
-  });
-  const createParty = await sql("mysql", { useCustomRole: false })
-    .insert(tables.party.name, partyArr)
-    .run();
-  if (createParty.statusCode !== 200) {
+  const tableListRes = await Promise.all(
+    [].map(async (tableKey) => {
+      const tableData = fn.getDB_Object(newData, {
+        key: tableKey,
+        contractID,
+        makeid,
+      });
+      const postTableData = await sql("mysql", { useCustomRole: false })
+        .insert(tables[tableKey].name, tableData)
+        .run();
+      if (postTableData.statusCode !== 200) {
+        return {
+          E_STATUS: "F",
+          E_MESSAGE: `Failed save ${tables[tableKey].name}`,
+          result: postTableData,
+        };
+      } else
+        return {
+          E_STATUS: "S",
+          E_MESSAGE: `saved ${tables[tableKey].name}`,
+          result: postTableData,
+        };
+    })
+  );
+
+  if (tableListRes.find((res) => res.E_STATUS === "F")) {
     draft.response.body = {
       E_STATUS: "F",
-      E_MESSAGE: `Failed save ${tables.party.name}`,
-      createParty,
+      E_MESSAGE: `계약 내용을 저장하는 과정에서 문제가 발생했습니다`,
+      contractID,
+      tableListRes,
     };
-    draft.response.statusCode = 400;
-    return;
+  } else {
+    draft.response.body = {
+      E_STATUS: "S",
+      E_MESSAGE: `계약번호: ${contractID}\n생성되었습니다`,
+      contractID,
+      tableListRes,
+    };
   }
 
-  draft.response.body = {
-    E_STATUS: "S",
-    E_MESSAGE: `계약번호: ${contractID}\n생성되었습니다`,
-    contractID,
-    contract: {
-      ...queryResult.body.list[0],
-      contractID,
-      partyList: [],
-      costObjectList: [],
-      billList: [],
-      attachmentList: [],
-    },
-  };
+  // const partyArr = fn.getDB_Object(newData, {
+  //   key: "party",
+  //   contractID,
+  //   makeid,
+  // });
+  // const createParty = await sql("mysql", { useCustomRole: false })
+  //   .insert(tables.party.name, partyArr)
+  //   .run();
+  // if (createParty.statusCode !== 200) {
+  //   draft.response.body = {
+  //     E_STATUS: "F",
+  //     E_MESSAGE: `Failed save ${tables.party.name}`,
+  //     createParty,
+  //   };
+  //   draft.response.statusCode = 400;
+  //   return;
+  // }
+
+  // draft.response.body = {
+  //   E_STATUS: "S",
+  //   E_MESSAGE: `계약번호: ${contractID}\n생성되었습니다`,
+  //   contractID,
+  //   contract: {
+  //     ...queryResult.body.list[0],
+  //     contractID,
+  //     partyList: [],
+  //     costObjectList: [],
+  //     billList: [],
+  //     attachmentList: [],
+  //   },
+  // };
 
   // const ref_doc = [];
   // const cost_object = [];
