@@ -29,13 +29,13 @@ module.exports = async (draft, { sql, tryit }) => {
     request_contractID: newData.contractID,
     contract: {
       ...contract,
-      contractID: results.contractID,
+      contractID: contract.id,
       partyList: party,
       costObjectList: cost_object,
       billList: bill,
       attachmentList: attachment,
     },
     E_STATUS: "S",
-    E_MESSAGE: `계약번호: ${results.contractID}\n조회가\n완료되었습니다`,
+    E_MESSAGE: `계약번호: ${contract.id}\n조회가\n완료되었습니다`,
   };
 };
