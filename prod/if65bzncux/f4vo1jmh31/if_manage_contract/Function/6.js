@@ -37,30 +37,34 @@ module.exports = async (draft, { fn, sql, tryit, makeid }) => {
   }
 
   const tableListRes = await Promise.all(
-    ["ref_doc", "cost_object", "bill", "party", "attachment"].map(
-      async (tableKey) => {
-        const tableData = fn.getDB_Object(newData, {
-          key: tableKey,
-          contractID,
-          makeid,
-        });
-        const postTableData = await sql("mysql", { useCustomRole: false })
-          .insert(tables[tableKey].name, tableData)
-          .run();
-        if (postTableData.statusCode !== 200) {
-          return {
-            E_STATUS: "F",
-            E_MESSAGE: `Failed save ${tables[tableKey].name}`,
-            result: postTableData,
-          };
-        } else
-          return {
-            E_STATUS: "S",
-            E_MESSAGE: `saved ${tables[tableKey].name}`,
-            result: postTableData,
-          };
-      }
-    )
+    [
+      "cost_object",
+      "bill",
+      "party",
+      "attachment",
+      // "ref_doc",
+    ].map(async (tableKey) => {
+      const tableData = fn.getDB_Object(newData, {
+        key: tableKey,
+        contractID,
+        makeid,
+      });
+      const postTableData = await sql("mysql", { useCustomRole: false })
+        .insert(tables[tableKey].name, tableData)
+        .run();
+      if (postTableData.statusCode !== 200) {
+        return {
+          E_STATUS: "F",
+          E_MESSAGE: `Failed save ${tables[tableKey].name}`,
+          result: postTableData,
+        };
+      } else
+        return {
+          E_STATUS: "S",
+          E_MESSAGE: `saved ${tables[tableKey].name}`,
+          result: postTableData,
+        };
+    })
   );
 
   if (tableListRes.find((res) => res.E_STATUS === "F")) {
