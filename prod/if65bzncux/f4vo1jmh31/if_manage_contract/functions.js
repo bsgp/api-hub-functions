@@ -73,6 +73,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
       return data.attachmentList.map((item) => ({
         contract_id: contractID || item.contractID,
         id: item.id || (makeid && makeid(5)),
+        index: item.index,
         type: item.type,
         name: item.name,
         ext: item.ext,
