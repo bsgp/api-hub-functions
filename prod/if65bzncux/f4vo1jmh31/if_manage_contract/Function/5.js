@@ -9,15 +9,21 @@ module.exports = async (draft, { sql, tryit }) => {
     const contractID = tryit(() => queryResult.body.list[0].id, "");
     if (contractID) {
       contract = { ...contract, ...queryResult.body.list[0], contractID };
-      const tableList = [{ tableKey: "party", clientTableName: "partyList" }];
+      const tableList = [
+        "party",
+        "bill",
+        "ref_doc",
+        "cost_object",
+        "attachment",
+      ];
       await Promise.all(
-        tableList.map(async ({ tableKey, clientTableName }) => {
+        tableList.map(async (tableKey) => {
           const queryTableData = await sql("mysql", { useCustomRole: false })
             .select(tables[tableKey].name)
             .where("contract_id", "like", contractID)
             .run();
           const tableData = tryit(() => queryTableData.body.list, []);
-          contract[clientTableName] = tableData;
+          contract[tableKey] = tableData;
           return true;
         })
       );
