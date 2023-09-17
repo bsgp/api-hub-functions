@@ -29,6 +29,7 @@ module.exports = async (draft, { sql, tryit }) => {
     request_contractID: newData.contractID,
     contract: {
       ...contract,
+      contractID: results.contractID,
       partyList: party,
       costObjectList: cost_object,
       billList: bill,
