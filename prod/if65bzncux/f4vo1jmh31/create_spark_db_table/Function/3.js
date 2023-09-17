@@ -36,7 +36,7 @@ module.exports = async (draft, { file }) => {
       desc: "Party(supplier, customer) info DB",
     },
     attachment: {
-      name: "attachment_1",
+      name: "attachment_2",
       desc: "Attachment info DB",
     },
     letter_appr: {
