@@ -4,7 +4,7 @@ module.exports = async (draft, { sql, tryit }) => {
 
   const query = sql("mysql", { useCustomRole: false })
     .select(tables.contract.name)
-    .where("id", "like", Number(newData.contractID));
+    .where("id", "like", Number(contractID));
   const queryResult = await query.run();
 
   const tableList = ["party", "bill", "ref_doc", "cost_object", "attachment"];
@@ -25,7 +25,7 @@ module.exports = async (draft, { sql, tryit }) => {
   const { contract, party, bill, cost_object, attachment } = results; //ref_doc
 
   draft.response.body = {
-    request_contractID: newData.contractID,
+    request_contractID: contractID,
     contract: {
       ...contract,
       contractID: results.contractID,
