@@ -6,7 +6,7 @@ module.exports = async (draft, { sql, tryit, fn }) => {
     "contract",
     "party",
     "bill",
-    "ref_doc",
+    // "ref_doc",
     "cost_object",
     "attachment",
   ];
