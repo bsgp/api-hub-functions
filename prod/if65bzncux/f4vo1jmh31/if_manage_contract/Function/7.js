@@ -60,7 +60,7 @@ module.exports = async (draft, { sql, tryit, fn }) => {
         .forEach((item) =>
           changeList.push({
             index: item.index,
-            before: item,
+            before: { ...item },
             after: "deleted",
           })
         );
