@@ -14,11 +14,14 @@ module.exports = async (draft, { sql, tryit, fn }) => {
   await Promise.all(
     tableList.map(async (tableKey) => {
       const searchKey = tableKey === "contract" ? "id" : "contract_id";
-      const queryTableData = await sql("mysql", { useCustomRole: false })
+      const queryBuilder = sql("mysql", { useCustomRole: false })
         .select(tables[tableKey].name)
-        .where(searchKey, "like", contractID)
-        .orderBy("index", "asc")
-        .run();
+        .where(searchKey, "like", contractID);
+      if (tableKey !== "contract") {
+        queryBuilder.orderBy("index", "asc");
+      }
+
+      const queryTableData = await queryBuilder.run();
       const tableData = tryit(() => queryTableData.body.list, []);
       if (tableKey === "contract") {
         origin[tableKey] = tableData[0];
