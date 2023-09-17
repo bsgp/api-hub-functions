@@ -30,9 +30,9 @@ module.exports = async (draft, { sql, tryit }) => {
     contract: {
       ...contract,
       contractID: results.contractID,
-      partyList: party,
-      costObjectList: cost_object,
-      billList: bill,
+      partyList: party.sort((obj1, obj2) => obj1.index - obj2.index),
+      costObjectList: cost_object.sort((obj1, obj2) => obj1.index - obj2.index),
+      billList: bill.sort((obj1, obj2) => obj1.index - obj2.index),
       attachmentList: attachment,
     },
     E_STATUS: "S",
