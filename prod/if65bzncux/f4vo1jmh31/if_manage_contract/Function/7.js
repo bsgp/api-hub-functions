@@ -2,22 +2,28 @@ module.exports = async (draft, { sql, tryit, fn }) => {
   const { tables, newData } = draft.json;
   const contractID = newData.form.contractID;
 
-  const query = sql("mysql", { useCustomRole: false })
-    .select(tables.contract.name)
-    .where("id", "like", Number(contractID));
-  const queryResult = await query.run();
-
-  const tableList = ["party", "bill", "ref_doc", "cost_object", "attachment"];
-  const origin = { contract: queryResult.body.list[0], contractID };
+  const tableList = [
+    "contract",
+    "party",
+    "bill",
+    "ref_doc",
+    "cost_object",
+    "attachment",
+  ];
+  const origin = { contractID };
   await Promise.all(
     tableList.map(async (tableKey) => {
+      const searchKey = tableKey === "contract" ? "id" : "contract_id";
       const queryTableData = await sql("mysql", { useCustomRole: false })
         .select(tables[tableKey].name)
-        .where("contract_id", "like", contractID)
+        .where(searchKey, "like", contractID)
         .orderBy("index", "asc")
         .run();
       const tableData = tryit(() => queryTableData.body.list, []);
-      origin[tableKey] = tableData;
+      if (tableKey === "contract") {
+        origin[tableKey] = tableData[0];
+      } else origin[tableKey] = tableData;
+
       return true;
     })
   );
@@ -25,10 +31,43 @@ module.exports = async (draft, { sql, tryit, fn }) => {
   const { contract, party, bill, cost_object, attachment } = origin; //ref_doc
 
   const changed = {};
-  [...tableList, "contract"].map((tableKey) => {
+  tableList.map((tableKey) => {
     const tableData = fn.getDB_Object(newData, { key: tableKey });
     changed[tableKey] = tableData;
   });
+
+  const compared = tableList.reduce((acc, tableKey) => {
+    const changeList = [];
+    const fOrigin = origin[tableKey];
+    const fChanged = changed[tableKey];
+    if (tableKey === "contract") {
+      Object.keys(fChanged).forEach((field) => {
+        if (fChanged[field] !== fOrigin[field]) {
+          changeList.push({
+            key: field,
+            before: fOrigin[field],
+            after: fChanged[field],
+          });
+        }
+      });
+    } else {
+      // find Deleted
+      fOrigin
+        .filter((item) => !fChanged.find((it) => it.id === item.id))
+        .forEach((item) =>
+          Object.keys(item).forEach((field) =>
+            changeList.push({
+              key: field,
+              index: item.index,
+              before: item[field],
+              after: "",
+            })
+          )
+        );
+    }
+    acc[tableKey] = changeList;
+    return acc;
+  }, {});
 
   draft.response.body = {
     request_contractID: contractID,
@@ -40,7 +79,7 @@ module.exports = async (draft, { sql, tryit, fn }) => {
       billList: bill,
       attachmentList: attachment,
     },
-    origin,
+    compared,
     changed,
     E_STATUS: "S",
     E_MESSAGE: `계약번호: ${origin.contractID}\n조회가\n완료되었습니다`,
