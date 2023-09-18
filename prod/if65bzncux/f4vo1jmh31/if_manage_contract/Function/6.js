@@ -49,6 +49,13 @@ module.exports = async (draft, { fn, sql, tryit, makeid }) => {
         contractID,
         makeid,
       });
+      if (tableData.length === 0) {
+        return {
+          E_STATUS: "S",
+          E_MESSAGE: `no data ${tables[tableKey].name}`,
+          result: tableData,
+        };
+      }
       const postTableData = await sql("mysql", { useCustomRole: false })
         .insert(tables[tableKey].name, tableData)
         .run();
