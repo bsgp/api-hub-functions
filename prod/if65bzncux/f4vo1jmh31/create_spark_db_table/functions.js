@@ -22,29 +22,32 @@ module.exports.change =
   };
 
 /** TABLE: contract */
-module.exports.contract = () => (table) => {
-  table.charset("utf8mb4");
+module.exports.contract =
+  ({ mysql }) =>
+  (table) => {
+    table.charset("utf8mb4");
 
-  table.increments("id");
+    table.increments("id");
 
-  table.string("prod_date", 8).defaultTo(""); // 계약작성일
-  table.string("bukrs", 4).defaultTo(""); // 회사코드(기본값: 로그인한 회사코드)
-  table.string("name", 200).defaultTo(""); // 계약명
-  table.string("type", 1).defaultTo(""); // 계약유형
-  table.string("start_date", 8).defaultTo(""); // 계약시작일
-  table.string("end_date", 8).defaultTo(""); //계약종료일
-  table.boolean("renewal_ind"); // 자동연장 지시자
-  table.string("renewal_period", 3).defaultTo(""); // 자동연장기간 (기본값: "1Y")
-  table.string("curr_key", 5).defaultTo("");
-  // KRW,USD,JPY..(기본값: 로그인 회사코드 기본 통화)
-  table.decimal("dmbtr", 23, 2).defaultTo(0); // curr_key와 매칭되는 금액
-  table.decimal("dmbtr_local", 23, 2).defaultTo(0);
-  // curr_key와 curr_local이 다를 경우 필수 입력
-  table.string("curr_local", 5).defaultTo(""); // 기본값: 로그인 회사 기본통화키
-  table.string("status", 3).defaultTo(""); // 상태
+    table.string("prod_date", 8).defaultTo(""); // 계약작성일
+    table.string("bukrs", 4).defaultTo(""); // 회사코드(기본값: 로그인한 회사코드)
+    table.string("name", 200).defaultTo(""); // 계약명
+    table.string("type", 1).defaultTo(""); // 계약유형
+    table.string("start_date", 8).defaultTo(""); // 계약시작일
+    table.string("end_date", 8).defaultTo(""); //계약종료일
+    table.boolean("renewal_ind"); // 자동연장 지시자
+    table.string("renewal_period", 3).defaultTo(""); // 자동연장기간 (기본값: "1Y")
+    table.string("curr_key", 5).defaultTo("");
+    // KRW,USD,JPY..(기본값: 로그인 회사코드 기본 통화)
+    table.decimal("dmbtr", 23, 2).defaultTo(0); // curr_key와 매칭되는 금액
+    table.decimal("dmbtr_local", 23, 2).defaultTo(0);
+    // curr_key와 curr_local이 다를 경우 필수 입력
+    table.string("curr_local", 5).defaultTo(""); // 기본값: 로그인 회사 기본통화키
+    table.string("status", 3).defaultTo(""); // 상태
+    table.datetime("created_at", { precision: 6 }).defaultTo(mysql.fn.now(6));
 
-  table.primary(["id"]);
-};
+    table.primary(["id"]);
+  };
 
 /** TABLE: ref_doc */
 module.exports.ref_doc =
