@@ -1,4 +1,4 @@
-module.exports = async (draft, { sql, tryit }) => {
+module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
   const { tables, newData } = draft.json;
   const queryBuilder = sql("mysql", { useCustomRole: false }).select(
     tables.contract.name
@@ -22,6 +22,7 @@ module.exports = async (draft, { sql, tryit }) => {
 
   draft.response.body = {
     request: newData,
+    test: fn.convDate(dayjs, newData.contractDate[0]),
     list: results,
     E_STATUS: "S",
     E_MESSAGE: `조회가\n완료되었습니다`,
