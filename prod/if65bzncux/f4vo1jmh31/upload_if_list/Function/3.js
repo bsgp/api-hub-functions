@@ -135,6 +135,12 @@ module.exports = async (draft, { file }) => {
       RfcName: "",
       TriggeredBy: "SUPPORT",
     },
+    ["IF-CT-105"]: {
+      Type: "RFC",
+      Name: "GET_CONTRACT_LIST_FROM_DB",
+      RfcName: "",
+      TriggeredBy: "SUPPORT",
+    },
     ["IF-FU-101"]: {
       Type: "RFC",
       Name: "FILE_UPLOAD",
