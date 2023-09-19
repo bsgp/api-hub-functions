@@ -4,6 +4,12 @@ module.exports = async (draft, { sql, tryit }) => {
     tables.contract.name
   );
 
+  if (newData.contractDate[0] && newData.contractDate[1]) {
+    queryBuilder.whereBetween("created_at", [
+      newData.contractDate[0],
+      newData.contractDate[1],
+    ]);
+  }
   if (newData.contractID) {
     queryBuilder.where("id", "like", Number(newData.contractID));
   }
