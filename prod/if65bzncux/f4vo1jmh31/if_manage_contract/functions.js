@@ -83,3 +83,23 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
       break;
   }
 };
+
+const convDate = (dayjs, dateStr, format = "YYYY-MM-DD", hour = 0) => {
+  if (!dateStr) {
+    return "";
+  }
+  let date;
+  if (typeof dateStr === "string") {
+    if (/^\d{1,}$/.test(dateStr)) {
+      date = dateStr;
+    } else {
+      const numberString = dateStr.replace(/^\/Date\(/, "").replace(")/", "");
+      if (/^\d{1,}$/.test(numberString)) {
+        date = new Date(parseInt(numberString, 10));
+      } else date = numberString;
+    }
+  }
+  return dayjs(date).add(hour, "hour").format(format);
+};
+
+module.exports.convDate = convDate;
