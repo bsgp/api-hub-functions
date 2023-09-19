@@ -9,6 +9,9 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
     const to = fn.convDate(dayjs, newData.contractDate[1], "YYYYMMDD", 9);
     queryBuilder.whereBetween("prod_date", [from, to]);
   }
+  if (newData.contractType) {
+    queryBuilder.where("type", "like", newData.contractType);
+  }
   if (newData.contractID) {
     queryBuilder.where("id", "like", Number(newData.contractID));
   }
