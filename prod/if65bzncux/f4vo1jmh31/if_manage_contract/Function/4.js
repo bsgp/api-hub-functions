@@ -18,6 +18,9 @@ module.exports = async (draft, { lib, file, request }) => {
     case "IF-CT-103": // PATCH
       draft.json.nextNodeKey = "Function#7";
       break;
+    case "IF-CT-105": // GET LIST
+      draft.json.nextNodeKey = "Function#8";
+      break;
     default:
       break;
   }
