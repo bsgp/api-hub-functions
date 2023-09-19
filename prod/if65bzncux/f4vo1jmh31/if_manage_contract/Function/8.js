@@ -12,6 +12,9 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
   if (newData.contractType) {
     queryBuilder.where("type", "like", newData.contractType);
   }
+  if (newData.contractStatus) {
+    queryBuilder.where("status", "like", newData.contractStatus);
+  }
   if (newData.contractID) {
     queryBuilder.where("id", "like", Number(newData.contractID));
   }
