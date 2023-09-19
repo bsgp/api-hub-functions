@@ -22,7 +22,7 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
 
   draft.response.body = {
     request: newData,
-    test: fn.convDate(dayjs, newData.contractDate[0], 9),
+    test: fn.convDate(dayjs, newData.contractDate[0], "YYYY-MM-DD", 9),
     list: results,
     E_STATUS: "S",
     E_MESSAGE: `조회가\n완료되었습니다`,
