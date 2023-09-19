@@ -8,7 +8,7 @@ module.exports = async (draft, { sql, tryit }) => {
     queryBuilder.where("id", "like", Number(newData.contractID));
   }
   if (newData.contractName) {
-    queryBuilder.where("name", "like", `${newData.contractName}*`);
+    queryBuilder.where("name", "like", `%${newData.contractName}%`);
   }
 
   const queryResult = await queryBuilder.run();
