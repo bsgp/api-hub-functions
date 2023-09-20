@@ -126,12 +126,12 @@ module.exports = async (draft, { sql, tryit, fn }) => {
 
           if (tableKey === "contract") {
             return await sql("mysql", { useCustomRole: false })
-              .update(tables[tableKey].name, changed)
+              .update(tables[tableKey].name, after)
               .where({ id: contractID })
               .run();
           } else {
             return await sql("mysql", { useCustomRole: false })
-              .update(tables[tableKey].name, changed)
+              .update(tables[tableKey].name, after)
               .where({ contract_id: contractID, id: before.id })
               .run();
           }
