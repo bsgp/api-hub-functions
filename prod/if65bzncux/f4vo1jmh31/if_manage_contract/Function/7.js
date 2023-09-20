@@ -106,38 +106,37 @@ module.exports = async (draft, { sql, tryit, fn }) => {
   const updateResult = await Promise.all(
     updateList.map(async (item) => {
       const { tableKey, type, before, after } = item;
-      const updateBuilder = sql("mysql", { useCustomRole: false });
-      // .select(
-      //   tables[tableKey].name
-      // );
       switch (type) {
         case "created": {
           // insert
-          updateBuilder.insert(tables[tableKey].name, after);
-          break;
+          return await sql("mysql", { useCustomRole: false })
+            .insert(tables[tableKey].name, after)
+            .run();
         }
         case "deleted": {
           // update deleted: true;
-          updateBuilder
+          return await sql("mysql", { useCustomRole: false })
             .select(tables[tableKey].name)
             .where("contract_id", "like", contractID)
             .where("id", "like", before.id)
             .update({ deleted: true });
-          break;
         }
         default: {
           // type: "changed"; update changed
-          updateBuilder.select(tables[tableKey].name);
+
           if (tableKey === "contract") {
-            updateBuilder.where({ id: contractID });
+            return await sql("mysql", { useCustomRole: false })
+              .select(tables[tableKey].name)
+              .where({ id: contractID })
+              .update(changed);
           } else {
-            updateBuilder.where({ contract_id: contractID, id: before.id });
+            return await sql("mysql", { useCustomRole: false })
+              .select(tables[tableKey].name)
+              .where({ contract_id: contractID, id: before.id })
+              .update(changed);
           }
-          updateBuilder.update(changed);
-          break;
         }
       }
-      return await updateBuilder.run();
     })
   );
 
