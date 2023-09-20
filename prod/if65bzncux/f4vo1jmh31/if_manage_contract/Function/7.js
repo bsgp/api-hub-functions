@@ -31,7 +31,7 @@ module.exports = async (draft, { sql, tryit, fn }) => {
     })
   );
 
-  const { contract, party, bill, cost_object, attachment } = origin; //ref_doc
+  // const { contract, party, bill, cost_object, attachment } = origin;//ref_doc
 
   const changed = {};
   tableList.map((tableKey) => {
@@ -139,6 +139,30 @@ module.exports = async (draft, { sql, tryit, fn }) => {
       }
     })
   );
+
+  const updateContract = { contractID };
+  await Promise.all(
+    tableList.map(async (tableKey) => {
+      const searchKey = tableKey === "contract" ? "id" : "contract_id";
+      const queryBuilder = sql("mysql", { useCustomRole: false })
+        .select(tables[tableKey].name)
+        .where(searchKey, "like", contractID);
+      if (tableKey !== "contract") {
+        queryBuilder.whereNot({ deleted: true }).orderBy("index", "asc");
+      }
+
+      const queryTableData = await queryBuilder.run();
+      const tableData = tryit(() => queryTableData.body.list, []);
+      if (tableKey === "contract") {
+        updateContract[tableKey] = tableData[0];
+      } else updateContract[tableKey] = tableData;
+
+      return true;
+    })
+  );
+
+  const { contract, party, bill, cost_object, attachment } = updateContract;
+  //ref_doc
 
   draft.response.body = {
     request_contractID: contractID,
