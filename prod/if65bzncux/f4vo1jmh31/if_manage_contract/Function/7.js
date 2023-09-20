@@ -118,7 +118,8 @@ module.exports = async (draft, { sql, tryit, fn }) => {
           return await sql("mysql", { useCustomRole: false })
             .update(tables[tableKey].name, { deleted: true })
             .where("contract_id", "like", contractID)
-            .where("id", "like", before.id);
+            .where("id", "like", before.id)
+            .run();
         }
         default: {
           // type: "changed"; update changed
@@ -126,11 +127,13 @@ module.exports = async (draft, { sql, tryit, fn }) => {
           if (tableKey === "contract") {
             return await sql("mysql", { useCustomRole: false })
               .update(tables[tableKey].name, changed)
-              .where({ id: contractID });
+              .where({ id: contractID })
+              .run();
           } else {
             return await sql("mysql", { useCustomRole: false })
               .update(tables[tableKey].name, changed)
-              .where({ contract_id: contractID, id: before.id });
+              .where({ contract_id: contractID, id: before.id })
+              .run();
           }
         }
       }
