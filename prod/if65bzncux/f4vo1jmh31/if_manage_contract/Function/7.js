@@ -129,11 +129,9 @@ module.exports = async (draft, { sql, tryit, fn }) => {
           // type: "changed"; update changed
           updateBuilder.select(tables[tableKey].name);
           if (tableKey === "contract") {
-            updateBuilder.where("id", "like", contractID);
+            updateBuilder.where({ id: contractID });
           } else {
-            updateBuilder
-              .where("contract_id", "like", contractID)
-              .where("id", "like", before.id);
+            updateBuilder.where({ contract_id: contractID, id: before.id });
           }
           updateBuilder.update(changed);
           break;
