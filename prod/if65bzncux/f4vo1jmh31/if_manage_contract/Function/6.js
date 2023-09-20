@@ -36,14 +36,9 @@ module.exports = async (draft, { fn, sql, tryit, makeid }) => {
     return;
   }
 
+  const tableKeys = ["cost_object", "bill", "party", "attachment"]; // "ref_doc"
   const tableListRes = await Promise.all(
-    [
-      "cost_object",
-      "bill",
-      "party",
-      "attachment",
-      // "ref_doc",
-    ].map(async (tableKey) => {
+    tableKeys.map(async (tableKey) => {
       const tableData = fn.getDB_Object(newData, {
         key: tableKey,
         contractID,
