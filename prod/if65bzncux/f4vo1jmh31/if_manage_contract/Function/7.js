@@ -179,6 +179,6 @@ module.exports = async (draft, { sql, tryit, fn, makeid }) => {
     changed,
     updateResult,
     E_STATUS: "S",
-    E_MESSAGE: `계약번호: ${origin.contractID}\n조회가\n완료되었습니다`,
+    E_MESSAGE: `계약번호: ${origin.contractID}\n수정이\n완료되었습니다`,
   };
 };
