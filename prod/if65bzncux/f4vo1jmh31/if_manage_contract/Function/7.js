@@ -118,6 +118,10 @@ module.exports = async (draft, { sql, tryit, fn }) => {
         }
         case "deleted": {
           // update deleted: true;
+          updateBuilder
+            .where("contract_id", "like", contractID)
+            .where("id", "like", before.id)
+            .update();
           break;
         }
         default: {
