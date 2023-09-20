@@ -119,6 +119,7 @@ module.exports = async (draft, { sql, tryit, fn }) => {
         case "deleted": {
           // update deleted: true;
           updateBuilder
+            .select(tables[tableKey].name)
             .where("contract_id", "like", contractID)
             .where("id", "like", before.id)
             .update({ deleted: true });
@@ -126,6 +127,7 @@ module.exports = async (draft, { sql, tryit, fn }) => {
         }
         default: {
           // type: "changed"; update changed
+          updateBuilder.select(tables[tableKey].name);
           if (tableKey === "contract") {
             updateBuilder.where("id", "like", contractID);
           } else {
