@@ -105,13 +105,15 @@ module.exports = async (draft, { sql, tryit, fn }) => {
 
   const updateResult = await Promise.all(
     updateList.map(async (item) => {
-      const { tableKey, type, before } = item;
-      const updateBuilder = sql("mysql", { useCustomRole: false }).select(
-        tables[tableKey].name
-      );
+      const { tableKey, type, before, after } = item;
+      const updateBuilder = sql("mysql", { useCustomRole: false });
+      // .select(
+      //   tables[tableKey].name
+      // );
       switch (type) {
         case "created": {
           // insert
+          updateBuilder.insert(tables[tableKey].name, after);
           break;
         }
         case "deleted": {
