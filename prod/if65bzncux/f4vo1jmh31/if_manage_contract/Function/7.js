@@ -116,24 +116,21 @@ module.exports = async (draft, { sql, tryit, fn }) => {
         case "deleted": {
           // update deleted: true;
           return await sql("mysql", { useCustomRole: false })
-            .select(tables[tableKey].name)
+            .update(tables[tableKey].name, { deleted: true })
             .where("contract_id", "like", contractID)
-            .where("id", "like", before.id)
-            .update({ deleted: true });
+            .where("id", "like", before.id);
         }
         default: {
           // type: "changed"; update changed
 
           if (tableKey === "contract") {
             return await sql("mysql", { useCustomRole: false })
-              .select(tables[tableKey].name)
-              .where({ id: contractID })
-              .update(changed);
+              .update(tables[tableKey].name, changed)
+              .where({ id: contractID });
           } else {
             return await sql("mysql", { useCustomRole: false })
-              .select(tables[tableKey].name)
-              .where({ contract_id: contractID, id: before.id })
-              .update(changed);
+              .update(tables[tableKey].name, changed)
+              .where({ contract_id: contractID, id: before.id });
           }
         }
       }
