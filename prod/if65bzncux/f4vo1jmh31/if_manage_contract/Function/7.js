@@ -133,6 +133,7 @@ module.exports = async (draft, { sql, tryit, fn }) => {
               .where("contract_id", "like", contractID)
               .where("id", "like", before.id);
           }
+          updateBuilder.update(changed);
           break;
         }
       }
