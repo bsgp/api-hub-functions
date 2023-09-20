@@ -15,6 +15,7 @@ module.exports = async (draft, { sql, tryit }) => {
           const queryTableData = await sql("mysql", { useCustomRole: false })
             .select(tables[tableKey].name)
             .where("contract_id", "like", contractID)
+            .whereNot({ deleted: true })
             .orderBy("index", "asc")
             .run();
           const tableData = tryit(() => queryTableData.body.list, []);
