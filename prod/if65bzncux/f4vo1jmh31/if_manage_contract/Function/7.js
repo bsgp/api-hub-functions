@@ -105,7 +105,7 @@ module.exports = async (draft, { sql, tryit, fn }) => {
 
   const updateResult = await Promise.all(
     updateList.map(async (item) => {
-      const { tableKey, type, before, after } = item;
+      const { tableKey, type, key, before, after } = item;
       switch (type) {
         case "created": {
           // insert
@@ -123,10 +123,11 @@ module.exports = async (draft, { sql, tryit, fn }) => {
         }
         default: {
           // type: "changed"; update changed
-
           if (tableKey === "contract") {
+            const changed = {};
+            changed[key] = after;
             return await sql("mysql", { useCustomRole: false })
-              .update(tables[tableKey].name, after)
+              .update(tables[tableKey].name, changed)
               .where({ id: contractID })
               .run();
           } else {
