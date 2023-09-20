@@ -18,7 +18,7 @@ module.exports = async (draft, { sql, tryit, fn }) => {
         .select(tables[tableKey].name)
         .where(searchKey, "like", contractID);
       if (tableKey !== "contract") {
-        queryBuilder.orderBy("index", "asc");
+        queryBuilder.whereNot({ deleted: true }).orderBy("index", "asc");
       }
 
       const queryTableData = await queryBuilder.run();
