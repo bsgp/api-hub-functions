@@ -100,6 +100,31 @@ module.exports = async (draft, { sql, tryit, fn }) => {
     return acc;
   }, []);
 
+  const updateResult = await Promise.all(
+    updateList.map(async (item) => {
+      const { tableKey, before, after } = item;
+      const updateBuilder = sql("mysql", { useCustomRole: false }).select(
+        tables[tableKey].name
+      );
+
+      if (before === "created") {
+        // insert
+      } else if (after === "deleted") {
+        // update deleted: true;
+      } else {
+        // update changed
+        if (tableKey === "contract") {
+          updateBuilder.where("id", "like", contractID);
+        } else {
+          updateBuilder
+            .where("contract_id", "like", contractID)
+            .where("id", "like", before.id);
+        }
+      }
+      return await updateBuilder.run();
+    })
+  );
+
   draft.response.body = {
     request_contractID: contractID,
     contract: {
@@ -112,7 +137,7 @@ module.exports = async (draft, { sql, tryit, fn }) => {
     },
     compared,
     changed,
-    updateList: updateList.map((item) => ({ ...item })),
+    updateResult,
     E_STATUS: "S",
     E_MESSAGE: `계약번호: ${origin.contractID}\n조회가\n완료되었습니다`,
   };
