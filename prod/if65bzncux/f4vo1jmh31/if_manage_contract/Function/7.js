@@ -1,4 +1,4 @@
-module.exports = async (draft, { sql, tryit, fn }) => {
+module.exports = async (draft, { sql, tryit, fn, makeid }) => {
   const { tables, newData } = draft.json;
   const contractID = newData.form.contractID;
 
@@ -110,7 +110,7 @@ module.exports = async (draft, { sql, tryit, fn }) => {
         case "created": {
           // insert
           return await sql("mysql", { useCustomRole: false })
-            .insert(tables[tableKey].name, after)
+            .insert(tables[tableKey].name, { ...after, id: makeid(5) })
             .run();
         }
         case "deleted": {
