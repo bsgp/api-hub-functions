@@ -119,7 +119,7 @@ module.exports = async (draft, { sql, tryit, fn }) => {
           break;
         }
         default: {
-          // type: "changed" // update changed
+          // type: "changed"; update changed
           if (tableKey === "contract") {
             updateBuilder.where("id", "like", contractID);
           } else {
