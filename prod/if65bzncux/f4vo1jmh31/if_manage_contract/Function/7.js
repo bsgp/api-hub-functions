@@ -103,43 +103,43 @@ module.exports = async (draft, { sql, tryit, fn }) => {
     return acc;
   }, []);
 
-  // const updateResult = await Promise.all(
-  //   updateList.map(async (item) => {
-  //     const { tableKey, type, before, after } = item;
-  //     const updateBuilder = sql("mysql", { useCustomRole: false });
-  //     // .select(
-  //     //   tables[tableKey].name
-  //     // );
-  //     switch (type) {
-  //       case "created": {
-  //         // insert
-  //         updateBuilder.insert(tables[tableKey].name, after);
-  //         break;
-  //       }
-  //       case "deleted": {
-  //         // update deleted: true;
-  //         updateBuilder
-  //           .select(tables[tableKey].name)
-  //           .where("contract_id", "like", contractID)
-  //           .where("id", "like", before.id)
-  //           .update({ deleted: true });
-  //         break;
-  //       }
-  //       default: {
-  //         // type: "changed"; update changed
-  //         updateBuilder.select(tables[tableKey].name);
-  //         if (tableKey === "contract") {
-  //           updateBuilder.where({ id: contractID });
-  //         } else {
-  //           updateBuilder.where({ contract_id: contractID, id: before.id });
-  //         }
-  //         updateBuilder.update(changed);
-  //         break;
-  //       }
-  //     }
-  //     return await updateBuilder.run();
-  //   })
-  // );
+  const updateResult = await Promise.all(
+    updateList.map(async (item) => {
+      const { tableKey, type, before, after } = item;
+      const updateBuilder = sql("mysql", { useCustomRole: false });
+      // .select(
+      //   tables[tableKey].name
+      // );
+      switch (type) {
+        case "created": {
+          // insert
+          updateBuilder.insert(tables[tableKey].name, after);
+          break;
+        }
+        case "deleted": {
+          // update deleted: true;
+          updateBuilder
+            .select(tables[tableKey].name)
+            .where("contract_id", "like", contractID)
+            .where("id", "like", before.id)
+            .update({ deleted: true });
+          break;
+        }
+        default: {
+          // type: "changed"; update changed
+          updateBuilder.select(tables[tableKey].name);
+          if (tableKey === "contract") {
+            updateBuilder.where({ id: contractID });
+          } else {
+            updateBuilder.where({ contract_id: contractID, id: before.id });
+          }
+          updateBuilder.update(changed);
+          break;
+        }
+      }
+      return await updateBuilder.run();
+    })
+  );
 
   draft.response.body = {
     request_contractID: contractID,
@@ -153,7 +153,7 @@ module.exports = async (draft, { sql, tryit, fn }) => {
     },
     compared,
     changed,
-    updateList,
+    updateResult,
     E_STATUS: "S",
     E_MESSAGE: `계약번호: ${origin.contractID}\n조회가\n완료되었습니다`,
   };
