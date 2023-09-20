@@ -93,7 +93,9 @@ module.exports = async (draft, { sql, tryit, fn }) => {
 
   const updateList = Object.keys(compared).reduce((acc, tableKey) => {
     if (compared[tableKey].length > 0) {
-      acc.concat(compared[tableKey].map((item) => ({ ...item, tableKey })));
+      acc = acc.concat(
+        compared[tableKey].map((item) => ({ ...item, tableKey }))
+      );
     }
     return acc;
   }, []);
@@ -110,7 +112,7 @@ module.exports = async (draft, { sql, tryit, fn }) => {
     },
     compared,
     changed,
-    updateList,
+    updateList: updateList.map((item) => ({ ...item })),
     E_STATUS: "S",
     E_MESSAGE: `계약번호: ${origin.contractID}\n조회가\n완료되었습니다`,
   };
