@@ -60,8 +60,9 @@ module.exports = async (draft, { sql, tryit, fn }) => {
         .forEach((item) =>
           changeList.push({
             index: item.index,
+            type: "deleted",
             before: { ...item },
-            after: "deleted",
+            after: {},
           })
         );
       //find created || changed
@@ -70,7 +71,8 @@ module.exports = async (draft, { sql, tryit, fn }) => {
         if (!beforeObj) {
           changeList.push({
             index: item.index,
-            before: "created",
+            type: "created",
+            before: {},
             after: { ...item },
           });
         } else {
@@ -79,6 +81,7 @@ module.exports = async (draft, { sql, tryit, fn }) => {
               changeList.push({
                 key: field,
                 index: item.index,
+                type: "changed",
                 before: { ...beforeObj },
                 after: { ...item },
               });
@@ -102,23 +105,29 @@ module.exports = async (draft, { sql, tryit, fn }) => {
 
   const updateResult = await Promise.all(
     updateList.map(async (item) => {
-      const { tableKey, before, after } = item;
+      const { tableKey, type, before } = item;
       const updateBuilder = sql("mysql", { useCustomRole: false }).select(
         tables[tableKey].name
       );
-
-      if (before === "created") {
-        // insert
-      } else if (after === "deleted") {
-        // update deleted: true;
-      } else {
-        // update changed
-        if (tableKey === "contract") {
-          updateBuilder.where("id", "like", contractID);
-        } else {
-          updateBuilder
-            .where("contract_id", "like", contractID)
-            .where("id", "like", before.id);
+      switch (type) {
+        case "created": {
+          // insert
+          break;
+        }
+        case "deleted": {
+          // update deleted: true;
+          break;
+        }
+        default: {
+          // type: "changed" // update changed
+          if (tableKey === "contract") {
+            updateBuilder.where("id", "like", contractID);
+          } else {
+            updateBuilder
+              .where("contract_id", "like", contractID)
+              .where("id", "like", before.id);
+          }
+          break;
         }
       }
       return await updateBuilder.run();
