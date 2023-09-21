@@ -149,6 +149,7 @@ module.exports.attachment =
     table.string("type", 40).defaultTo("");
     table.string("name", 200).defaultTo("");
     table.string("ext", 10).defaultTo("");
+    table.string("path", 200).defaultTo("");
     table.boolean("deleted").defaultTo(false);
 
     table.primary(["contract_id", "id"]);
