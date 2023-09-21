@@ -166,7 +166,7 @@ module.exports = async (draft, { sql, tryit, fn, makeid }) => {
   //ref_doc
 
   draft.response.body = {
-    request_contractID: contractID,
+    contractID,
     contract: {
       ...contract,
       contractID: origin.contractID,
