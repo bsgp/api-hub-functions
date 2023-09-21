@@ -89,6 +89,12 @@ module.exports = async (draft, { file }) => {
       TriggeredBy: "CONTRACT",
       Path: "/rfc",
     },
+    ["IF-CO-009"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_WBS_LIST",
+      TriggeredBy: "BSGON",
+      Path: "/rfc",
+    },
     ["IF-CT-011"]: {
       Type: "WEBHOOK",
       Name: "CT_CHANGED",
