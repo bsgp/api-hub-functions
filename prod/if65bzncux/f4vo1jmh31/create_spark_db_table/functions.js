@@ -107,7 +107,7 @@ module.exports.bill =
     table.decimal("dmbtr_local", 23, 2).defaultTo(0);
     table.string("curr_key", 5).defaultTo("");
     table.string("curr_local", 5).defaultTo("");
-    table.string("post_date", 8).defaultTo(""); // 청구예정일일
+    table.string("post_date", 8).defaultTo(""); // 청구예정일
     table.boolean("deleted").defaultTo(false);
 
     table.primary(["contract_id", "id"]);
