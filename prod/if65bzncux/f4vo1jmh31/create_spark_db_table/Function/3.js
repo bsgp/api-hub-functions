@@ -28,7 +28,7 @@ module.exports = async (draft, { file }) => {
       desc: "WBS, CostCenter info DB table",
     },
     bill: {
-      name: "bill_6",
+      name: "bill_7",
       desc: "bill reson text DB",
     },
     party: {
