@@ -49,6 +49,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
         id: item.id || (makeid && makeid(5)),
         index: `${item.index}`,
         cost_object_id: item.cost_object_id,
+        post_date: item.post_date,
         reason_text: item.reason_text,
         dmbtr: (item.dmbtr || "").replace(/,/g, ""),
         dmbtr_local: (item.dmbtr_local || "").replace(/,/g, ""),
