@@ -77,10 +77,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
         index: `${item.index}`,
         type: item.type,
         name: item.name,
-        path: [
-          `${contractID}` || item.contractID,
-          `${item.name}.${item.ext}`,
-        ].join("/"),
+        path: [`${contractID}` || item.contractID, item.name].join("/"),
         ext: item.ext,
       }));
     }
