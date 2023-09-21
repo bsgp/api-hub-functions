@@ -71,6 +71,24 @@ module.exports = async (draft, { file }) => {
       TriggeredBy: "G_PRO",
       Path: "/rfc",
     },
+    ["IF-CO-005"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_WBS_LIST",
+      TriggeredBy: "G_PRO",
+      Path: "/rfc",
+    },
+    ["IF-CO-006"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_WBS_LIST",
+      TriggeredBy: "WORKSHEET",
+      Path: "/rfc",
+    },
+    ["IF-CO-007"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_WBS_LIST",
+      TriggeredBy: "CONTRACT",
+      Path: "/rfc",
+    },
     ["IF-CT-011"]: {
       Type: "WEBHOOK",
       Name: "CT_CHANGED",
