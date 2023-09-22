@@ -87,18 +87,25 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
 };
 
 module.exports.getChange_Object = ({ tableKey, data, userID, makeid }) => {
+  const defaultObj = {
+    type: tableKey,
+    id: makeid && makeid(5),
+    changed_by: userID,
+    content: JSON.stringify(data),
+  };
   switch (tableKey) {
     case "contract": {
       return {
-        type: tableKey,
         row_key: data.id,
-        id: makeid && makeid(5),
-        changed_by: userID,
-        content: JSON.stringify(data),
+        ...defaultObj,
       };
     }
-    default:
-      break;
+    default: {
+      return {
+        row_key: [data.contract_id, data.id].join("#"),
+        ...defaultObj,
+      };
+    }
   }
 };
 
