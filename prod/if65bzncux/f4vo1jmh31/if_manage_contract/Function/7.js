@@ -110,20 +110,18 @@ module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
         case "created": {
           // insert
           if (tableKey === "attachment") {
-            await Promise.all(
-              newData.attachmentList.map(async (fileData) => {
-                const { tempFilePath, fileType, name } = fileData;
-                const path = [`${contractID}`, name].join("/");
-                const data = await file.get(tempFilePath, {
-                  exactPath: true,
-                  returnBuffer: true,
-                });
-                const fileResponse = await file.upload(path, data, {
-                  contentType: fileType,
-                });
-                return fileResponse;
-              })
+            const fileData = newData.attachmentList.find(
+              (item) => item.index === after.index
             );
+            const { tempFilePath, fileType, name } = fileData;
+            const path = [`${contractID}`, name].join("/");
+            const data = await file.get(tempFilePath, {
+              exactPath: true,
+              returnBuffer: true,
+            });
+            await file.upload(path, data, {
+              contentType: fileType,
+            });
           }
           return await sql("mysql", { useCustomRole: false })
             .insert(tables[tableKey].name, { ...after, id: makeid(5) })
