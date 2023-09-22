@@ -1,4 +1,5 @@
 module.exports = async (draft, { sql }) => {
+  const { tables } = draft.json;
   const tableData = {
     type: "contract",
     row_key: "1",
@@ -7,7 +8,7 @@ module.exports = async (draft, { sql }) => {
     content: "{'test': '123'}",
   };
   const postTableData = await sql("mysql", { useCustomRole: false })
-    .insert("changed", tableData)
+    .insert(tables["change"].name, tableData)
     .run();
 
   draft.response.body = {
