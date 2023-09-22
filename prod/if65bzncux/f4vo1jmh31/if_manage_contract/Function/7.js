@@ -96,16 +96,27 @@ module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
 
   const updateList = Object.keys(compared).reduce((acc, tableKey) => {
     if (compared[tableKey].length > 0) {
-      acc = acc.concat(
-        compared[tableKey].map((item) => ({ ...item, tableKey }))
-      );
+      if (tableKey === "contract") {
+        const contractObj = { ...origin[tableKey] };
+        compared[tableKey].map(({ key, after }) => (contractObj[key] = after));
+        acc = acc.concat({
+          tableKey,
+          type: "changed",
+          before: origin[tableKey],
+          after: contractObj,
+        });
+      } else {
+        acc = acc.concat(
+          compared[tableKey].map((item) => ({ ...item, tableKey }))
+        );
+      }
     }
     return acc;
   }, []);
 
   const updateResult = await Promise.all(
     updateList.map(async (item) => {
-      const { tableKey, type, key, before, after } = item;
+      const { tableKey, type, before, after } = item;
       switch (type) {
         case "created": {
           // insert
@@ -159,10 +170,18 @@ module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
         default: {
           // type: "changed"; update changed
           if (tableKey === "contract") {
-            const changed = {};
-            changed[key] = after;
+            await sql("mysql", { useCustomRole: false })
+              .insert(tables["change"].name, [
+                fn.getChange_Object({
+                  tableKey,
+                  data: after,
+                  userID,
+                  makeid,
+                }),
+              ])
+              .run();
             return await sql("mysql", { useCustomRole: false })
-              .update(tables[tableKey].name, changed)
+              .update(tables[tableKey].name, after)
               .where({ id: contractID })
               .run();
           } else {
