@@ -111,7 +111,7 @@ module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
           // insert
           if (tableKey === "attachment") {
             const fileData = newData.attachmentList.find(
-              (item) => item.index === after.index
+              (item) => `${item.index}` === after.index
             );
             const { tempFilePath, fileType, name } = fileData;
             const path = [`${contractID}`, name].join("/");
