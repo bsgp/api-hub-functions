@@ -125,18 +125,14 @@ module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
           }
           const uuid = makeid(5);
           await sql("mysql", { useCustomRole: false })
-            .insert(
-              tables["change"].name,
-
-              [
-                fn.getChange_Object({
-                  tableKey,
-                  data: { ...after, id: uuid },
-                  userID,
-                  makeid,
-                }),
-              ]
-            )
+            .insert(tables["change"].name, [
+              fn.getChange_Object({
+                tableKey,
+                data: { ...after, id: uuid },
+                userID,
+                makeid,
+              }),
+            ])
             .run();
           return await sql("mysql", { useCustomRole: false })
             .insert(tables[tableKey].name, { ...after, id: uuid })
