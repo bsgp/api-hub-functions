@@ -86,6 +86,22 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
   }
 };
 
+module.exports.getChange_Object = ({ tableKey, data, userID, makeid }) => {
+  switch (tableKey) {
+    case "contract": {
+      return {
+        type: tableKey,
+        row_key: data.id,
+        id: makeid && makeid(5),
+        changed_by: userID,
+        content: JSON.stringify(data),
+      };
+    }
+    default:
+      break;
+  }
+};
+
 const convDate = (dayjs, dateStr, format = "YYYY-MM-DD", hour = 0) => {
   if (!dateStr) {
     return "";
