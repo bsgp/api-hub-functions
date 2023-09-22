@@ -11,9 +11,9 @@ module.exports = async (draft, { sql }) => {
   //   .insert(tables["change"].name, tableData)
   //   .run();
 
-  const postTableData = await sql("mysql", { useCustomRole: false }).select(
-    tables["change"].name
-  );
+  const postTableData = await sql("mysql", { useCustomRole: false })
+    .select(tables["change"].name)
+    .run();
 
   draft.response.body = {
     postTableData,
