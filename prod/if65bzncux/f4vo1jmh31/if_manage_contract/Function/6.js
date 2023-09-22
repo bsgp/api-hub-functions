@@ -1,5 +1,5 @@
 module.exports = async (draft, { fn, sql, tryit, makeid, file }) => {
-  const { tables, newData } = draft.json;
+  const { tables, newData, userID } = draft.json;
   const contract = fn.getDB_Object(newData, { key: "contract" });
 
   // const builder = sql("mysql").select(tables.contract.name);
@@ -71,12 +71,7 @@ module.exports = async (draft, { fn, sql, tryit, makeid, file }) => {
         .insert(
           tables["change"].name,
           tableData.map((data) =>
-            fn.getChange_Object({
-              tableKey,
-              data,
-              userID: newData,
-              makeid,
-            })
+            fn.getChange_Object({ tableKey, data, userID, makeid })
           )
         )
         .run();
