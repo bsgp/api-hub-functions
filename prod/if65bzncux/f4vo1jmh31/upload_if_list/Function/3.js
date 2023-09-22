@@ -173,7 +173,7 @@ module.exports = async (draft, { file }) => {
     },
     ["IF-CT-109"]: {
       Type: "RFC",
-      Name: "GET CHANGED HISTORY",
+      Name: "GET_CHANGED_HISTORY",
       RfcName: "",
       TriggeredBy: "SUPPORT",
     },
