@@ -67,19 +67,37 @@ module.exports = async (draft, { fn, sql, tryit, makeid, file }) => {
           })
         );
       }
+      const changeTableData = await sql("mysql", { useCustomRole: false })
+        .insert(
+          tables["change"].name,
+          tableData.map((data) =>
+            fn.getChange_Object({
+              tableKey,
+              data,
+              userID: newData,
+              makeid,
+            })
+          )
+        )
+        .run();
       const postTableData = await sql("mysql", { useCustomRole: false })
         .insert(tables[tableKey].name, tableData)
         .run();
-      if (postTableData.statusCode !== 200) {
+      if (
+        postTableData.statusCode !== 200 ||
+        changeTableData.statusCode !== 200
+      ) {
         return {
           E_STATUS: "F",
           E_MESSAGE: `Failed save ${tables[tableKey].name}`,
+          changeTableData,
           result: postTableData,
         };
       } else
         return {
           E_STATUS: "S",
           E_MESSAGE: `saved ${tables[tableKey].name}`,
+          changeTableData,
           result: postTableData,
         };
     })
