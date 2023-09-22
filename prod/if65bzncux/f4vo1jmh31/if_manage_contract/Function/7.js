@@ -1,5 +1,5 @@
 module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
-  const { tables, newData } = draft.json;
+  const { tables, newData, userID } = draft.json;
   const contractID = newData.form.contractID;
 
   const tableList = [
@@ -123,6 +123,13 @@ module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
               contentType: fileType,
             });
           }
+          await sql("mysql", { useCustomRole: false })
+            .insert(
+              tables["change"].name,
+
+              [fn.getChange_Object({ tableKey, data: after, userID, makeid })]
+            )
+            .run();
           return await sql("mysql", { useCustomRole: false })
             .insert(tables[tableKey].name, { ...after, id: makeid(5) })
             .run();
