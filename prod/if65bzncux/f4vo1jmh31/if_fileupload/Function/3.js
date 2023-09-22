@@ -1,7 +1,10 @@
 module.exports = async (draft, { request, file }) => {
   const { path } = request.body.Data.file;
 
-  const link = await file.getUrl(path);
+  const link = await file.getUrl(path, {
+    exactPath: true,
+    returnBuffer: true,
+  });
 
   draft.response.body = {
     E_STATUS: "S",
