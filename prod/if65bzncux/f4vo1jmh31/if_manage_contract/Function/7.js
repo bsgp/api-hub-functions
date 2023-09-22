@@ -1,4 +1,4 @@
-module.exports = async (draft, { sql, tryit, fn, makeid }) => {
+module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
   const { tables, newData } = draft.json;
   const contractID = newData.form.contractID;
 
@@ -109,6 +109,22 @@ module.exports = async (draft, { sql, tryit, fn, makeid }) => {
       switch (type) {
         case "created": {
           // insert
+          if (tableKey === "attachment") {
+            await Promise.all(
+              newData.attachmentList.map(async (fileData) => {
+                const { tempFilePath, fileType, name } = fileData;
+                const path = [`${contractID}`, name].join("/");
+                const data = await file.get(tempFilePath, {
+                  exactPath: true,
+                  returnBuffer: true,
+                });
+                const fileResponse = await file.upload(path, data, {
+                  contentType: fileType,
+                });
+                return fileResponse;
+              })
+            );
+          }
           return await sql("mysql", { useCustomRole: false })
             .insert(tables[tableKey].name, { ...after, id: makeid(5) })
             .run();
