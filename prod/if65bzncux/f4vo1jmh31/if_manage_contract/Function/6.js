@@ -1,4 +1,4 @@
-module.exports = async (draft, { fn, sql, tryit, makeid }) => {
+module.exports = async (draft, { fn, sql, tryit, makeid, file }) => {
   const { tables, newData } = draft.json;
   const contract = fn.getDB_Object(newData, { key: "contract" });
 
@@ -52,19 +52,20 @@ module.exports = async (draft, { fn, sql, tryit, makeid }) => {
         };
       }
       if (tableKey === "attachment") {
-        // await Promise.all(
-        //   tableData.map(async (fileData) => {
-        //     const { tempFilePath, fileType, path } = fileData;
-        //     const data = await file.get(tempFilePath, {
-        //       exactPath: true,
-        //       returnBuffer: true,
-        //     });
-        //     const fileResponse = await file.upload(path, data, {
-        //       contentType: fileType,
-        //     });
-        //     return fileResponse;
-        //   })
-        // );
+        await Promise.all(
+          newData.attachmentList.map(async (fileData) => {
+            const { tempFilePath, fileType, name } = fileData;
+            const path = [`${contractID}`, name].join("/");
+            const data = await file.get(tempFilePath, {
+              exactPath: true,
+              returnBuffer: true,
+            });
+            const fileResponse = await file.upload(path, data, {
+              contentType: fileType,
+            });
+            return fileResponse;
+          })
+        );
       }
       const postTableData = await sql("mysql", { useCustomRole: false })
         .insert(tables[tableKey].name, tableData)
