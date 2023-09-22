@@ -140,6 +140,16 @@ module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
         }
         case "deleted": {
           // update deleted: true;
+          await sql("mysql", { useCustomRole: false })
+            .insert(tables["change"].name, [
+              fn.getChange_Object({
+                tableKey,
+                data: { ...before, deleted: true },
+                userID,
+                makeid,
+              }),
+            ])
+            .run();
           return await sql("mysql", { useCustomRole: false })
             .update(tables[tableKey].name, { deleted: true })
             .where("contract_id", "like", contractID)
