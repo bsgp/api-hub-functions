@@ -5,7 +5,7 @@ module.exports = async (draft, { sql }) => {
     row_key: "1",
     id: "12344",
     changed_by: "test",
-    content: "{'test': '123'}",
+    content: JSON.stringyfy({ id: 123, test: "test" }),
   };
   const postTableData = await sql("mysql", { useCustomRole: false })
     .insert(tables["change"].name, tableData)
