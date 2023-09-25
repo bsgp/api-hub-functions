@@ -51,7 +51,7 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
   draft.response.body = {
     request: newData,
     queryParams,
-    queryResult,
+    // queryResult,
     test: fn.convDate(dayjs, newData.contractDate[0], "YYYYMMDD", 9),
     list: results,
     E_STATUS: "S",
