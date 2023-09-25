@@ -13,6 +13,7 @@ module.exports = async (draft, { sql, tryit }) => {
   draft.response.body = {
     E_MESSAGE: "변경내역 조회가 완료되었습니다",
     E_STATUS: "S",
+    chagedList,
     history: {
       contract: chagedList.filter((list) => list.type === "contract"),
       partyList: [],
