@@ -17,7 +17,13 @@ module.exports = async (draft, { sql, tryit }) => {
     contractID,
     chagedList,
     history: {
-      contract: chagedList.filter((list) => list.type === "contract"),
+      contract: chagedList
+        .filter((list) => list.type === "contract")
+        .map((changed_at, changed_by, content) => ({
+          changed_at,
+          changed_by,
+          content: JSON.stringify(content),
+        })),
       partyList: [],
       costObjectList: [],
       billList: [],
