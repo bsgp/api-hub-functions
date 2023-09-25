@@ -6,12 +6,18 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
 
   const queryParams = {};
   if (newData.partyID) {
-    queryBuilder.rightJoin(
-      tables.party.name,
-      `${tables.contract.name}.id`,
-      "=",
-      `${tables.party.name}.contract_id`
-    );
+    queryBuilder
+      .select(
+        `${tables.contract.name}.*`,
+        `${tables.party.name}.contract_id`,
+        `${tables.party.name}.ref_id`
+      )
+      .leftJoin(
+        tables.party.name,
+        `${tables.contract.name}.id`,
+        "=",
+        `${tables.party.name}.contract_id`
+      );
     // .where("party.ref_id", "like", newData.partyID);
   } else {
     if (newData.contractDate[0] && newData.contractDate[1]) {
