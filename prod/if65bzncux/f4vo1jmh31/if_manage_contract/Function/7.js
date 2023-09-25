@@ -124,14 +124,14 @@ module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
             const fileData = newData.attachmentList.find(
               (item) => `${item.index}` === after.index
             );
-            const { tempFilePath, fileType, name } = fileData;
+            const { tempFilePath, type, name } = fileData;
             const path = [`${contractID}`, name].join("/");
             const data = await file.get(tempFilePath, {
               exactPath: true,
               returnBuffer: true,
             });
             await file.upload(path, data, {
-              contentType: fileType,
+              contentType: type,
             });
           }
           const uuid = makeid(5);
