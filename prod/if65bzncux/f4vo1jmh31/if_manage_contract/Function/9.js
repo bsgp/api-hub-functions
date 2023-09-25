@@ -46,7 +46,7 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
           content: JSON.stringify(content),
         })),
       attachmentList: chagedList
-        .filter((list) => list.type === "contract")
+        .filter((list) => list.type === "attachment")
         .map(({ changed_at, changed_by, content }) => ({
           changed_at: fn.convDate(dayjs, changed_at),
           changed_by,
