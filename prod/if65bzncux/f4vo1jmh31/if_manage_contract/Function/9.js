@@ -1,23 +1,24 @@
-module.exports = async (draft, { sql }) => {
+module.exports = async (draft, { sql, tryit }) => {
   const { tables, newData } = draft.json;
   const { contractID } = newData;
-  // const tableData = {
-  //   type: "contract",
-  //   row_key: "1",
-  //   id: "12344",
-  //   changed_by: "test",
-  //   content: JSON.stringify({ id: 123, test: "test" }),
-  // };
-  // const postTableData = await sql("mysql", { useCustomRole: false })
-  //   .insert(tables["change"].name, tableData)
-  //   .run();
 
-  const postTableData = await sql("mysql", { useCustomRole: false })
+  const changedData = await sql("mysql", { useCustomRole: false })
     .select(tables["change"].name)
     .where("row_key", "like", `${contractID}%`)
+    .orderBy("changed_at")
     .run();
 
+  const chagedList = tryit(() => changedData.body.list, []);
+
   draft.response.body = {
-    postTableData,
+    E_MESSAGE: "변경내역 조회가 완료되었습니다",
+    E_STATUS: "S",
+    history: {
+      contract: chagedList.filter((list) => list.type === "contract"),
+      partyList: [],
+      costObjectList: [],
+      billList: [],
+      attachmentList: [],
+    },
   };
 };
