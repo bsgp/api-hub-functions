@@ -69,14 +69,14 @@ module.exports = async (draft, { fn, sql, tryit, makeid, file }) => {
       if (tableKey === "attachment") {
         await Promise.all(
           newData.attachmentList.map(async (fileData) => {
-            const { tempFilePath, fileType, name } = fileData;
+            const { tempFilePath, type, name } = fileData;
             const path = [`${contractID}`, name].join("/");
             const data = await file.get(tempFilePath, {
               exactPath: true,
               returnBuffer: true,
             });
             const fileResponse = await file.upload(path, data, {
-              contentType: fileType,
+              contentType: type,
             });
             return fileResponse;
           })
