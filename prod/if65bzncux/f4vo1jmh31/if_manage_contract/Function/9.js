@@ -4,7 +4,8 @@ module.exports = async (draft, { sql, tryit }) => {
 
   const changedData = await sql("mysql", { useCustomRole: false })
     .select(tables["change"].name)
-    .where("row_key", "like", `${contractID}%`)
+    .where("row_key", "like", `${contractID}`)
+    .orWhere("row_key", "like", `${contractID}%`)
     .orderBy("changed_at")
     .run();
 
