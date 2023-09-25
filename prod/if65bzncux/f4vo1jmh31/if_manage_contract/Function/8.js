@@ -10,7 +10,7 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
       "party",
       `${tables.contract.name}.id`,
       "=",
-      `party.contract_id`
+      `${tables.party.name}.contract_id`
     );
     // .where("party.ref_id", "like", newData.partyID);
   } else {
