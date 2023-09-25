@@ -111,7 +111,7 @@ module.exports.getChange_Object = ({ tableKey, data, userID, makeid }) => {
   }
 };
 
-const convDate = (dayjs, dateStr, format = "YYYY-MM-DD HH:mm:ss", hour = 0) => {
+const convDate = (dayjs, dateStr, format = "YYYY-MM-DD HH:mm:ss", hour = 9) => {
   if (!dateStr) {
     return "";
   }
