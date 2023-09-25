@@ -39,6 +39,8 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
         cost_type: item.cost_type,
         dmbtr: (item.dmbtr || "").replace(/,/g, ""),
         dmbtr_local: (item.dmbtr_local || "").replace(/,/g, ""),
+        curr_key: item.curr_key,
+        curr_local: item.curr_local,
         start_date: item.start_date,
         end_date: item.end_date,
       }));
