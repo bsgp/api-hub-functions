@@ -84,6 +84,8 @@ module.exports.cost_object =
     // 귀속 유형(cf: to-be 리스트파일 계약유형 시트)
     table.decimal("dmbtr", 23, 2).defaultTo(0);
     table.decimal("dmbtr_local", 23, 2).defaultTo(0);
+    table.string("curr_key", 5).defaultTo("");
+    table.string("curr_local", 5).defaultTo("");
     table.string("start_date", 8).defaultTo(""); // 시작일
     table.string("end_date", 8).defaultTo(""); // 종료일
     table.boolean("deleted").defaultTo(false);
