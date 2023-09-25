@@ -24,10 +24,34 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
           changed_by,
           content: JSON.stringify(content),
         })),
-      partyList: [],
-      costObjectList: [],
-      billList: [],
-      attachmentList: [],
+      partyList: chagedList
+        .filter((list) => list.type === "party")
+        .map(({ changed_at, changed_by, content }) => ({
+          changed_at: fn.convDate(dayjs, changed_at),
+          changed_by,
+          content: JSON.stringify(content),
+        })),
+      costObjectList: chagedList
+        .filter((list) => list.type === "cost_objec")
+        .map(({ changed_at, changed_by, content }) => ({
+          changed_at: fn.convDate(dayjs, changed_at),
+          changed_by,
+          content: JSON.stringify(content),
+        })),
+      billList: chagedList
+        .filter((list) => list.type === "bill")
+        .map(({ changed_at, changed_by, content }) => ({
+          changed_at: fn.convDate(dayjs, changed_at),
+          changed_by,
+          content: JSON.stringify(content),
+        })),
+      attachmentList: chagedList
+        .filter((list) => list.type === "contract")
+        .map(({ changed_at, changed_by, content }) => ({
+          changed_at: fn.convDate(dayjs, changed_at),
+          changed_by,
+          content: JSON.stringify(content),
+        })),
     },
   };
 };
