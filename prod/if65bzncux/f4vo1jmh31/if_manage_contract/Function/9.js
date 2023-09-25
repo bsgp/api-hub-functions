@@ -19,7 +19,7 @@ module.exports = async (draft, { sql, tryit }) => {
     history: {
       contract: chagedList
         .filter((list) => list.type === "contract")
-        .map((changed_at, changed_by, content) => ({
+        .map(({ changed_at, changed_by, content }) => ({
           changed_at,
           changed_by,
           content: JSON.stringify(content),
