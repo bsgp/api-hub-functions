@@ -1,4 +1,4 @@
-module.exports = async (draft, { sql, tryit }) => {
+module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
   const { tables, newData } = draft.json;
   const { contractID } = newData;
 
@@ -20,7 +20,7 @@ module.exports = async (draft, { sql, tryit }) => {
       contract: chagedList
         .filter((list) => list.type === "contract")
         .map(({ changed_at, changed_by, content }) => ({
-          changed_at,
+          changed_at: fn.convDate(dayjs, changed_at),
           changed_by,
           content: JSON.stringify(content),
         })),
