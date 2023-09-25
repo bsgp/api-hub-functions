@@ -20,10 +20,13 @@ module.exports = async (draft, { fn, sql, tryit, makeid, file }) => {
   } else {
     await sql("mysql", { useCustomRole: false })
       .insert(
-        tables["change"].name
-        // tableData.map((data) =>
-        //   fn.getChange_Object({ tableKey, data, userID, makeid })
-        // )
+        tables["change"].name,
+        fn.getChange_Object({
+          tableKey: "contract",
+          data: contract,
+          userID,
+          makeid,
+        })
       )
       .run();
   }
