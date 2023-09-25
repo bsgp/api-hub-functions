@@ -17,6 +17,15 @@ module.exports = async (draft, { fn, sql, tryit, makeid, file }) => {
     };
     draft.response.statusCode = 400;
     return;
+  } else {
+    await sql("mysql", { useCustomRole: false })
+      .insert(
+        tables["change"].name
+        // tableData.map((data) =>
+        //   fn.getChange_Object({ tableKey, data, userID, makeid })
+        // )
+      )
+      .run();
   }
 
   const query = sql("mysql", { useCustomRole: false })
