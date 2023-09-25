@@ -98,7 +98,7 @@ module.exports.getChange_Object = ({ tableKey, data, userID, makeid }) => {
   switch (tableKey) {
     case "contract": {
       return {
-        row_key: data.id,
+        row_key: data.contractID,
         ...defaultObj,
       };
     }
