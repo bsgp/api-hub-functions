@@ -1,5 +1,6 @@
 module.exports = async (draft, { sql }) => {
-  const { tables } = draft.json;
+  const { tables, newData } = draft.json;
+  const { contractID } = newData;
   // const tableData = {
   //   type: "contract",
   //   row_key: "1",
@@ -13,6 +14,7 @@ module.exports = async (draft, { sql }) => {
 
   const postTableData = await sql("mysql", { useCustomRole: false })
     .select(tables["change"].name)
+    .where("row_key", "like", `${contractID}%`)
     .run();
 
   draft.response.body = {
