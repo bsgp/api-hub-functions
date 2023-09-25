@@ -8,7 +8,7 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
   if (newData.partyID) {
     queryBuilder
       .leftJoin("party", `${tables.contract.name}.id`, "=", `party.contract_id`)
-      .where("ref_id", "like", newData.partyID);
+      .where("party.ref_id", "like", newData.partyID);
   }
   if (newData.contractDate[0] && newData.contractDate[1]) {
     const from = fn.convDate(dayjs, newData.contractDate[0], "YYYYMMDD");
