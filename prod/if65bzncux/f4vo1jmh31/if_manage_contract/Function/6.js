@@ -18,7 +18,7 @@ module.exports = async (draft, { fn, sql, tryit, makeid, file }) => {
     draft.response.statusCode = 400;
     return;
   } else {
-    await sql("mysql", { useCustomRole: false })
+    const cContract = await sql("mysql", { useCustomRole: false })
       .insert(
         tables["change"].name,
         fn.getChange_Object({
@@ -29,6 +29,9 @@ module.exports = async (draft, { fn, sql, tryit, makeid, file }) => {
         })
       )
       .run();
+    draft.response.body = {
+      cContract,
+    };
   }
 
   const query = sql("mysql", { useCustomRole: false })
@@ -119,6 +122,7 @@ module.exports = async (draft, { fn, sql, tryit, makeid, file }) => {
     };
   } else {
     draft.response.body = {
+      ...draft.response.body,
       E_STATUS: "S",
       E_MESSAGE: `계약번호: ${contractID}\n생성되었습니다`,
       contractID,
