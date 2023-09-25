@@ -1,5 +1,5 @@
 module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
-  const { tables, newData } = draft.json;
+  const { tables, newData, userID } = draft.json;
   const contractID = newData.form.contractID;
 
   const tableList = [
@@ -96,16 +96,27 @@ module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
 
   const updateList = Object.keys(compared).reduce((acc, tableKey) => {
     if (compared[tableKey].length > 0) {
-      acc = acc.concat(
-        compared[tableKey].map((item) => ({ ...item, tableKey }))
-      );
+      if (tableKey === "contract") {
+        const contractObj = { ...origin[tableKey] };
+        compared[tableKey].map(({ key, after }) => (contractObj[key] = after));
+        acc = acc.concat({
+          tableKey,
+          type: "changed",
+          before: origin[tableKey],
+          after: contractObj,
+        });
+      } else {
+        acc = acc.concat(
+          compared[tableKey].map((item) => ({ ...item, tableKey }))
+        );
+      }
     }
     return acc;
   }, []);
 
   const updateResult = await Promise.all(
     updateList.map(async (item) => {
-      const { tableKey, type, key, before, after } = item;
+      const { tableKey, type, before, after } = item;
       switch (type) {
         case "created": {
           // insert
@@ -113,22 +124,43 @@ module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
             const fileData = newData.attachmentList.find(
               (item) => `${item.index}` === after.index
             );
-            const { tempFilePath, fileType, name } = fileData;
+            const { tempFilePath, type, name } = fileData;
             const path = [`${contractID}`, name].join("/");
             const data = await file.get(tempFilePath, {
               exactPath: true,
               returnBuffer: true,
             });
             await file.upload(path, data, {
-              contentType: fileType,
+              contentType: type,
             });
           }
+          const uuid = makeid(5);
+          await sql("mysql", { useCustomRole: false })
+            .insert(tables["change"].name, [
+              fn.getChange_Object({
+                tableKey,
+                data: { ...after, id: uuid },
+                userID,
+                makeid,
+              }),
+            ])
+            .run();
           return await sql("mysql", { useCustomRole: false })
-            .insert(tables[tableKey].name, { ...after, id: makeid(5) })
+            .insert(tables[tableKey].name, { ...after, id: uuid })
             .run();
         }
         case "deleted": {
           // update deleted: true;
+          await sql("mysql", { useCustomRole: false })
+            .insert(tables["change"].name, [
+              fn.getChange_Object({
+                tableKey,
+                data: { ...before, deleted: true },
+                userID,
+                makeid,
+              }),
+            ])
+            .run();
           return await sql("mysql", { useCustomRole: false })
             .update(tables[tableKey].name, { deleted: true })
             .where("contract_id", "like", contractID)
@@ -138,13 +170,31 @@ module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
         default: {
           // type: "changed"; update changed
           if (tableKey === "contract") {
-            const changed = {};
-            changed[key] = after;
+            await sql("mysql", { useCustomRole: false })
+              .insert(tables["change"].name, [
+                fn.getChange_Object({
+                  tableKey,
+                  data: after,
+                  userID,
+                  makeid,
+                }),
+              ])
+              .run();
             return await sql("mysql", { useCustomRole: false })
-              .update(tables[tableKey].name, changed)
+              .update(tables[tableKey].name, after)
               .where({ id: contractID })
               .run();
           } else {
+            await sql("mysql", { useCustomRole: false })
+              .insert(tables["change"].name, [
+                fn.getChange_Object({
+                  tableKey,
+                  data: after,
+                  userID,
+                  makeid,
+                }),
+              ])
+              .run();
             return await sql("mysql", { useCustomRole: false })
               .update(tables[tableKey].name, after)
               .where({ contract_id: contractID, id: before.id })

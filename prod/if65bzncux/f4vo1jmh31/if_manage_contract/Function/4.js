@@ -1,6 +1,7 @@
 module.exports = async (draft, { lib, file, request }) => {
   const { clone } = lib;
   draft.json.newData = clone(request.body.Data);
+  draft.json.userID = request.body.Function.UserId;
 
   const tables = await file.get("config/tables.json", {
     gziped: true,
@@ -20,6 +21,9 @@ module.exports = async (draft, { lib, file, request }) => {
       break;
     case "IF-CT-105": // GET LIST
       draft.json.nextNodeKey = "Function#8";
+      break;
+    case "IF-CT-109": // GET CHANGED HISTORY
+      draft.json.nextNodeKey = "Function#9";
       break;
     default:
       break;

@@ -39,6 +39,8 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
         cost_type: item.cost_type,
         dmbtr: (item.dmbtr || "").replace(/,/g, ""),
         dmbtr_local: (item.dmbtr_local || "").replace(/,/g, ""),
+        curr_key: item.curr_key,
+        curr_local: item.curr_local,
         start_date: item.start_date,
         end_date: item.end_date,
       }));
@@ -86,7 +88,30 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
   }
 };
 
-const convDate = (dayjs, dateStr, format = "YYYY-MM-DD", hour = 0) => {
+module.exports.getChange_Object = ({ tableKey, data, userID, makeid }) => {
+  const defaultObj = {
+    type: tableKey,
+    id: makeid && makeid(5),
+    changed_by: userID,
+    content: JSON.stringify(data),
+  };
+  switch (tableKey) {
+    case "contract": {
+      return {
+        row_key: data.id,
+        ...defaultObj,
+      };
+    }
+    default: {
+      return {
+        row_key: [data.contract_id, data.id].join("#"),
+        ...defaultObj,
+      };
+    }
+  }
+};
+
+const convDate = (dayjs, dateStr, format = "YYYY-MM-DD HH:mm:ss", hour = 9) => {
   if (!dateStr) {
     return "";
   }
