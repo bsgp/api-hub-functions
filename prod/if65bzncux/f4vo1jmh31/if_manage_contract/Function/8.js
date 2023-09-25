@@ -8,9 +8,9 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
   if (newData.partyID) {
     queryBuilder
       .select(
-        `${tables.contract.name}.*`
-        // `${tables.party.name}.contract_id`,
-        // `${tables.party.name}.ref_id`
+        `${tables.contract.name}.*`,
+        `${tables.party.name}.contract_id`,
+        `${tables.party.name}.ref_id`
       )
       .leftJoin(
         tables.party.name,
