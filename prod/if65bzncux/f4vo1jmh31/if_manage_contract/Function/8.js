@@ -7,7 +7,7 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
   const queryParams = {};
   if (newData.partyID) {
     queryBuilder.innerJoin(
-      "party",
+      tables.party.name,
       `${tables.contract.name}.id`,
       "=",
       `${tables.party.name}.contract_id`
