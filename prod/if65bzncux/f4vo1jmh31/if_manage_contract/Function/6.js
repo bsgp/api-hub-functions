@@ -17,21 +17,6 @@ module.exports = async (draft, { fn, sql, tryit, makeid, file }) => {
     };
     draft.response.statusCode = 400;
     return;
-  } else {
-    const cContract = await sql("mysql", { useCustomRole: false })
-      .insert(
-        tables["change"].name,
-        fn.getChange_Object({
-          tableKey: "contract",
-          data: contract,
-          userID,
-          makeid,
-        })
-      )
-      .run();
-    draft.response.body = {
-      cContract,
-    };
   }
 
   const query = sql("mysql", { useCustomRole: false })
@@ -49,6 +34,21 @@ module.exports = async (draft, { fn, sql, tryit, makeid, file }) => {
     };
     draft.response.statusCode = 400;
     return;
+  } else {
+    const cContract = await sql("mysql", { useCustomRole: false })
+      .insert(
+        tables["change"].name,
+        fn.getChange_Object({
+          tableKey: "contract",
+          data: { ...contract, id: contractID },
+          userID,
+          makeid,
+        })
+      )
+      .run();
+    draft.response.body = {
+      cContract,
+    };
   }
 
   const tableKeys = ["cost_object", "bill", "party", "attachment"]; // "ref_doc"
