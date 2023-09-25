@@ -1,22 +1,24 @@
-module.exports = async (draft, { sql }) => {
-  /** set spec */
-  const spec = draft.json.tables.sample;
+module.exports = async (draft, { fn, sql, makeid }) => {
+  /**
+   * db 업데이트 시
+   * Function#3 table name의 number++ && Functions: schema update
+   */
+  const mysql = sql("mysql", { useCustomRole: false });
+  const changed = draft.json.changed;
 
-  const mysql = sql("mysql");
-  const result = await mysql.table
-    .create(spec.name, function (table) {
-      table.charset("utf8mb4");
-      table.string("id").notNullable();
-      table.string("text").defaultTo("");
-      table.boolean("deleted").notNullable().defaultTo(false);
-      table.datetime("created_at", { precision: 6 }).defaultTo(mysql.fn.now(6));
-      table.datetime("updated_at", { precision: 6 }).defaultTo(mysql.fn.now(6));
-      table.string("created_by").defaultTo("");
-      table.string("updated_by").defaultTo("");
-      table.primary(["id"]);
+  await Promise.all(
+    Object.keys(changed).map(async (tableKey) => {
+      const spec = changed[tableKey];
+      if (!fn[tableKey]) {
+        draft.response.body[spec.name] = "schema not exist";
+        return false;
+      }
+      const result = await mysql.table
+        .create(spec.name, fn[tableKey]({ mysql, makeid }))
+        .run();
+      draft.response.body[spec.name] =
+        result.statusCode === 200 ? "Succeed" : result.body;
+      return true;
     })
-    .run();
-
-  draft.response.body[spec.name] =
-    result.statusCode === 200 ? "Succeed" : result.body;
+  );
 };
