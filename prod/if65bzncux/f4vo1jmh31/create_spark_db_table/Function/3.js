@@ -24,7 +24,7 @@ module.exports = async (draft, { file }) => {
       desc: "Reference document(MM,FI) info DB table",
     },
     cost_object: {
-      name: "cost_object_7",
+      name: "cost_object_8",
       desc: "WBS, CostCenter info DB table",
     },
     bill: {
