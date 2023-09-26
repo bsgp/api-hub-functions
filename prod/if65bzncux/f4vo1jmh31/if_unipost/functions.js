@@ -32,7 +32,7 @@ const getToken = async (secretKey, usId, { restApi, tryit }) => {
       secretKey,
     },
     body: {
-      usId: "bsg_cont_work01",
+      usId,
     },
   });
 
