@@ -15,10 +15,9 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
       `${tables.contract.name}.id`,
       "=",
       `${tables.party.name}.contract_id`
-    );
+    )
+    .whereNot("deleted", true);
   // .orderBy(`${tables.party.name}.stems10`, "desc")
-
-  // .whereNot("deleted", true);
 
   if (newData.partyID) {
     queryBuilder.where("ref_id", "like", newData.partyID);
