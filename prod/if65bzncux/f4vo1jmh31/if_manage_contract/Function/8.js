@@ -10,7 +10,7 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
       .select(
         `${tables.contract.name}.*`,
         `${tables.party.name}.contract_id`,
-        `${tables.party.name}.ref_id`
+        `${tables.party.name}.ref_id``${tables.party.name}.name as party_name`
       )
       .leftJoin(
         tables.party.name,
