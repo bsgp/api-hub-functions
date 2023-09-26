@@ -9,7 +9,7 @@ function findNotHaveValue(obj, keys) {
   return keys.filter((key) => !obj[key]);
 }
 module.exports = async (draft, { request, file, lib, env }) => {
-  const { isFalsy, isObject, tryit, repeat } = lib;
+  const { isFalsy } = lib;
   // const isObject = lib.type.isObject;
 
   function resFalsyError(message, status = 400) {
@@ -88,102 +88,102 @@ module.exports = async (draft, { request, file, lib, env }) => {
     );
   }
 
-  if (ifObj.UrlPath || ifObj.Type === "DB") {
-    const ifIdPrefix = request.body.InterfaceId.replace(/\d{0,}$/, "");
-    const ifSystem = ifList.prefixes[ifIdPrefix];
-    if (isFalsy(ifSystem)) {
-      return resFalsyError(
-        `Can not find valid prefix with "${request.body.InterfaceId}"`
-      );
-    }
+  // if (ifObj.UrlPath || ifObj.Type === "DB") {
+  //   const ifIdPrefix = request.body.InterfaceId.replace(/\d{0,}$/, "");
+  //   const ifSystem = ifList.prefixes[ifIdPrefix];
+  //   if (isFalsy(ifSystem)) {
+  //     return resFalsyError(
+  //       `Can not find valid prefix with "${request.body.InterfaceId}"`
+  //     );
+  //   }
 
-    let ifDomain = request.stage;
+  //   let ifDomain = request.stage;
 
-    repeat(() => {
-      ifDomain = tryit(() => ifList.systems[ifSystem].domains[ifDomain]);
+  //   repeat(() => {
+  //     ifDomain = tryit(() => ifList.systems[ifSystem].domains[ifDomain]);
 
-      if (isFalsy(ifDomain)) {
-        return { break: true };
-      }
-      if (ifObj.Type === "DB") {
-        if (ifDomain.startsWith("DB:")) {
-          return { break: true };
-        }
-      } else {
-        if (ifDomain.startsWith("http")) {
-          return { break: true };
-        }
-      }
-    });
+  //     if (isFalsy(ifDomain)) {
+  //       return { break: true };
+  //     }
+  //     if (ifObj.Type === "DB") {
+  //       if (ifDomain.startsWith("DB:")) {
+  //         return { break: true };
+  //       }
+  //     } else {
+  //       if (ifDomain.startsWith("http")) {
+  //         return { break: true };
+  //       }
+  //     }
+  //   });
 
-    let invalidDomain = false;
-    if (isFalsy(ifDomain)) {
-      invalidDomain = true;
-    } else if (ifObj.Type === "DB") {
-      if (!ifDomain.startsWith("DB:")) {
-        invalidDomain = true;
-      }
-    } else if (!ifDomain.startsWith("http")) {
-      invalidDomain = true;
-    }
+  //   let invalidDomain = false;
+  //   if (isFalsy(ifDomain)) {
+  //     invalidDomain = true;
+  //   } else if (ifObj.Type === "DB") {
+  //     if (!ifDomain.startsWith("DB:")) {
+  //       invalidDomain = true;
+  //     }
+  //   } else if (!ifDomain.startsWith("http")) {
+  //     invalidDomain = true;
+  //   }
 
-    if (invalidDomain === true) {
-      return resFalsyError(
-        `Can not find valid domain with "${request.body.InterfaceId}"`
-      );
-    }
+  //   if (invalidDomain === true) {
+  //     return resFalsyError(
+  //       `Can not find valid domain with "${request.body.InterfaceId}"`
+  //     );
+  //   }
 
-    if (ifObj.Type === "DB") {
-      ifDomain = ifDomain.replace("DB:", "");
+  //   if (ifObj.Type === "DB") {
+  //     ifDomain = ifDomain.replace("DB:", "");
 
-      let ifDbName = request.stage;
+  //     let ifDbName = request.stage;
 
-      repeat(() => {
-        const newDbName = tryit(
-          () => ifList.systems[ifSystem].dbNames[ifDbName]
-        );
+  //     repeat(() => {
+  //       const newDbName = tryit(
+  //         () => ifList.systems[ifSystem].dbNames[ifDbName]
+  //       );
 
-        if (isFalsy(newDbName)) {
-          return { break: true };
-        }
+  //       if (isFalsy(newDbName)) {
+  //         return { break: true };
+  //       }
 
-        ifDbName = newDbName;
-      });
+  //       ifDbName = newDbName;
+  //     });
 
-      let invalidDbName = false;
-      if (isFalsy(ifDbName)) {
-        invalidDbName = true;
-      }
+  //     let invalidDbName = false;
+  //     if (isFalsy(ifDbName)) {
+  //       invalidDbName = true;
+  //     }
 
-      if (invalidDbName === true) {
-        return resFalsyError(
-          `Can not find valid DB Name with "${request.body.InterfaceId}"`
-        );
-      }
-      ifObj.DbName = ifDbName;
-    }
+  //     if (invalidDbName === true) {
+  //       return resFalsyError(
+  //         `Can not find valid DB Name with "${request.body.InterfaceId}"`
+  //       );
+  //     }
+  //     ifObj.DbName = ifDbName;
+  //   }
 
-    ifObj.Url = [ifDomain, ifObj.UrlPath].join("");
-    ifObj.Domain = ifDomain;
+  //   ifObj.Url = [ifDomain, ifObj.UrlPath].join("");
+  //   ifObj.Domain = ifDomain;
 
-    let ifHeaders = request.stage;
+  //   let ifHeaders = request.stage;
 
-    repeat(() => {
-      ifHeaders = tryit(() => ifList.systems[ifSystem].headers[ifHeaders]);
+  //   repeat(() => {
+  //     ifHeaders = tryit(() => ifList.systems[ifSystem].headers[ifHeaders]);
 
-      if (isFalsy(ifHeaders)) {
-        return { break: true };
-      }
-      if (isObject(ifHeaders)) {
-        return { break: true };
-      }
-    });
+  //     if (isFalsy(ifHeaders)) {
+  //       return { break: true };
+  //     }
+  //     if (isObject(ifHeaders)) {
+  //       return { break: true };
+  //     }
+  //   });
 
-    ifObj.HttpHeaders = {
-      ...ifObj.HttpHeaders,
-      ...ifHeaders,
-    };
-  }
+  //   ifObj.HttpHeaders = {
+  //     ...ifObj.HttpHeaders,
+  //     ...ifHeaders,
+  //   };
+  // }
 
   // check Function
   const undefinedInFunction = findUndefinedKeys(request.body.Function, [
