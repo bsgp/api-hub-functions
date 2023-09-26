@@ -58,6 +58,7 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
       }, [])
       .map(({ stems10, party_name, ...args }) => ({
         ...args,
+        stems10,
         party_name: stems10 === "2" && party_name,
       })),
     test: fn.convDate(dayjs, newData.contractDate[0], "YYYYMMDD", 9),
