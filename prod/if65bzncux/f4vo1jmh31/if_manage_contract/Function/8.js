@@ -1,18 +1,23 @@
 module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
   const { tables, newData } = draft.json;
-  const queryBuilder = sql("mysql", { useCustomRole: false }).select(
-    tables.contract.name
-  );
+  const queryBuilder = sql("mysql", { useCustomRole: false })
+    .select(tables.contract.name)
+    .select(
+      `${tables.contract.name}.*`,
+      `${tables.party.name}.contract_id`,
+      `${tables.party.name}.ref_id`,
+      `${tables.party.name}.name as party_name`
+    );
 
   const queryParams = {};
   if (newData.partyID) {
     queryBuilder
-      .select(
-        `${tables.contract.name}.*`,
-        `${tables.party.name}.contract_id`,
-        `${tables.party.name}.ref_id`,
-        `${tables.party.name}.name as party_name`
-      )
+      // .select(
+      //   `${tables.contract.name}.*`,
+      //   `${tables.party.name}.contract_id`,
+      //   `${tables.party.name}.ref_id`,
+      //   `${tables.party.name}.name as party_name`
+      // )
       .leftJoin(
         tables.party.name,
         `${tables.contract.name}.id`,
