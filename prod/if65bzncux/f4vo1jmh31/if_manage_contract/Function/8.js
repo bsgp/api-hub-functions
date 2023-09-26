@@ -7,14 +7,16 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
       `${tables.party.name}.contract_id`,
       `${tables.party.name}.ref_id`,
       `${tables.party.name}.stems10`,
-      `${tables.party.name}.name as party_name`
+      `${tables.party.name}.name as party_name`,
+      `${tables.party.name}.deleted as party_deleted`
     )
     .leftJoin(
       tables.party.name,
       `${tables.contract.name}.id`,
       "=",
       `${tables.party.name}.contract_id`
-    );
+    )
+    .whereNot("party_deleted", true);
 
   const queryParams = {};
   if (newData.partyID) {
