@@ -15,8 +15,8 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
       `${tables.contract.name}.id`,
       "=",
       `${tables.party.name}.contract_id`
-    )
-    .whereNot("party_deleted", "like", true);
+    );
+  // .whereNot("party_deleted", "like", false);
 
   if (newData.partyID) {
     queryBuilder
