@@ -47,15 +47,15 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
     request: newData,
     queryResult,
     list: list
-      .reduce((acc, curr) => {
-        const isExist = acc.findIndex(({ id }) => id === curr.id);
-        if (isExist >= 0) {
-          if (curr.stems10 === "2" && !curr.party_deleted) {
-            acc[isExist] = curr;
-          }
-        } else acc.push(curr);
-        return acc;
-      }, [])
+      // .reduce((acc, curr) => {
+      //   const isExist = acc.findIndex(({ id }) => id === curr.id);
+      //   if (isExist >= 0) {
+      //     if (curr.stems10 === "2" && !curr.party_deleted) {
+      //       acc[isExist] = curr;
+      //     }
+      //   } else acc.push(curr);
+      //   return acc;
+      // }, [])
       .map(({ stems10, party_name, ...args }) => ({
         ...args,
         party_name: stems10 === "2" ? party_name : "",
