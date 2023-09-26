@@ -1,8 +1,20 @@
-module.exports = async (draft, { request }) => {
-  // const { tables, newData } = draft.json;
-  draft.response.body = {
-    request,
-    E_STATUS: "S",
-    E_MESSAGE: "계약당사자 정보가 조회되었습니다",
-  };
+module.exports = async (draft, { request, sql }) => {
+  draft.response.body = {};
+  const { tables, newData } = draft.json;
+  if (newData.key) {
+    const queryBuilder = sql("mysql", { useCustomRole: false }).select(
+      tables.party.name
+    );
+    queryBuilder
+      .where("ref_id", "like", `%${newData.key}%`)
+      .orWhere("name", "like", `%${newData.key}%`);
+    const queryResult = await queryBuilder.run();
+    draft.response.body = {
+      ...draft.response.body,
+      request,
+      queryResult,
+      E_STATUS: "S",
+      E_MESSAGE: "계약당사자 정보가 조회되었습니다",
+    };
+  }
 };
