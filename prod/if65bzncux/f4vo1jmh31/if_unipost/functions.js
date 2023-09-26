@@ -1,4 +1,30 @@
-module.exports.getSecretKey = async ({ restApi, tryit }) => {
+const checkResError = (body, prefixMessage) => {
+  /*{
+    "status": "200",
+    "message": "통신이 처리 되었습니다.",
+    "response": {
+        "resultCode": "-1",
+        "message": "인증키값이 유효 하지 않습니다."
+    }
+  }*/
+  if (body.response) {
+    if (body.response.resultCode === "-1") {
+      const err = new Error(
+        [prefixMessage, body.response.message].filter(Boolean).join(", ")
+      );
+
+      try {
+        err.description = "JSON.stringify(body);\n" + JSON.stringify(body);
+      } catch (ex) {
+        // pass
+      }
+
+      throw err;
+    }
+  }
+};
+
+module.exports.getSecretKey = async ({ restApi }) => {
   const result = await restApi.post({
     url: ["https://contdev.unipost.co.kr/unicloud/cont/api/getSecretKey"].join(
       "?"
@@ -8,21 +34,12 @@ module.exports.getSecretKey = async ({ restApi, tryit }) => {
     },
   });
 
-  const secretKey = tryit(() => result.body.response.secretKey);
-  if (secretKey) {
-    return secretKey;
-  }
+  checkResError(result.body, "Failed to get secret key from unipost");
 
-  const err = new Error("Failed to get secret key from unipost");
-
-  err.description = tryit(
-    () => "JSON.stringify(result);\n" + JSON.stringify(result)
-  );
-
-  throw err;
+  return result.body.response.secretKey;
 };
 
-const getToken = async (secretKey, usId, { restApi, tryit }) => {
+const getToken = async (secretKey, usId, { restApi }) => {
   const result = await restApi.post({
     url: [
       "https://contdev.unipost.co.kr/unicloud/cont/api/getContUserToken",
@@ -36,32 +53,42 @@ const getToken = async (secretKey, usId, { restApi, tryit }) => {
     },
   });
 
-  const token = tryit(() => result.body.response.token);
-  if (token) {
-    return token;
-  }
+  checkResError(result.body, "Failed to get token from unipost");
 
-  const err = new Error("Failed to get token from unipost");
-
-  err.description = tryit(
-    () => "JSON.stringify(result);\n" + JSON.stringify(result)
-  );
-
-  throw err;
+  return result.body.response.token;
 };
 
-module.exports.getTokenForWork = async (secretKey, { restApi, tryit }) => {
+module.exports.getTokenForWork = async (secretKey, { restApi }) => {
   const result = await getToken(secretKey, "bsg_cont_work01", {
     restApi,
-    tryit,
   });
   return result;
 };
 
-module.exports.getTokenForRead = async (secretKey, { restApi, tryit }) => {
+module.exports.getTokenForRead = async (secretKey, { restApi }) => {
   const result = await getToken(secretKey, "bsg_cont_read01", {
     restApi,
-    tryit,
   });
   return result;
+};
+
+module.exports.getTemplateList = async (secretKey, usId, { restApi }) => {
+  const result = await restApi.post({
+    url: [
+      "https://contdev.unipost.co.kr/unicloud/cont/api/getTemplateList",
+    ].join("?"),
+    headers: {
+      "content-type": "application/json;charset=UTF-8",
+      secretKey,
+    },
+    body: {
+      searchInfo: {
+        orgTemplateNo: "TN2308000008",
+      },
+    },
+  });
+
+  checkResError(result.body, "Failed to get Template list");
+
+  return result.body.response.templateList.list;
 };
