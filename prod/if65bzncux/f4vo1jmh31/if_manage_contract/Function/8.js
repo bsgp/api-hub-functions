@@ -20,20 +20,7 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
     .orWhere("deleted", null);
 
   if (newData.partyID) {
-    queryBuilder
-      // .select(
-      //   `${tables.contract.name}.*`,
-      //   `${tables.party.name}.contract_id`,
-      //   `${tables.party.name}.ref_id`,
-      //   `${tables.party.name}.name as party_name`
-      // )
-      // .leftJoin(
-      //   tables.party.name,
-      //   `${tables.contract.name}.id`,
-      //   "=",
-      //   `${tables.party.name}.contract_id`
-      // )
-      .where("ref_id", "like", newData.partyID);
+    queryBuilder.where("ref_id", "like", newData.partyID);
   } else {
     if (newData.contractDate[0] && newData.contractDate[1]) {
       const from = fn.convDate(dayjs, newData.contractDate[0], "YYYYMMDD");
@@ -55,13 +42,12 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
   }
 
   const queryResult = await queryBuilder.run();
-  const results = tryit(() => queryResult.body.list, []);
 
   draft.response.body = {
     request: newData,
-    queryResult,
+    queryResult: queryResult.map((it) => ({ ...it })),
     test: fn.convDate(dayjs, newData.contractDate[0], "YYYYMMDD", 9),
-    list: results,
+    list: tryit(() => queryResult.body.list, []),
     E_STATUS: "S",
     E_MESSAGE: `조회가\n완료되었습니다`,
   };
