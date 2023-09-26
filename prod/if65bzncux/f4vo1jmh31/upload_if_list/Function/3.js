@@ -56,7 +56,13 @@ module.exports = async (draft, { file }) => {
     },
     ["IF-CT-008"]: {
       Type: "API",
-      Name: "CT_CONT_WRITE",
+      Name: "CT_TOKEN_4_WRITING",
+      TriggeredBy: "UNIPOST",
+      Path: "/unipost",
+    },
+    ["IF-CT-009"]: {
+      Type: "API",
+      Name: "CT_TOKEN_4_READING",
       TriggeredBy: "UNIPOST",
       Path: "/unipost",
     },
