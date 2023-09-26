@@ -6,8 +6,8 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
       `${tables.contract.name}.*`,
       `${tables.party.name}.contract_id`,
       `${tables.party.name}.ref_id`,
-      `${tables.party.name}.name as party_name`,
-      `${tables.party.name}.type as party_type`
+      `${tables.party.name}.stems10`,
+      `${tables.party.name}.name as party_name`
     )
     .leftJoin(
       tables.party.name,
