@@ -2,6 +2,7 @@ module.exports = async (draft, { request, sql }) => {
   draft.response.body = {};
   const { tables, newData } = draft.json;
   const queryBuilder = sql("mysql", { useCustomRole: false }).select(
+    tables.party.name,
     `${tables.party.name}.ref_id`,
     `${tables.party.name}.name`
   );
