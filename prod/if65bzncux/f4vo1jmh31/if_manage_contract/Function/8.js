@@ -16,8 +16,8 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
       "=",
       `${tables.party.name}.contract_id`
     )
+    .groupBy("id")
     .orderBy(["id", { column: `${tables.party.name}.stems10`, order: "desc" }]);
-  // .groupBy("id");
 
   if (newData.partyID) {
     queryBuilder.where("ref_id", "like", newData.partyID);
