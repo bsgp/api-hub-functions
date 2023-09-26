@@ -16,7 +16,8 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
       "=",
       `${tables.party.name}.contract_id`
     )
-    .orderBy(["id", { column: `${tables.party.name}.stems10`, order: "desc" }])
+    .orderBy(["id", `${tables.party.name}.stems10`])
+    // .orderBy(["id",{column: `${tables.party.name}.stems10`, order: "desc" }])
     .groupBy("id");
 
   if (newData.partyID) {
