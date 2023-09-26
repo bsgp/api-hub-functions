@@ -7,6 +7,12 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
       `${tables.party.name}.contract_id`,
       `${tables.party.name}.ref_id`,
       `${tables.party.name}.name as party_name`
+    )
+    .leftJoin(
+      tables.party.name,
+      `${tables.contract.name}.id`,
+      "=",
+      `${tables.party.name}.contract_id`
     );
 
   const queryParams = {};
@@ -18,12 +24,12 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
       //   `${tables.party.name}.ref_id`,
       //   `${tables.party.name}.name as party_name`
       // )
-      .leftJoin(
-        tables.party.name,
-        `${tables.contract.name}.id`,
-        "=",
-        `${tables.party.name}.contract_id`
-      )
+      // .leftJoin(
+      //   tables.party.name,
+      //   `${tables.contract.name}.id`,
+      //   "=",
+      //   `${tables.party.name}.contract_id`
+      // )
       .where("ref_id", "like", newData.partyID);
   } else {
     if (newData.contractDate[0] && newData.contractDate[1]) {
