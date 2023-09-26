@@ -10,13 +10,19 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
       `${tables.party.name}.name as party_name`,
       `${tables.party.name}.deleted as party_deleted`
     )
-    .leftJoin(
-      tables.party.name,
-      `${tables.contract.name}.id`,
-      "=",
-      `${tables.party.name}.contract_id`
-    );
-  // queryBuilder.where("party_deleted", "like", false);
+    .leftJoin(tables.party.name, function () {
+      this.on(
+        `${tables.contract.name}.id`,
+        "=",
+        `${tables.party.name}.contract_id`
+      ).on(`${tables.party.name}`, "=", false);
+    });
+  // .leftJoin(
+  //   tables.party.name,
+  //   `${tables.contract.name}.id`,
+  //   "=",
+  //   `${tables.party.name}.contract_id`
+  // );
 
   if (newData.partyID) {
     queryBuilder
