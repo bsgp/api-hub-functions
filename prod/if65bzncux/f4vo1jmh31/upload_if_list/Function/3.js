@@ -183,6 +183,12 @@ module.exports = async (draft, { file }) => {
       RfcName: "",
       TriggeredBy: "SUPPORT",
     },
+    ["IF-CT-106"]: {
+      Type: "RFC",
+      Name: "GET_PARTY_LIST_FROM_DB",
+      RfcName: "",
+      TriggeredBy: "SUPPORT",
+    },
     ["IF-CT-109"]: {
       Type: "RFC",
       Name: "GET_CHANGED_HISTORY",
