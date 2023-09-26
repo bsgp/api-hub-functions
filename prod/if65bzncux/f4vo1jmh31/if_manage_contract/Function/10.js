@@ -1,4 +1,4 @@
-module.exports = async (draft, { request, sql }) => {
+module.exports = async (draft, { request, sql, tryit }) => {
   draft.response.body = {};
   const { tables, newData } = draft.json;
   const queryBuilder = sql("mysql", { useCustomRole: false })
@@ -12,10 +12,11 @@ module.exports = async (draft, { request, sql }) => {
       .orWhere("name", "like", `%${newData.key}%`);
   }
   const queryResult = await queryBuilder.run();
+  const list = tryit(() => queryResult.body.list, []);
   draft.response.body = {
     ...draft.response.body,
     request,
-    queryResult,
+    list,
     E_STATUS: "S",
     E_MESSAGE: "계약당사자 정보가 조회되었습니다",
   };
