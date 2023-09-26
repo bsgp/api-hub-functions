@@ -17,7 +17,9 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
       `${tables.party.name}.contract_id`
     )
     .orderBy(`${tables.party.name}.stems10`, "desc")
-    .groupBy("id");
+    .groupBy("id")
+    .orderBy(`id`);
+
   // .whereNot("deleted", true);
 
   if (newData.partyID) {
