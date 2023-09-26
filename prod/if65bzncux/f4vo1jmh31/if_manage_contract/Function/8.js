@@ -15,7 +15,7 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
         `${tables.contract.name}.id`,
         "=",
         `${tables.party.name}.contract_id`
-      ).on(`${tables.party.name}.deleted`, "=", false);
+      ).on(`${tables.party.name}.deleted`, "=", "false");
     });
   // .leftJoin(
   //   tables.party.name,
