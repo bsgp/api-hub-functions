@@ -167,7 +167,7 @@ module.exports = async (draft, { file }) => {
       TriggeredBy: "SUPPORT",
     },
     ["IF-FU-101"]: {
-      Type: "RFC",
+      Type: "FU",
       Name: "GET_FILE_UPLOAD_URL",
       RfcName: "",
       TriggeredBy: "SUPPORT",
