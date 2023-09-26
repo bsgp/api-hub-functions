@@ -11,7 +11,7 @@ module.exports = async (draft, { restApi, fn }) => {
   switch (draft.json.ifObj.InterfaceId) {
     case "IF-CT-007":
       {
-        const result = await fn.getTemplateList();
+        const result = await fn.getTemplateList(secretKey, { restApi });
 
         draft.response.body = {
           list: result,
