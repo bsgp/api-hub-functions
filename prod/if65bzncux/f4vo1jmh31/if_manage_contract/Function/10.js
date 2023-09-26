@@ -3,7 +3,8 @@ module.exports = async (draft, { request, sql }) => {
   const { tables, newData } = draft.json;
   const queryBuilder = sql("mysql", { useCustomRole: false })
     .select(tables.party.name)
-    .select(`${tables.party.name}.ref_id`, `${tables.party.name}.name`);
+    .select(`${tables.party.name}.ref_id`, `${tables.party.name}.name`)
+    .orderBy("ref_id");
   if (newData.key) {
     queryBuilder
       .where("ref_id", "like", `%${newData.key}%`)
