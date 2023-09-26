@@ -46,15 +46,20 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
   draft.response.body = {
     request: newData,
     queryResult,
-    list: list.reduce((acc, curr) => {
-      const isExist = acc.findIndex(({ id }) => id === curr.id);
-      if (isExist >= 0) {
-        if (curr.stems10 === "2" && !curr.party_deleted) {
-          acc[isExist] = curr;
-        }
-      } else acc.push(curr);
-      return acc;
-    }, []),
+    list: list
+      .reduce((acc, curr) => {
+        const isExist = acc.findIndex(({ id }) => id === curr.id);
+        if (isExist >= 0) {
+          if (curr.stems10 === "2" && !curr.party_deleted) {
+            acc[isExist] = curr;
+          }
+        } else acc.push(curr);
+        return acc;
+      }, [])
+      .map(({ stems10, party_name, ...args }) => ({
+        ...args,
+        party_name: stems10 === "2" && party_name,
+      })),
     test: fn.convDate(dayjs, newData.contractDate[0], "YYYYMMDD", 9),
     E_STATUS: "S",
     E_MESSAGE: `조회가\n완료되었습니다`,
