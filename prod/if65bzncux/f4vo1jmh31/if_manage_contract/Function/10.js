@@ -5,7 +5,8 @@ module.exports = async (draft, { request, sql, tryit }) => {
     .select(tables.party.name)
     .select(`${tables.party.name}.ref_id`, `${tables.party.name}.name`)
     .orderBy("ref_id")
-    .groupBy("ref_id");
+    .groupBy("ref_id")
+    .whereNot({ ref_id: "" });
   if (newData.key) {
     queryBuilder
       .where("ref_id", "like", `%${newData.key}%`)
