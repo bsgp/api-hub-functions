@@ -45,9 +45,9 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
 
   draft.response.body = {
     request: newData,
-    queryResult: { ...queryResult },
+    queryResult,
     test: fn.convDate(dayjs, newData.contractDate[0], "YYYYMMDD", 9),
-    list: tryit(() => queryResult.body.list, []),
+    list: tryit(() => queryResult.body.list.map((it) => ({ ...it })), []),
     E_STATUS: "S",
     E_MESSAGE: `조회가\n완료되었습니다`,
   };
