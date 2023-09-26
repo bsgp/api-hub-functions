@@ -8,21 +8,13 @@ module.exports = async (draft, { restApi, tryit, fn }) => {
 
   const secretKey = await fn.getSecretKey({ restApi, tryit });
 
-  const result = await restApi.post({
-    url: [
-      "https://contdev.unipost.co.kr/unicloud/cont/api/getContUserToken",
-    ].join("?"),
-    headers: {
-      "content-type": "application/json;charset=UTF-8",
-      secretKey,
-    },
-    body: {
-      usId: "bsg_cont_work01",
-    },
-  });
+  const token = await fn.getTokenForWork(secretKey, { restApi, tryit });
+
+  const result = await fn.getTemplateList();
 
   draft.response.body = {
     secretKey,
+    token,
     result,
   };
 };
