@@ -72,7 +72,7 @@ module.exports.getTokenForRead = async (secretKey, { restApi }) => {
   return result;
 };
 
-module.exports.getTemplateList = async (secretKey, usId, { restApi }) => {
+module.exports.getTemplateList = async (secretKey, { restApi }) => {
   const result = await restApi.post({
     url: [
       "https://contdev.unipost.co.kr/unicloud/cont/api/getTemplateList",
