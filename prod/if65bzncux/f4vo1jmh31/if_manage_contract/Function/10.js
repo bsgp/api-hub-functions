@@ -1,4 +1,5 @@
 module.exports = async (draft, { request }) => {
+  // const { tables, newData } = draft.json;
   draft.response.body = {
     request,
     E_STATUS: "S",
