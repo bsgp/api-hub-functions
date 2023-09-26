@@ -16,7 +16,6 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
       "=",
       `${tables.party.name}.contract_id`
     )
-    .groupBy("id")
     .orderBy(["id", { column: `${tables.party.name}.stems10`, order: "desc" }]);
 
   if (newData.partyID) {
@@ -42,12 +41,21 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
   }
 
   const queryResult = await queryBuilder.run();
+  const list = tryit(() => queryResult.body.list.map((it) => ({ ...it })), []);
 
   draft.response.body = {
     request: newData,
     queryResult,
+    list: list.reduce((acc, curr) => {
+      const isExist = acc.findIndex(({ id }) => id === curr.id);
+      if (isExist >= 0) {
+        if (curr.stems10 === "2" && !curr.party_deleted) {
+          acc[isExist] = curr;
+        }
+      } else acc.push(curr);
+      return acc;
+    }, []),
     test: fn.convDate(dayjs, newData.contractDate[0], "YYYYMMDD", 9),
-    list: tryit(() => queryResult.body.list.map((it) => ({ ...it })), []),
     E_STATUS: "S",
     E_MESSAGE: `조회가\n완료되었습니다`,
   };
