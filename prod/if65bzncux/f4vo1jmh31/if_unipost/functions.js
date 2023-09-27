@@ -35,7 +35,7 @@ module.exports.getSecretKey = async ({ restApi }) => {
   });
 
   checkResError(result.body, "Failed to get secret key from unipost");
-
+  console.log("result.body:", result.body);
   return result.body.response.secretKey;
 };
 
