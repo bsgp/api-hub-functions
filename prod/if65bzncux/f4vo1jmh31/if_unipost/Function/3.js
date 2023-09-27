@@ -11,11 +11,23 @@ module.exports = async (draft, { restApi, fn }) => {
   switch (draft.json.ifObj.InterfaceId) {
     case "IF-CT-007":
       {
-        const result = await fn.getTemplateList(secretKey, { restApi });
-
+        const secretKey = await restApi.post({
+          url: [
+            "https://contdev.unipost.co.kr/unicloud/cont/api/getSecretKey",
+          ].join("?"),
+          headers: {
+            clientKey: "51147370C5A742709F3EB95213CFBE30",
+          },
+        });
         draft.response.body = {
-          list: result,
+          secretKey,
         };
+
+        // const result = await fn.getTemplateList(secretKey, { restApi });
+
+        // draft.response.body = {
+        //   list: result,
+        // };
       }
       break;
     case "IF-CT-008":
