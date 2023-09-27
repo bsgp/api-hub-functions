@@ -11,7 +11,7 @@ module.exports = async (draft, { restApi, fn }) => {
   switch (draft.json.ifObj.InterfaceId) {
     case "IF-CT-007":
       {
-        const secretKey = await restApi.post({
+        const secretKey2 = await restApi.post({
           url: [
             "https://contdev.unipost.co.kr/unicloud/cont/api/getSecretKey",
           ].join("?"),
@@ -20,7 +20,7 @@ module.exports = async (draft, { restApi, fn }) => {
           },
         });
         draft.response.body = {
-          secretKey,
+          secretKey2,
         };
 
         // const result = await fn.getTemplateList(secretKey, { restApi });
