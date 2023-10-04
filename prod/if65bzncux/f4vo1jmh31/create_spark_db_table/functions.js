@@ -9,13 +9,15 @@ module.exports.change =
   (table) => {
     table.charset("utf8mb4");
 
-    table.string("type", 10).notNullable(); // Master, Contract, Project, Bill..
+    table.string("type", 15).notNullable(); // Master, Contract, Project, Bill..
+    // cost_object 10자리로 하는 경우 잘림, 15로 수정
     table.string("row_key", 20).notNullable(); // 행의 키필드.join("#")
     table.string("id", 5).defaultTo(makeid(5)); // makeid()
 
     table.string("changed_by", 30).defaultTo(""); // 변경자
     table.datetime("changed_at", { precision: 6 }).defaultTo(mysql.fn.now(6));
     // 변경일시
+    table.string("operation", 1).defaultTo(""); // I(insert), U(update)
     table.json("content"); // json 타입
 
     table.primary(["type", "row_key", "id"]);
@@ -27,7 +29,7 @@ module.exports.contract =
   (table) => {
     table.charset("utf8mb4");
 
-    table.increments("id");
+    table.string("id", 10).notNullable();
 
     table.string("prod_date", 8).defaultTo(""); // 계약작성일
     table.string("bukrs", 4).defaultTo(""); // 회사코드(기본값: 로그인한 회사코드)
@@ -44,6 +46,19 @@ module.exports.contract =
     // curr_key와 curr_local이 다를 경우 필수 입력
     table.string("curr_local", 5).defaultTo(""); // 기본값: 로그인 회사 기본통화키
     table.string("status", 3).defaultTo(""); // 상태
+    table.string("seq", 3).defaultTo("0"); // 회차
+    table.string("payment_terms", 20).defaultTo(""); // 지급조건
+    table.string("claims_time", 20).defaultTo(""); // 청구시점
+    table.string("contract_deposit", 20).defaultTo(""); // 계약이행보증
+    table.string("delayed_money", 20).defaultTo(""); // 지체상금율
+    table.string("etc", 200).defaultTo(""); // 기타
+    table.string("uni_contno", 20).defaultTo(""); // 계약관리번호
+    table.string("uni_contseq", 3).defaultTo(""); //  계약관리 일련번호
+    table.string("uni_coregno", 10).defaultTo(""); // 계약소유자 사업자등록번호
+    table.string("uni_contname", 200).defaultTo(""); // 계약명
+    table.string("uni_contdate", 3).defaultTo(""); // 계약일자(yyyyMMdd)
+    table.string("uni_contsts", 3).defaultTo(""); // 계약상태코드
+    table.string("uni_contstsname", 3).defaultTo(""); // 계약상태명
     table.datetime("created_at", { precision: 6 }).defaultTo(mysql.fn.now(6));
 
     table.primary(["id"]);
