@@ -15,6 +15,18 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
       dmbtr_local: (data.form.dmbtr_local || "").replace(/,/g, ""),
       curr_local: data.form.curr_local,
       status: data.form.status,
+      payment_terms: data.form.payment_terms,
+      claims_time: data.form.claims_time,
+      contract_deposit: data.form.contract_deposit,
+      delayed_money: data.form.delayed_money,
+      etc: data.form.etc,
+      uni_coregno: data.form.uni_coregno,
+      uni_contsts: data.form.uni_contsts,
+      uni_contseq: data.form.uni_contseq,
+      uni_contstsname: data.form.uni_contstsname,
+      uni_contno: data.form.uni_contno,
+      uni_contdate: data.form.uni_contdate,
+      uni_contname: data.form.uni_contname,
     };
   }
   switch (key) {
