@@ -16,6 +16,9 @@ module.exports = async (
   const contract = fn.getDB_Object(newData, { key: "contract" });
 
   /** */
+  const prefix = [contract.type, fn.convDate(dayjs, new Date(), "YYYY")].join(
+    ""
+  );
   const query = sql("mysql", { useCustomRole: false })
     .select(tables.contract.name)
     .orderBy("id", "desc")
@@ -28,7 +31,7 @@ module.exports = async (
     E_STATUS: "S",
     E_MESSAGE: `save ${tables.contract.name}`,
     test: { contract, contractID },
-    year: fn.convDate(dayjs, new Date(), "YYYY-MM-DD HH"),
+    prefix,
   };
 
   /** */
