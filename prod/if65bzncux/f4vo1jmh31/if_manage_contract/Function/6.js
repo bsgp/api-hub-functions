@@ -16,22 +16,21 @@ module.exports = async (
   const contract = fn.getDB_Object(newData, { key: "contract" });
 
   /** */
-  await sql("mysql", { useCustomRole: false })
-    .insert(tables.contract.name, { ...contract, id: "P202300003" })
-    .run();
+  // await sql("mysql", { useCustomRole: false })
+  //   .insert(tables.contract.name, { ...contract, id: "P202300004" })
+  //   .run();
 
   const prefix = [contract.type, fn.convDate(dayjs, new Date(), "YYYY")].join(
     ""
   );
   const query = sql("mysql", { useCustomRole: false })
     .select(tables.contract.name)
-    .max("id")
+    .max("id", { as: "maxID" })
     .where("id", "like", `${prefix}%`);
-  // .orderBy("id", "desc")
-  // .limit(1);
+
   const queryResult = await query.run();
 
-  const maxID = tryit(() => queryResult.body.list[0]["max(`id`)"], "");
+  const maxID = tryit(() => queryResult.body.list[0], "");
 
   draft.response.body = {
     E_STATUS: "S",
