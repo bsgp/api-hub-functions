@@ -2,6 +2,7 @@ module.exports = async (
   draft,
   {
     fn,
+    dayjs,
     sql,
     tryit,
     // makeid, file
@@ -27,6 +28,7 @@ module.exports = async (
     E_STATUS: "S",
     E_MESSAGE: `save ${tables.contract.name}`,
     test: { contract, contractID },
+    year: fn.convDate(dayjs, new Date(), "YYYY-MM-DD HH"),
   };
 
   /** */
