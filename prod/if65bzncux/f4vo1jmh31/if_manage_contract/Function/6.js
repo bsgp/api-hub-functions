@@ -21,6 +21,7 @@ module.exports = async (
   );
   const query = sql("mysql", { useCustomRole: false })
     .select(tables.contract.name)
+    // .max('id')
     .where("id", "like", `${prefix}%`);
   // .orderBy("id", "desc")
   // .limit(1);
