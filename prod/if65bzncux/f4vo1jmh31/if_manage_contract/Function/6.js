@@ -16,9 +16,9 @@ module.exports = async (
   const contract = fn.getDB_Object(newData, { key: "contract" });
 
   /** */
-  // await sql("mysql", { useCustomRole: false })
-  //   .insert(tables.contract.name, { ...contract, id: "P202300004" })
-  //   .run();
+  await sql("mysql", { useCustomRole: false })
+    .insert(tables.contract.name, { ...contract, id: "P202300004" })
+    .run();
 
   const prefix = [contract.type, fn.convDate(dayjs, new Date(), "YYYY")].join(
     ""
@@ -30,12 +30,16 @@ module.exports = async (
 
   const queryResult = await query.run();
 
-  const maxID = tryit(() => queryResult.body.list[0], "");
+  const maxID =
+    tryit(() => queryResult.body.list[0].maxID, "0000000000") || "0000000000";
+  const contractID = (Number(maxID.substring(5)) + 1)
+    .toString()
+    .padStart(5, "0");
 
   draft.response.body = {
     E_STATUS: "S",
     E_MESSAGE: `save ${tables.contract.name}`,
-    test: { contract, maxID },
+    test: { contract, maxID, contractID },
     prefix,
   };
 
