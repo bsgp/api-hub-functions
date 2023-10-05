@@ -4,7 +4,7 @@ module.exports = async (draft, { sql, tryit }) => {
   if (newData.contractID) {
     const query = sql("mysql", { useCustomRole: false })
       .select(tables.contract.name)
-      .where("id", "like", Number(newData.contractID));
+      .where("id", "like", newData.contractID);
     const queryResult = await query.run();
     const contractID = tryit(() => queryResult.body.list[0].id, "");
     const tableList = ["party", "bill", "ref_doc", "cost_object", "attachment"];

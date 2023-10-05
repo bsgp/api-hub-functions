@@ -1,12 +1,27 @@
-module.exports = async (draft, { fn, sql, tryit, makeid, file }) => {
+module.exports = async (draft, { fn, dayjs, sql, tryit, makeid, file }) => {
   const { tables, newData, userID } = draft.json;
   const contract = fn.getDB_Object(newData, { key: "contract" });
 
   // const builder = sql("mysql").select(tables.contract.name);
   // const contractValidator = await builder.validator;
+  /** create new ContractID by maxID && insert contract table */
+  const cYear = fn.convDate(dayjs, new Date(), "YYYY");
+  const prefix = [contract.type, cYear].join("");
+  const query = sql("mysql", { useCustomRole: false })
+    .select(tables.contract.name)
+    .max("id", { as: "maxID" })
+    .where("id", "like", `${prefix}%`);
+
+  const queryResult = await query.run();
+  const maxID =
+    tryit(() => queryResult.body.list[0].maxID, "0000000000") || "0000000000";
+  const contractID = [
+    prefix,
+    (Number(maxID.substring(5)) + 1).toString().padStart(5, "0"),
+  ].join("");
 
   const createContract = await sql("mysql", { useCustomRole: false })
-    .insert(tables.contract.name, contract)
+    .insert(tables.contract.name, { ...contract, id: contractID })
     .run();
 
   if (createContract.statusCode !== 200) {
@@ -19,39 +34,25 @@ module.exports = async (draft, { fn, sql, tryit, makeid, file }) => {
     return;
   }
 
-  const query = sql("mysql", { useCustomRole: false })
-    .select(tables.contract.name)
-    .orderBy("id", "desc")
-    .limit(1);
-  const queryResult = await query.run();
+  /** insert change table */
+  const cContract = await sql("mysql", { useCustomRole: false })
+    .insert(
+      tables["change"].name,
+      fn.getChange_Object({
+        tableKey: "contract",
+        data: { ...contract, id: contractID },
+        userID,
+        makeid,
+        operation: "I",
+      })
+    )
+    .run();
+  draft.response.body = {
+    cContract,
+  };
 
-  const contractID = tryit(() => queryResult.body.list[0].id, "");
-  if (!contractID) {
-    draft.response.body = {
-      E_STATUS: "F",
-      E_MESSAGE: `Failed get contractID`,
-      createContract,
-    };
-    draft.response.statusCode = 400;
-    return;
-  } else {
-    const cContract = await sql("mysql", { useCustomRole: false })
-      .insert(
-        tables["change"].name,
-        fn.getChange_Object({
-          tableKey: "contract",
-          data: { ...contract, id: contractID },
-          userID,
-          makeid,
-        })
-      )
-      .run();
-    draft.response.body = {
-      cContract,
-    };
-  }
-
-  const tableKeys = ["cost_object", "bill", "party", "attachment"]; // "ref_doc"
+  /** insert sub table */
+  const tableKeys = ["cost_object", "bill", "party", "attachment"]; //"ref_doc"
   const tableListRes = await Promise.all(
     tableKeys.map(async (tableKey) => {
       const tableData = fn.getDB_Object(newData, {
@@ -86,7 +87,13 @@ module.exports = async (draft, { fn, sql, tryit, makeid, file }) => {
         .insert(
           tables["change"].name,
           tableData.map((data) =>
-            fn.getChange_Object({ tableKey, data, userID, makeid })
+            fn.getChange_Object({
+              tableKey,
+              data,
+              userID,
+              makeid,
+              operation: "I",
+            })
           )
         )
         .run();
