@@ -3,7 +3,8 @@ module.exports = async (
   {
     fn,
     sql,
-    // tryit, makeid, file
+    tryit,
+    // makeid, file
   }
 ) => {
   const {
@@ -14,14 +15,19 @@ module.exports = async (
   const contract = fn.getDB_Object(newData, { key: "contract" });
 
   /** */
-  const createContract = await sql("mysql", { useCustomRole: false })
-    .insert(tables.contract.name, { ...contract, id: "P202300001" })
-    .run();
+  const query = sql("mysql", { useCustomRole: false })
+    .select(tables.contract.name)
+    .orderBy("id", "desc")
+    .limit(1);
+  const queryResult = await query.run();
+
+  const contractID = tryit(() => queryResult.body.list[0].id, "");
+
   draft.response.body = {
     E_STATUS: "S",
     E_MESSAGE: `save ${tables.contract.name}`,
     contract,
-    createContract,
+    contractID,
   };
 
   /** */
