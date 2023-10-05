@@ -4,7 +4,7 @@ module.exports = async (
     fn,
     dayjs,
     sql,
-    tryit,
+    // tryit,
     // makeid, file
   }
 ) => {
@@ -21,16 +21,17 @@ module.exports = async (
   );
   const query = sql("mysql", { useCustomRole: false })
     .select(tables.contract.name)
-    .orderBy("id", "desc")
-    .limit(1);
+    .where("id", "like", `${prefix}%`);
+  // .orderBy("id", "desc")
+  // .limit(1);
   const queryResult = await query.run();
 
-  const contractID = tryit(() => queryResult.body.list[0].id, "");
+  // const contractID = tryit(() => queryResult.body.list[0].id, "");
 
   draft.response.body = {
     E_STATUS: "S",
     E_MESSAGE: `save ${tables.contract.name}`,
-    test: { contract, contractID },
+    test: { contract, queryResult },
     prefix,
   };
 
