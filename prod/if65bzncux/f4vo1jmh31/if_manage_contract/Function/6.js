@@ -16,11 +16,8 @@ module.exports = async (
   const contract = fn.getDB_Object(newData, { key: "contract" });
 
   /** */
-
-  const prefix = ["S", fn.convDate(dayjs, new Date(), "YYYY")].join("");
-  // const prefix =[contract.type, fn.convDate(dayjs, new Date(), "YYYY")].join(
-  //   ""
-  // );
+  const cYear = fn.convDate(dayjs, new Date(), "YYYY");
+  const prefix = [contract.type, cYear].join("");
   const query = sql("mysql", { useCustomRole: false })
     .select(tables.contract.name)
     .max("id", { as: "maxID" })
