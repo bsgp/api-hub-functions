@@ -16,6 +16,10 @@ module.exports = async (
   const contract = fn.getDB_Object(newData, { key: "contract" });
 
   /** */
+  await sql("mysql", { useCustomRole: false })
+    .insert(tables.contract.name, { ...contract, id: "P202300002" })
+    .run();
+
   const prefix = [contract.type, fn.convDate(dayjs, new Date(), "YYYY")].join(
     ""
   );
