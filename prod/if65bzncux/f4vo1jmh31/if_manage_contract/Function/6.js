@@ -43,6 +43,7 @@ module.exports = async (draft, { fn, sql, tryit, makeid, file }) => {
           data: { ...contract, id: contractID },
           userID,
           makeid,
+          operation: "I",
         })
       )
       .run();
@@ -86,7 +87,13 @@ module.exports = async (draft, { fn, sql, tryit, makeid, file }) => {
         .insert(
           tables["change"].name,
           tableData.map((data) =>
-            fn.getChange_Object({ tableKey, data, userID, makeid })
+            fn.getChange_Object({
+              tableKey,
+              data,
+              userID,
+              makeid,
+              operation: "I",
+            })
           )
         )
         .run();
