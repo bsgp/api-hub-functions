@@ -141,10 +141,9 @@ module.exports.party =
 
     table.string("index", 5).defaultTo("");
     table.string("stems10", 1).defaultTo("");
+    // 甲(갑) 乙(을) 丙(병) 丁(정) 戊(무) 己(기) 庚(경) 辛(신) 壬(임) 癸(계)
     table.string("stems10_cn", 1).defaultTo("");
-    // 甲(갑) 乙(을) 丙(병) 丁(정) 戊(무) 己(기) 庚(경) 辛(신) 壬(임) 癸(계)
     table.string("stems10_ko", 1).defaultTo("");
-    // 甲(갑) 乙(을) 丙(병) 丁(정) 戊(무) 己(기) 庚(경) 辛(신) 壬(임) 癸(계)
     table.string("name", 100).defaultTo(""); // 상호
     table.string("ref_id", 36).defaultTo(""); // 회사 코드, BP코드
     table.string("type", 5).defaultTo(""); // 회사 타입
