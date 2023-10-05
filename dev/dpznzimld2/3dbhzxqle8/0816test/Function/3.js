@@ -1,4 +1,4 @@
 module.exports = async (draft, { request }) => {
-  // your script!
+  // your script!1
   console.log(draft, request);
 };
