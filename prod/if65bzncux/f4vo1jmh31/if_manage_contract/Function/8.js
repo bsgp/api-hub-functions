@@ -36,7 +36,7 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
       queryBuilder.where(
         `${tables.contract.name}.id`,
         "like",
-        newData.contractID
+        `%${newData.contractID}%`
       );
     }
     if (newData.contractName) {
