@@ -100,11 +100,18 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
   }
 };
 
-module.exports.getChange_Object = ({ tableKey, data, userID, makeid }) => {
+module.exports.getChange_Object = ({
+  tableKey,
+  data,
+  userID,
+  makeid,
+  operation = "U",
+}) => {
   const defaultObj = {
     type: tableKey,
     id: makeid && makeid(5),
     changed_by: userID,
+    operation,
     content: JSON.stringify(data),
   };
   switch (tableKey) {
