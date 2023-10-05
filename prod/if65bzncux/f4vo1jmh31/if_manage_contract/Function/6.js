@@ -4,7 +4,7 @@ module.exports = async (
     fn,
     dayjs,
     sql,
-    // tryit,
+    tryit,
     // makeid, file
   }
 ) => {
@@ -31,12 +31,12 @@ module.exports = async (
   // .limit(1);
   const queryResult = await query.run();
 
-  // const contractID = tryit(() => queryResult.body.list[0].id, "");
+  const maxID = tryit(() => queryResult.body.list[0]["max(`id`)"], "");
 
   draft.response.body = {
     E_STATUS: "S",
     E_MESSAGE: `save ${tables.contract.name}`,
-    test: { contract, queryResult },
+    test: { contract, maxID },
     prefix,
   };
 
