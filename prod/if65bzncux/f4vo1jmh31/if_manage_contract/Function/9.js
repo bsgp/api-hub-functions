@@ -32,7 +32,7 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
           content: JSON.stringify(content),
         })),
       costObjectList: chagedList
-        .filter((list) => list.type === "cost_objec")
+        .filter((list) => list.type === "cost_object")
         .map(({ changed_at, changed_by, content }) => ({
           changed_at: fn.convDate(dayjs, changed_at),
           changed_by,
