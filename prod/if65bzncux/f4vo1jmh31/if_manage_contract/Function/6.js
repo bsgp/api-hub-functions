@@ -26,8 +26,7 @@ module.exports = async (
   draft.response.body = {
     E_STATUS: "S",
     E_MESSAGE: `save ${tables.contract.name}`,
-    contract,
-    contractID,
+    test: { contract, contractID },
   };
 
   /** */
