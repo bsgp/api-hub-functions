@@ -114,6 +114,18 @@ module.exports = async (draft, { file }) => {
       TriggeredBy: "G_PRO",
       Path: "/rfc",
     },
+    ["IF-MM-001"]: {
+      Type: "RFC",
+      Name: "ZMM_MASTER_INFO_DISPLAY",
+      TriggeredBy: "CONTRACT",
+      Path: "/rfc",
+    },
+    ["IF-MM-002"]: {
+      Type: "RFC",
+      Name: "ZMM_PO_CREATION",
+      TriggeredBy: "CONTRACT",
+      Path: "/rfc",
+    },
     // ["IF-SD-GBS04"]: {
     //   Type: "API",
     //   Name: "SHOPS",
