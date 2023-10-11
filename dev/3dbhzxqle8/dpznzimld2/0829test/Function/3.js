@@ -1,4 +1,4 @@
 module.exports = async () => {
   // your script
-  // change function3
+  // change function3!
 };
