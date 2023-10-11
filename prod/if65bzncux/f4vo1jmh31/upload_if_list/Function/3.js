@@ -90,6 +90,18 @@ module.exports = async (draft, { file }) => {
       TriggeredBy: "G_PRO",
       Path: "/rfc",
     },
+    ["IF-FI-011"]: {
+      Type: "RFC",
+      Name: "ZFI_IF_STD_CODE",
+      TriggeredBy: "CONTRACT",
+      Path: "/rfc",
+    },
+    ["IF-FI-012"]: {
+      Type: "RFC",
+      Name: "ZFI_IF_CONTRT_FIDOC",
+      TriggeredBy: "CONTRACT",
+      Path: "/rfc",
+    },
     ["IF-FI-013"]: {
       Type: "RFC",
       Name: "ZFI_IF_STD_CODE",
