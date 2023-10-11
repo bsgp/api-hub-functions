@@ -1,3 +1,3 @@
 module.exports = async () => {
-  // your script123456
+  // your script123456!
 };
