@@ -1,6 +1,6 @@
 const crypto = require("crypto");
 
-module.exports = async (draft, { request, rfc, clone, kst }) => {
+module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
   const rfcName = draft.json.ifObj.RfcName || request.body.Function.Name;
   if (!rfcName) {
     draft.response.body = {
@@ -48,6 +48,17 @@ module.exports = async (draft, { request, rfc, clone, kst }) => {
     };
   } else {
     switch (request.body.InterfaceId) {
+      case "IF-FI-011": {
+        const ET_DATA = tryit(() => result.body.result.ET_DATA, []) || [];
+        draft.response.body = {
+          ...result.body.result,
+          list: ET_DATA.map(({ ZGBCD, ZCNTS1 }) => ({
+            key: ZGBCD,
+            text: ZCNTS1,
+          })),
+        };
+        break;
+      }
       default: {
         draft.response.body = result.body.result;
         break;
