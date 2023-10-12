@@ -47,6 +47,11 @@ module.exports = async (draft, { request, rfc, clone, kst }) => {
       E_MESSAGE: "RFC 결과에 E_STATUS, E_MESSAGE가 없습니다, RFC를 수정하세요",
     };
   } else {
-    draft.response.body = result.body.result;
+    switch (request.body.InterfaceId) {
+      default: {
+        draft.response.body = result.body.result;
+        break;
+      }
+    }
   }
 };
