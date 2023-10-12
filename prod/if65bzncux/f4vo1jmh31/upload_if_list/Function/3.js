@@ -128,7 +128,7 @@ module.exports = async (draft, { file }) => {
     },
     ["IF-MM-001"]: {
       Type: "RFC",
-      Name: "ZMM_MASTER_INFO_DISPLAY",
+      Name: "ZMM_MASTER_LIST",
       TriggeredBy: "CONTRACT",
       Path: "/rfc",
     },
