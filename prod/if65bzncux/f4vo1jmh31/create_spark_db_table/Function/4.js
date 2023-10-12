@@ -16,8 +16,19 @@ module.exports = async (draft, { fn, sql, makeid }) => {
       const result = await mysql.table
         .create(spec.name, fn[tableKey]({ mysql, makeid }))
         .run();
-      draft.response.body[spec.name] =
-        result.statusCode === 200 ? "Succeed" : result.body;
+      if (result.statusCode !== 200) {
+        if (spec.name === "") {
+          const alterResult = await mysql.table
+            .alter(spec.name, function (table) {
+              table.uuid("RLUID").defaultTo("").comment("관련 UUID");
+              // table.string("LOTNR", 30).defaultTo("").comment("관련 Lot번호");
+            })
+            .run();
+          draft.response.body[spec.name] = alterResult;
+        }
+      } else
+        draft.response.body[spec.name] =
+          result.statusCode === 200 ? "Succeed" : result.body;
       return true;
     })
   );
