@@ -82,6 +82,12 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
         name: item.name,
         ref_id: item.ref_id,
         type: item.type,
+        prdnt_name: item.prdnt_name,
+        id_no: item.id_no,
+        biz_no: item.biz_no,
+        land_id: item.land_id,
+        address: item.address,
+        tel: item.tel,
       }));
     }
     case "attachment": {
