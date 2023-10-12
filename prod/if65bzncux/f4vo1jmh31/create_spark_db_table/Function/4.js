@@ -17,10 +17,29 @@ module.exports = async (draft, { fn, sql, makeid }) => {
         .create(spec.name, fn[tableKey]({ mysql, makeid }))
         .run();
       if (result.statusCode !== 200) {
-        if (spec.name === "") {
+        if (spec.desc === "Party(supplier, customer) info DB") {
           const alterResult = await mysql.table
             .alter(spec.name, function (table) {
-              table.uuid("RLUID").defaultTo("").comment("관련 UUID");
+              table.string("prdnt_name", 30).defaultTo("").comment("대표자 명");
+              table.string("id_no", 20).defaultTo("").comment("사업자등록번호");
+              table.string("biz_no", 20).defaultTo("").comment("법인등록번호");
+              table.string("land_id", 2).defaultTo("").comment("국가키");
+              table.string("address", 100).defaultTo("").comment("주소");
+              table.string("tel", 20).defaultTo("").comment("연락처처");
+              // table.string("LOTNR", 30).defaultTo("").comment("관련 Lot번호");
+            })
+            .run();
+          draft.response.body[spec.name] = alterResult;
+        }
+        if (spec.desc === "Party(supplier, customer) info DB") {
+          const alterResult = await mysql.table
+            .alter(spec.name, function (table) {
+              table.string("prdnt_name", 30).defaultTo("").comment("대표자 명");
+              table.string("id_no", 20).defaultTo("").comment("사업자등록번호");
+              table.string("biz_no", 20).defaultTo("").comment("법인등록번호");
+              table.string("land_id", 2).defaultTo("").comment("국가키");
+              table.string("address", 100).defaultTo("").comment("주소");
+              table.string("tel", 20).defaultTo("").comment("연락처처");
               // table.string("LOTNR", 30).defaultTo("").comment("관련 Lot번호");
             })
             .run();
