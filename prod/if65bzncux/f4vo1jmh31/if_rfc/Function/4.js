@@ -50,13 +50,32 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
     switch (request.body.InterfaceId) {
       case "IF-FI-011": {
         const ET_DATA = tryit(() => result.body.result.ET_DATA, []) || [];
-        draft.response.body = {
-          ...result.body.result,
-          list: ET_DATA.map(({ ZGBCD, ZCNTS1 }) => ({
-            key: ZGBCD,
-            text: ZCNTS1,
-          })),
-        };
+        if (tryit(() => result.body.result.I_ZCODE, "") === "FI06") {
+          const company = { ...ET_DATA[0] };
+          draft.response.body = {
+            ...result.body.result,
+            value: {
+              index: 1,
+              stems10: "1",
+              name: company.ZCNTS1,
+              ref_id: company.BUKRS,
+              prdnt_name: "",
+              id_no: "",
+              biz_no: "",
+              land_id: "",
+              address: "",
+              tel: "",
+            },
+          };
+        } else {
+          draft.response.body = {
+            ...result.body.result,
+            list: ET_DATA.map(({ ZGBCD, ZCNTS1 }) => ({
+              key: ZGBCD,
+              text: ZCNTS1,
+            })),
+          };
+        }
         break;
       }
       default: {
