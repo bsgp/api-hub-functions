@@ -1,7 +1,10 @@
-module.exports = async (draft, { file }) => {
+module.exports = async (draft, { file, env }) => {
   let configFile;
   try {
-    configFile = await file.get("config/tables.json", { gziped: true });
+    configFile = await file.get("config/tables.json", {
+      gziped: true,
+      stage: env.CURRENT_ALIAS,
+    });
   } catch (err) {
     draft.response.body = { configFileMessage: "new Config file created" };
   }
@@ -47,6 +50,7 @@ module.exports = async (draft, { file }) => {
 
   const newTableConfig = await file.upload("config/tables.json", tables, {
     gzip: true,
+    stage: env.CURRENT_ALIAS,
   });
 
   const changed = Object.keys(tables).reduce((acc, curr) => {
