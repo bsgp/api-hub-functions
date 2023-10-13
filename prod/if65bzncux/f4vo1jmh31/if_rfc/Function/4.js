@@ -52,6 +52,24 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
         const ET_DATA = tryit(() => result.body.result.ET_DATA, []) || [];
         const searchCode = tryit(() => result.body.result.I_ZCODE, "");
         switch (searchCode) {
+          case "FI03": {
+            draft.response.body = {
+              ...result.body.result,
+              list: ET_DATA.map(({ ZZCDEZ, ZCNTS1 }) => ({
+                key: ZZCDEZ,
+                text: ZCNTS1,
+                ref_id: "",
+                name: "",
+                prdnt_name: "",
+                id_no: "",
+                biz_no: "",
+                land_id: "",
+                address: "",
+                tel: "",
+              })),
+            };
+            break;
+          }
           case "FI06": {
             const company = { ...ET_DATA[0] };
             draft.response.body = {
