@@ -1,8 +1,11 @@
-module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
+module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
   const { tables, newData } = draft.json;
   const { contractID } = newData;
 
-  const changedData = await sql("mysql", { useCustomRole: false })
+  const changedData = await sql("mysql", {
+    useCustomRole: false,
+    stage: env.CURRENT_ALIAS,
+  })
     .select(tables["change"].name)
     .where("row_key", "like", `${contractID}`)
     .orWhere("row_key", "like", `${contractID}%`)
