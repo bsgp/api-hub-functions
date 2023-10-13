@@ -21,7 +21,7 @@ module.exports = async (draft, { fn, dayjs, sql, tryit, makeid, file }) => {
   ].join("");
 
   const createContract = await sql("mysql", { useCustomRole: false })
-    .insert(tables.contract.name, { ...contract, id: contractID })
+    .insert(tables.contract.name, { ...contract, id: contractID, type: "DRN" })
     .run();
 
   if (createContract.statusCode !== 200) {
