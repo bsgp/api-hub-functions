@@ -1,7 +1,10 @@
-module.exports = async (draft, { request, sql, tryit }) => {
+module.exports = async (draft, { request, sql, env, tryit }) => {
   draft.response.body = {};
   const { tables, newData } = draft.json;
-  const queryBuilder = sql("mysql", { useCustomRole: false })
+  const queryBuilder = sql("mysql", {
+    useCustomRole: false,
+    stage: env.CURRENT_ALIAS,
+  })
     .select(tables.party.name)
     .select(`${tables.party.name}.ref_id`, `${tables.party.name}.name`)
     .orderBy("ref_id")
