@@ -1,8 +1,11 @@
-module.exports = async (draft, { sql, tryit }) => {
+module.exports = async (draft, { sql, env, tryit }) => {
   const { tables, newData } = draft.json;
   let results = {};
   if (newData.contractID) {
-    const query = sql("mysql", { useCustomRole: false })
+    const query = sql("mysql", {
+      useCustomRole: false,
+      stage: env.CURRENT_ALIAS,
+    })
       .select(tables.contract.name)
       .where("id", "like", newData.contractID);
     const queryResult = await query.run();
@@ -12,7 +15,10 @@ module.exports = async (draft, { sql, tryit }) => {
       results = { contract: queryResult.body.list[0], contractID };
       await Promise.all(
         tableList.map(async (tableKey) => {
-          const queryTableData = await sql("mysql", { useCustomRole: false })
+          const queryTableData = await sql("mysql", {
+            useCustomRole: false,
+            stage: env.CURRENT_ALIAS,
+          })
             .select(tables[tableKey].name)
             .where("contract_id", "like", contractID)
             .whereNot({ deleted: true })
