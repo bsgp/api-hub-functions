@@ -1,4 +1,4 @@
-module.exports = async (draft, { lib, file, request }) => {
+module.exports = async (draft, { lib, file, env, request }) => {
   const { clone } = lib;
   draft.json.newData = clone(request.body.Data);
   draft.json.userID = request.body.Function.UserId;
@@ -6,6 +6,7 @@ module.exports = async (draft, { lib, file, request }) => {
   const tables = await file.get("config/tables.json", {
     gziped: true,
     toJSON: true,
+    stage: env.CURRENT_ALIAS,
   });
   draft.json.tables = tables;
 
