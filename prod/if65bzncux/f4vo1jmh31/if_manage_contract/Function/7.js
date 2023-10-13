@@ -132,9 +132,11 @@ module.exports = async (draft, { sql, env, tryit, fn, makeid, file }) => {
             const data = await file.get(tempFilePath, {
               exactPath: true,
               returnBuffer: true,
+              stage: env.CURRENT_ALIAS,
             });
             await file.upload(path, data, {
               contentType: type,
+              stage: env.CURRENT_ALIAS,
             });
           }
           const uuid = makeid(5);
