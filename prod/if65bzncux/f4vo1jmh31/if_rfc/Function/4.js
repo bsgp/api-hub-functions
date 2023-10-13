@@ -106,12 +106,12 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
       case "IF-CO-007": {
         draft.response.body = {
           ...result.body.result,
-          list: ET_DATA.map(({ ZZCDEZ, ZCNTS1 }) => ({
-            key: ZZCDEZ,
-            text: ZCNTS1,
-            cost_object_id: "",
-            name: "",
-            cost_type: "",
+          list: ET_DATA.map(({ POSID, POST1, ZWWSTS_NAME }) => ({
+            key: POSID,
+            text: POST1,
+            cost_object_id: POSID,
+            name: POST1,
+            cost_type: ZWWSTS_NAME,
           })),
         };
         break;
