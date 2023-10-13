@@ -1,4 +1,4 @@
-module.exports = async (draft, { file }) => {
+module.exports = async (draft, { file, env }) => {
   const interfaces = {
     ["IF-CO-001"]: {
       Type: "RFC",
@@ -198,8 +198,11 @@ module.exports = async (draft, { file }) => {
     },
   };
 
-  await file.upload("if/list.json", interfaces, { gzip: true });
-  const url = await file.getUrl("if/list.json");
+  await file.upload("if/list.json", interfaces, {
+    gzip: true,
+    stage: env.CURRENT_ALIAS,
+  });
+  const url = await file.getUrl("if/list.json", { stage: env.CURRENT_ALIAS });
 
   draft.response.body = {
     url,
