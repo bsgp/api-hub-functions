@@ -58,8 +58,8 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
               list: ET_DATA.map(({ ZZCDEZ, ZCNTS1, ...args }) => ({
                 key: ZZCDEZ,
                 text: ZCNTS1,
-                ref_id: "",
-                name: "",
+                ref_id: ZZCDEZ,
+                name: ZCNTS1,
                 prdnt_name: args.ZCNTS9,
                 id_no: args.ZCNTS5,
                 biz_no: args.ZCNTS6,
