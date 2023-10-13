@@ -70,8 +70,8 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
         } else {
           draft.response.body = {
             ...result.body.result,
-            list: ET_DATA.map(({ ZGBCD, ZCNTS1 }) => ({
-              key: ZGBCD,
+            list: ET_DATA.map(({ ZZCDEZ, ZCNTS1 }) => ({
+              key: ZZCDEZ,
               text: ZCNTS1,
             })),
           };
