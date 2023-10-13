@@ -27,6 +27,7 @@ module.exports = async (draft, { request, clone, tryit, file, sql }) => {
       E_STATUS: "F",
       E_MESSAGE: "Cannot find apiUserKey at webhookData",
     };
+    return;
   }
   const tables = await file.get("config/tables.json", {
     gziped: true,
