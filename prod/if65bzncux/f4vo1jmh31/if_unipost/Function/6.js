@@ -1,6 +1,8 @@
 module.exports = async (draft, { request, clone, tryit, file, env, sql }) => {
   const webhookData = clone(request.body.Data);
-
+  await file.upload("unipost/test.json", webhookData, {
+    stage: env.CURRENT_ALIAS,
+  });
   const statusList = [
     { id: "ENC", uni_id: "10", text: "작성중" },
     { id: "RSC", uni_id: "30", text: "진행중" },
