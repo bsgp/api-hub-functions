@@ -52,6 +52,17 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
       case "IF-FI-011": {
         const searchCode = tryit(() => result.body.result.I_ZCODE, "");
         switch (searchCode) {
+          case "FI01": {
+            draft.response.body = {
+              ...result.body.result,
+              list: ET_DATA.map(({ ZZCDEZ, ZCNTS1 }) => ({
+                key: ZZCDEZ,
+                text: ZCNTS1,
+                cost_type: ZCNTS1,
+              })),
+            };
+            break;
+          }
           case "FI03": {
             draft.response.body = {
               ...result.body.result,
