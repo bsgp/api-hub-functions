@@ -43,5 +43,6 @@ module.exports = async (draft, { request, clone, tryit, file, sql }) => {
     webhookData,
     fStatus,
     updateResult,
+    E_STATUS: updateResult.statusCode === "200" ? "S" : "F",
   };
 };
