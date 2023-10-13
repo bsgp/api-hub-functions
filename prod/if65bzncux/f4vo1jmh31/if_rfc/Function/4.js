@@ -81,7 +81,7 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
             };
             break;
           }
-          case "FI06": {
+          case "FI12": {
             const company = { ...ET_DATA[0] };
             draft.response.body = {
               ...result.body.result,
