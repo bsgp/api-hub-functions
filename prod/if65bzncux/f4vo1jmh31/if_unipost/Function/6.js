@@ -11,9 +11,9 @@ module.exports = async (draft, { request, clone, tryit, file, env, sql }) => {
     { id: "SSC", uni_id: "70", text: "완료" },
   ];
 
-  const consts = tryit(() => webhookData.contInfo.contsts, "");
+  const contSts = tryit(() => webhookData.contInfo.contSts, "");
   const apiUserKey = tryit(() => webhookData.contInfo.apiUserKey, "");
-  const fStatus = statusList.find((item) => item.uni_id === consts);
+  const fStatus = statusList.find((item) => item.uni_id === contSts);
   if (!fStatus) {
     draft.response.body = {
       webhookData,
