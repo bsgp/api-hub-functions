@@ -1,9 +1,12 @@
-module.exports = async (draft, { fn, sql, makeid }) => {
+module.exports = async (draft, { fn, sql, env, makeid }) => {
   /**
    * db 업데이트 시
    * Function#3 table name의 number++ && Functions: schema update
    */
-  const mysql = sql("mysql", { useCustomRole: false });
+  const mysql = sql("mysql", {
+    useCustomRole: false,
+    stage: env.CURRENT_ALIAS,
+  });
   const changed = draft.json.changed;
 
   await Promise.all(
