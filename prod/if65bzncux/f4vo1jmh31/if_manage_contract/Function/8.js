@@ -1,6 +1,9 @@
-module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
+module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
   const { tables, newData } = draft.json;
-  const queryBuilder = sql("mysql", { useCustomRole: false })
+  const queryBuilder = sql("mysql", {
+    useCustomRole: false,
+    stage: env.CURRENT_ALIAS,
+  })
     .select(tables.contract.name)
     .select(
       `${tables.contract.name}.*`,
