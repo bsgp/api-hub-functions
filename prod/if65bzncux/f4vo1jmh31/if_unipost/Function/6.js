@@ -1,4 +1,4 @@
-module.exports = async (draft, { request, clone, tryit, file, sql }) => {
+module.exports = async (draft, { request, clone, tryit, file, env, sql }) => {
   const webhookData = clone(request.body.Data);
 
   const statusList = [
@@ -32,9 +32,13 @@ module.exports = async (draft, { request, clone, tryit, file, sql }) => {
   const tables = await file.get("config/tables.json", {
     gziped: true,
     toJSON: true,
+    stage: env.CURRENT_ALIAS,
   });
 
-  const updateResult = await sql("mysql", { useCustomRole: false })
+  const updateResult = await sql("mysql", {
+    useCustomRole: false,
+    stage: env.CURRENT_ALIAS,
+  })
     .update(tables.contract.name, { status: fStatus.id })
     .where({ id: apiUserKey })
     .run();
