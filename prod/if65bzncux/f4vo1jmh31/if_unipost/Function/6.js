@@ -10,12 +10,22 @@ module.exports = async (draft, { request, clone, tryit, file, sql }) => {
   ];
 
   const consts = tryit(() => webhookData.continfo.contsts, "");
+  const apiUserKey = tryit(() => webhookData.continfo.apiUserKey, "");
   const fStatus = statusList.find((item) => item.uni_id === consts);
-  if (fStatus) {
+  if (!fStatus) {
     draft.response.body = {
       webhookData,
       E_STATUS: "F",
       E_MESSAGE: "Cannot find status at statusList",
+    };
+    return;
+  }
+  if (!apiUserKey) {
+    draft.response.body = {
+      webhookData,
+      fStatus,
+      E_STATUS: "F",
+      E_MESSAGE: "Cannot find apiUserKey at webhookData",
     };
   }
   const tables = await file.get("config/tables.json", {
@@ -25,12 +35,11 @@ module.exports = async (draft, { request, clone, tryit, file, sql }) => {
 
   const updateResult = await sql("mysql", { useCustomRole: false })
     .update(tables.contract.name, { status: fStatus.id })
-    .where({ id: "contractID" })
+    .where({ id: apiUserKey })
     .run();
 
   draft.response.body = {
     webhookData,
-    consts,
     fStatus,
     updateResult,
   };
