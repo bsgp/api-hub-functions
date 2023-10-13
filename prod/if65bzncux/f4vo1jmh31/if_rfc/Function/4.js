@@ -75,7 +75,7 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
                 id_no: args.ZCNTS5,
                 biz_no: args.ZCNTS6,
                 land_id: args.ZCNTS4,
-                address: "",
+                address: [args.ZCNTS13, args.ZCNTS14].filter(Boolean).join(" "),
                 tel: "",
               })),
             };
