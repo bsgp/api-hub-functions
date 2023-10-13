@@ -111,7 +111,6 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
             text: KTEXT,
             cost_object_id: KOSTL,
             name: KTEXT,
-            cost_type: "",
           })),
         };
         break;
@@ -119,12 +118,11 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
       case "IF-CO-007": {
         draft.response.body = {
           ...result.body.result,
-          list: ET_DATA.map(({ POSID, POST1, ZWWSTS_NAME }) => ({
+          list: ET_DATA.map(({ POSID, POST1 }) => ({
             key: POSID,
             text: POST1,
             cost_object_id: POSID,
             name: POST1,
-            cost_type: ZWWSTS_NAME,
           })),
         };
         break;
