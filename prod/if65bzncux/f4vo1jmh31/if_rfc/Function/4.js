@@ -47,9 +47,9 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
       E_MESSAGE: "RFC 결과에 E_STATUS, E_MESSAGE가 없습니다, RFC를 수정하세요",
     };
   } else {
+    const ET_DATA = tryit(() => result.body.result.ET_DATA, []) || [];
     switch (request.body.InterfaceId) {
       case "IF-FI-011": {
-        const ET_DATA = tryit(() => result.body.result.ET_DATA, []) || [];
         const searchCode = tryit(() => result.body.result.I_ZCODE, "");
         switch (searchCode) {
           case "FI03": {
@@ -101,6 +101,19 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
           }
         }
 
+        break;
+      }
+      case "IF-CO-007": {
+        draft.response.body = {
+          ...result.body.result,
+          list: ET_DATA.map(({ ZZCDEZ, ZCNTS1 }) => ({
+            key: ZZCDEZ,
+            text: ZCNTS1,
+            cost_object_id: "",
+            name: "",
+            cost_type: "",
+          })),
+        };
         break;
       }
       default: {
