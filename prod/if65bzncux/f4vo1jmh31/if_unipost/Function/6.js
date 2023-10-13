@@ -1,5 +1,5 @@
-module.exports = async (draft, { request, tryit, file, sql }) => {
-  const webhookData = JSON.parse(request.body.Data);
+module.exports = async (draft, { request, clone, tryit, file, sql }) => {
+  const webhookData = clone(request.body.Data);
 
   const statusList = [
     { id: "ENC", uni_id: "10", text: "작성중" },
