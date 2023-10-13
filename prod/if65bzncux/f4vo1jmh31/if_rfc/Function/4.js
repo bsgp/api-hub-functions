@@ -55,15 +55,15 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
           case "FI03": {
             draft.response.body = {
               ...result.body.result,
-              list: ET_DATA.map(({ ZZCDEZ, ZCNTS1 }) => ({
+              list: ET_DATA.map(({ ZZCDEZ, ZCNTS1, ...args }) => ({
                 key: ZZCDEZ,
                 text: ZCNTS1,
                 ref_id: "",
                 name: "",
-                prdnt_name: "",
-                id_no: "",
-                biz_no: "",
-                land_id: "",
+                prdnt_name: args.ZCNTS9,
+                id_no: args.ZCNTS5,
+                biz_no: args.ZCNTS6,
+                land_id: args.ZCNTS4,
                 address: "",
                 tel: "",
               })),
