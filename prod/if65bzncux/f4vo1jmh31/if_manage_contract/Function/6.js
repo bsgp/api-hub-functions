@@ -88,9 +88,11 @@ module.exports = async (
             const data = await file.get(tempFilePath, {
               exactPath: true,
               returnBuffer: true,
+              stage: env.CURRENT_ALIAS,
             });
             const fileResponse = await file.upload(path, data, {
               contentType: type,
+              stage: env.CURRENT_ALIAS,
             });
             return fileResponse;
           })
