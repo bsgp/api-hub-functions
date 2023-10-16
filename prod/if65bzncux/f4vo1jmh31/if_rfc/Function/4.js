@@ -17,6 +17,7 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
     IFDATE: kst.format("YYYYMMDD"),
     IFTIME: kst.format("HHmmss"),
   };
+  /** */
 
   const result = await rfc.invoke(
     rfcName,
