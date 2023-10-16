@@ -4,7 +4,7 @@ module.exports = async (draft, { request, clone, tryit, file, env, sql }) => {
   //   stage: env.CURRENT_ALIAS,
   // });
   const statusList = [
-    { id: "ENC", uni_id: "10", text: "작성중" },
+    { id: "DRN", uni_id: "10", text: "작성중" },
     { id: "RSC", uni_id: "30", text: "진행중" },
     { id: "DRN", uni_id: "50", text: "수정요청" },
     { id: "DRN", uni_id: "51", text: "반려" },
