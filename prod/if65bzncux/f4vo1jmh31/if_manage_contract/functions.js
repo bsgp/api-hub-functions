@@ -69,13 +69,12 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
         contract_id: `${contractID}` || item.contractID,
         id: item.id || (makeid && makeid(5)),
         index: `${item.index}`,
-        cost_object_id: item.cost_object_id,
         post_date: item.post_date,
-        reason_text: item.reason_text,
-        dmbtr: (item.dmbtr || "").replace(/,/g, ""),
-        dmbtr_local: (item.dmbtr_local || "").replace(/,/g, ""),
-        curr_key: item.curr_key,
-        curr_local: item.curr_local,
+        remark: item.remark,
+        dmbtr_supply: (item.dmbtr_supply || "").replace(/,/g, ""),
+        dmbtr_vat: (item.dmbtr_vat || "").replace(/,/g, ""),
+        // curr_key: item.curr_key,
+        // curr_local: item.curr_local,
       }));
     }
     case "party": {
