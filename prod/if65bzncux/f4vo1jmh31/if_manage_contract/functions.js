@@ -56,6 +56,8 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
         dmbtr_supply_local: (item.dmbtr_supply_local || "").replace(/,/g, ""),
         dmbtr_vat: (item.dmbtr_vat || "").replace(/,/g, ""),
         dmbtr_vat_local: (item.dmbtr_vat_local || "").replace(/,/g, ""),
+        matnr: item.matnr,
+        maktx: item.maktx,
         // curr_key: item.curr_key,
         // curr_local: item.curr_local,
         start_date: item.start_date,
