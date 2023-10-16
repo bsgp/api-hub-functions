@@ -90,7 +90,7 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
                 stems10: "1",
                 name: company.ZCNTS1,
                 ref_id: company.BUKRS,
-                prdnt_name: "",
+                prdnt_name: company.ZCNTS5,
                 id_no: company.ZCNTS3,
                 biz_no: "",
                 land_id: "",
