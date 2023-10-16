@@ -17,14 +17,6 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
     IFDATE: kst.format("YYYYMMDD"),
     IFTIME: kst.format("HHmmss"),
   };
-  /** rfc interface request default setting */
-  switch (request.body.InterfaceId) {
-    case "IF-MM-001": {
-      break;
-    }
-    default:
-      break;
-  }
 
   const result = await rfc.invoke(
     rfcName,
