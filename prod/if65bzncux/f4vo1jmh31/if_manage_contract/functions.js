@@ -11,6 +11,8 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
       renewal_ind: data.form.renewal_ind,
       renewal_period: data.form.renewal_period,
       curr_key: data.form.curr_key,
+      dmbtr_supply: (data.form.dmbtr_supply || "").replace(/,/g, ""),
+      dmbtr_vat: (data.form.dmbtr_vat || "").replace(/,/g, ""),
       dmbtr: (data.form.dmbtr || "").replace(/,/g, ""),
       dmbtr_local: (data.form.dmbtr_local || "").replace(/,/g, ""),
       curr_local: data.form.curr_local,
