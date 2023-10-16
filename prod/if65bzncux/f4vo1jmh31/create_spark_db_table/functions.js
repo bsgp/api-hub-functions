@@ -41,6 +41,8 @@ module.exports.contract =
     table.string("renewal_period", 3).defaultTo(""); // 자동연장기간 (기본값: "1Y")
     table.string("curr_key", 5).defaultTo("");
     // KRW,USD,JPY..(기본값: 로그인 회사코드 기본 통화)
+    table.decimal("dmbtr_supply", 23, 2).defaultTo(0); // 공급가액
+    table.decimal("dmbtr_vat", 23, 2).defaultTo(0); // 부과세
     table.decimal("dmbtr", 23, 2).defaultTo(0); // curr_key와 매칭되는 금액
     table.decimal("dmbtr_local", 23, 2).defaultTo(0);
     // curr_key와 curr_local이 다를 경우 필수 입력
@@ -95,12 +97,15 @@ module.exports.cost_object =
     table.string("type", 3).defaultTo(""); // 귀속처유형(WBS, 코스트센터)
     table.string("cost_object_id", 36).defaultTo(""); // 귀속처(WBS, 코스트센터)
     table.string("name", 100).defaultTo(""); // 귀속처 명
-    table.string("cost_type", 3).defaultTo("");
+    table.string("cost_type_id", 10).defaultTo("");
+    table.string("cost_type", 100).defaultTo("");
     // 귀속 유형(cf: to-be 리스트파일 계약유형 시트)
-    table.decimal("dmbtr", 23, 2).defaultTo(0);
-    table.decimal("dmbtr_local", 23, 2).defaultTo(0);
-    table.string("curr_key", 5).defaultTo("");
-    table.string("curr_local", 5).defaultTo("");
+    table.string("matnr", 18).defaultTo(""); // 자재코드
+    table.string("maktx", 50).defaultTo(""); // 자재명
+    table.decimal("dmbtr_supply", 23, 2).defaultTo(0);
+    table.decimal("dmbtr_supply_local", 23, 2).defaultTo(0);
+    table.decimal("dmbtr_vat", 23, 2).defaultTo(0);
+    table.decimal("dmbtr_vat_local", 23, 2).defaultTo(0);
     table.string("start_date", 8).defaultTo(""); // 시작일
     table.string("end_date", 8).defaultTo(""); // 종료일
     table.boolean("deleted").defaultTo(false);
@@ -118,12 +123,12 @@ module.exports.bill =
     table.string("id", 5).defaultTo(makeid(5)); // makeid()
 
     table.string("index", 5).defaultTo("");
-    table.string("cost_object_id", 36).defaultTo(""); // 귀속처
-    table.string("reason_text", 200).defaultTo(""); // 미청구 사유
-    table.decimal("dmbtr", 23, 2).defaultTo(0);
-    table.decimal("dmbtr_local", 23, 2).defaultTo(0);
+    // table.string("cost_object_id", 36).defaultTo(""); // 귀속처
+    // table.string("reason_text", 200).defaultTo(""); // 미청구 사유
+    table.decimal("dmbtr_supply", 23, 2).defaultTo(0);
+    table.decimal("dmbtr_vat", 23, 2).defaultTo(0);
+    table.string("remark", 200).defaultTo(""); // 비고
     table.string("curr_key", 5).defaultTo("");
-    table.string("curr_local", 5).defaultTo("");
     table.string("post_date", 8).defaultTo(""); // 청구예정일
     table.boolean("deleted").defaultTo(false);
 
