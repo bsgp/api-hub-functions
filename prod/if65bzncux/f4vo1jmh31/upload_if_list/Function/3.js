@@ -48,10 +48,28 @@ module.exports = async (draft, { file, env }) => {
       TriggeredBy: "BSGON",
       Path: "/rfc",
     },
+    ["IF-CO-010"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_HR_DEPT",
+      TriggeredBy: "G_PRO",
+      Path: "/rfc",
+    },
+    ["IF-CO-011"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_HR_EMPLOYEE",
+      TriggeredBy: "G_PRO",
+      Path: "/rfc",
+    },
     ["IF-CO-013"]: {
       Type: "RFC",
       Name: "ZCO_IF_CONTRACT",
       TriggeredBy: "CONTRACT",
+      Path: "/rfc",
+    },
+    ["IF-CO-035"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_HR_EMPLOYEE_ORDER",
+      TriggeredBy: "G_PRO",
       Path: "/rfc",
     },
     ["IF-CT-007"]: {
