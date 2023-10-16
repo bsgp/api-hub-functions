@@ -138,6 +138,19 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
         };
         break;
       }
+      case "IF-MM-001": {
+        const ET_TAB = tryit(() => result.body.result.ET_TAB, []) || [];
+        draft.response.body = {
+          ...result.body.result,
+          list: ET_TAB.map(({ MAKTX, MATNR }) => ({
+            key: MAKTX,
+            text: MATNR,
+            maktx: MAKTX,
+            matnr: MATNR,
+          })),
+        };
+        break;
+      }
       default: {
         draft.response.body = result.body.result;
         break;
