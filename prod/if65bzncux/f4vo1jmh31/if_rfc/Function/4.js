@@ -58,6 +58,7 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
               list: ET_DATA.map(({ ZZCDEZ, ZCNTS1 }) => ({
                 key: ZZCDEZ,
                 text: ZCNTS1,
+                cost_type_id: ZZCDEZ,
                 cost_type: ZCNTS1,
               })),
             };
