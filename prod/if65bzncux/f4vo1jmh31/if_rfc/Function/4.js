@@ -143,10 +143,10 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
         draft.response.body = {
           ...result.body.result,
           list: ET_TAB.map(({ MAKTX, MATNR }) => ({
-            key: MAKTX,
-            text: MATNR,
-            maktx: MAKTX,
+            key: MATNR,
+            text: MAKTX,
             matnr: MATNR,
+            maktx: MAKTX,
           })),
         };
         break;
