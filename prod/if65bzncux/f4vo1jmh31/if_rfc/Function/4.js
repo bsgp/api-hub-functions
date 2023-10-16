@@ -88,6 +88,8 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
               value: {
                 index: 1,
                 stems10: "1",
+                key: company.BUKRS,
+                text: company.ZCNTS1,
                 name: company.ZCNTS1,
                 ref_id: company.BUKRS,
                 prdnt_name: company.ZCNTS5,
