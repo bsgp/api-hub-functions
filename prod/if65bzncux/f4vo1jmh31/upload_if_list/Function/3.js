@@ -48,6 +48,12 @@ module.exports = async (draft, { file, env }) => {
       TriggeredBy: "BSGON",
       Path: "/rfc",
     },
+    ["IF-CO-013"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_CONTRACT",
+      TriggeredBy: "CONTRACT",
+      Path: "/rfc",
+    },
     ["IF-CT-007"]: {
       Type: "API",
       Name: "CT_TEMPLATE_LIST",
