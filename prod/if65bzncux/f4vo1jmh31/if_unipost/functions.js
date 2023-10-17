@@ -82,9 +82,7 @@ module.exports.getTemplateList = async (secretKey, { restApi }) => {
       secretKey,
     },
     body: {
-      searchInfo: {
-        orgTemplateNo: "TN2308000008",
-      },
+      searchInfo: {},
     },
   });
 
