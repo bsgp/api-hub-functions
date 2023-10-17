@@ -72,6 +72,12 @@ module.exports = async (draft, { file, env }) => {
       TriggeredBy: "G_PRO",
       Path: "/rfc",
     },
+    ["IF-CO-036"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_TIMESHEET_INPUT_GUBUN",
+      TriggeredBy: "TIMESHEET",
+      Path: "/rfc",
+    },
     ["IF-CT-007"]: {
       Type: "API",
       Name: "CT_TEMPLATE_LIST",
