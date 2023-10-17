@@ -23,12 +23,15 @@ module.exports = async (draft, { fn, sql, env, makeid }) => {
         if (spec.desc === "WBS, CostCenter info DB table") {
           const alterResult = await mysql.table
             .alter(spec.name, function (table) {
-              table.string("prdnt_name", 30).defaultTo("").comment("대표자 명");
-              table.string("id_no", 20).defaultTo("").comment("사업자등록번호");
-              table.string("biz_no", 20).defaultTo("").comment("법인등록번호");
-              table.string("land_id", 2).defaultTo("").comment("국가키");
-              table.string("address", 100).defaultTo("").comment("주소");
-              table.string("tel", 20).defaultTo("").comment("연락처");
+              table
+                .string("po_number ", 10)
+                .defaultTo("")
+                .comment("구매오더번호");
+              table
+                .string("po_item_no", 10)
+                .defaultTo("")
+                .comment("구매오더항목번호");
+              table.string("post_date", 8).defaultTo("").comment("청구예정일");
             })
             .run();
           draft.response.body[spec.name] = alterResult;
