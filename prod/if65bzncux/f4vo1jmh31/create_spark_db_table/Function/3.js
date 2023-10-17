@@ -48,20 +48,25 @@ module.exports = async (draft, { file, env }) => {
     },
   };
 
-  const newTableConfig = await file.upload("config/tables.json", tables, {
-    gzip: true,
-    stage: env.CURRENT_ALIAS,
-  });
+  draft.json.changed = tables;
+  // const newTableConfig = await file.upload("config/tables.json", tables, {
+  //   gzip: true,
+  //   stage: env.CURRENT_ALIAS,
+  // });
 
-  const changed = Object.keys(tables).reduce((acc, curr) => {
-    if (
-      !lastestTableConfig[curr] ||
-      tables[curr].name !== lastestTableConfig[curr].name
-    ) {
-      acc[curr] = tables[curr];
-    }
-    return acc;
-  }, {});
-  draft.json.changed = changed;
-  draft.response.body = { tableConfig: newTableConfig, changed };
+  // const changed = Object.keys(tables).reduce((acc, curr) => {
+  //   if (
+  //     !lastestTableConfig[curr] ||
+  //     tables[curr].name !== lastestTableConfig[curr].name
+  //   ) {
+  //     acc[curr] = tables[curr];
+  //   }
+  //   return acc;
+  // }, {});
+  // draft.json.changed = changed;
+  draft.response.body = {
+    // tableConfig: newTableConfig,
+    // changed,
+    lastestTableConfig,
+  };
 };
