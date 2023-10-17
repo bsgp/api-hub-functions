@@ -108,6 +108,9 @@ module.exports.cost_object =
     table.decimal("dmbtr_vat_local", 23, 2).defaultTo(0);
     table.string("start_date", 8).defaultTo(""); // 시작일
     table.string("end_date", 8).defaultTo(""); // 종료일
+    table.string("po_number ", 10).defaultTo(""); // 구매오더번호
+    table.string("po_item_no", 10).defaultTo(""); // 구매오더항목번호
+    table.string("post_date", 8).defaultTo(""); // 청구예정일
     table.boolean("deleted").defaultTo(false);
 
     table.primary(["contract_id", "id"]);
