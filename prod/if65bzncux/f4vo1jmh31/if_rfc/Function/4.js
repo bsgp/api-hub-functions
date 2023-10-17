@@ -45,6 +45,7 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
     draft.response.body = {
       E_STATUS: "E",
       E_MESSAGE: "RFC 결과에 E_STATUS, E_MESSAGE가 없습니다, RFC를 수정하세요",
+      result: result.body.result,
     };
   } else {
     const ET_DATA = tryit(() => result.body.result.ET_DATA, []) || [];
