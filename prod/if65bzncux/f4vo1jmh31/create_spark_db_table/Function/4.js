@@ -20,7 +20,7 @@ module.exports = async (draft, { fn, sql, env, makeid }) => {
         .create(spec.name, fn[tableKey]({ mysql, makeid }))
         .run();
       if (result.statusCode !== 200) {
-        if (spec.desc === "Party(supplier, customer) info DB") {
+        if (spec.desc === "WBS, CostCenter info DB table") {
           const alterResult = await mysql.table
             .alter(spec.name, function (table) {
               table.string("prdnt_name", 30).defaultTo("").comment("대표자 명");
