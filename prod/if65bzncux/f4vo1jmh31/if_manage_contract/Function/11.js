@@ -5,7 +5,7 @@ module.exports = async (
     // sql, env
   }
 ) => {
-  // your script
+  const { tables, newData } = draft.json;
   // await sql("mysql", {
   //   useCustomRole: false,
   //   stage: env.CURRENT_ALIAS,
@@ -16,6 +16,8 @@ module.exports = async (
   //   .run();
   draft.response.body = {
     request,
+    tables,
+    newData,
     E_STATUS: "F",
     E_MESSAGE: `TEST`,
   };
