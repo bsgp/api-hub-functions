@@ -111,6 +111,7 @@ module.exports.cost_object =
     table.string("po_number ", 10).defaultTo(""); // 구매오더번호
     table.string("po_item_no", 10).defaultTo(""); // 구매오더항목번호
     table.string("post_date", 8).defaultTo(""); // 청구예정일
+    table.datetime("last_send_date ").defaultTo(null);
     table.boolean("deleted").defaultTo(false);
 
     table.primary(["contract_id", "id"]);
