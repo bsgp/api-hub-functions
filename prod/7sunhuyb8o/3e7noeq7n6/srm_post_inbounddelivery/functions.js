@@ -58,7 +58,7 @@ module.exports.getCreateIDN_Params = ({ newIDN, form, list }) => {
           _value_1: `${form.deliveryDate}T00:00:00Z`,
         },
       },
-      ShipToLocationID: form.orderSiteID,
+      ShipToLocationID: form.shipTo,
       ProductRecipientID: form.company,
       VendorID: form.supplier,
       Item: list.map((value) => {
