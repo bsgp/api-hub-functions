@@ -29,6 +29,9 @@ module.exports = async (draft, { lib, file, env, request }) => {
     case "IF-CT-109": // GET CHANGED HISTORY
       draft.json.nextNodeKey = "Function#9";
       break;
+    case "IF-CT-110": // UPDATE_WBS_CONTRACT
+      draft.json.nextNodeKey = "Function#11";
+      break;
     default:
       break;
   }
