@@ -5,7 +5,7 @@ module.exports = async (draft, { sql, env }) => {
     stage: env.CURRENT_ALIAS,
   })
     .update(tables.cost_object.name, { last_send_date: newData.last_send_date })
-    .where("contract_id", "like", newData.contractID)
+    .where("contract_id", "like", newData.contract_id)
     .where("id", "like", newData.id)
     .run();
   draft.response.body = {
