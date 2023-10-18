@@ -220,6 +220,12 @@ module.exports = async (draft, { file, env }) => {
       RfcName: "",
       TriggeredBy: "SUPPORT",
     },
+    ["IF-CT-110"]: {
+      Type: "DB",
+      Name: "UPDATE_WBS_CONTRACT",
+      RfcName: "",
+      TriggeredBy: "SUPPORT",
+    },
     ["IF-FU-101"]: {
       Type: "FU",
       Name: "GET_FILE_UPLOAD_URL",
