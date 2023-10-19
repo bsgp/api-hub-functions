@@ -39,7 +39,14 @@ module.exports.getSecretKey = async ({ restApi }) => {
   return result.body.response.secretKey;
 };
 
-const getToken = async (secretKey, usId, { restApi }) => {
+const getToken = async (secretKey, { usId, contNo }, { restApi }) => {
+  const body = {
+    usId,
+  };
+  if (contNo) {
+    body.contNo = contNo;
+  }
+
   const result = await restApi.post({
     url: [
       "https://contdev.unipost.co.kr/unicloud/cont/api/getContUserToken",
@@ -48,9 +55,7 @@ const getToken = async (secretKey, usId, { restApi }) => {
       "content-type": "application/json;charset=UTF-8",
       secretKey,
     },
-    body: {
-      usId,
-    },
+    body,
   });
 
   checkResError(result.body, "Failed to get token from unipost");
@@ -58,17 +63,25 @@ const getToken = async (secretKey, usId, { restApi }) => {
   return result.body.response.token;
 };
 
-module.exports.getTokenForWork = async (secretKey, { restApi }) => {
-  const result = await getToken(secretKey, "bsg_cont_work01", {
-    restApi,
-  });
+module.exports.getTokenForWork = async (secretKey, { contNo, restApi }) => {
+  const result = await getToken(
+    secretKey,
+    { usId: "bsg_cont_work01", contNo },
+    {
+      restApi,
+    }
+  );
   return result;
 };
 
-module.exports.getTokenForRead = async (secretKey, { restApi }) => {
-  const result = await getToken(secretKey, "bsg_cont_read01", {
-    restApi,
-  });
+module.exports.getTokenForRead = async (secretKey, { contNo, restApi }) => {
+  const result = await getToken(
+    secretKey,
+    { usId: "bsg_cont_read01", contNo },
+    {
+      restApi,
+    }
+  );
   return result;
 };
 
