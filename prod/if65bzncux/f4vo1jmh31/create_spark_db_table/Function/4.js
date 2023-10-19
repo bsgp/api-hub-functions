@@ -24,11 +24,11 @@ module.exports = async (draft, { fn, sql, env, makeid }) => {
           const alterResult = await mysql.table
             .alter(spec.name, function (table) {
               table
-                .string("f_payment_return_deposit ")
+                .string("f_payment_return_deposit ", 20)
                 .defaultTo("")
                 .comment("선급금보증");
               table
-                .string("warr_haja_deposit ")
+                .string("warr_haja_deposit ", 20)
                 .defaultTo("")
                 .comment("하자이행보증");
             })
