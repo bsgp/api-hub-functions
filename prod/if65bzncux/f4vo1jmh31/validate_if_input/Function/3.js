@@ -35,6 +35,7 @@ module.exports = async (draft, { request, file, lib, env }) => {
     return resFalsyError("HTTP Method must be 'POST'");
 
   const ifList = await file.get("if/list.json", {
+    stage: env.CURRENT_ALIAS,
     gziped: true,
     toJSON: true,
   });
