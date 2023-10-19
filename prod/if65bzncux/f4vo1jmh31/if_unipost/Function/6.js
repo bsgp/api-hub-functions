@@ -3,6 +3,19 @@ module.exports = async (draft, { request, clone, tryit, file, env, sql }) => {
   // await file.upload("unipost/test.json", webhookData, {
   //   stage: env.CURRENT_ALIAS,
   // });
+  // {
+  //   "secretKey":"",
+  //   "contInfo":{
+  //     "contDate":"20231005",
+  //     "contStsName":"작성중",
+  //     "contSts":"10",
+  //     "contName":"test xxxx",
+  //     "apiUserKey":"P202300008",
+  //     "contSeq":0,
+  //     "contNo":"CN462000108606",
+  //     "coRegno":"2018122611"
+  //   }
+  // }
   const statusList = [
     { id: "DRN", uni_id: "10", text: "작성중" },
     { id: "RSC", uni_id: "30", text: "진행중" },
@@ -11,8 +24,9 @@ module.exports = async (draft, { request, clone, tryit, file, env, sql }) => {
     { id: "SSC", uni_id: "70", text: "완료" },
   ];
 
-  const contSts = tryit(() => webhookData.contInfo.contSts, "");
-  const apiUserKey = tryit(() => webhookData.contInfo.apiUserKey, "");
+  const contInfo = tryit(() => webhookData.contInfo, {}) || {};
+  const contSts = tryit(() => contInfo.contSts, "");
+  const apiUserKey = tryit(() => contInfo.apiUserKey, "");
   const fStatus = statusList.find((item) => item.uni_id === contSts);
   if (!fStatus) {
     draft.response.body = {
