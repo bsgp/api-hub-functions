@@ -55,7 +55,16 @@ module.exports = async (draft, { request, clone, tryit, file, env, sql }) => {
     useCustomRole: false,
     stage: env.CURRENT_ALIAS,
   })
-    .update(tables.contract.name, { status: fStatus.id })
+    .update(tables.contract.name, {
+      status: fStatus.id,
+      uni_contno: contInfo.contNo, // 계약관리번호
+      uni_contseq: contInfo.contSeq, //  계약관리 일련번호
+      uni_coregno: contInfo.coRegno, // 계약소유자 사업자등록번호
+      uni_contname: contInfo.contName, // 계약명
+      uni_contdate: contInfo.contDate, // 계약일자(yyyyMMdd)
+      uni_contsts: contInfo.contSts, // 계약상태코드
+      uni_contstsname: contInfo.contStsName, // 계약상태명
+    })
     .where({ id: apiUserKey })
     .run();
 
