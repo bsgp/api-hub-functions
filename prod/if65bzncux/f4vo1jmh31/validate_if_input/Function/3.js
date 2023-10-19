@@ -233,7 +233,9 @@ module.exports = async (draft, { request, file, lib, env }) => {
 
   if (request.body.Function.Type !== ifObj.Type) {
     return resFalsyError(
-      `body.Function.Type의 값이 정확한 인터페이스 정보와 일치하지 않습니다.${ifObj.Type}`
+      `body.Function.Type의 값이 정확한 인터페이스 정보와 일치하지 않습니다.${JSON.stringify(
+        ifObj
+      )}`
     );
   }
 
