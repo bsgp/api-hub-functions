@@ -40,6 +40,7 @@ module.exports = async (draft, { sql, env, tryit }) => {
       contractID: results.contractID,
       partyList: party,
       costObjectList: cost_object,
+      wbsList: [],
       billList: bill,
       attachmentList: attachment,
     },
