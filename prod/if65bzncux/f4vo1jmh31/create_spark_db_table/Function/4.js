@@ -20,13 +20,17 @@ module.exports = async (draft, { fn, sql, env, makeid }) => {
         .create(spec.name, fn[tableKey]({ mysql, makeid }))
         .run();
       if (result.statusCode !== 200) {
-        if (spec.desc === "WBS, CostCenter info DB table") {
+        if (spec.desc === "Contract info DB table") {
           const alterResult = await mysql.table
             .alter(spec.name, function (table) {
               table
-                .datetime("last_send_date ")
-                .defaultTo(null)
-                .comment("WBS업데이트일자");
+                .string("f_payment_return_deposit ")
+                .defaultTo("")
+                .comment("선급금보증");
+              table
+                .string("warr_haja_deposit ")
+                .defaultTo("")
+                .comment("하자이행보증");
             })
             .run();
           draft.response.body[spec.name] = alterResult;
