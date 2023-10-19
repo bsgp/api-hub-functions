@@ -52,6 +52,8 @@ module.exports.contract =
     table.string("payment_terms", 20).defaultTo(""); // 지급조건
     table.string("claims_time", 20).defaultTo(""); // 청구시점
     table.string("contract_deposit", 20).defaultTo(""); // 계약이행보증
+    table.string("f_payment_return_deposit ", 20).defaultTo(""); // 선급금보증
+    table.string("warr_haja_deposit ", 20).defaultTo(""); // 하자이행보증
     table.string("delayed_money", 20).defaultTo(""); // 지체상금율
     table.string("etc", 200).defaultTo(""); // 기타
     table.string("uni_contno", 20).defaultTo(""); // 계약관리번호
