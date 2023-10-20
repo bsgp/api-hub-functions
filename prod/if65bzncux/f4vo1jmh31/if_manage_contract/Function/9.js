@@ -41,6 +41,13 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           changed_by,
           content: JSON.stringify(content),
         })),
+      wbsList: chagedList
+        .filter((list) => list.type === "wbs")
+        .map(({ changed_at, changed_by, content }) => ({
+          changed_at: fn.convDate(dayjs, changed_at),
+          changed_by,
+          content: JSON.stringify(content),
+        })),
       billList: chagedList
         .filter((list) => list.type === "bill")
         .map(({ changed_at, changed_by, content }) => ({
