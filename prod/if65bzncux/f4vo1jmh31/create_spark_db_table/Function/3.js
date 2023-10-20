@@ -15,39 +15,39 @@ module.exports = async (draft, { file, env }) => {
    */
   const tables = {
     change: {
-      name: "change_6",
+      name: "change_7",
       desc: "Spark DB change history table",
     },
     contract: {
-      name: "contract_8",
+      name: "contract_9",
       desc: "Contract info DB table",
     },
     ref_doc: {
-      name: "ref_doc_9",
+      name: "ref_doc_10",
       desc: "Reference document(MM,FI) info DB table",
     },
     cost_object: {
-      name: "cost_object_10",
+      name: "cost_object_11",
       desc: "MM,FI cost object DB table",
     },
     wbs: {
-      name: "wbs_0",
+      name: "wbs_1",
       desc: "WBS DB table",
     },
     bill: {
-      name: "bill_11",
+      name: "bill_12",
       desc: "bill reson text DB",
     },
     party: {
-      name: "party_10",
+      name: "party_11",
       desc: "Party(supplier, customer) info DB",
     },
     attachment: {
-      name: "attachment_8",
+      name: "attachment_9",
       desc: "Attachment info DB",
     },
     letter_appr: {
-      name: "letter_appr_5",
+      name: "letter_appr_6",
       desc: "groupware letter approval info DB",
     },
   };
