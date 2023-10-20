@@ -119,6 +119,29 @@ module.exports.cost_object =
     table.primary(["contract_id", "id"]);
   };
 
+/** TABLE: wbs */
+module.exports.wbs =
+  ({ makeid }) =>
+  (table) => {
+    table.charset("utf8mb4");
+
+    table.string("contract_id", 10).notNullable();
+    table.string("id", 5).defaultTo(makeid(5)); // makeid()
+
+    table.string("index", 5).defaultTo("");
+    table.string("type", 3).defaultTo(""); // 귀속처유형(WBS, 코스트센터)
+    table.string("cost_object_id", 36).defaultTo(""); // 귀속처(WBS, 코스트센터)
+    table.string("name", 100).defaultTo(""); // 귀속처 명
+    table.decimal("dmbtr", 23, 2).defaultTo(0);
+    table.decimal("dmbtr_local", 23, 2).defaultTo(0);
+    table.string("start_date", 8).defaultTo(""); // 시작일
+    table.string("end_date", 8).defaultTo(""); // 종료일
+    table.datetime("last_send_date ").defaultTo(null);
+    table.boolean("deleted").defaultTo(false);
+
+    table.primary(["contract_id", "id"]);
+  };
+
 /** TABLE: bill */
 module.exports.bill =
   ({ makeid }) =>
