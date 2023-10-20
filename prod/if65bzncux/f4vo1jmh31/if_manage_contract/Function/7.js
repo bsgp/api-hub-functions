@@ -8,6 +8,7 @@ module.exports = async (draft, { sql, env, tryit, fn, makeid, file }) => {
     "bill",
     // "ref_doc",
     "cost_object",
+    "wbs",
     "attachment",
   ];
   const origin = { contractID };
@@ -252,7 +253,8 @@ module.exports = async (draft, { sql, env, tryit, fn, makeid, file }) => {
     })
   );
 
-  const { contract, party, bill, cost_object, attachment } = updateContract;
+  const { contract, party, bill, cost_object, wbs, attachment } =
+    updateContract;
   //ref_doc
 
   draft.response.body = {
@@ -262,6 +264,7 @@ module.exports = async (draft, { sql, env, tryit, fn, makeid, file }) => {
       contractID: origin.contractID,
       partyList: party,
       costObjectList: cost_object,
+      wbsList: wbs,
       billList: bill,
       attachmentList: attachment,
     },
