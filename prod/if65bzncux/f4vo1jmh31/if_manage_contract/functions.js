@@ -67,6 +67,20 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
         end_date: item.end_date,
       }));
     }
+    case "wbs": {
+      return data.wbsList.map((item) => ({
+        contract_id: `${contractID}` || item.contractID,
+        id: item.id || (makeid && makeid(5)),
+        index: `${item.index}`,
+        type: item.type,
+        cost_object_id: item.cost_object_id,
+        name: item.name,
+        dmbtr: (item.dmbtr || "").replace(/,/g, ""),
+        dmbtr_local: (item.dmbtr_local || "").replace(/,/g, ""),
+        start_date: item.start_date,
+        end_date: item.end_date,
+      }));
+    }
     case "bill": {
       return data.billList.map((item) => ({
         contract_id: `${contractID}` || item.contractID,
