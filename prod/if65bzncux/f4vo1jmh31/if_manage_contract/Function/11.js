@@ -4,9 +4,9 @@ module.exports = async (draft, { sql, env }) => {
     useCustomRole: false,
     stage: env.CURRENT_ALIAS,
   })
-    .update(tables.cost_object.name, { last_send_date: newData.last_send_date })
+    .update(tables.wbs.name, { last_send_date: newData.last_send_date })
     .where("contract_id", "like", newData.contract_id)
-    .where("id", "like", newData.id)
+    // .where("id", "like", newData.id)
     .run();
   draft.response.body = {
     updateResult,
