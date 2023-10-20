@@ -28,7 +28,11 @@ module.exports = async (draft, { file, env }) => {
     },
     cost_object: {
       name: "cost_object_10",
-      desc: "WBS, CostCenter info DB table",
+      desc: "MM,FI cost object DB table",
+    },
+    wbs: {
+      name: "wbs_0",
+      desc: "WBS DB table",
     },
     bill: {
       name: "bill_11",
