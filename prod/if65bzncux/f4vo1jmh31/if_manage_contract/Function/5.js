@@ -10,7 +10,14 @@ module.exports = async (draft, { sql, env, tryit }) => {
       .where("id", "like", newData.contractID);
     const queryResult = await query.run();
     const contractID = tryit(() => queryResult.body.list[0].id, "");
-    const tableList = ["party", "bill", "ref_doc", "cost_object", "attachment"];
+    const tableList = [
+      "party",
+      "bill",
+      "ref_doc",
+      "cost_object",
+      "wbs",
+      "attachment",
+    ];
     if (contractID) {
       results = { contract: queryResult.body.list[0], contractID };
       await Promise.all(
@@ -31,7 +38,8 @@ module.exports = async (draft, { sql, env, tryit }) => {
       );
     }
   }
-  const { contract, party, bill, cost_object, attachment } = results; //ref_doc
+  const { contract, party, bill, cost_object, wbs, attachment } = results;
+  //ref_doc
 
   draft.response.body = {
     request_contractID: newData.contractID,
@@ -40,7 +48,7 @@ module.exports = async (draft, { sql, env, tryit }) => {
       contractID: results.contractID,
       partyList: party,
       costObjectList: cost_object,
-      wbsList: [],
+      wbsList: wbs,
       billList: bill,
       attachmentList: attachment,
     },
