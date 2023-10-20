@@ -65,7 +65,8 @@ module.exports = async (
   };
 
   /** insert sub table */
-  const tableKeys = ["cost_object", "bill", "party", "attachment"]; //"ref_doc"
+  const tableKeys = ["cost_object", "wbs", "bill", "party", "attachment"];
+  //"ref_doc"
   const tableListRes = await Promise.all(
     tableKeys.map(async (tableKey) => {
       const tableData = fn.getDB_Object(newData, {
