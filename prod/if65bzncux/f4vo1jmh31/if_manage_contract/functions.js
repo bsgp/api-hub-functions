@@ -20,6 +20,8 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
       payment_terms: data.form.payment_terms,
       claims_time: data.form.claims_time,
       contract_deposit: data.form.contract_deposit,
+      f_payment_return_deposit: data.form.f_payment_return_deposit,
+      warr_haja_deposit: data.form.warr_haja_deposit,
       delayed_money: data.form.delayed_money,
       etc: data.form.etc,
       uni_coregno: data.form.uni_coregno,
