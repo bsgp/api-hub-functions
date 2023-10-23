@@ -201,6 +201,7 @@ module.exports.attachment =
     table.string("index", 5).defaultTo("");
     table.string("type", 40).defaultTo("");
     table.string("name", 200).defaultTo("");
+    table.string("desc", 50).defaultTo("").comment("파일명(계약서)");
     table.string("ext", 10).defaultTo("");
     table.string("path", 200).defaultTo("");
     table.boolean("deleted").defaultTo(false);
