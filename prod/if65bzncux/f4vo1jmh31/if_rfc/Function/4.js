@@ -65,24 +65,7 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
             };
             break;
           }
-          case "FI02": {
-            draft.response.body = {
-              ...result.body.result,
-              list: ET_DATA.map(({ ZZCDEZ, ZCNTS1, ...args }) => ({
-                key: ZZCDEZ,
-                text: ZCNTS1,
-                ref_id: ZZCDEZ,
-                name: ZCNTS1,
-                prdnt_name: args.ZCNTS9,
-                id_no: args.ZCNTS6,
-                biz_no: args.ZCNTS5,
-                land_id: args.ZCNTS4,
-                address: [args.ZCNTS13, args.ZCNTS14].filter(Boolean).join(" "),
-                tel: "",
-              })),
-            };
-            break;
-          }
+          case "FI02":
           case "FI03": {
             draft.response.body = {
               ...result.body.result,
