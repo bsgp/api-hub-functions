@@ -19,25 +19,18 @@ module.exports = async (draft, { fn, sql, env, makeid }) => {
       const result = await mysql.table
         .create(spec.name, fn[tableKey]({ mysql, makeid }))
         .run();
-      // if (result.statusCode !== 200) {
-      //   if (spec.desc === "Contract info DB table") {
-      //     const alterResult = await mysql.table
-      //       .alter(spec.name, function (table) {
-      //         table
-      //           .string("f_payment_return_deposit ", 20)
-      //           .defaultTo("")
-      //           .comment("선급금보증");
-      //         table
-      //           .string("warr_haja_deposit ", 20)
-      //           .defaultTo("")
-      //           .comment("하자이행보증");
-      //       })
-      //       .run();
-      //     draft.response.body[spec.name] = alterResult;
-      //   }
-      // } else
-      draft.response.body[spec.name] =
-        result.statusCode === 200 ? "Succeed" : result.body;
+      if (result.statusCode !== 200) {
+        if (spec.desc === "Attachment info DB") {
+          const alterResult = await mysql.table
+            .alter(spec.name, function (table) {
+              table.string("desc", 50).defaultTo("").comment("파일명(계약서)");
+            })
+            .run();
+          draft.response.body[spec.name] = alterResult;
+        }
+      } else
+        draft.response.body[spec.name] =
+          result.statusCode === 200 ? "Succeed" : result.body;
       return true;
     })
   );
