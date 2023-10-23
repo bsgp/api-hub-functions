@@ -55,6 +55,6 @@ module.exports = async (draft, { sql, env, tryit }) => {
     E_STATUS: results.contractID ? "S" : "F",
     E_MESSAGE: results.contractID
       ? `계약번호: ${results.contractID}\n조회가\n완료되었습니다`
-      : "해당하는 계약정보가 없습니다",
+      : "해당하는\n계약정보가\n없습니다",
   };
 };
