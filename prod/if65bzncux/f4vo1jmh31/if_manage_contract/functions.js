@@ -65,8 +65,8 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
         po_item_no: item.po_item_no,
         // curr_key: item.curr_key,
         // curr_local: item.curr_local,
-        start_date: item.start_date,
-        end_date: item.end_date,
+        // start_date: item.start_date,
+        // end_date: item.end_date,
       }));
     }
     case "wbs": {
