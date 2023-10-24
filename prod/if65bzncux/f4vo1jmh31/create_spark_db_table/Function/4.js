@@ -27,7 +27,7 @@ module.exports = async (draft, { fn, sql, env, makeid }) => {
               table
                 .string("gl_group_text", 20)
                 .defaultTo("")
-                .comment("계정그룹텍스트트");
+                .comment("계정그룹텍스트");
             })
             .run();
           draft.response.body[spec.name] = alterResult;
