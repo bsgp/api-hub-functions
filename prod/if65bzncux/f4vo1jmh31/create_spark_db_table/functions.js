@@ -39,14 +39,16 @@ module.exports.contract =
     table.string("end_date", 8).defaultTo(""); //계약종료일
     table.boolean("renewal_ind"); // 자동연장 지시자
     table.string("renewal_period", 3).defaultTo(""); // 자동연장기간 (기본값: "1Y")
-    table.string("curr_key", 5).defaultTo("");
-    // KRW,USD,JPY..(기본값: 로그인 회사코드 기본 통화)
     table.decimal("dmbtr_supply", 23, 2).defaultTo(0); // 공급가액
     table.decimal("dmbtr_vat", 23, 2).defaultTo(0); // 부과세
     table.decimal("dmbtr", 23, 2).defaultTo(0); // curr_key와 매칭되는 금액
+    table.decimal("dmbtr_supply_local", 23, 2).defaultTo(0);
+    table.decimal("dmbtr_vat_local", 23, 2).defaultTo(0);
     table.decimal("dmbtr_local", 23, 2).defaultTo(0);
-    // curr_key와 curr_local이 다를 경우 필수 입력
+    table.string("curr_key", 5).defaultTo("");
+    // KRW,USD,JPY..(기본값: 로그인 회사코드 기본 통화)
     table.string("curr_local", 5).defaultTo(""); // 기본값: 로그인 회사 기본통화키
+    // curr_key와 curr_local이 다를 경우 필수 입력
     table.string("status", 3).defaultTo(""); // 상태
     table.string("seq", 3).defaultTo("0"); // 회차
     table.string("payment_terms", 20).defaultTo(""); // 지급조건
