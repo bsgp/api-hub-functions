@@ -9,7 +9,7 @@ function findNotHaveValue(obj, keys) {
   return keys.filter((key) => !obj[key]);
 }
 module.exports = async (draft, { request, file, lib, env }) => {
-  const { isFalsy, isObject, tryit, repeat } = lib;
+  const { isFalsy } = lib;
   // const isObject = lib.type.isObject;
 
   function resFalsyError(message, status = 400) {
@@ -35,6 +35,7 @@ module.exports = async (draft, { request, file, lib, env }) => {
     return resFalsyError("HTTP Method must be 'POST'");
 
   const ifList = await file.get("if/list.json", {
+    stage: env.CURRENT_ALIAS,
     gziped: true,
     toJSON: true,
   });
@@ -88,102 +89,102 @@ module.exports = async (draft, { request, file, lib, env }) => {
     );
   }
 
-  if (ifObj.UrlPath || ifObj.Type === "DB") {
-    const ifIdPrefix = request.body.InterfaceId.replace(/\d{0,}$/, "");
-    const ifSystem = ifList.prefixes[ifIdPrefix];
-    if (isFalsy(ifSystem)) {
-      return resFalsyError(
-        `Can not find valid prefix with "${request.body.InterfaceId}"`
-      );
-    }
+  // if (ifObj.UrlPath || ifObj.Type === "DB") {
+  //   const ifIdPrefix = request.body.InterfaceId.replace(/\d{0,}$/, "");
+  //   const ifSystem = ifList.prefixes[ifIdPrefix];
+  //   if (isFalsy(ifSystem)) {
+  //     return resFalsyError(
+  //       `Can not find valid prefix with "${request.body.InterfaceId}"`
+  //     );
+  //   }
 
-    let ifDomain = request.stage;
+  //   let ifDomain = request.stage;
 
-    repeat(() => {
-      ifDomain = tryit(() => ifList.systems[ifSystem].domains[ifDomain]);
+  //   repeat(() => {
+  //     ifDomain = tryit(() => ifList.systems[ifSystem].domains[ifDomain]);
 
-      if (isFalsy(ifDomain)) {
-        return { break: true };
-      }
-      if (ifObj.Type === "DB") {
-        if (ifDomain.startsWith("DB:")) {
-          return { break: true };
-        }
-      } else {
-        if (ifDomain.startsWith("http")) {
-          return { break: true };
-        }
-      }
-    });
+  //     if (isFalsy(ifDomain)) {
+  //       return { break: true };
+  //     }
+  //     if (ifObj.Type === "DB") {
+  //       if (ifDomain.startsWith("DB:")) {
+  //         return { break: true };
+  //       }
+  //     } else {
+  //       if (ifDomain.startsWith("http")) {
+  //         return { break: true };
+  //       }
+  //     }
+  //   });
 
-    let invalidDomain = false;
-    if (isFalsy(ifDomain)) {
-      invalidDomain = true;
-    } else if (ifObj.Type === "DB") {
-      if (!ifDomain.startsWith("DB:")) {
-        invalidDomain = true;
-      }
-    } else if (!ifDomain.startsWith("http")) {
-      invalidDomain = true;
-    }
+  //   let invalidDomain = false;
+  //   if (isFalsy(ifDomain)) {
+  //     invalidDomain = true;
+  //   } else if (ifObj.Type === "DB") {
+  //     if (!ifDomain.startsWith("DB:")) {
+  //       invalidDomain = true;
+  //     }
+  //   } else if (!ifDomain.startsWith("http")) {
+  //     invalidDomain = true;
+  //   }
 
-    if (invalidDomain === true) {
-      return resFalsyError(
-        `Can not find valid domain with "${request.body.InterfaceId}"`
-      );
-    }
+  //   if (invalidDomain === true) {
+  //     return resFalsyError(
+  //       `Can not find valid domain with "${request.body.InterfaceId}"`
+  //     );
+  //   }
 
-    if (ifObj.Type === "DB") {
-      ifDomain = ifDomain.replace("DB:", "");
+  //   if (ifObj.Type === "DB") {
+  //     ifDomain = ifDomain.replace("DB:", "");
 
-      let ifDbName = request.stage;
+  //     let ifDbName = request.stage;
 
-      repeat(() => {
-        const newDbName = tryit(
-          () => ifList.systems[ifSystem].dbNames[ifDbName]
-        );
+  //     repeat(() => {
+  //       const newDbName = tryit(
+  //         () => ifList.systems[ifSystem].dbNames[ifDbName]
+  //       );
 
-        if (isFalsy(newDbName)) {
-          return { break: true };
-        }
+  //       if (isFalsy(newDbName)) {
+  //         return { break: true };
+  //       }
 
-        ifDbName = newDbName;
-      });
+  //       ifDbName = newDbName;
+  //     });
 
-      let invalidDbName = false;
-      if (isFalsy(ifDbName)) {
-        invalidDbName = true;
-      }
+  //     let invalidDbName = false;
+  //     if (isFalsy(ifDbName)) {
+  //       invalidDbName = true;
+  //     }
 
-      if (invalidDbName === true) {
-        return resFalsyError(
-          `Can not find valid DB Name with "${request.body.InterfaceId}"`
-        );
-      }
-      ifObj.DbName = ifDbName;
-    }
+  //     if (invalidDbName === true) {
+  //       return resFalsyError(
+  //         `Can not find valid DB Name with "${request.body.InterfaceId}"`
+  //       );
+  //     }
+  //     ifObj.DbName = ifDbName;
+  //   }
 
-    ifObj.Url = [ifDomain, ifObj.UrlPath].join("");
-    ifObj.Domain = ifDomain;
+  //   ifObj.Url = [ifDomain, ifObj.UrlPath].join("");
+  //   ifObj.Domain = ifDomain;
 
-    let ifHeaders = request.stage;
+  //   let ifHeaders = request.stage;
 
-    repeat(() => {
-      ifHeaders = tryit(() => ifList.systems[ifSystem].headers[ifHeaders]);
+  //   repeat(() => {
+  //     ifHeaders = tryit(() => ifList.systems[ifSystem].headers[ifHeaders]);
 
-      if (isFalsy(ifHeaders)) {
-        return { break: true };
-      }
-      if (isObject(ifHeaders)) {
-        return { break: true };
-      }
-    });
+  //     if (isFalsy(ifHeaders)) {
+  //       return { break: true };
+  //     }
+  //     if (isObject(ifHeaders)) {
+  //       return { break: true };
+  //     }
+  //   });
 
-    ifObj.HttpHeaders = {
-      ...ifObj.HttpHeaders,
-      ...ifHeaders,
-    };
-  }
+  //   ifObj.HttpHeaders = {
+  //     ...ifObj.HttpHeaders,
+  //     ...ifHeaders,
+  //   };
+  // }
 
   // check Function
   const undefinedInFunction = findUndefinedKeys(request.body.Function, [
@@ -237,6 +238,12 @@ module.exports = async (draft, { request, file, lib, env }) => {
     );
   }
 
+  if (request.body.Function.SysId !== ifObj.TriggeredBy) {
+    return resFalsyError(
+      `body.Function.SysId의 값이 정확한 인터페이스 정보와 일치하지 않습니다.`
+    );
+  }
+
   if (request.path && ifObj.Path) {
     if (request.path === "unknown") {
       // pass
@@ -249,13 +256,10 @@ module.exports = async (draft, { request, file, lib, env }) => {
     }
   }
 
-  if (ifObj.TriggeredBy !== "SAP") {
-    // 2022.09.26 골프존에서 내부 의견으로 결정하여 Name을 점검하지 않기로 함.
-    if (request.body.Function.Name !== ifObj.Name) {
-      return resFalsyError(
-        `body.Function.Name의 값이 정확한 인터페이스 정보와 일치하지 않습니다.`
-      );
-    }
+  if (request.body.Function.Name !== ifObj.Name) {
+    return resFalsyError(
+      `body.Function.Name의 값이 정확한 인터페이스 정보와 일치하지 않습니다.`
+    );
   }
 
   if (ifObj.Type === "RFC" || ifObj.RfcName) {
