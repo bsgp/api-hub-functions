@@ -1,7 +1,10 @@
-module.exports = async (draft, { file }) => {
+module.exports = async (draft, { file, env }) => {
   let configFile;
   try {
-    configFile = await file.get("config/tables.json", { gziped: true });
+    configFile = await file.get("config/tables.json", {
+      gziped: true,
+      stage: env.CURRENT_ALIAS,
+    });
   } catch (err) {
     draft.response.body = { configFileMessage: "new Config file created" };
   }
@@ -12,41 +15,47 @@ module.exports = async (draft, { file }) => {
    */
   const tables = {
     change: {
-      name: "change_5",
+      name: "change_7",
       desc: "Spark DB change history table",
     },
     contract: {
-      name: "contract_7",
+      name: "contract_9",
       desc: "Contract info DB table",
     },
     ref_doc: {
-      name: "ref_doc_8",
+      name: "ref_doc_10",
       desc: "Reference document(MM,FI) info DB table",
     },
     cost_object: {
-      name: "cost_object_9",
-      desc: "WBS, CostCenter info DB table",
+      name: "cost_object_11",
+      desc: "MM,FI cost object DB table",
+    },
+    wbs: {
+      name: "wbs_1",
+      desc: "WBS DB table",
     },
     bill: {
-      name: "bill_10",
+      name: "bill_12",
       desc: "bill reson text DB",
     },
     party: {
-      name: "party_9",
+      name: "party_11",
       desc: "Party(supplier, customer) info DB",
     },
     attachment: {
-      name: "attachment_7",
+      name: "attachment_9",
       desc: "Attachment info DB",
     },
     letter_appr: {
-      name: "letter_appr_4",
+      name: "letter_appr_6",
       desc: "groupware letter approval info DB",
     },
   };
-
+  // draft.json.changed = lastestTableConfig;
+  // draft.response.body = { changed: lastestTableConfig, tables };
   const newTableConfig = await file.upload("config/tables.json", tables, {
     gzip: true,
+    stage: env.CURRENT_ALIAS,
   });
 
   const changed = Object.keys(tables).reduce((acc, curr) => {
