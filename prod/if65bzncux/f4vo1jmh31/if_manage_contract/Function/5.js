@@ -46,11 +46,15 @@ module.exports = async (draft, { sql, env, tryit }) => {
     contract: {
       ...contract,
       contractID: results.contractID,
-      partyList: party,
-      costObjectList: cost_object,
-      wbsList: wbs,
-      billList: bill,
-      attachmentList: attachment,
+      partyList: party.sort((al, be) => Number(al.index) - Number(be.index)),
+      costObjectList: cost_object.sort(
+        (al, be) => Number(al.index) - Number(be.index)
+      ),
+      wbsList: wbs.sort((al, be) => Number(al.index) - Number(be.index)),
+      billList: bill.sort((al, be) => Number(al.index) - Number(be.index)),
+      attachmentList: attachment.sort(
+        (al, be) => Number(al.index) - Number(be.index)
+      ),
     },
     E_STATUS: results.contractID ? "S" : "F",
     E_MESSAGE: results.contractID
