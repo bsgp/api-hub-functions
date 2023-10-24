@@ -14,6 +14,11 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
       dmbtr_supply: (data.form.dmbtr_supply || "").replace(/,/g, ""),
       dmbtr_vat: (`${data.form.dmbtr_vat}` || "").replace(/,/g, ""),
       dmbtr: (`${data.form.dmbtr}` || "").replace(/,/g, ""),
+      dmbtr_supply_local: (data.form.dmbtr_supply_local || "").replace(
+        /,/g,
+        ""
+      ),
+      dmbtr_vat_local: (data.form.dmbtr_vat_local || "").replace(/,/g, ""),
       dmbtr_local: (data.form.dmbtr_local || "").replace(/,/g, ""),
       curr_local: data.form.curr_local,
       status: data.form.status,
