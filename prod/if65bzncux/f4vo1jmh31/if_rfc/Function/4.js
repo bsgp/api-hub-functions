@@ -61,7 +61,7 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
                 text: ZCNTS1,
                 cost_type_id: ZZCDEZ,
                 cost_type: ZCNTS1,
-              })),
+              })).sort((al, be) => al.key - be.key),
             };
             break;
           }
@@ -82,7 +82,7 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
                 land_id: args.ZCNTS4,
                 address: [args.ZCNTS13, args.ZCNTS14].filter(Boolean).join(" "),
                 tel: "",
-              })),
+              })).sort((al, be) => al.key - be.key),
             };
             break;
           }
@@ -129,7 +129,7 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
             text: KTEXT,
             cost_object_id: KOSTL,
             name: KTEXT,
-          })),
+          })).sort((al, be) => al.key - be.key),
         };
         break;
       }
@@ -141,7 +141,7 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
             text: POST1,
             cost_object_id: POSID,
             name: POST1,
-          })),
+          })).sort((al, be) => al.key - be.key),
         };
         break;
       }
@@ -154,7 +154,7 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
             text: MAKTX,
             matnr: MATNR,
             maktx: MAKTX,
-          })),
+          })).sort((al, be) => al.key - be.key),
         };
         break;
       }
