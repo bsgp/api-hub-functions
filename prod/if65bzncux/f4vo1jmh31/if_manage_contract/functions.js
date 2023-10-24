@@ -105,6 +105,8 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
         stems10_cn: item.stems10_cn,
         stems10_ko: item.stems10_ko,
         name: item.name,
+        gl_group_id: item.gl_group_id,
+        gl_group_text: item.gl_group_text,
         ref_id: item.ref_id,
         type: item.type,
         prdnt_name: item.prdnt_name,
