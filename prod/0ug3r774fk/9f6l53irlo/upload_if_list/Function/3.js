@@ -36,6 +36,12 @@ module.exports = async (draft, { file }) => {
       RfcName: "ZPM_SEND_ORD_INFO",
       TriggeredBy: "PMM",
     },
+    "IF-PMM-ORD08": {
+      Type: "RFC",
+      Name: "TEMP_ACTIVITY_PMM_ORDERS",
+      RfcName: "ZPM_RECEIVE_ORD_TEMPSAVE",
+      TriggeredBy: "PMM",
+    },
     "IF-PMM-ORD09": {
       Type: "RFC",
       Name: "CREATE_PMM_ORDERS",
