@@ -1,4 +1,7 @@
-module.exports = async (draft, { fn, dayjs, sql, tryit, makeid, file }) => {
+module.exports = async (
+  draft,
+  { fn, dayjs, sql, env, tryit, makeid, file }
+) => {
   const { tables, newData, userID } = draft.json;
   const contract = fn.getDB_Object(newData, { key: "contract" });
 
@@ -7,7 +10,7 @@ module.exports = async (draft, { fn, dayjs, sql, tryit, makeid, file }) => {
   /** create new ContractID by maxID && insert contract table */
   const cYear = fn.convDate(dayjs, new Date(), "YYYY");
   const prefix = [contract.type, cYear].join("");
-  const query = sql("mysql", { useCustomRole: false })
+  const query = sql("mysql", { useCustomRole: false, stage: env.CURRENT_ALIAS })
     .select(tables.contract.name)
     .max("id", { as: "maxID" })
     .where("id", "like", `${prefix}%`);
@@ -20,8 +23,15 @@ module.exports = async (draft, { fn, dayjs, sql, tryit, makeid, file }) => {
     (Number(maxID.substring(5)) + 1).toString().padStart(5, "0"),
   ].join("");
 
-  const createContract = await sql("mysql", { useCustomRole: false })
-    .insert(tables.contract.name, { ...contract, id: contractID })
+  const createContract = await sql("mysql", {
+    useCustomRole: false,
+    stage: env.CURRENT_ALIAS,
+  })
+    .insert(tables.contract.name, {
+      ...contract,
+      id: contractID,
+      status: "DRN",
+    })
     .run();
 
   if (createContract.statusCode !== 200) {
@@ -35,7 +45,10 @@ module.exports = async (draft, { fn, dayjs, sql, tryit, makeid, file }) => {
   }
 
   /** insert change table */
-  const cContract = await sql("mysql", { useCustomRole: false })
+  const cContract = await sql("mysql", {
+    useCustomRole: false,
+    stage: env.CURRENT_ALIAS,
+  })
     .insert(
       tables["change"].name,
       fn.getChange_Object({
@@ -52,7 +65,8 @@ module.exports = async (draft, { fn, dayjs, sql, tryit, makeid, file }) => {
   };
 
   /** insert sub table */
-  const tableKeys = ["cost_object", "bill", "party", "attachment"]; //"ref_doc"
+  const tableKeys = ["cost_object", "wbs", "bill", "party", "attachment"];
+  //"ref_doc"
   const tableListRes = await Promise.all(
     tableKeys.map(async (tableKey) => {
       const tableData = fn.getDB_Object(newData, {
@@ -75,15 +89,20 @@ module.exports = async (draft, { fn, dayjs, sql, tryit, makeid, file }) => {
             const data = await file.get(tempFilePath, {
               exactPath: true,
               returnBuffer: true,
+              stage: env.CURRENT_ALIAS,
             });
             const fileResponse = await file.upload(path, data, {
               contentType: type,
+              stage: env.CURRENT_ALIAS,
             });
             return fileResponse;
           })
         );
       }
-      const changeTableData = await sql("mysql", { useCustomRole: false })
+      const changeTableData = await sql("mysql", {
+        useCustomRole: false,
+        stage: env.CURRENT_ALIAS,
+      })
         .insert(
           tables["change"].name,
           tableData.map((data) =>
@@ -97,7 +116,10 @@ module.exports = async (draft, { fn, dayjs, sql, tryit, makeid, file }) => {
           )
         )
         .run();
-      const postTableData = await sql("mysql", { useCustomRole: false })
+      const postTableData = await sql("mysql", {
+        useCustomRole: false,
+        stage: env.CURRENT_ALIAS,
+      })
         .insert(tables[tableKey].name, tableData)
         .run();
       if (

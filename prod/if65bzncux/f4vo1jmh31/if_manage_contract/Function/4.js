@@ -1,4 +1,4 @@
-module.exports = async (draft, { lib, file, request }) => {
+module.exports = async (draft, { lib, file, env, request }) => {
   const { clone } = lib;
   draft.json.newData = clone(request.body.Data);
   draft.json.userID = request.body.Function.UserId;
@@ -6,6 +6,7 @@ module.exports = async (draft, { lib, file, request }) => {
   const tables = await file.get("config/tables.json", {
     gziped: true,
     toJSON: true,
+    stage: env.CURRENT_ALIAS,
   });
   draft.json.tables = tables;
 
@@ -27,6 +28,9 @@ module.exports = async (draft, { lib, file, request }) => {
       break;
     case "IF-CT-109": // GET CHANGED HISTORY
       draft.json.nextNodeKey = "Function#9";
+      break;
+    case "IF-CT-110": // UPDATE_WBS_CONTRACT
+      draft.json.nextNodeKey = "Function#11";
       break;
     default:
       break;

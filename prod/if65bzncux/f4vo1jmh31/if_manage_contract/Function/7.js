@@ -1,4 +1,4 @@
-module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
+module.exports = async (draft, { sql, env, tryit, fn, makeid, file }) => {
   const { tables, newData, userID } = draft.json;
   const contractID = newData.form.contractID;
 
@@ -8,13 +8,17 @@ module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
     "bill",
     // "ref_doc",
     "cost_object",
+    "wbs",
     "attachment",
   ];
   const origin = { contractID };
   await Promise.all(
     tableList.map(async (tableKey) => {
       const searchKey = tableKey === "contract" ? "id" : "contract_id";
-      const queryBuilder = sql("mysql", { useCustomRole: false })
+      const queryBuilder = sql("mysql", {
+        useCustomRole: false,
+        stage: env.CURRENT_ALIAS,
+      })
         .select(tables[tableKey].name)
         .where(searchKey, "like", contractID);
       if (tableKey !== "contract") {
@@ -129,13 +133,15 @@ module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
             const data = await file.get(tempFilePath, {
               exactPath: true,
               returnBuffer: true,
+              stage: env.CURRENT_ALIAS,
             });
             await file.upload(path, data, {
               contentType: type,
+              stage: env.CURRENT_ALIAS,
             });
           }
           const uuid = makeid(5);
-          await sql("mysql", { useCustomRole: false })
+          await sql("mysql", { useCustomRole: false, stage: env.CURRENT_ALIAS })
             .insert(tables["change"].name, [
               fn.getChange_Object({
                 tableKey,
@@ -145,13 +151,16 @@ module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
               }),
             ])
             .run();
-          return await sql("mysql", { useCustomRole: false })
+          return await sql("mysql", {
+            useCustomRole: false,
+            stage: env.CURRENT_ALIAS,
+          })
             .insert(tables[tableKey].name, { ...after, id: uuid })
             .run();
         }
         case "deleted": {
           // update deleted: true;
-          await sql("mysql", { useCustomRole: false })
+          await sql("mysql", { useCustomRole: false, stage: env.CURRENT_ALIAS })
             .insert(tables["change"].name, [
               fn.getChange_Object({
                 tableKey,
@@ -161,7 +170,10 @@ module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
               }),
             ])
             .run();
-          return await sql("mysql", { useCustomRole: false })
+          return await sql("mysql", {
+            useCustomRole: false,
+            stage: env.CURRENT_ALIAS,
+          })
             .update(tables[tableKey].name, { deleted: true })
             .where("contract_id", "like", contractID)
             .where("id", "like", before.id)
@@ -170,7 +182,10 @@ module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
         default: {
           // type: "changed"; update changed
           if (tableKey === "contract") {
-            await sql("mysql", { useCustomRole: false })
+            await sql("mysql", {
+              useCustomRole: false,
+              stage: env.CURRENT_ALIAS,
+            })
               .insert(tables["change"].name, [
                 fn.getChange_Object({
                   tableKey,
@@ -180,12 +195,18 @@ module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
                 }),
               ])
               .run();
-            return await sql("mysql", { useCustomRole: false })
+            return await sql("mysql", {
+              useCustomRole: false,
+              stage: env.CURRENT_ALIAS,
+            })
               .update(tables[tableKey].name, after)
               .where({ id: contractID })
               .run();
           } else {
-            await sql("mysql", { useCustomRole: false })
+            await sql("mysql", {
+              useCustomRole: false,
+              stage: env.CURRENT_ALIAS,
+            })
               .insert(tables["change"].name, [
                 fn.getChange_Object({
                   tableKey,
@@ -195,7 +216,10 @@ module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
                 }),
               ])
               .run();
-            return await sql("mysql", { useCustomRole: false })
+            return await sql("mysql", {
+              useCustomRole: false,
+              stage: env.CURRENT_ALIAS,
+            })
               .update(tables[tableKey].name, after)
               .where({ contract_id: contractID, id: before.id })
               .run();
@@ -209,7 +233,10 @@ module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
   await Promise.all(
     tableList.map(async (tableKey) => {
       const searchKey = tableKey === "contract" ? "id" : "contract_id";
-      const queryBuilder = sql("mysql", { useCustomRole: false })
+      const queryBuilder = sql("mysql", {
+        useCustomRole: false,
+        stage: env.CURRENT_ALIAS,
+      })
         .select(tables[tableKey].name)
         .where(searchKey, "like", contractID);
       if (tableKey !== "contract") {
@@ -226,7 +253,8 @@ module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
     })
   );
 
-  const { contract, party, bill, cost_object, attachment } = updateContract;
+  const { contract, party, bill, cost_object, wbs, attachment } =
+    updateContract;
   //ref_doc
 
   draft.response.body = {
@@ -236,6 +264,7 @@ module.exports = async (draft, { sql, tryit, fn, makeid, file }) => {
       contractID: origin.contractID,
       partyList: party,
       costObjectList: cost_object,
+      wbsList: wbs,
       billList: bill,
       attachmentList: attachment,
     },

@@ -1,8 +1,11 @@
-module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
+module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
   const { tables, newData } = draft.json;
   const { contractID } = newData;
 
-  const changedData = await sql("mysql", { useCustomRole: false })
+  const changedData = await sql("mysql", {
+    useCustomRole: false,
+    stage: env.CURRENT_ALIAS,
+  })
     .select(tables["change"].name)
     .where("row_key", "like", `${contractID}`)
     .orWhere("row_key", "like", `${contractID}%`)
@@ -33,6 +36,13 @@ module.exports = async (draft, { sql, tryit, fn, dayjs }) => {
         })),
       costObjectList: chagedList
         .filter((list) => list.type === "cost_object")
+        .map(({ changed_at, changed_by, content }) => ({
+          changed_at: fn.convDate(dayjs, changed_at),
+          changed_by,
+          content: JSON.stringify(content),
+        })),
+      wbsList: chagedList
+        .filter((list) => list.type === "wbs")
         .map(({ changed_at, changed_by, content }) => ({
           changed_at: fn.convDate(dayjs, changed_at),
           changed_by,
