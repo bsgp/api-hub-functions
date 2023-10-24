@@ -74,6 +74,8 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
                 text: ZCNTS1,
                 ref_id: ZZCDEZ,
                 name: ZCNTS1,
+                gl_group_id: args.ZCNTS2,
+                gl_group_text: args.ZCNTS3,
                 prdnt_name: args.ZCNTS9,
                 id_no: args.ZCNTS6,
                 biz_no: args.ZCNTS5,
