@@ -84,8 +84,8 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
                 tel: "",
               })).sort(
                 (al, be) =>
-                  Number(al.key.replace(/.|,|-/, "")) -
-                  Number(be.key.replace(/.|,|-/, ""))
+                  Number(al.key.replace(/\.|,|-/g, "")) -
+                  Number(be.key.replace(/\.|,|-/g, ""))
               ),
             };
             break;
@@ -135,8 +135,8 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
             name: KTEXT,
           })).sort(
             (al, be) =>
-              Number(al.key.replace(/.|,|-/, "")) -
-              Number(be.key.replace(/.|,|-/, ""))
+              Number(al.key.replace(/\.|,|-/g, "")) -
+              Number(be.key.replace(/\.|,|-/g, ""))
           ),
         };
         break;
@@ -151,8 +151,8 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
             name: POST1,
           })).sort(
             (al, be) =>
-              Number(al.key.replace(/.|,|-/, "")) -
-              Number(be.key.replace(/.|,|-/, ""))
+              Number(al.key.replace(/\.|,|-/g, "")) -
+              Number(be.key.replace(/\.|,|-/g, ""))
           ),
         };
         break;
@@ -168,8 +168,8 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
             maktx: MAKTX,
           })).sort(
             (al, be) =>
-              Number(al.key.replace(/.|,|-/, "")) -
-              Number(be.key.replace(/.|,|-/, ""))
+              Number(al.key.replace(/\.|,|-/g, "")) -
+              Number(be.key.replace(/\.|,|-/g, ""))
           ),
         };
         break;
