@@ -69,15 +69,16 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
           case "FI03": {
             draft.response.body = {
               ...result.body.result,
-              list: ET_DATA.map(({ ZZCDEZ, ZCNTS1, ...args }) => ({
+              list: ET_DATA.map(({ ZZCDEZ, ZCNTS1, ZCNTS2, ...args }) => ({
                 key: ZZCDEZ,
                 text: ZCNTS1,
                 ref_id: ZZCDEZ,
                 name: ZCNTS1,
-                gl_group_id: args.ZCNTS2,
+                gl_group_id: ZCNTS2,
                 gl_group_text: args.ZCNTS3,
                 prdnt_name: args.ZCNTS9,
-                id_no: args.ZCNTS6,
+                // gl_group_id가 "3000"인 경우 id_no: ZCNTS5 (그 외:ZCNTS6)
+                id_no: (ZCNTS2 === "3000" && args.ZCNTS5) || args.ZCNTS6,
                 biz_no: args.ZCNTS5,
                 land_id: args.ZCNTS4,
                 address: [args.ZCNTS13, args.ZCNTS14].filter(Boolean).join(" "),
