@@ -42,8 +42,8 @@ module.exports.contract =
     table.decimal("dmbtr_supply", 23, 2).defaultTo(0); // 공급가액
     table.decimal("dmbtr_vat", 23, 2).defaultTo(0); // 부과세
     table.decimal("dmbtr", 23, 2).defaultTo(0); // curr_key와 매칭되는 금액
-    table.decimal("dmbtr_supply_local", 23, 2).defaultTo(0);
-    table.decimal("dmbtr_vat_local", 23, 2).defaultTo(0);
+    table.decimal("dmbtr_supply_local", 23, 2).defaultTo(0); // 로컬 공급가액
+    table.decimal("dmbtr_vat_local", 23, 2).defaultTo(0); // 로컬 부과세
     table.decimal("dmbtr_local", 23, 2).defaultTo(0);
     table.string("curr_key", 5).defaultTo("");
     // KRW,USD,JPY..(기본값: 로그인 회사코드 기본 통화)
