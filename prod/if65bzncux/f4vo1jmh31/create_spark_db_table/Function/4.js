@@ -19,25 +19,25 @@ module.exports = async (draft, { fn, sql, env, makeid }) => {
       const result = await mysql.table
         .create(spec.name, fn[tableKey]({ mysql, makeid }))
         .run();
-      if (result.statusCode !== 200) {
-        if (spec.desc === "Contract info DB table") {
-          const alterResult = await mysql.table
-            .alter(spec.name, function (table) {
-              table
-                .decimal("dmbtr_supply_local", 23, 2)
-                .defaultTo(0)
-                .comment("로컬공급가액");
-              table
-                .decimal("dmbtr_vat_local", 23, 2)
-                .defaultTo(0)
-                .comment("로컬부가세");
-            })
-            .run();
-          draft.response.body[spec.name] = alterResult;
-        }
-      } else
-        draft.response.body[spec.name] =
-          result.statusCode === 200 ? "Succeed" : result.body;
+      // if (result.statusCode !== 200) {
+      //   if (spec.desc === "Contract info DB table") {
+      //     const alterResult = await mysql.table
+      //       .alter(spec.name, function (table) {
+      //         table
+      //           .decimal("dmbtr_supply_local", 23, 2)
+      //           .defaultTo(0)
+      //           .comment("로컬공급가액");
+      //         table
+      //           .decimal("dmbtr_vat_local", 23, 2)
+      //           .defaultTo(0)
+      //           .comment("로컬부가세");
+      //       })
+      //       .run();
+      //     draft.response.body[spec.name] = alterResult;
+      //   }
+      // } else
+      draft.response.body[spec.name] =
+        result.statusCode === 200 ? "Succeed" : result.body;
       return true;
     })
   );
