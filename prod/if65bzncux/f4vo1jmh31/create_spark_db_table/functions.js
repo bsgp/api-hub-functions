@@ -185,6 +185,8 @@ module.exports.party =
     table.string("land_id", 2).defaultTo("").comment("국가키");
     table.string("address", 100).defaultTo("").comment("주소");
     table.string("tel", 20).defaultTo("").comment("연락처");
+    table.string("gl_group_id", 20).defaultTo("").comment("계정그룹");
+    table.string("gl_group_text", 20).defaultTo("").comment("계정그룹텍스트");
 
     table.primary(["contract_id", "id"]);
   };
