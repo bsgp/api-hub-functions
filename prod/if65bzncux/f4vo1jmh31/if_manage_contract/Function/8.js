@@ -79,6 +79,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
       };
       break;
     }
+    case "IF-CT-115": {
+      break;
+    }
     default: {
       draft.response.body = {
         request: newData,
