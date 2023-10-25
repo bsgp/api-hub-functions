@@ -97,13 +97,27 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
       break;
     }
     case "IF-CT-115": {
-      // const queryBuilder = sql("mysql", {
-      //   useCustomRole: false,
-      //   stage: env.CURRENT_ALIAS,
-      // }).select(tables.contract.name);
+      const queryBuilder = sql("mysql", {
+        useCustomRole: false,
+        stage: env.CURRENT_ALIAS,
+      }).select(tables.cost_object.name);
+
+      if (newData.post_date[0] && newData.post_date[1]) {
+        const from = fn.convDate(dayjs, newData.post_date[0], "YYYYMMDD");
+        const to = fn.convDate(dayjs, newData.post_date[1], "YYYYMMDD");
+        queryBuilder.whereBetween("prod_date", [from, to]);
+      }
+
+      const queryResult = await queryBuilder.run();
+      const list = tryit(
+        () => queryResult.body.list.map((it) => ({ ...it })),
+        []
+      );
+
       draft.response.body = {
         request: newData,
-        list: [],
+        list,
+        // list: [],
         E_STATUS: "S",
         E_MESSAGE: `IF-CT-115`,
       };
