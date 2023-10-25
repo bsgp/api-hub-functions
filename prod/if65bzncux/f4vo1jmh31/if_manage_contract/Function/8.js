@@ -50,7 +50,11 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           );
         }
         if (newData.contractName) {
-          queryBuilder.where("name", "like", `%${newData.contractName}%`);
+          queryBuilder.where(
+            `${tables.contract.name}.name`,
+            "like",
+            `%${newData.contractName}%`
+          );
         }
       }
 
