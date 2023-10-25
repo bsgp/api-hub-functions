@@ -105,7 +105,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
         .select(
           `${tables.cost_object.name}.*`,
           `${tables.contract.name}.id`,
-          `${tables.contract.name}.name as contract_name`
+          `${tables.contract.name}.name as contract_name`,
+          `${tables.contract.name}.renewal_ind`
         )
         .leftJoin(
           tables.contract.name,
