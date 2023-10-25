@@ -30,32 +30,31 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           "like",
           `%${newData.contractID}%`
         );
-      } else {
-        if (newData.partyID) {
-          queryBuilder.where("ref_id", "like", newData.partyID);
-        }
-        if (newData.contractDate[0] && newData.contractDate[1]) {
-          const from = fn.convDate(dayjs, newData.contractDate[0], "YYYYMMDD");
-          const to = fn.convDate(dayjs, newData.contractDate[1], "YYYYMMDD");
-          queryBuilder.whereBetween("prod_date", [from, to]);
-        }
-        if (newData.contractType) {
-          queryBuilder.where(
-            `${tables.contract.name}.type`,
-            "like",
-            newData.contractType
-          );
-        }
-        if (newData.contractStatus) {
-          queryBuilder.where("status", "like", newData.contractStatus);
-        }
-        if (newData.contractName) {
-          queryBuilder.where(
-            `${tables.contract.name}.name`,
-            "like",
-            `%${newData.contractName}%`
-          );
-        }
+      }
+      if (newData.partyID) {
+        queryBuilder.where("ref_id", "like", newData.partyID);
+      }
+      if (newData.contractDate[0] && newData.contractDate[1]) {
+        const from = fn.convDate(dayjs, newData.contractDate[0], "YYYYMMDD");
+        const to = fn.convDate(dayjs, newData.contractDate[1], "YYYYMMDD");
+        queryBuilder.whereBetween("prod_date", [from, to]);
+      }
+      if (newData.contractType) {
+        queryBuilder.where(
+          `${tables.contract.name}.type`,
+          "like",
+          newData.contractType
+        );
+      }
+      if (newData.contractStatus) {
+        queryBuilder.where("status", "like", newData.contractStatus);
+      }
+      if (newData.contractName) {
+        queryBuilder.where(
+          `${tables.contract.name}.name`,
+          "like",
+          `%${newData.contractName}%`
+        );
       }
 
       const queryResult = await queryBuilder.run();
