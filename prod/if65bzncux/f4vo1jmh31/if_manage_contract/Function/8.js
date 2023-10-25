@@ -33,7 +33,11 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           queryBuilder.whereBetween("prod_date", [from, to]);
         }
         if (newData.contractType) {
-          queryBuilder.where("type", "like", newData.contractType);
+          queryBuilder.where(
+            `${tables.contract.name}.type`,
+            "like",
+            newData.contractType
+          );
         }
         if (newData.contractStatus) {
           queryBuilder.where("status", "like", newData.contractStatus);
