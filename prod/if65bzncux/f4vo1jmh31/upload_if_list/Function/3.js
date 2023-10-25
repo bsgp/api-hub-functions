@@ -78,6 +78,12 @@ module.exports = async (draft, { file, env }) => {
       TriggeredBy: "TIMESHEET",
       Path: "/rfc",
     },
+    ["IF-CO-037"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_CCTR_LIST",
+      TriggeredBy: "BSGON",
+      Path: "/rfc",
+    },
     ["IF-CT-007"]: {
       Type: "API",
       Name: "CT_TEMPLATE_LIST",
