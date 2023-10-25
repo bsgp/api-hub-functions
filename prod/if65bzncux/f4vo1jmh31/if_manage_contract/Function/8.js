@@ -2,7 +2,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
   const { tables, newData, interfaceID } = draft.json;
 
   switch (interfaceID) {
-    case "": {
+    case "IF-CT-105": {
       const queryBuilder = sql("mysql", {
         useCustomRole: false,
         stage: env.CURRENT_ALIAS,
