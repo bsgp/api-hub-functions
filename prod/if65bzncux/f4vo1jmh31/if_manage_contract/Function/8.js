@@ -106,13 +106,24 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           `${tables.cost_object.name}.*`,
           `${tables.contract.name}.id`,
           `${tables.contract.name}.name as contract_name`,
-          `${tables.contract.name}.renewal_ind`
+          `${tables.contract.name}.renewal_ind`,
+          `${tables.party.name}.contract_id`,
+          `${tables.party.name}.ref_id`,
+          `${tables.party.name}.stems10`,
+          `${tables.party.name}.name as party_name`,
+          `${tables.party.name}.deleted as party_deleted`
         )
         .leftJoin(
           tables.contract.name,
           `${tables.cost_object.name}.contract_id`,
           "=",
           `${tables.contract.name}.id`
+        )
+        .leftJoin(
+          tables.party.name,
+          `${tables.cost_object.name}.contract_id`,
+          "=",
+          `${tables.party.name}.contract_id`
         );
 
       if (newData.post_date[0] && newData.post_date[1]) {
