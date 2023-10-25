@@ -117,7 +117,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
       if (newData.post_date[0] && newData.post_date[1]) {
         const from = fn.convDate(dayjs, newData.post_date[0], "YYYYMMDD");
         const to = fn.convDate(dayjs, newData.post_date[1], "YYYYMMDD");
-        queryBuilder.whereBetween("prod_date", [from, to]);
+        queryBuilder.whereBetween("post_date", [from, to]);
       }
 
       const queryResult = await queryBuilder.run();
