@@ -2,6 +2,7 @@ module.exports = async (draft, { lib, file, env, request }) => {
   const { clone } = lib;
   draft.json.newData = clone(request.body.Data);
   draft.json.userID = request.body.Function.UserId;
+  draft.json.InterfaceId = request.body.InterfaceId;
 
   const tables = await file.get("config/tables.json", {
     gziped: true,
