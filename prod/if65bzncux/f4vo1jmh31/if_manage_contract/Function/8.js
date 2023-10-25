@@ -127,6 +127,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
         );
 
       queryBuilder.where("stems10", "like", "1");
+      queryBuilder.where(`${tables.contract.name}.type`, "like", "S");
       if (newData.post_date[0] && newData.post_date[1]) {
         const from = fn.convDate(dayjs, newData.post_date[0], "YYYYMMDD");
         const to = fn.convDate(dayjs, newData.post_date[1], "YYYYMMDD");
