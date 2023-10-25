@@ -81,7 +81,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             if (type === "S" && stems10 === "1") {
               name = party_name;
             }
-            return { ...args, party_name: name };
+            return { ...args, type, party_name: name };
           }),
         test: fn.convDate(dayjs, newData.contractDate[0], "YYYYMMDD", 9),
         E_STATUS: "S",
