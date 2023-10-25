@@ -24,9 +24,16 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
         );
       // .orderBy(["id",{column:`${tables.party.name}.stems10`,order:"desc"}]);
 
-      if (newData.partyID) {
-        queryBuilder.where("ref_id", "like", newData.partyID);
+      if (newData.contractID) {
+        queryBuilder.where(
+          `${tables.contract.name}.id`,
+          "like",
+          `%${newData.contractID}%`
+        );
       } else {
+        if (newData.partyID) {
+          queryBuilder.where("ref_id", "like", newData.partyID);
+        }
         if (newData.contractDate[0] && newData.contractDate[1]) {
           const from = fn.convDate(dayjs, newData.contractDate[0], "YYYYMMDD");
           const to = fn.convDate(dayjs, newData.contractDate[1], "YYYYMMDD");
@@ -41,13 +48,6 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
         }
         if (newData.contractStatus) {
           queryBuilder.where("status", "like", newData.contractStatus);
-        }
-        if (newData.contractID) {
-          queryBuilder.where(
-            `${tables.contract.name}.id`,
-            "like",
-            `%${newData.contractID}%`
-          );
         }
         if (newData.contractName) {
           queryBuilder.where(
@@ -98,6 +98,10 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
       break;
     }
     case "IF-CT-115": {
+      // const queryBuilder = sql("mysql", {
+      //   useCustomRole: false,
+      //   stage: env.CURRENT_ALIAS,
+      // }).select(tables.contract.name);
       draft.response.body = {
         request: newData,
         list: [],
