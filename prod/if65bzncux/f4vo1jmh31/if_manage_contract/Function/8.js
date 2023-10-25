@@ -7,7 +7,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
         useCustomRole: false,
         stage: env.CURRENT_ALIAS,
       })
-        // .select(tables.contract.name)
+        .select(tables.contract.name)
         .select(
           `${tables.contract.name}.*`,
           `${tables.party.name}.contract_id`,
