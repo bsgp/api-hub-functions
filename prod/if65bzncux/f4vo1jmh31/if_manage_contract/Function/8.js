@@ -80,6 +80,12 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
       break;
     }
     case "IF-CT-115": {
+      draft.response.body = {
+        request: newData,
+        list: [],
+        E_STATUS: "S",
+        E_MESSAGE: `IF-CT-115`,
+      };
       break;
     }
     default: {
