@@ -73,10 +73,16 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             } else acc.push(curr);
             return acc;
           }, [])
-          .map(({ stems10, party_name, ...args }) => ({
-            ...args,
-            party_name: stems10 === "2" ? party_name : "",
-          })),
+          .map(({ party_name, stems10, type, ...args }) => {
+            let name = "";
+            if (type === "P" && stems10 === "2") {
+              name = party_name;
+            }
+            if (type === "S" && stems10 === "1") {
+              name = party_name;
+            }
+            return { ...args, party_name: name };
+          }),
         test: fn.convDate(dayjs, newData.contractDate[0], "YYYYMMDD", 9),
         E_STATUS: "S",
         E_MESSAGE: `조회가\n완료되었습니다`,
