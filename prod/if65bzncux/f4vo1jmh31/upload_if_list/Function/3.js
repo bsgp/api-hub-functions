@@ -226,6 +226,12 @@ module.exports = async (draft, { file, env }) => {
       RfcName: "",
       TriggeredBy: "SUPPORT",
     },
+    ["IF-CT-115"]: {
+      Type: "DB",
+      Name: "GET_BILLING_LIST_FROM_DB",
+      RfcName: "",
+      TriggeredBy: "SUPPORT",
+    },
     ["IF-FU-101"]: {
       Type: "FU",
       Name: "GET_FILE_UPLOAD_URL",
