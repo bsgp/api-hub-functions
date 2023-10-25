@@ -63,7 +63,11 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           .reduce((acc, curr) => {
             const isExist = acc.findIndex(({ id }) => id === curr.id);
             if (isExist >= 0) {
-              if (curr.stems10 === "2" && !curr.party_deleted) {
+              const { type, stems10, party_deleted } = curr;
+              if (type === "P" && stems10 === "2" && !party_deleted) {
+                acc[isExist] = curr;
+              }
+              if (type === "S" && stems10 === "1" && !party_deleted) {
                 acc[isExist] = curr;
               }
             } else acc.push(curr);
