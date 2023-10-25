@@ -100,7 +100,19 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
       const queryBuilder = sql("mysql", {
         useCustomRole: false,
         stage: env.CURRENT_ALIAS,
-      }).select(tables.cost_object.name);
+      })
+        .select(tables.cost_object.name)
+        .select(
+          `${tables.cost_object.name}.*`,
+          `${tables.contract.name}.id`,
+          `${tables.contract.name}.name as contract_name`
+        )
+        .leftJoin(
+          tables.party.name,
+          `${tables.cost_object.name}.contract_id`,
+          "=",
+          `${tables.contract.name}.id`
+        );
 
       if (newData.post_date[0] && newData.post_date[1]) {
         const from = fn.convDate(dayjs, newData.post_date[0], "YYYYMMDD");
