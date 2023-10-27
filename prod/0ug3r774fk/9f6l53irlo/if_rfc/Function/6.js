@@ -315,7 +315,14 @@ module.exports = async (draft, { request }) => {
             MSAUS: !!ES_IMPORT.MSAUS,
           },
           tables: [
-            { id: "planList", items: [] },
+            {
+              id: "planList",
+              items: [].map(({ ARBEI_INPUT, ANZZL_INPUT, GRUND }) => ({
+                ARBEI_INPUT,
+                ANZZL_INPUT,
+                GRUND,
+              })),
+            },
             { id: "measureList", items: [] },
             { id: "component", items: [] },
             { id: "additionalPlan", items: [] },
