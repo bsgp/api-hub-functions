@@ -323,10 +323,32 @@ module.exports = async (draft, { request }) => {
                 GRUND,
               })),
             },
-            { id: "measureList", items: [] },
-            { id: "component", items: [] },
-            { id: "additionalPlan", items: [] },
-            { id: "addComp", items: [] },
+            {
+              id: "measureList",
+              items: [].map(({ DESIC_INPUT, GRUND }) => ({
+                DESIC_INPUT,
+                GRUND,
+              })),
+            },
+            {
+              id: "component",
+              items: [].map(({ LGOBE, QTY_INPUT }) => ({
+                LGOBE,
+                QTY_INPUT,
+              })),
+            },
+            {
+              id: "additionalPlan",
+              items: [].map(({ TEXT }) => ({
+                TEXT,
+              })),
+            },
+            {
+              id: "addComp",
+              items: [].map(({ LTXA1_C }) => ({
+                LTXA1_C,
+              })),
+            },
           ],
         },
       };
