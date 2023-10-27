@@ -140,6 +140,13 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           `%${newData.contractID}%`
         );
       }
+      if (newData.partyID) {
+        queryBuilder.where(
+          `${tables.party.name}.ref_id`,
+          "like",
+          newData.partyID
+        );
+      }
 
       const queryResult = await queryBuilder.run();
       const list = tryit(
