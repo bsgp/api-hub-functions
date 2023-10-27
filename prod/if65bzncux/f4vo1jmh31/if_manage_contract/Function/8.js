@@ -142,8 +142,16 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
 
       draft.response.body = {
         request: newData,
-        list,
-        // list: [],
+        list: list.sort((al, be) => {
+          if (al.contract_id === be.contract_id) {
+            return Number(al.index) - Number(be.index);
+          } else
+            return (
+              Number(al.contract_id.replace(/[A-z]/g, "")) -
+              Number(be.contract_id.replace(/[A-z]/g, ""))
+            );
+        }),
+
         E_STATUS: "S",
         E_MESSAGE: `IF-CT-115`,
       };
