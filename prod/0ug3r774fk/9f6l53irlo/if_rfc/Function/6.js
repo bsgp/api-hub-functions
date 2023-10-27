@@ -332,22 +332,15 @@ module.exports = async (draft, { request }) => {
             },
             {
               id: "component",
-              items: [].map(({ LGOBE, QTY_INPUT }) => ({
-                LGOBE,
-                QTY_INPUT,
-              })),
+              items: [].map(({ LGOBE, QTY_INPUT }) => ({ LGOBE, QTY_INPUT })),
             },
             {
               id: "additionalPlan",
-              items: [].map(({ TEXT }) => ({
-                TEXT,
-              })),
+              items: [].map(({ TEXT }) => ({ TEXT })),
             },
             {
               id: "addComp",
-              items: [].map(({ LTXA1_C }) => ({
-                LTXA1_C,
-              })),
+              items: [].map(({ LTXA1_C }) => ({ LTXA1_C })),
             },
           ],
         },
