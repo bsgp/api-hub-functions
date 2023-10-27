@@ -133,6 +133,13 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
         const to = fn.convDate(dayjs, newData.post_date[1], "YYYYMMDD");
         queryBuilder.whereBetween("post_date", [from, to]);
       }
+      if (newData.contractID) {
+        queryBuilder.where(
+          `${tables.contract.name}.id`,
+          "like",
+          `%${newData.contractID}%`
+        );
+      }
 
       const queryResult = await queryBuilder.run();
       const list = tryit(
