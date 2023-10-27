@@ -301,6 +301,30 @@ module.exports = async (draft, { request }) => {
           draft.response.body.ES_RETURN.MESSAGE || "조회가 완료되었습니다",
       };
       break;
+    case "IF-PMM-ORD07": {
+      const ES_IMPORT = { ...draft.response.body.ES_IMPORT };
+      draft.response.body = {
+        ...draft.response.body,
+        activity: {
+          form: {
+            QMNUM: ES_IMPORT.QMNUM,
+            AUSVN: ES_IMPORT.AUSVN,
+            AUZTV: ES_IMPORT.AUZTV,
+            AUSBS: ES_IMPORT.AUSBS,
+            AUZTB: ES_IMPORT.AUZTB,
+            MSAUS: !!ES_IMPORT.MSAUS,
+          },
+          tables: [
+            { id: "planList", items: [] },
+            { id: "measureList", items: [] },
+            { id: "component", items: [] },
+            { id: "additionalPlan", items: [] },
+            { id: "addComp", items: [] },
+          ],
+        },
+      };
+      break;
+    }
     case "IF-PMM-ORD09":
       draft.response.body = {
         ...draft.response.body,
