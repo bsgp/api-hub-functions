@@ -155,10 +155,10 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
         );
       }
       if (newData.cost_object_id) {
-        queryBuilder.where("status", "like", newData.cost_object_id);
+        queryBuilder.where("cost_object_id", "like", newData.cost_object_id);
       }
       if (newData.cost_type_id) {
-        queryBuilder.where("status", "like", newData.cost_type_id);
+        queryBuilder.where("cost_type_id", "like", newData.cost_type_id);
       }
 
       const queryResult = await queryBuilder.run();
