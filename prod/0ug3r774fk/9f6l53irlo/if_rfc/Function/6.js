@@ -306,12 +306,9 @@ module.exports = async (draft, { request }) => {
         draft.response.body.ES_IMPORT;
       const { IT_OPERATION, IT_MEASURING_P } = draft.response.body;
       const { IT_COMPONENT, IT_ADDJOB, IT_ADDFILE } = draft.response.body;
-      const { IT_MALFUNCTION_5, IT_MALFUNCTION_A } = draft.response.body;
-      const { IT_MALFUNCTION_B, IT_MALFUNCTION_C } = draft.response.body;
-      const katalogStack = IT_MALFUNCTION_5.concat(
-        IT_MALFUNCTION_A,
-        IT_MALFUNCTION_B,
-        IT_MALFUNCTION_C
+
+      const katalogStack = ["5", "A", "B", "C"].map(
+        (key) => draft.response.body[["IT_MALFUNCTION", key].join("_")]
       );
 
       const list = [IT_OPERATION, IT_MEASURING_P].concat(
@@ -348,7 +345,7 @@ module.exports = async (draft, { request }) => {
         ...draft.response.body,
         E_STATUS,
         E_MESSAGE,
-        list,
+        katalogStack,
         activity: {
           form,
           tables: [
