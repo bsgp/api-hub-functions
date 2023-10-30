@@ -313,6 +313,13 @@ module.exports = async (draft, { request }) => {
       const IT_MALFUNCTION_A = draft.response.body.IT_MALFUNCTION_A;
       const IT_MALFUNCTION_B = draft.response.body.IT_MALFUNCTION_B;
       const IT_MALFUNCTION_C = draft.response.body.IT_MALFUNCTION_C;
+      const list = [
+        IT_OPERATION,
+        IT_MEASURING_P,
+        IT_COMPONENT,
+        IT_ADDJOB,
+        IT_ADDFILE,
+      ];
       let E_STATUS = "F";
       let E_MESSAGE = "저장된 내역이 없습니다";
       if (QMNUM || AUSVN || AUZTV || AUSBS || AUZTB || !!MSAUS) {
@@ -320,13 +327,7 @@ module.exports = async (draft, { request }) => {
         E_MESSAGE = "임시저장 된 내역이 있습니다.\n불러오시겠습니까?";
       }
       if (
-        ([
-          IT_OPERATION,
-          IT_MEASURING_P,
-          IT_COMPONENT,
-          IT_ADDJOB,
-          IT_ADDFILE,
-        ].find((table) => table.length > 0),
+        (list.find((table) => table.length > 0),
         IT_MALFUNCTION_5.length > 0 ||
           IT_MALFUNCTION_A.length > 0 ||
           IT_MALFUNCTION_B.length > 0 ||
