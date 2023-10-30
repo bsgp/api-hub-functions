@@ -307,9 +307,23 @@ module.exports = async (draft, { request }) => {
       const { IT_OPERATION, IT_MEASURING_P } = draft.response.body;
       const { IT_COMPONENT, IT_ADDJOB, IT_ADDFILE } = draft.response.body;
 
-      const katalogStack = ["5", "A", "B", "C"].map(
-        (key) => draft.response.body[["IT_MALFUNCTION", key].join("_")]
-      );
+      const katalogStack = ["5", "A", "B", "C"].reduce((stack, type) => {
+        const katalog = draft.response.body[["IT_MALFUNCTION", type].join("_")];
+        katalog.forEach((kat, idx) => {
+          if (stack[idx]) {
+            ["CODE", "CODEGRUPPE"].forEach((key) => {
+              stack[idx][["ET_DATA", type, key].join("_")] = kat[key];
+            }); // "KURZTEXT_T"
+          } else {
+            const obj = {};
+            ["CODE", "CODEGRUPPE"].forEach((key) => {
+              obj[["ET_DATA", type, key].join("_")] = kat[key];
+            });
+            stack.push(obj);
+          }
+        });
+        return stack;
+      }, []);
 
       const list = [IT_OPERATION, IT_MEASURING_P].concat(
         [IT_COMPONENT, IT_ADDJOB, IT_ADDFILE],
