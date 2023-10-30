@@ -315,13 +315,11 @@ module.exports = async (draft, { request }) => {
       const IT_MALFUNCTION_C = draft.response.body.IT_MALFUNCTION_C;
       let E_STATUS = "F";
       let E_MESSAGE = "저장된 내역이 없습니다";
+      if (QMNUM || AUSVN || AUZTV || AUSBS || AUZTB || !!MSAUS) {
+        E_STATUS = "S";
+        E_MESSAGE = "임시저장 된 내역이 있습니다.\n불러오시겠습니까?";
+      }
       if (
-        QMNUM ||
-        AUSVN ||
-        AUZTV ||
-        AUSBS ||
-        AUZTB ||
-        !!MSAUS ||
         IT_OPERATION.length > 0 ||
         IT_MEASURING_P.length > 0 ||
         IT_COMPONENT.length > 0 ||
