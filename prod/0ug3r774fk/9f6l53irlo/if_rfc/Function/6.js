@@ -303,6 +303,12 @@ module.exports = async (draft, { request }) => {
       break;
     case "IF-PMM-ORD07": {
       const ES_IMPORT = { ...draft.response.body.ES_IMPORT };
+      const IT_OPERATION = draft.response.body.IT_OPERATION;
+      const IT_MEASURING_P = draft.response.body.IT_MEASURING_P;
+      const IT_COMPONENT = draft.response.body.IT_COMPONENT;
+      const IT_ADDJOB = draft.response.body.IT_ADDJOB;
+      const IT_ADDFILE = draft.response.body.IT_ADDFILE;
+
       draft.response.body = {
         ...draft.response.body,
         activity: {
@@ -317,32 +323,45 @@ module.exports = async (draft, { request }) => {
           tables: [
             {
               id: "planList",
-              items: [].map(({ ARBEI_INPUT, ANZZL_INPUT, GRUND }) => ({
-                ARBEI_INPUT,
-                ANZZL_INPUT,
+              items: IT_OPERATION.map(({ LTXA1, ARBEI, ANZZL, GRUND }) => ({
+                LTXA1,
+                ARBEI_INPUT: ARBEI,
+                ANZZL_INPUT: ANZZL,
                 GRUND,
               })),
             },
             {
               id: "measureList",
-              items: [].map(({ DESIC_INPUT, GRUND }) => ({
-                DESIC_INPUT,
+              items: IT_MEASURING_P.map(({ DESIC, GRUND }) => ({
+                DESIC_INPUT: DESIC,
                 GRUND,
               })),
             },
             {
               id: "component",
-              items: [].map(({ LGOBE, QTY_INPUT }) => ({ LGOBE, QTY_INPUT })),
+              items: IT_COMPONENT.map(({ LTXA1, LGORT, LGOBE, BDMNG }) => ({
+                LTXA1,
+                LGORT,
+                LGOBE,
+                QTY_INPUT: BDMNG,
+              })),
             },
             {
               id: "additionalPlan",
-              items: [].map(({ TEXT }) => ({ TEXT })),
+              items: IT_ADDJOB.map(({ TDLINE }) => ({
+                TEXT: TDLINE,
+              })),
             },
             {
               id: "addComp",
-              items: [].map(({ LTXA1_C }) => ({ LTXA1_C })),
+              items: IT_OPERATION.map(({ VORNR, LTXA1, LTXA1_C }) => ({
+                VORNR,
+                LTXA1,
+                LTXA1_C,
+              })),
             },
           ],
+          attachments: IT_ADDFILE.map((URL) => ({ attach: URL })),
         },
       };
       break;
