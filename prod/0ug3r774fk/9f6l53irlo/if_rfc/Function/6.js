@@ -340,7 +340,9 @@ module.exports = async (draft, { request }) => {
         E_MESSAGE = "임시저장 된 내역이 있습니다.\n불러오시겠습니까?";
       }
 
-      const form = { QMNUM, AUSVN, AUZTV, AUSBS, AUZTB, MSAUS: !!MSAUS };
+      const form = { QMNUM, AUSVN, AUSBS, MSAUS: !!MSAUS };
+      form.AUZTV = ((AUZTV || "").match(/..?/g) || []).join(":");
+      form.AUZTB = ((AUZTB || "").match(/..?/g) || []).join(":");
 
       const pItems = IT_OPERATION.map(({ LTXA1, ARBEI, ANZZL, GRUND }) => {
         return { LTXA1, ARBEI_INPUT: ARBEI, ANZZL_INPUT: ANZZL, GRUND };
