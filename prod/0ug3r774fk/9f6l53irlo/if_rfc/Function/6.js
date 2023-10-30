@@ -308,6 +308,10 @@ module.exports = async (draft, { request }) => {
       const IT_COMPONENT = draft.response.body.IT_COMPONENT;
       const IT_ADDJOB = draft.response.body.IT_ADDJOB;
       const IT_ADDFILE = draft.response.body.IT_ADDFILE;
+      const IT_MALFUNCTION_5 = draft.response.body.IT_MALFUNCTION_5;
+      const IT_MALFUNCTION_A = draft.response.body.IT_MALFUNCTION_A;
+      const IT_MALFUNCTION_B = draft.response.body.IT_MALFUNCTION_B;
+      const IT_MALFUNCTION_C = draft.response.body.IT_MALFUNCTION_C;
       let E_STATUS = "F";
       let E_MESSAGE = "저장된 내역이 없습니다";
       if (
@@ -318,10 +322,14 @@ module.exports = async (draft, { request }) => {
         ES_IMPORT.AUZTB ||
         !!ES_IMPORT.MSAUS ||
         IT_OPERATION.length > 0 ||
-        IT_OPERATION.length > 0 ||
-        IT_OPERATION.length > 0 ||
-        IT_OPERATION.length > 0 ||
-        IT_OPERATION.length > 0
+        IT_MEASURING_P.length > 0 ||
+        IT_COMPONENT.length > 0 ||
+        IT_ADDJOB.length > 0 ||
+        IT_ADDFILE.length > 0 ||
+        IT_MALFUNCTION_5.length > 0 ||
+        IT_MALFUNCTION_A.length > 0 ||
+        IT_MALFUNCTION_B.length > 0 ||
+        IT_MALFUNCTION_C.length > 0
       ) {
         E_STATUS = "S";
         E_MESSAGE = "임시저장 된\n내역이 있습니다\n불러오시겠습니까?";
