@@ -341,8 +341,8 @@ module.exports = async (draft, { request }) => {
       }
 
       const form = { QMNUM, AUSVN, AUSBS, MSAUS: !!MSAUS };
-      // form.AUZTV = (AUZTV || "").match(/..?/g).join(":");
-      // form.AUZTB = (AUZTB || "").match(/..?/g).join(":");
+      form.AUZTV = ((AUZTV || "").match(/..?/g) || []).join(":");
+      form.AUZTB = ((AUZTB || "").match(/..?/g) || []).join(":");
 
       const pItems = IT_OPERATION.map(({ LTXA1, ARBEI, ANZZL, GRUND }) => {
         return { LTXA1, ARBEI_INPUT: ARBEI, ANZZL_INPUT: ANZZL, GRUND };
