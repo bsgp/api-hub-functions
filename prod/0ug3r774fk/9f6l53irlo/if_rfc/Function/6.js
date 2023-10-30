@@ -334,11 +334,14 @@ module.exports = async (draft, { request }) => {
         E_STATUS = "S";
         E_MESSAGE = "임시저장 된 내역이 있습니다.\n불러오시겠습니까?";
       }
-      const planListItems = IT_OPERATION.map(
+      const pItems = IT_OPERATION.map(
         ({ LTXA1, ARBEI: ARBEI_INPUT, ANZZL: ANZZL_INPUT, GRUND }) => {
           return { LTXA1, ARBEI_INPUT, ANZZL_INPUT, GRUND };
         }
       );
+      const mItems = IT_MEASURING_P.map(({ DESIC, GRUND }) => {
+        return { DESIC_INPUT: DESIC, GRUND };
+      });
       draft.response.body = {
         ...draft.response.body,
         E_STATUS,
@@ -353,14 +356,8 @@ module.exports = async (draft, { request }) => {
             MSAUS: !!ES_IMPORT.MSAUS,
           },
           tables: [
-            { id: "planList", items: planListItems },
-            {
-              id: "measureList",
-              items: IT_MEASURING_P.map(({ DESIC, GRUND }) => ({
-                DESIC_INPUT: DESIC,
-                GRUND,
-              })),
-            },
+            { id: "planList", items: pItems },
+            { id: "measureList", items: mItems },
             {
               id: "component",
               items: IT_COMPONENT.map(({ LTXA1, LGORT, LGOBE, BDMNG }) => ({
