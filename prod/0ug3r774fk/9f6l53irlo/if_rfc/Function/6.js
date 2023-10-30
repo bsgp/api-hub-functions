@@ -320,15 +320,17 @@ module.exports = async (draft, { request }) => {
         E_MESSAGE = "임시저장 된 내역이 있습니다.\n불러오시겠습니까?";
       }
       if (
-        IT_OPERATION.length > 0 ||
-        IT_MEASURING_P.length > 0 ||
-        IT_COMPONENT.length > 0 ||
-        IT_ADDJOB.length > 0 ||
-        IT_ADDFILE.length > 0 ||
+        ([
+          IT_OPERATION,
+          IT_MEASURING_P,
+          IT_COMPONENT,
+          IT_ADDJOB,
+          IT_ADDFILE,
+        ].find((table) => table.length > 0),
         IT_MALFUNCTION_5.length > 0 ||
-        IT_MALFUNCTION_A.length > 0 ||
-        IT_MALFUNCTION_B.length > 0 ||
-        IT_MALFUNCTION_C.length > 0
+          IT_MALFUNCTION_A.length > 0 ||
+          IT_MALFUNCTION_B.length > 0 ||
+          IT_MALFUNCTION_C.length > 0)
       ) {
         E_STATUS = "S";
         E_MESSAGE = "임시저장 된 내역이 있습니다.\n불러오시겠습니까?";
