@@ -304,14 +304,11 @@ module.exports = async (draft, { request }) => {
     case "IF-PMM-ORD07": {
       const { QMNUM, AUSVN, AUZTV, AUSBS, AUZTB, MSAUS } =
         draft.response.body.ES_IMPORT;
-      const { IT_OPERATION, IT_MEASURING_P, IT_COMPONENT } =
-        draft.response.body;
-      const { IT_ADDJOB, IT_ADDFILE } = draft.response.body;
+      const { IT_OPERATION, IT_MEASURING_P } = draft.response.body;
+      const { IT_COMPONENT, IT_ADDJOB, IT_ADDFILE } = draft.response.body;
+      const { IT_MALFUNCTION_5, IT_MALFUNCTION_A } = draft.response.body;
+      const { IT_MALFUNCTION_B, IT_MALFUNCTION_C } = draft.response.body;
 
-      const IT_MALFUNCTION_5 = draft.response.body.IT_MALFUNCTION_5;
-      const IT_MALFUNCTION_A = draft.response.body.IT_MALFUNCTION_A;
-      const IT_MALFUNCTION_B = draft.response.body.IT_MALFUNCTION_B;
-      const IT_MALFUNCTION_C = draft.response.body.IT_MALFUNCTION_C;
       const list = [
         IT_OPERATION,
         IT_MEASURING_P,
