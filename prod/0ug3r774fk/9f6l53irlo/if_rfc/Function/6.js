@@ -334,6 +334,14 @@ module.exports = async (draft, { request }) => {
         E_STATUS = "S";
         E_MESSAGE = "임시저장 된 내역이 있습니다.\n불러오시겠습니까?";
       }
+      const planListItems = IT_OPERATION.map(
+        ({ LTXA1, ARBEI, ANZZL, GRUND }) => ({
+          LTXA1,
+          ARBEI_INPUT: ARBEI,
+          ANZZL_INPUT: ANZZL,
+          GRUND,
+        })
+      );
       draft.response.body = {
         ...draft.response.body,
         E_STATUS,
@@ -348,15 +356,7 @@ module.exports = async (draft, { request }) => {
             MSAUS: !!ES_IMPORT.MSAUS,
           },
           tables: [
-            {
-              id: "planList",
-              items: IT_OPERATION.map(({ LTXA1, ARBEI, ANZZL, GRUND }) => ({
-                LTXA1,
-                ARBEI_INPUT: ARBEI,
-                ANZZL_INPUT: ANZZL,
-                GRUND,
-              })),
-            },
+            { id: "planList", items: planListItems },
             {
               id: "measureList",
               items: IT_MEASURING_P.map(({ DESIC, GRUND }) => ({
@@ -386,6 +386,10 @@ module.exports = async (draft, { request }) => {
                 LTXA1,
                 LTXA1_C,
               })),
+            },
+            {
+              id: "katalogList",
+              items: [],
             },
           ],
           attachments: IT_ADDFILE.map(({ URL }) => URL),
