@@ -309,17 +309,10 @@ module.exports = async (draft, { request }) => {
       const { IT_MALFUNCTION_5, IT_MALFUNCTION_A } = draft.response.body;
       const { IT_MALFUNCTION_B, IT_MALFUNCTION_C } = draft.response.body;
 
-      const list = [
-        IT_OPERATION,
-        IT_MEASURING_P,
-        IT_COMPONENT,
-        IT_ADDJOB,
-        IT_ADDFILE,
-        IT_MALFUNCTION_5,
-        IT_MALFUNCTION_A,
-        IT_MALFUNCTION_B,
-        IT_MALFUNCTION_C,
-      ];
+      const list = [IT_OPERATION, IT_MEASURING_P].concat(
+        [IT_COMPONENT, IT_ADDJOB, IT_ADDFILE],
+        [IT_MALFUNCTION_5, IT_MALFUNCTION_A, IT_MALFUNCTION_B, IT_MALFUNCTION_C]
+      );
       let E_STATUS = "F";
       let E_MESSAGE = "저장된 내역이 없습니다";
       if (QMNUM || AUSVN || AUZTV || AUSBS || AUZTB || !!MSAUS) {
