@@ -332,7 +332,7 @@ module.exports = async (draft, { request }) => {
         IT_MALFUNCTION_C.length > 0
       ) {
         E_STATUS = "S";
-        E_MESSAGE = "임시저장 된\n내역이 있습니다\n불러오시겠습니까?";
+        E_MESSAGE = "임시저장 된 내역이 있습니다.\n불러오시겠습니까?";
       }
       draft.response.body = {
         ...draft.response.body,
