@@ -369,7 +369,7 @@ module.exports = async (draft, { request }) => {
             { id: "additionalPlan", items: apItems },
             { id: "addComp", items: acItmes },
           ],
-          katalogList: [],
+          katalogList: katalogStack,
           attachments: IT_ADDFILE.map(({ URL }) => URL),
         },
       };
