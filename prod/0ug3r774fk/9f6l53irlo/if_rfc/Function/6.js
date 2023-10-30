@@ -335,12 +335,9 @@ module.exports = async (draft, { request }) => {
         E_MESSAGE = "임시저장 된 내역이 있습니다.\n불러오시겠습니까?";
       }
       const planListItems = IT_OPERATION.map(
-        ({ LTXA1, ARBEI: ARBEI_INPUT, ANZZL: ANZZL_INPUT, GRUND }) => ({
-          LTXA1,
-          ARBEI_INPUT,
-          ANZZL_INPUT,
-          GRUND,
-        })
+        ({ LTXA1, ARBEI: ARBEI_INPUT, ANZZL: ANZZL_INPUT, GRUND }) => {
+          return { LTXA1, ARBEI_INPUT, ANZZL_INPUT, GRUND };
+        }
       );
       draft.response.body = {
         ...draft.response.body,
