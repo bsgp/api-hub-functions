@@ -311,6 +311,12 @@ module.exports = async (draft, { request }) => {
       let E_STATUS = "F";
       let E_MESSAGE = "저장된 내역이 없습니다";
       if (
+        ES_IMPORT.QMNUM ||
+        ES_IMPORT.AUSVN ||
+        ES_IMPORT.AUZTV ||
+        ES_IMPORT.AUSBS ||
+        ES_IMPORT.AUZTB ||
+        !!ES_IMPORT.MSAUS ||
         IT_OPERATION.length > 0 ||
         IT_OPERATION.length > 0 ||
         IT_OPERATION.length > 0 ||
