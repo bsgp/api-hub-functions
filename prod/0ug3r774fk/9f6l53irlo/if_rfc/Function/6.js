@@ -343,6 +343,7 @@ module.exports = async (draft, { request }) => {
         ...draft.response.body,
         E_STATUS,
         E_MESSAGE,
+        list,
         activity: {
           form,
           tables: [
