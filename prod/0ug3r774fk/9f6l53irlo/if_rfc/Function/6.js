@@ -388,7 +388,7 @@ module.exports = async (draft, { request }) => {
               })),
             },
           ],
-          attachments: IT_ADDFILE.map((URL) => ({ attach: URL })),
+          attachments: IT_ADDFILE.map(({ URL }) => URL),
         },
       };
       break;
