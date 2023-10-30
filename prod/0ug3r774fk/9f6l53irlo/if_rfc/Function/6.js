@@ -387,12 +387,9 @@ module.exports = async (draft, { request }) => {
                 LTXA1_C,
               })),
             },
-            {
-              id: "katalogList",
-              items: [],
-            },
           ],
           attachments: IT_ADDFILE.map(({ URL }) => URL),
+          katalogList: [],
         },
       };
       break;
