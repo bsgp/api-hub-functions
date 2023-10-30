@@ -51,6 +51,7 @@ module.exports = async (draft, { lib, request }) => {
       };
       break;
     }
+    case "IF-PMM-ORD08":
     case "IF-PMM-ORD10": {
       draft.json.newData = clone(request.body.Data);
       const { IS_IMPORT, activity } = clone(request.body.Data);

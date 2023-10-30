@@ -301,6 +301,80 @@ module.exports = async (draft, { request }) => {
           draft.response.body.ES_RETURN.MESSAGE || "조회가 완료되었습니다",
       };
       break;
+    case "IF-PMM-ORD07": {
+      const { QMNUM, AUSVN, AUZTV, AUSBS, AUZTB, MSAUS } =
+        draft.response.body.ES_IMPORT;
+      const { IT_OPERATION, IT_MEASURING_P } = draft.response.body;
+      const { IT_COMPONENT, IT_ADDJOB, IT_ADDFILE } = draft.response.body;
+
+      const katalogStack = ["5", "A", "B", "C"].reduce((stack, type) => {
+        const katalog = draft.response.body[["IT_MALFUNCTION", type].join("_")];
+        katalog.forEach((kat, idx) => {
+          if (stack[idx]) {
+            ["CODE", "CODEGRUPPE"].forEach((key) => {
+              stack[idx][["ET_DATA", type, key].join("_")] = kat[key];
+            }); // "KURZTEXT_T"
+          } else {
+            const obj = {};
+            ["CODE", "CODEGRUPPE"].forEach((key) => {
+              obj[["ET_DATA", type, key].join("_")] = kat[key];
+            });
+            stack.push(obj);
+          }
+        });
+        return stack;
+      }, []);
+
+      const list = [IT_OPERATION, IT_MEASURING_P].concat(
+        [IT_COMPONENT, IT_ADDJOB, IT_ADDFILE],
+        katalogStack
+      );
+      let E_STATUS = "F";
+      let E_MESSAGE = "저장된 내역이 없습니다";
+      if (QMNUM || AUSVN || AUZTV || AUSBS || AUZTB || !!MSAUS) {
+        E_STATUS = "S";
+        E_MESSAGE = "임시저장 된 내역이 있습니다.\n불러오시겠습니까?";
+      }
+      if (list.find((table) => table.length > 0)) {
+        E_STATUS = "S";
+        E_MESSAGE = "임시저장 된 내역이 있습니다.\n불러오시겠습니까?";
+      }
+
+      const form = { QMNUM, AUSVN, AUZTV, AUSBS, AUZTB, MSAUS: !!MSAUS };
+
+      const pItems = IT_OPERATION.map(({ LTXA1, ARBEI, ANZZL, GRUND }) => {
+        return { LTXA1, ARBEI_INPUT: ARBEI, ANZZL_INPUT: ANZZL, GRUND };
+      });
+      const mItems = IT_MEASURING_P.map(({ DESIC, GRUND }) => {
+        return { DESIC_INPUT: DESIC, GRUND };
+      });
+      const cItems = IT_COMPONENT.map(({ LTXA1, LGORT, LGOBE, BDMNG }) => {
+        return { LTXA1, LGORT, LGOBE, QTY_INPUT: BDMNG };
+      });
+      const apItems = IT_ADDJOB.map(({ TDLINE }) => ({ TEXT: TDLINE }));
+      const acItmes = IT_OPERATION.map(({ VORNR, LTXA1, LTXA1_C }) => {
+        return { VORNR, LTXA1, LTXA1_C };
+      });
+      draft.response.body = {
+        ...draft.response.body,
+        E_STATUS,
+        E_MESSAGE,
+        katalogStack,
+        activity: {
+          form,
+          tables: [
+            { id: "planList", items: pItems },
+            { id: "measureList", items: mItems },
+            { id: "component", items: cItems },
+            { id: "additionalPlan", items: apItems },
+            { id: "addComp", items: acItmes },
+          ],
+          katalogList: katalogStack,
+          attachments: IT_ADDFILE.map(({ URL }) => URL),
+        },
+      };
+      break;
+    }
     case "IF-PMM-ORD09":
       draft.response.body = {
         ...draft.response.body,
