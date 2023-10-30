@@ -304,11 +304,10 @@ module.exports = async (draft, { request }) => {
     case "IF-PMM-ORD07": {
       const { QMNUM, AUSVN, AUZTV, AUSBS, AUZTB, MSAUS } =
         draft.response.body.ES_IMPORT;
-      const IT_OPERATION = draft.response.body.IT_OPERATION;
-      const IT_MEASURING_P = draft.response.body.IT_MEASURING_P;
-      const IT_COMPONENT = draft.response.body.IT_COMPONENT;
-      const IT_ADDJOB = draft.response.body.IT_ADDJOB;
-      const IT_ADDFILE = draft.response.body.IT_ADDFILE;
+      const { IT_OPERATION, IT_MEASURING_P, IT_COMPONENT } =
+        draft.response.body;
+      const { IT_ADDJOB, IT_ADDFILE } = draft.response.body;
+
       const IT_MALFUNCTION_5 = draft.response.body.IT_MALFUNCTION_5;
       const IT_MALFUNCTION_A = draft.response.body.IT_MALFUNCTION_A;
       const IT_MALFUNCTION_B = draft.response.body.IT_MALFUNCTION_B;
@@ -319,6 +318,10 @@ module.exports = async (draft, { request }) => {
         IT_COMPONENT,
         IT_ADDJOB,
         IT_ADDFILE,
+        IT_MALFUNCTION_5,
+        IT_MALFUNCTION_A,
+        IT_MALFUNCTION_B,
+        IT_MALFUNCTION_C,
       ];
       let E_STATUS = "F";
       let E_MESSAGE = "저장된 내역이 없습니다";
@@ -326,13 +329,7 @@ module.exports = async (draft, { request }) => {
         E_STATUS = "S";
         E_MESSAGE = "임시저장 된 내역이 있습니다.\n불러오시겠습니까?";
       }
-      if (
-        (list.find((table) => table.length > 0),
-        IT_MALFUNCTION_5.length > 0 ||
-          IT_MALFUNCTION_A.length > 0 ||
-          IT_MALFUNCTION_B.length > 0 ||
-          IT_MALFUNCTION_C.length > 0)
-      ) {
+      if (list.find((table) => table.length > 0)) {
         E_STATUS = "S";
         E_MESSAGE = "임시저장 된 내역이 있습니다.\n불러오시겠습니까?";
       }
