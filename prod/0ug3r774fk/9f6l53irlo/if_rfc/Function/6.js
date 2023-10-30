@@ -302,7 +302,8 @@ module.exports = async (draft, { request }) => {
       };
       break;
     case "IF-PMM-ORD07": {
-      const ES_IMPORT = { ...draft.response.body.ES_IMPORT };
+      const { QMNUM, AUSVN, AUZTV, AUSBS, AUZTB, MSAUS } =
+        draft.response.body.ES_IMPORT;
       const IT_OPERATION = draft.response.body.IT_OPERATION;
       const IT_MEASURING_P = draft.response.body.IT_MEASURING_P;
       const IT_COMPONENT = draft.response.body.IT_COMPONENT;
@@ -315,12 +316,12 @@ module.exports = async (draft, { request }) => {
       let E_STATUS = "F";
       let E_MESSAGE = "저장된 내역이 없습니다";
       if (
-        ES_IMPORT.QMNUM ||
-        ES_IMPORT.AUSVN ||
-        ES_IMPORT.AUZTV ||
-        ES_IMPORT.AUSBS ||
-        ES_IMPORT.AUZTB ||
-        !!ES_IMPORT.MSAUS ||
+        QMNUM ||
+        AUSVN ||
+        AUZTV ||
+        AUSBS ||
+        AUZTB ||
+        !!MSAUS ||
         IT_OPERATION.length > 0 ||
         IT_MEASURING_P.length > 0 ||
         IT_COMPONENT.length > 0 ||
@@ -334,14 +335,7 @@ module.exports = async (draft, { request }) => {
         E_STATUS = "S";
         E_MESSAGE = "임시저장 된 내역이 있습니다.\n불러오시겠습니까?";
       }
-      const form = {
-        QMNUM: ES_IMPORT.QMNUM,
-        AUSVN: ES_IMPORT.AUSVN,
-        AUZTV: ES_IMPORT.AUZTV,
-        AUSBS: ES_IMPORT.AUSBS,
-        AUZTB: ES_IMPORT.AUZTB,
-        MSAUS: !!ES_IMPORT.MSAUS,
-      };
+      const form = { QMNUM, AUSVN, AUZTV, AUSBS, AUZTB, MSAUS: !!MSAUS };
       const pItems = IT_OPERATION.map(({ LTXA1, ARBEI, ANZZL, GRUND }) => {
         return { LTXA1, ARBEI_INPUT: ARBEI, ANZZL_INPUT: ANZZL, GRUND };
       });
