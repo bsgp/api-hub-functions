@@ -334,13 +334,14 @@ module.exports = async (draft, { request }) => {
         E_STATUS = "S";
         E_MESSAGE = "임시저장 된 내역이 있습니다.\n불러오시겠습니까?";
       }
-      const pItems = IT_OPERATION.map(
-        ({ LTXA1, ARBEI: ARBEI_INPUT, ANZZL: ANZZL_INPUT, GRUND }) => {
-          return { LTXA1, ARBEI_INPUT, ANZZL_INPUT, GRUND };
-        }
-      );
+      const pItems = IT_OPERATION.map(({ LTXA1, ARBEI, ANZZL, GRUND }) => {
+        return { LTXA1, ARBEI_INPUT: ARBEI, ANZZL_INPUT: ANZZL, GRUND };
+      });
       const mItems = IT_MEASURING_P.map(({ DESIC, GRUND }) => {
         return { DESIC_INPUT: DESIC, GRUND };
+      });
+      const cItems = IT_COMPONENT.map(({ LTXA1, LGORT, LGOBE, BDMNG }) => {
+        return { LTXA1, LGORT, LGOBE, QTY_INPUT: BDMNG };
       });
       draft.response.body = {
         ...draft.response.body,
@@ -358,15 +359,7 @@ module.exports = async (draft, { request }) => {
           tables: [
             { id: "planList", items: pItems },
             { id: "measureList", items: mItems },
-            {
-              id: "component",
-              items: IT_COMPONENT.map(({ LTXA1, LGORT, LGOBE, BDMNG }) => ({
-                LTXA1,
-                LGORT,
-                LGOBE,
-                QTY_INPUT: BDMNG,
-              })),
-            },
+            { id: "component", items: cItems },
             {
               id: "additionalPlan",
               items: IT_ADDJOB.map(({ TDLINE }) => ({
