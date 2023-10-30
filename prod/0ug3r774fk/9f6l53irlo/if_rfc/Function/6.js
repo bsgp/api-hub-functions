@@ -343,6 +343,10 @@ module.exports = async (draft, { request }) => {
       const cItems = IT_COMPONENT.map(({ LTXA1, LGORT, LGOBE, BDMNG }) => {
         return { LTXA1, LGORT, LGOBE, QTY_INPUT: BDMNG };
       });
+      const apItems = IT_ADDJOB.map(({ TDLINE }) => ({ TEXT: TDLINE }));
+      const acItmes = IT_OPERATION.map(({ VORNR, LTXA1, LTXA1_C }) => {
+        return { VORNR, LTXA1, LTXA1_C };
+      });
       draft.response.body = {
         ...draft.response.body,
         E_STATUS,
@@ -360,23 +364,11 @@ module.exports = async (draft, { request }) => {
             { id: "planList", items: pItems },
             { id: "measureList", items: mItems },
             { id: "component", items: cItems },
-            {
-              id: "additionalPlan",
-              items: IT_ADDJOB.map(({ TDLINE }) => ({
-                TEXT: TDLINE,
-              })),
-            },
-            {
-              id: "addComp",
-              items: IT_OPERATION.map(({ VORNR, LTXA1, LTXA1_C }) => ({
-                VORNR,
-                LTXA1,
-                LTXA1_C,
-              })),
-            },
+            { id: "additionalPlan", items: apItems },
+            { id: "addComp", items: acItmes },
           ],
-          attachments: IT_ADDFILE.map(({ URL }) => URL),
           katalogList: [],
+          attachments: IT_ADDFILE.map(({ URL }) => URL),
         },
       };
       break;
