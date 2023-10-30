@@ -308,9 +308,22 @@ module.exports = async (draft, { request }) => {
       const IT_COMPONENT = draft.response.body.IT_COMPONENT;
       const IT_ADDJOB = draft.response.body.IT_ADDJOB;
       const IT_ADDFILE = draft.response.body.IT_ADDFILE;
-
+      let E_STATUS = "F";
+      let E_MESSAGE = "저장된 내역이 없습니다";
+      if (
+        IT_OPERATION.length > 0 ||
+        IT_OPERATION.length > 0 ||
+        IT_OPERATION.length > 0 ||
+        IT_OPERATION.length > 0 ||
+        IT_OPERATION.length > 0
+      ) {
+        E_STATUS = "S";
+        E_MESSAGE = "임시저장 된\n내역이 있습니다\n불러오시겠습니까?";
+      }
       draft.response.body = {
         ...draft.response.body,
+        E_STATUS,
+        E_MESSAGE,
         activity: {
           form: {
             QMNUM: ES_IMPORT.QMNUM,
