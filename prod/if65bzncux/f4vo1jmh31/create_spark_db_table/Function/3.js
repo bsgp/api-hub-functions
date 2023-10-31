@@ -56,22 +56,22 @@ module.exports = async (draft, { file, env }) => {
       desc: "groupware letter approval info DB",
     },
   };
-  // draft.json.changed =  lastestTableConfig;
-  // draft.response.body = { changed: lastestTableConfig, tables };
-  const newTableConfig = await file.upload("config/tables.json", tables, {
-    gzip: true,
-    stage: env.CURRENT_ALIAS,
-  });
+  draft.json.changed = lastestTableConfig;
+  draft.response.body = { changed: lastestTableConfig, tables };
+  // const newTableConfig = await file.upload("config/tables.json", tables, {
+  //   gzip: true,
+  //   stage: env.CURRENT_ALIAS,
+  // });
 
-  const changed = Object.keys(tables).reduce((acc, curr) => {
-    if (
-      !lastestTableConfig[curr] ||
-      tables[curr].name !== lastestTableConfig[curr].name
-    ) {
-      acc[curr] = tables[curr];
-    }
-    return acc;
-  }, {});
-  draft.json.changed = changed;
-  draft.response.body = { tableConfig: newTableConfig, changed };
+  // const changed = Object.keys(tables).reduce((acc, curr) => {
+  //   if (
+  //     !lastestTableConfig[curr] ||
+  //     tables[curr].name !== lastestTableConfig[curr].name
+  //   ) {
+  //     acc[curr] = tables[curr];
+  //   }
+  //   return acc;
+  // }, {});
+  // draft.json.changed = changed;
+  // draft.response.body = { tableConfig: newTableConfig, changed };
 };
