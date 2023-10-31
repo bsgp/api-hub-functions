@@ -74,19 +74,19 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
         return;
       }
       const contract = { ...queryResult.body.list[0], contractID };
-      // const tableList = ["party", "cost_object", "actual_billing"];
+      const itemID = newData.itemID;
 
       const costObjectQueryData = await sql("mysql", sqlParams)
         .select(tables.cost_object.name)
         .where("contract_id", "like", contractID)
-        .where("id", "like", newData.itemID)
+        .where("id", "like", itemID)
         .whereNot({ deleted: true })
         .run();
       const costObjectData = tryit(() => costObjectQueryData.body.list, []);
       if (costObjectData.length === 0) {
         draft.response.body = {
           request_contractID: newData.contractID,
-          request_itemID: newData.itemID,
+          request_itemID: itemID,
           E_STATUS: "F",
           E_MESSAGE: "해당하는\n청구항목정보가\n없습니다",
         };
@@ -98,19 +98,12 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
         .select(tables.actual_billing.name)
         .where("contract_id", "like", contractID)
         .where(function () {
-          this.where("id", "like", newData.itemID).orWhere(
-            "parent_id",
-            "like",
-            newData.itemID
-          );
+          this.where("id", "like", itemID).orWhere("parent_id", "like", itemID);
         })
         .whereNot({ deleted: true })
         .run();
-      const actualBillngData = tryit(
-        () => actualBillingQueryData.body.list,
-        []
-      );
-      contract.actualBillng = fn.sortIndexFn(actualBillngData);
+      const actualBillng = tryit(() => actualBillingQueryData.body.list, []);
+      contract.actualBillng = fn.sortIndexFn(actualBillng);
 
       const partyQueryData = await sql("mysql", sqlParams)
         .select(tables.party.name)
