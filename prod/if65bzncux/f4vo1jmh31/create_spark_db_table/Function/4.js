@@ -23,14 +23,11 @@ module.exports = async (draft, { fn, sql, env, makeid }) => {
         if (spec.desc === "MM,FI cost object DB table") {
           const alterResult = await mysql.table
             .alter(spec.name, function (table) {
+              table.string("parent_item_id", 5).defaultTo("");
               table
-                .decimal("dmbtr_supply_local", 23, 2)
-                .defaultTo(0)
-                .comment("로컬공급가액");
-              table
-                .decimal("dmbtr_vat_local", 23, 2)
-                .defaultTo(0)
-                .comment("로컬부가세");
+                .string("billing_index", 5)
+                .defaultTo("")
+                .comment("전표청구항목"); // 전표청구항목
             })
             .run();
           draft.response.body[spec.name] = alterResult;
