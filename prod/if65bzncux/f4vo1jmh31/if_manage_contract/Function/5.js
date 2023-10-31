@@ -2,7 +2,6 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
   const { interfaceID, tables, newData } = draft.json;
   switch (interfaceID) {
     case "IF-CT-101": {
-      let results = {};
       if (newData.contractID) {
         const query = sql("mysql", {
           useCustomRole: false,
@@ -21,7 +20,7 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
           "attachment",
         ];
         if (contractID) {
-          results = { contract: queryResult.body.list[0] };
+          const results = { contract: queryResult.body.list[0] };
           await Promise.all(
             tableList.map(async (tableKey) => {
               const queryTableData = await sql("mysql", {
