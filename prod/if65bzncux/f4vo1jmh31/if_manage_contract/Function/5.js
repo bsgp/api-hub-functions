@@ -64,7 +64,6 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
         }
       } else
         draft.response.body = { E_STATUS: "F", E_MESSAGE: "Wrong Request" };
-
       break;
     }
     case "IF-CT-111": {
