@@ -21,7 +21,7 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
           "attachment",
         ];
         if (contractID) {
-          results = { contract: queryResult.body.list[0], contractID };
+          results = { contract: queryResult.body.list[0] };
           await Promise.all(
             tableList.map(async (tableKey) => {
               const queryTableData = await sql("mysql", {
@@ -44,16 +44,16 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
             request_contractID: newData.contractID,
             contract: {
               ...results.contract,
-              contractID: results.contractID,
+              contractID,
               partyList: fn.sortIndexFn(party),
               costObjectList: fn.sortIndexFn(cost_object),
               wbsList: fn.sortIndexFn(wbs),
               billList: fn.sortIndexFn(bill),
               attachmentList: fn.sortIndexFn(attachment),
             },
-            E_STATUS: results.contractID ? "S" : "F",
-            E_MESSAGE: results.contractID
-              ? `계약번호: ${results.contractID}\n조회가\n완료되었습니다`
+            E_STATUS: contractID ? "S" : "F",
+            E_MESSAGE: contractID
+              ? `계약번호: ${contractID}\n조회가\n완료되었습니다`
               : "해당하는\n계약정보가\n없습니다",
           };
         } else {
