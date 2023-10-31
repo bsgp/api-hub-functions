@@ -38,33 +38,50 @@ module.exports = async (draft, { sql, env, tryit }) => {
               return true;
             })
           );
-        }
-      }
-      const { contract, party, bill, cost_object, wbs, attachment } = results;
-      //ref_doc
+          const { contract, party, bill, cost_object, wbs, attachment } =
+            results;
+          //ref_doc
 
-      draft.response.body = {
-        request_contractID: newData.contractID,
-        contract: {
-          ...contract,
-          contractID: results.contractID,
-          partyList: party.sort(
-            (al, be) => Number(al.index) - Number(be.index)
-          ),
-          costObjectList: cost_object.sort(
-            (al, be) => Number(al.index) - Number(be.index)
-          ),
-          wbsList: wbs.sort((al, be) => Number(al.index) - Number(be.index)),
-          billList: bill.sort((al, be) => Number(al.index) - Number(be.index)),
-          attachmentList: attachment.sort(
-            (al, be) => Number(al.index) - Number(be.index)
-          ),
-        },
-        E_STATUS: results.contractID ? "S" : "F",
-        E_MESSAGE: results.contractID
-          ? `계약번호: ${results.contractID}\n조회가\n완료되었습니다`
-          : "해당하는\n계약정보가\n없습니다",
-      };
+          draft.response.body = {
+            request_contractID: newData.contractID,
+            contract: {
+              ...contract,
+              contractID: results.contractID,
+              partyList: party.sort(
+                (al, be) => Number(al.index) - Number(be.index)
+              ),
+              costObjectList: cost_object.sort(
+                (al, be) => Number(al.index) - Number(be.index)
+              ),
+              wbsList: wbs.sort(
+                (al, be) => Number(al.index) - Number(be.index)
+              ),
+              billList: bill.sort(
+                (al, be) => Number(al.index) - Number(be.index)
+              ),
+              attachmentList: attachment.sort(
+                (al, be) => Number(al.index) - Number(be.index)
+              ),
+            },
+            E_STATUS: results.contractID ? "S" : "F",
+            E_MESSAGE: results.contractID
+              ? `계약번호: ${results.contractID}\n조회가\n완료되었습니다`
+              : "해당하는\n계약정보가\n없습니다",
+          };
+        } else {
+          draft.response.body = {
+            request_contractID: newData.contractID,
+            E_STATUS: "F",
+            E_MESSAGE: "해당하는\n계약정보가\n없습니다",
+          };
+        }
+      } else {
+        draft.response.body = {
+          request_contractID: newData.contractID,
+          E_STATUS: "F",
+          E_MESSAGE: "검색조건이 잘못되었습니다다",
+        };
+      }
       break;
     }
     case "IF-CT-111": {
