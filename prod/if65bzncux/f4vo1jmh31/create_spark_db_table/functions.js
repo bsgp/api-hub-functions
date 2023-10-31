@@ -113,8 +113,34 @@ module.exports.cost_object =
     table.string("po_number ", 10).defaultTo(""); // 구매오더번호
     table.string("po_item_no", 10).defaultTo(""); // 구매오더항목번호
     table.string("post_date", 8).defaultTo(""); // 청구예정일
-    table.string("parent_item_id", 5).defaultTo("");
-    table.string("billing_index", 5).defaultTo(""); // 전표청구항목
+    table.boolean("deleted").defaultTo(false);
+
+    table.primary(["contract_id", "id"]);
+  };
+
+/** TABLE: actual_billing */
+module.exports.actual_billing =
+  ({ makeid }) =>
+  (table) => {
+    table.charset("utf8mb4");
+
+    table.string("contract_id", 10).notNullable();
+    table.string("id", 5).defaultTo(makeid(5)); // makeid()
+
+    table.string("index", 5).defaultTo("");
+    table.string("type", 3).defaultTo(""); // 귀속처유형(WBS, 코스트센터)
+    table.string("cost_object_id", 36).defaultTo(""); // 귀속처(WBS, 코스트센터)
+    table.string("name", 100).defaultTo(""); // 귀속처 명
+    table.string("cost_type_id", 10).defaultTo("");
+    table.string("cost_type", 100).defaultTo("");
+    // 귀속 유형(cf: to-be 리스트파일 계약유형 시트)
+    table.decimal("dmbtr_supply", 23, 2).defaultTo(0);
+    table.decimal("dmbtr_supply_local", 23, 2).defaultTo(0);
+    table.decimal("dmbtr_vat", 23, 2).defaultTo(0);
+    table.decimal("dmbtr_vat_local", 23, 2).defaultTo(0);
+    table.string("fi_number ", 10).defaultTo(""); // 구매오더번호
+    table.string("fi_item_no", 4).defaultTo(""); // 구매오더항목번호
+    table.string("post_date", 8).defaultTo(""); // 청구예정일
     table.boolean("deleted").defaultTo(false);
 
     table.primary(["contract_id", "id"]);
