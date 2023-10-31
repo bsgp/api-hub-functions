@@ -19,22 +19,22 @@ module.exports = async (draft, { fn, sql, env, makeid }) => {
       const result = await mysql.table
         .create(spec.name, fn[tableKey]({ mysql, makeid }))
         .run();
-      if (result.statusCode !== 200) {
-        if (spec.desc === "MM,FI cost object DB table") {
-          const alterResult = await mysql.table
-            .alter(spec.name, function (table) {
-              table.string("parent_item_id", 5).defaultTo("");
-              table
-                .string("billing_index", 5)
-                .defaultTo("")
-                .comment("전표청구항목"); // 전표청구항목
-            })
-            .run();
-          draft.response.body[spec.name] = alterResult;
-        }
-      } else
-        draft.response.body[spec.name] =
-          result.statusCode === 200 ? "Succeed" : result.body;
+      // if (result.statusCode !== 200) {
+      //   if (spec.desc === "MM,FI cost object DB table") {
+      //     const alterResult = await mysql.table
+      //       .alter(spec.name, function (table) {
+      //         table.string("parent_item_id", 5).defaultTo("");
+      //         table
+      //           .string("billing_index", 5)
+      //           .defaultTo("")
+      //           .comment("전표청구항목"); // 전표청구항목
+      //       })
+      //       .run();
+      //     draft.response.body[spec.name] = alterResult;
+      //   }
+      // } else
+      draft.response.body[spec.name] =
+        result.statusCode === 200 ? "Succeed" : result.body;
       return true;
     })
   );
