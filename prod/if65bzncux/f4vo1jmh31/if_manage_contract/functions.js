@@ -206,3 +206,6 @@ const convDate = (dayjs, dateStr, format = "YYYY-MM-DD HH:mm:ss", hour = 9) => {
 };
 
 module.exports.convDate = convDate;
+
+module.exports.sortIndexFn = (arr = []) =>
+  arr.sort((al, be) => Number(al.index) - Number(be.index));
