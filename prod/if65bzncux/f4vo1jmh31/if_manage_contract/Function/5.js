@@ -1,5 +1,6 @@
 module.exports = async (draft, { sql, env, tryit, fn }) => {
   const { interfaceID, tables, newData } = draft.json;
+  const tableList = ["party", "bill", "cost_object", "wbs", "attachment"];
   switch (interfaceID) {
     case "IF-CT-101": {
       if (newData.contractID) {
@@ -11,14 +12,6 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
           .where("id", "like", newData.contractID);
         const queryResult = await query.run();
         const contractID = tryit(() => queryResult.body.list[0].id, "");
-        const tableList = [
-          "party",
-          "bill",
-          "ref_doc",
-          "cost_object",
-          "wbs",
-          "attachment",
-        ];
         if (contractID) {
           const results = { contract: queryResult.body.list[0] };
           await Promise.all(
