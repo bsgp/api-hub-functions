@@ -10,6 +10,7 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
           .select(tables.contract.name)
           .where("id", "like", newData.contractID);
         const queryResult = await query.run();
+
         const contractID = tryit(() => queryResult.body.list[0].id, "");
         if (contractID) {
           const results = { contract: queryResult.body.list[0] };
@@ -22,22 +23,21 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
                 .orderBy("index", "asc")
                 .run();
               const tableData = tryit(() => queryTableData.body.list, []);
-              results[tableKey] = tableData;
+              results[tableKey] = fn.sortIndexFn(tableData);
               return true;
             })
           );
-          const { party, bill, cost_object, wbs, attachment } = results;
 
           draft.response.body = {
             request_contractID: newData.contractID,
             contract: {
               ...results.contract,
               contractID,
-              partyList: fn.sortIndexFn(party),
-              costObjectList: fn.sortIndexFn(cost_object),
-              wbsList: fn.sortIndexFn(wbs),
-              billList: fn.sortIndexFn(bill),
-              attachmentList: fn.sortIndexFn(attachment),
+              partyList: results.party,
+              costObjectList: results.cost_object,
+              wbsList: results.wbs,
+              billList: results.bill,
+              attachmentList: results.attachment,
             },
             E_STATUS: contractID ? "S" : "F",
             E_MESSAGE: contractID
