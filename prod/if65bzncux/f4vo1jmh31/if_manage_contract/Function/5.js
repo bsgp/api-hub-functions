@@ -73,10 +73,21 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
         };
         return;
       }
+      const contract = { ...queryResult.body.list[0], contractID };
       // const tableList = ["party", "cost_object", "actual_billing"];
+
+      const partyQueryData = await sql("mysql", sqlParams)
+        .select(tables[party].name)
+        .where("contract_id", "like", contractID)
+        .whereNot({ deleted: true })
+        .orderBy("index", "asc")
+        .run();
+      const party = tryit(() => partyQueryData.body.list, []);
+      contract.partyList = fn.sortIndexFn(party);
 
       draft.response.body = {
         request_contractID: newData.contractID,
+        contract,
         E_STATUS: "S",
         E_MESSAGE: "IF-CT-111",
       };
