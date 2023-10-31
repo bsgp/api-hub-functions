@@ -1,13 +1,12 @@
 module.exports = async (draft, { sql, env, tryit, fn }) => {
   const { interfaceID, tables, newData } = draft.json;
+  const sqlParams = { useCustomRole: false, stage: env.CURRENT_ALIAS };
+
   switch (interfaceID) {
     case "IF-CT-101": {
       const tableList = ["party", "bill", "cost_object", "wbs", "attachment"];
       if (newData.contractID) {
-        const query = sql("mysql", {
-          useCustomRole: false,
-          stage: env.CURRENT_ALIAS,
-        })
+        const query = sql("mysql", sqlParams)
           .select(tables.contract.name)
           .where("id", "like", newData.contractID);
         const queryResult = await query.run();
@@ -16,10 +15,7 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
           const results = { contract: queryResult.body.list[0] };
           await Promise.all(
             tableList.map(async (tableKey) => {
-              const queryTableData = await sql("mysql", {
-                useCustomRole: false,
-                stage: env.CURRENT_ALIAS,
-              })
+              const queryTableData = await sql("mysql", sqlParams)
                 .select(tables[tableKey].name)
                 .where("contract_id", "like", contractID)
                 .whereNot({ deleted: true })
@@ -60,10 +56,29 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
       break;
     }
     case "IF-CT-111": {
+      if (!newData.contractID || !newData.itemID) {
+        draft.response.body = { E_STATUS: "F", E_MESSAGE: "Wrong Request" };
+        return;
+      }
+      const query = sql("mysql", sqlParams)
+        .select(tables.contract.name)
+        .where("id", "like", newData.contractID);
+      const queryResult = await query.run();
+      const contractID = tryit(() => queryResult.body.list[0].id, "");
+      if (!contractID) {
+        draft.response.body = {
+          request_contractID: newData.contractID,
+          E_STATUS: "F",
+          E_MESSAGE: "해당하는\n계약정보가\n없습니다",
+        };
+        return;
+      }
+      // const tableList = ["party", "cost_object", "actual_billing"];
+
       draft.response.body = {
         request_contractID: newData.contractID,
         E_STATUS: "S",
-        E_MESSAGE: "IF-CT-101",
+        E_MESSAGE: "IF-CT-111",
       };
       break;
     }
