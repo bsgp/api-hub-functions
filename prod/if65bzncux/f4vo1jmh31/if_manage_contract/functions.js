@@ -70,6 +70,25 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
         po_item_no: item.po_item_no,
       }));
     }
+    case "actual_billing": {
+      return data.actualBillingList.map((item) => ({
+        contract_id: `${contractID}` || item.contractID,
+        id: item.id || (makeid && makeid(5)),
+        index: `${item.index}`,
+        type: item.type,
+        cost_object_id: item.cost_object_id,
+        name: item.name,
+        cost_type_id: item.cost_type_id,
+        cost_type: item.cost_type,
+        dmbtr_supply: (item.dmbtr_supply || "").replace(/,/g, ""),
+        dmbtr_supply_local: (item.dmbtr_supply_local || "").replace(/,/g, ""),
+        dmbtr_vat: (item.dmbtr_vat || "").replace(/,/g, ""),
+        dmbtr_vat_local: (item.dmbtr_vat_local || "").replace(/,/g, ""),
+        post_date: item.post_date,
+        fi_number: item.fi_number,
+        fi_item_no: item.fi_item_no,
+      }));
+    }
     case "wbs": {
       return data.wbsList.map((item) => ({
         contract_id: `${contractID}` || item.contractID,
