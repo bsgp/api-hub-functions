@@ -40,7 +40,7 @@ module.exports = async (draft, { file, env }) => {
       desc: "bill reson text DB",
     },
     actual_billing: {
-      name: "actual_billing_1",
+      name: "actual_billing_2",
       desc: "Actual FI cost object DB table",
     },
     party: {
