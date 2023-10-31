@@ -13,13 +13,15 @@ module.exports = async (draft, { lib, file, env, request }) => {
 
   switch (request.body.InterfaceId) {
     case "IF-CT-101": // GET
-    case "IF-CT-111": // GET
+    case "IF-CT-111":
       draft.json.nextNodeKey = "Function#5";
       break;
     case "IF-CT-102": // POST
+    case "IF-CT-112":
       draft.json.nextNodeKey = "Function#6";
       break;
     case "IF-CT-103": // PATCH
+    case "IF-CT-113":
       draft.json.nextNodeKey = "Function#7";
       break;
     case "IF-CT-105": // GET LIST
