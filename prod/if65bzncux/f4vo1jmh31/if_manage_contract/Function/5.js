@@ -1,8 +1,8 @@
 module.exports = async (draft, { sql, env, tryit, fn }) => {
   const { interfaceID, tables, newData } = draft.json;
-  const tableList = ["party", "bill", "cost_object", "wbs", "attachment"];
   switch (interfaceID) {
     case "IF-CT-101": {
+      const tableList = ["party", "bill", "cost_object", "wbs", "attachment"];
       if (newData.contractID) {
         const query = sql("mysql", {
           useCustomRole: false,
