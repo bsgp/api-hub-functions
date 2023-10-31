@@ -39,29 +39,21 @@ module.exports = async (draft, { sql, env, tryit }) => {
             })
           );
           const { contract, party, bill, cost_object, wbs, attachment } =
-            results;
-          //ref_doc
+            results; //ref_doc
+
+          const sortIndexFn = (arr = []) =>
+            arr.sort((al, be) => Number(al.index) - Number(be.index));
 
           draft.response.body = {
             request_contractID: newData.contractID,
             contract: {
               ...contract,
               contractID: results.contractID,
-              partyList: party.sort(
-                (al, be) => Number(al.index) - Number(be.index)
-              ),
-              costObjectList: cost_object.sort(
-                (al, be) => Number(al.index) - Number(be.index)
-              ),
-              wbsList: wbs.sort(
-                (al, be) => Number(al.index) - Number(be.index)
-              ),
-              billList: bill.sort(
-                (al, be) => Number(al.index) - Number(be.index)
-              ),
-              attachmentList: attachment.sort(
-                (al, be) => Number(al.index) - Number(be.index)
-              ),
+              partyList: sortIndexFn(party),
+              costObjectList: sortIndexFn(cost_object),
+              wbsList: sortIndexFn(wbs),
+              billList: sortIndexFn(bill),
+              attachmentList: sortIndexFn(attachment),
             },
             E_STATUS: results.contractID ? "S" : "F",
             E_MESSAGE: results.contractID
