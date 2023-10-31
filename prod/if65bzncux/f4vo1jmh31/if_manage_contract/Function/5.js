@@ -76,8 +76,25 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
       const contract = { ...queryResult.body.list[0], contractID };
       // const tableList = ["party", "cost_object", "actual_billing"];
 
+      const costObjectQueryData = await sql("mysql", sqlParams)
+        .select(tables.cost_object.name)
+        .where("contract_id", "like", contractID)
+        .where("id", "like", newData.itemID)
+        .whereNot({ deleted: true })
+        .orderBy("index", "asc")
+        .run();
+      const costObjectData = tryit(() => costObjectQueryData.body.list, []);
+      if (costObjectData.length === 0) {
+        draft.response.body = {
+          request_contractID: newData.contractID,
+          request_itemID: newData.itemID,
+          E_STATUS: "F",
+          E_MESSAGE: "해당하는\n청구항목정보가\n없습니다",
+        };
+        return;
+      }
       const partyQueryData = await sql("mysql", sqlParams)
-        .select(tables[party].name)
+        .select(tables.party.name)
         .where("contract_id", "like", contractID)
         .whereNot({ deleted: true })
         .orderBy("index", "asc")
