@@ -34,9 +34,14 @@ module.exports = async (draft, { file, env }) => {
       name: "wbs_1",
       desc: "WBS DB table",
     },
+
     bill: {
       name: "bill_12",
       desc: "bill reson text DB",
+    },
+    actual_billing: {
+      name: "actual_billing_1",
+      desc: "Actual FI cost object DB table",
     },
     party: {
       name: "party_11",
