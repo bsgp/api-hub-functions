@@ -1,4 +1,4 @@
-module.exports = async (draft, { sql, env, tryit }) => {
+module.exports = async (draft, { sql, env, tryit, fn }) => {
   const { interfaceID, tables, newData } = draft.json;
   switch (interfaceID) {
     case "IF-CT-101": {
@@ -38,22 +38,18 @@ module.exports = async (draft, { sql, env, tryit }) => {
               return true;
             })
           );
-          const { contract, party, bill, cost_object, wbs, attachment } =
-            results; //ref_doc
-
-          const sortIndexFn = (arr = []) =>
-            arr.sort((al, be) => Number(al.index) - Number(be.index));
+          const { party, bill, cost_object, wbs, attachment } = results;
 
           draft.response.body = {
             request_contractID: newData.contractID,
             contract: {
-              ...contract,
+              ...results.contract,
               contractID: results.contractID,
-              partyList: sortIndexFn(party),
-              costObjectList: sortIndexFn(cost_object),
-              wbsList: sortIndexFn(wbs),
-              billList: sortIndexFn(bill),
-              attachmentList: sortIndexFn(attachment),
+              partyList: fn.sortIndexFn(party),
+              costObjectList: fn.sortIndexFn(cost_object),
+              wbsList: fn.sortIndexFn(wbs),
+              billList: fn.sortIndexFn(bill),
+              attachmentList: fn.sortIndexFn(attachment),
             },
             E_STATUS: results.contractID ? "S" : "F",
             E_MESSAGE: results.contractID
