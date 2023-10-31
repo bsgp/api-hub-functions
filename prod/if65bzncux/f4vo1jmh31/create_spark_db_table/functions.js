@@ -128,11 +128,14 @@ module.exports.actual_billing =
     table.string("id", 5).defaultTo(makeid(5)); // makeid()
 
     table.string("index", 5).defaultTo("");
+    table.string("parent_id", 5).defaultTo("");
     table.string("type", 3).defaultTo(""); // 귀속처유형(WBS, 코스트센터)
     table.string("cost_object_id", 36).defaultTo(""); // 귀속처(WBS, 코스트센터)
     table.string("name", 100).defaultTo(""); // 귀속처 명
     table.string("cost_type_id", 10).defaultTo("");
     table.string("cost_type", 100).defaultTo("");
+    table.string("gl_account_id", 18).defaultTo("");
+    table.string("gl_account", 100).defaultTo("");
     // 귀속 유형(cf: to-be 리스트파일 계약유형 시트)
     table.decimal("dmbtr_supply", 23, 2).defaultTo(0);
     table.decimal("dmbtr_supply_local", 23, 2).defaultTo(0);
