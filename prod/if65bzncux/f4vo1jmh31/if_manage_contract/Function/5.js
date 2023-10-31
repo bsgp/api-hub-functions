@@ -62,13 +62,9 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
             E_MESSAGE: "해당하는\n계약정보가\n없습니다",
           };
         }
-      } else {
-        draft.response.body = {
-          request_contractID: newData.contractID,
-          E_STATUS: "F",
-          E_MESSAGE: "검색조건이 잘못되었습니다다",
-        };
-      }
+      } else
+        draft.response.body = { E_STATUS: "F", E_MESSAGE: "Wrong Request" };
+
       break;
     }
     case "IF-CT-111": {
