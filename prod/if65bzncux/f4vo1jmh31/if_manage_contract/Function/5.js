@@ -67,6 +67,14 @@ module.exports = async (draft, { sql, env, tryit }) => {
       };
       break;
     }
+    case "IF-CT-111": {
+      draft.response.body = {
+        request_contractID: newData.contractID,
+        E_STATUS: "S",
+        E_MESSAGE: "IF-CT-101",
+      };
+      break;
+    }
     default: {
       draft.response.body = {
         request_contractID: newData.contractID,
