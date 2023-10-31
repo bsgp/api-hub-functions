@@ -69,7 +69,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
         po_number: item.po_number,
         po_item_no: item.po_item_no,
         parent_item_id: item.parent_item_id,
-        billing_index: item.billing_index || `${item.index}`,
+        billing_index: item.billing_index || "1",
       }));
     }
     case "wbs": {
