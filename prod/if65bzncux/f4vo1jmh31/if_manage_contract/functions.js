@@ -68,10 +68,8 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
         post_date: item.post_date,
         po_number: item.po_number,
         po_item_no: item.po_item_no,
-        // curr_key: item.curr_key,
-        // curr_local: item.curr_local,
-        // start_date: item.start_date,
-        // end_date: item.end_date,
+        parent_item_id: item.parent_item_id,
+        billing_index: item.billing_index || `${item.index}`,
       }));
     }
     case "wbs": {
