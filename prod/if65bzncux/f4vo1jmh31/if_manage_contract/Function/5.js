@@ -81,7 +81,6 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
         .where("contract_id", "like", contractID)
         .where("id", "like", newData.itemID)
         .whereNot({ deleted: true })
-        .orderBy("index", "asc")
         .run();
       const costObjectData = tryit(() => costObjectQueryData.body.list, []);
       if (costObjectData.length === 0) {
@@ -93,6 +92,26 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
         };
         return;
       }
+      contract.costObjectList = costObjectData;
+
+      const actualBillingQueryData = await sql("mysql", sqlParams)
+        .select(tables.actual_billing.name)
+        .where("contract_id", "like", contractID)
+        .where(function () {
+          this.where("id", "like", newData.itemID).orWhere(
+            "parent_id",
+            "like",
+            newData.itemID
+          );
+        })
+        .whereNot({ deleted: true })
+        .run();
+      const actualBillngData = tryit(
+        () => actualBillingQueryData.body.list,
+        []
+      );
+      contract.actualBillng = fn.sortIndexFn(actualBillngData);
+
       const partyQueryData = await sql("mysql", sqlParams)
         .select(tables.party.name)
         .where("contract_id", "like", contractID)
