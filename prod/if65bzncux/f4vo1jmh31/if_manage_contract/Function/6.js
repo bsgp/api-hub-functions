@@ -7,7 +7,6 @@ module.exports = async (
   switch (interfaceID) {
     case "IF-CT-102": {
       const contract = fn.getDB_Object(newData, { key: "contract" });
-
       // const builder = sql("mysql").select(tables.contract.name);
       // const contractValidator = await builder.validator;
       /** create new ContractID by maxID && insert contract table */
