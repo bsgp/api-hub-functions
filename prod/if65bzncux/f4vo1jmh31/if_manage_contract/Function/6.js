@@ -167,6 +167,9 @@ module.exports = async (
       break;
     }
     case "IF-CT-112": {
+      /**
+       * 들어오는 값들이 신규 생성인지 업데이트인지 확인 필요요
+       */
       draft.response.body = { newData, E_STATUS: "S", E_MESSAGE: "IF-CT-112" };
       break;
     }
