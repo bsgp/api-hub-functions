@@ -141,9 +141,12 @@ module.exports.actual_billing =
     table.decimal("dmbtr_supply_local", 23, 2).defaultTo(0);
     table.decimal("dmbtr_vat", 23, 2).defaultTo(0);
     table.decimal("dmbtr_vat_local", 23, 2).defaultTo(0);
-    table.string("fi_number ", 10).defaultTo(""); // 구매오더번호
-    table.string("fi_item_no", 4).defaultTo(""); // 구매오더항목번호
-    table.string("post_date", 8).defaultTo(""); // 청구예정일
+    table.string("fi_gjahr", 4).defaultTo(""); // 회계연도
+    table.string("fi_number ", 10).defaultTo(""); // 회계전표번호
+    table.string("fi_item_no", 4).defaultTo(""); // 회계전표항목번호
+    table.string("post_date", 8).defaultTo(""); // 전기일
+    table.string("docu_date", 8).defaultTo(""); // 증빙일
+    table.string("remark", 100).defaultTo(""); // 비고
     table.boolean("deleted").defaultTo(false);
 
     table.primary(["contract_id", "id"]);
