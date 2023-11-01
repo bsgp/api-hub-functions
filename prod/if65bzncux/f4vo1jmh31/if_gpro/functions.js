@@ -24,82 +24,78 @@ const checkResError = (body, prefixMessage) => {
   }
 };
 
-module.exports.getSecretKey = async ({ restApi }) => {
-  const result = await restApi.post({
-    url: ["https://contdev.unipost.co.kr/unicloud/cont/api/getSecretKey"].join(
-      "?"
-    ),
-    headers: {
-      clientKey: "51147370C5A742709F3EB95213CFBE30",
-    },
-  });
+module.exports.getToken = async ({ restApi }) => {
+  const body = {};
 
-  checkResError(result.body, "Failed to get secret key from unipost");
-  console.log("result.body:", result.body);
-  return result.body.response.secretKey;
-};
-
-const getToken = async (secretKey, { usId, contNo }, { restApi }) => {
-  const body = {
-    usId,
+  const queryObj = {
+    client_id: "e14d1b82-c658-40b6-b4fe-87b3bd3fcd64",
+    client_secret: "f7befe83-c90d-43ce-a229-46981e71b17b",
+    grant_type: "client_credentials",
   };
-  if (contNo) {
-    body.contNo = contNo;
-  }
 
-  const result = await restApi.post({
+  const result = await restApi.get({
     url: [
-      "https://contdev.unipost.co.kr/unicloud/cont/api/getContUserToken",
+      "https://bsgpartners.api.groupware.pro/v1/oauth/token",
+      Object.keys(queryObj)
+        .map((key) => `${key}=${queryObj[key]}`)
+        .join("&"),
     ].join("?"),
     headers: {
       "content-type": "application/json;charset=UTF-8",
-      secretKey,
     },
     body,
   });
 
   checkResError(result.body, "Failed to get token from unipost");
 
-  return result.body.response.token;
+  return result.body.access_token;
 };
 
-module.exports.getTokenForWork = async (secretKey, { contNo, restApi }) => {
-  const result = await getToken(
-    secretKey,
-    { usId: "bsg_cont_work01", contNo },
-    {
-      restApi,
-    }
-  );
-  return result;
+module.exports.getEmployeesList = async (token, { restApi }) => {
+  const result = await restApi.get({
+    url: ["https://bsgpartners.api.groupware.pro/v1/eai/employees"].join("?"),
+    headers: {
+      "content-type": "application/json;charset=UTF-8",
+      Authorization: ["Bearer", token].join(" "),
+    },
+    body: {},
+  });
+
+  checkResError(result.body, "Failed to get 임직원 list");
+
+  return result.body.payload;
 };
 
-module.exports.getTokenForRead = async (secretKey, { contNo, restApi }) => {
-  const result = await getToken(
-    secretKey,
-    { usId: "bsg_cont_read01", contNo },
-    {
-      restApi,
-    }
-  );
-  return result;
-};
-
-module.exports.getTemplateList = async (secretKey, { restApi }) => {
-  const result = await restApi.post({
+module.exports.getAssignmentsList = async (token, { restApi }) => {
+  const result = await restApi.get({
     url: [
-      "https://contdev.unipost.co.kr/unicloud/cont/api/getTemplateList",
+      "https://bsgpartners.api.groupware.pro/v1/eai/employees/assignments",
     ].join("?"),
     headers: {
       "content-type": "application/json;charset=UTF-8",
-      secretKey,
+      Authorization: ["Bearer", token].join(" "),
     },
-    body: {
-      searchInfo: {},
-    },
+    body: {},
   });
 
-  checkResError(result.body, "Failed to get Template list");
+  checkResError(result.body, "Failed to get 발령 list");
 
-  return result.body.response.templateList.list;
+  return result.body.payload;
+};
+
+module.exports.getOrganizationsList = async (token, { restApi }) => {
+  const result = await restApi.get({
+    url: ["https://bsgpartners.api.groupware.pro/v1/eai/organizations"].join(
+      "?"
+    ),
+    headers: {
+      "content-type": "application/json;charset=UTF-8",
+      Authorization: ["Bearer", token].join(" "),
+    },
+    body: {},
+  });
+
+  checkResError(result.body, "Failed to get 부서 list");
+
+  return result.body.payload;
 };
