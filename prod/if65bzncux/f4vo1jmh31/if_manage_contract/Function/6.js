@@ -157,6 +157,7 @@ module.exports = async (
        *  들어오는 값들이 신규 생성인지 업데이트인지 확인 필요
        */
       const { contractID, itemID } = newData.form;
+      const changed = newData.actualBillng;
       const queryBuilder = sql("mysql", sqlParams)
         .select(tables.actual_billing.name)
         .where("contract_id", "like", contractID)
@@ -165,10 +166,48 @@ module.exports = async (
         })
         .whereNot({ deleted: true });
       const queryTableData = await queryBuilder.run();
-      const tableData = tryit(() => queryTableData.body.list, []);
+      const originData = tryit(() => queryTableData.body.list, []);
+      const changeList = [];
+      // find Deleted
+      originData
+        .filter((item) => !changed.find((it) => it.id === item.id))
+        .forEach((item) =>
+          changeList.push({
+            index: item.index,
+            type: "deleted",
+            before: { ...item },
+            after: {},
+          })
+        );
+      // find created || changed
+      changed.forEach((item) => {
+        const beforeObj = originData.find((it) => it.id === item.id);
+        if (!beforeObj) {
+          changeList.push({
+            index: item.index,
+            type: "created",
+            before: {},
+            after: { ...item },
+          });
+        } else {
+          Object.keys(item).forEach((field) => {
+            if (item[field] !== beforeObj[field]) {
+              changeList.push({
+                key: field,
+                index: item.index,
+                type: "changed",
+                before: { ...beforeObj },
+                after: { ...item },
+              });
+            }
+          });
+        }
+      });
+
       draft.response.body = {
         newData,
-        tableData,
+        originData,
+        changeList,
         E_STATUS: "S",
         E_MESSAGE: "IF-CT-112",
       };
