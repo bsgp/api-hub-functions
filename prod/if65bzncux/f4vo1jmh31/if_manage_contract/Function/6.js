@@ -210,7 +210,7 @@ module.exports = async (
       draft.response.body = {
         newData,
         originData,
-        changed,
+        changed: [...changed],
         changeList,
         E_STATUS: "F",
         E_MESSAGE: "IF-CT-112",
