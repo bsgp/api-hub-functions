@@ -167,6 +167,10 @@ module.exports = async (
       }
       break;
     }
+    case "IF-CT-112": {
+      draft.response.body = { newData, E_STATUS: "S", E_MESSAGE: "IF-CT-112" };
+      break;
+    }
     default: {
       draft.response.body = { E_STATUS: "F", E_MESSAGE: "Wrong interfaceID" };
       break;
