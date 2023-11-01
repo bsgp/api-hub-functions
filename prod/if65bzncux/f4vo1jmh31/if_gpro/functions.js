@@ -1,28 +1,28 @@
-const checkResError = (body, prefixMessage) => {
-  /*{
-    "status": "200",
-    "message": "통신이 처리 되었습니다.",
-    "response": {
-        "resultCode": "-1",
-        "message": "인증키값이 유효 하지 않습니다."
-    }
-  }*/
-  if (body.response) {
-    if (body.response.resultCode === "-1") {
-      const err = new Error(
-        [prefixMessage, body.response.message].filter(Boolean).join(", ")
-      );
+// const checkResError = (body, prefixMessage) => {
+//   /*{
+//     "status": "200",
+//     "message": "통신이 처리 되었습니다.",
+//     "response": {
+//         "resultCode": "-1",
+//         "message": "인증키값이 유효 하지 않습니다."
+//     }
+//   }*/
+//   if (body.response) {
+//     if (body.response.resultCode === "-1") {
+//       const err = new Error(
+//         [prefixMessage, body.response.message].filter(Boolean).join(", ")
+//       );
 
-      try {
-        err.description = "JSON.stringify(body);\n" + JSON.stringify(body);
-      } catch (ex) {
-        // pass
-      }
+//       try {
+//         err.description = "JSON.stringify(body);\n" + JSON.stringify(body);
+//       } catch (ex) {
+//         // pass
+//       }
 
-      throw err;
-    }
-  }
-};
+//       throw err;
+//     }
+//   }
+// };
 
 module.exports.getToken = async ({ restApi }) => {
   const body = {};
@@ -46,7 +46,7 @@ module.exports.getToken = async ({ restApi }) => {
     body,
   });
 
-  checkResError(result.body, "Failed to get token from unipost");
+  // checkResError(result.body, "Failed to get token from gpro");
 
   return result.body.access_token;
 };
@@ -61,7 +61,7 @@ module.exports.getEmployeesList = async (token, { restApi }) => {
     body: {},
   });
 
-  checkResError(result.body, "Failed to get 임직원 list");
+  // checkResError(result.body, "Failed to get 임직원 list");
 
   return result.body.payload;
 };
@@ -78,7 +78,7 @@ module.exports.getAssignmentsList = async (token, { restApi }) => {
     body: {},
   });
 
-  checkResError(result.body, "Failed to get 발령 list");
+  // checkResError(result.body, "Failed to get 발령 list");
 
   return result.body.payload;
 };
@@ -95,7 +95,7 @@ module.exports.getOrganizationsList = async (token, { restApi }) => {
     body: {},
   });
 
-  checkResError(result.body, "Failed to get 부서 list");
+  // checkResError(result.body, "Failed to get 부서 list");
 
   return result.body.payload;
 };
