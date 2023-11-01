@@ -157,7 +157,10 @@ module.exports = async (
        *  들어오는 값들이 신규 생성인지 업데이트인지 확인 필요
        */
       const { contractID, itemID } = newData.form;
-      const changed = newData.actualBillng;
+      const changed = fn.getDB_Object(newData, {
+        key: "actualBillng",
+        contractID,
+      });
       const queryBuilder = sql("mysql", sqlParams)
         .select(tables.actual_billing.name)
         .where("contract_id", "like", contractID)
