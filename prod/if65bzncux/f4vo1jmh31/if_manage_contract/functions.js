@@ -88,6 +88,9 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
         dmbtr_vat: (item.dmbtr_vat || "").replace(/,/g, ""),
         dmbtr_vat_local: (item.dmbtr_vat_local || "").replace(/,/g, ""),
         post_date: item.post_date,
+        docu_date: item.docu_date,
+        remark: item.remark,
+        fi_gjahr: item.fi_gjahr,
         fi_number: item.fi_number,
         fi_item_no: item.fi_item_no,
       }));
