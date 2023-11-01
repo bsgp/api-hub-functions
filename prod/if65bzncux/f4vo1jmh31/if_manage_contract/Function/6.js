@@ -170,12 +170,12 @@ module.exports = async (
         .whereNot({ deleted: true });
       const queryTableData = await queryBuilder.run();
       const originData = tryit(() => queryTableData.body.list, []);
-      const changeList = [];
+      const updateList = [];
       // find Deleted
       originData
         .filter((item) => !changed.find((it) => it.id === item.id))
         .forEach((item) =>
-          changeList.push({
+          updateList.push({
             index: item.index,
             type: "deleted",
             before: { ...item },
@@ -186,7 +186,7 @@ module.exports = async (
       changed.forEach((item) => {
         const beforeObj = originData.find((it) => it.id === item.id);
         if (!beforeObj) {
-          changeList.push({
+          updateList.push({
             index: item.index,
             type: "created",
             before: {},
@@ -195,7 +195,7 @@ module.exports = async (
         } else {
           Object.keys(item).forEach((field) => {
             if (item[field] !== beforeObj[field]) {
-              changeList.push({
+              updateList.push({
                 key: field,
                 index: item.index,
                 type: "changed",
@@ -207,11 +207,74 @@ module.exports = async (
         }
       });
 
+      const updateResult = await Promise.all(
+        updateList.map(async (item) => {
+          const { type, before, after } = item;
+          const tableKey = "actual_billing";
+          switch (type) {
+            case "created": {
+              // insert
+              const uuid = makeid(5);
+              await sql("mysql", sqlParams)
+                .insert(tables.change.name, [
+                  fn.getChange_Object({
+                    tableKey,
+                    data: { ...after, id: uuid },
+                    userID,
+                    makeid,
+                  }),
+                ])
+                .run();
+              return await sql("mysql", sqlParams)
+                .insert(tables[tableKey].name, { ...after, id: uuid })
+                .run();
+            }
+            case "deleted": {
+              // update deleted: true;
+              await sql("mysql", sqlParams)
+                .insert(tables.change.name, [
+                  fn.getChange_Object({
+                    tableKey,
+                    data: { ...before, deleted: true },
+                    userID,
+                    makeid,
+                  }),
+                ])
+                .run();
+              return await sql("mysql", sqlParams)
+                .update(tables[tableKey].name, { deleted: true })
+                .where("contract_id", "like", contractID)
+                .where("id", "like", before.id)
+                .run();
+            }
+            default: {
+              // type: "changed"; update changed
+
+              await sql("mysql", sqlParams)
+                .insert(tables.change.name, [
+                  fn.getChange_Object({
+                    tableKey,
+                    data: after,
+                    userID,
+                    makeid,
+                  }),
+                ])
+                .run();
+              return await sql("mysql", sqlParams)
+                .update(tables[tableKey].name, after)
+                .where({ contract_id: contractID, id: before.id })
+                .run();
+            }
+          }
+        })
+      );
+
       draft.response.body = {
         newData,
         originData,
         changed: [...changed],
-        changeList,
+        updateList,
+        updateResult,
         E_STATUS: "F",
         E_MESSAGE: "IF-CT-112",
       };
