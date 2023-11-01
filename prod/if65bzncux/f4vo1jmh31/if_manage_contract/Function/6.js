@@ -208,7 +208,7 @@ module.exports = async (
         newData,
         originData,
         changeList,
-        E_STATUS: "S",
+        E_STATUS: "F",
         E_MESSAGE: "IF-CT-112",
       };
       break;
