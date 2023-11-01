@@ -73,8 +73,8 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
         };
         return;
       }
-      const contract = { ...queryResult.body.list[0], contractID };
       const itemID = newData.itemID;
+      const contract = { ...queryResult.body.list[0], contractID, itemID };
 
       const costObjectQueryData = await sql("mysql", sqlParams)
         .select(tables.cost_object.name)
