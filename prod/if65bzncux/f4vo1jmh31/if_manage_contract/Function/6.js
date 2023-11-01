@@ -3,6 +3,7 @@ module.exports = async (
   { fn, dayjs, sql, env, tryit, makeid, file }
 ) => {
   const { interfaceID, tables, newData, userID } = draft.json;
+  const sqlParams = { useCustomRole: false, stage: env.CURRENT_ALIAS };
 
   switch (interfaceID) {
     case "IF-CT-102": {
@@ -12,10 +13,7 @@ module.exports = async (
       /** create new ContractID by maxID && insert contract table */
       const cYear = fn.convDate(dayjs, new Date(), "YYYY");
       const prefix = [contract.type, cYear].join("");
-      const query = sql("mysql", {
-        useCustomRole: false,
-        stage: env.CURRENT_ALIAS,
-      })
+      const query = sql("mysql", sqlParams)
         .select(tables.contract.name)
         .max("id", { as: "maxID" })
         .where("id", "like", `${prefix}%`);
@@ -29,10 +27,7 @@ module.exports = async (
         (Number(maxID.substring(5)) + 1).toString().padStart(5, "0"),
       ].join("");
 
-      const createContract = await sql("mysql", {
-        useCustomRole: false,
-        stage: env.CURRENT_ALIAS,
-      })
+      const createContract = await sql("mysql", sqlParams)
         .insert(tables.contract.name, {
           ...contract,
           id: contractID,
@@ -51,10 +46,7 @@ module.exports = async (
       }
 
       /** insert change table */
-      const cContract = await sql("mysql", {
-        useCustomRole: false,
-        stage: env.CURRENT_ALIAS,
-      })
+      const cContract = await sql("mysql", sqlParams)
         .insert(
           tables["change"].name,
           fn.getChange_Object({
@@ -105,10 +97,7 @@ module.exports = async (
               })
             );
           }
-          const changeTableData = await sql("mysql", {
-            useCustomRole: false,
-            stage: env.CURRENT_ALIAS,
-          })
+          const changeTableData = await sql("mysql", sqlParams)
             .insert(
               tables["change"].name,
               tableData.map((data) =>
@@ -122,10 +111,7 @@ module.exports = async (
               )
             )
             .run();
-          const postTableData = await sql("mysql", {
-            useCustomRole: false,
-            stage: env.CURRENT_ALIAS,
-          })
+          const postTableData = await sql("mysql", sqlParams)
             .insert(tables[tableKey].name, tableData)
             .run();
           if (
@@ -167,7 +153,7 @@ module.exports = async (
       break;
     }
     case "IF-CT-112": {
-      /** Post Billing Interface
+      /** Post Billing(actual_billing) Interface
        *  들어오는 값들이 신규 생성인지 업데이트인지 확인 필요
        */
       draft.response.body = { newData, E_STATUS: "S", E_MESSAGE: "IF-CT-112" };
