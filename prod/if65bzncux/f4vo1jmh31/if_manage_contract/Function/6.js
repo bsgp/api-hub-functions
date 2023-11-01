@@ -168,6 +168,7 @@ module.exports = async (
       break;
     }
     default: {
+      draft.response.body = { E_STATUS: "F", E_MESSAGE: "Wrong interfaceID" };
       break;
     }
   }
