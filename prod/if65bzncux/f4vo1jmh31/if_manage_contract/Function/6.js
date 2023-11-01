@@ -251,7 +251,7 @@ module.exports = async (
                 ])
                 .run();
               return await sql("mysql", sqlParams)
-                .update(tables[tableKey].name, data)
+                .update(tables[tableKey].name, after)
                 .where({ contract_id: contractID, id: before.id })
                 .run();
             }
