@@ -156,10 +156,14 @@ module.exports = async (
       /** Post Billing(actual_billing) Interface
        *  들어오는 값들이 신규 생성인지 업데이트인지 확인 필요
        */
-      const contractID = newData.form.contractID;
+      const { contractID, itemID } = newData.form;
       const queryBuilder = sql("mysql", sqlParams)
         .select(tables.actual_billing.name)
-        .where("contract_id", "like", contractID);
+        .where("contract_id", "like", contractID)
+        .where(function () {
+          this.where("id", "like", itemID).orWhere("parent_id", "like", itemID);
+        })
+        .whereNot({ deleted: true });
       const queryTableData = await queryBuilder.run();
       const tableData = tryit(() => queryTableData.body.list, []);
       draft.response.body = {
