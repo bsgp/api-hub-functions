@@ -97,9 +97,9 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
       const actualBillingQueryData = await sql("mysql", sqlParams)
         .select(tables.actual_billing.name)
         .where("contract_id", "like", contractID)
-        // .where(function () {
-        // this.where("id","like",itemID).orWhere("parent_id", "like", itemID);
-        // })
+        .where(function () {
+          this.where("id", "like", itemID).orWhere("parent_id", "like", itemID);
+        })
         .whereNot({ deleted: true })
         .run();
       const actualBillng = tryit(() => actualBillingQueryData.body.list, []);
