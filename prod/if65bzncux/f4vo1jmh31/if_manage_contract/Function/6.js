@@ -158,7 +158,7 @@ module.exports = async (
        */
       const { contractID, itemID } = newData.form;
       const changed = fn.getDB_Object(newData, {
-        key: "actualBillng",
+        key: "actual_billing",
         contractID,
       });
       const queryBuilder = sql("mysql", sqlParams)
@@ -183,29 +183,29 @@ module.exports = async (
           })
         );
       // find created || changed
-      // changed.forEach((item) => {
-      //   const beforeObj = originData.find((it) => it.id === item.id);
-      //   if (!beforeObj) {
-      //     changeList.push({
-      //       index: item.index,
-      //       type: "created",
-      //       before: {},
-      //       after: { ...item },
-      //     });
-      //   } else {
-      //     Object.keys(item).forEach((field) => {
-      //       if (item[field] !== beforeObj[field]) {
-      //         changeList.push({
-      //           key: field,
-      //           index: item.index,
-      //           type: "changed",
-      //           before: { ...beforeObj },
-      //           after: { ...item },
-      //         });
-      //       }
-      //     });
-      //   }
-      // });
+      changed.forEach((item) => {
+        const beforeObj = originData.find((it) => it.id === item.id);
+        if (!beforeObj) {
+          changeList.push({
+            index: item.index,
+            type: "created",
+            before: {},
+            after: { ...item },
+          });
+        } else {
+          Object.keys(item).forEach((field) => {
+            if (item[field] !== beforeObj[field]) {
+              changeList.push({
+                key: field,
+                index: item.index,
+                type: "changed",
+                before: { ...beforeObj },
+                after: { ...item },
+              });
+            }
+          });
+        }
+      });
 
       draft.response.body = {
         newData,
