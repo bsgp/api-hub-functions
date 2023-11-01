@@ -213,20 +213,15 @@ module.exports = async (
           const tableKey = "actual_billing";
           switch (type) {
             case "created": {
-              // insert
-              const uuid = makeid(5);
+              // insert: 1번 항목인 경우 id를 cost_object id로 사용
+              const data = { ...after, id: after.id || makeid(5) };
               await sql("mysql", sqlParams)
                 .insert(tables.change.name, [
-                  fn.getChange_Object({
-                    tableKey,
-                    data: { ...after, id: uuid },
-                    userID,
-                    makeid,
-                  }),
+                  fn.getChange_Object({ tableKey, data, userID, makeid }),
                 ])
                 .run();
               return await sql("mysql", sqlParams)
-                .insert(tables[tableKey].name, { ...after, id: uuid })
+                .insert(tables[tableKey].name, data)
                 .run();
             }
             case "deleted": {
@@ -249,19 +244,14 @@ module.exports = async (
             }
             default: {
               // type: "changed"; update changed
-
+              const data = after;
               await sql("mysql", sqlParams)
                 .insert(tables.change.name, [
-                  fn.getChange_Object({
-                    tableKey,
-                    data: after,
-                    userID,
-                    makeid,
-                  }),
+                  fn.getChange_Object({ tableKey, data, userID, makeid }),
                 ])
                 .run();
               return await sql("mysql", sqlParams)
-                .update(tables[tableKey].name, after)
+                .update(tables[tableKey].name, data)
                 .where({ contract_id: contractID, id: before.id })
                 .run();
             }
