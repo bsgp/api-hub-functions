@@ -112,7 +112,18 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
         .orderBy("index", "asc")
         .run();
       const party = tryit(() => partyQueryData.body.list, []);
-      contract.partyList = fn.sortIndexFn(party);
+      const partyList = fn.sortIndexFn(party);
+      const billFromParty = partyList.find((party) => party.stems10 === "1");
+      const billToParty = partyList.find((party) => party.stems10 === "2");
+      contract.partyList = partyList;
+      contract.billFrom = {
+        id: billFromParty && billFromParty.ref_id,
+        text: billFromParty && billFromParty.name,
+      };
+      contract.billTo = {
+        id: billToParty && billToParty.ref_id,
+        text: billToParty && billToParty.name,
+      };
 
       draft.response.body = {
         request_contractID: newData.contractID,
