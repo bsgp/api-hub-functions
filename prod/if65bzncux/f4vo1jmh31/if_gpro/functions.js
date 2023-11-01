@@ -1,28 +1,36 @@
-// const checkResError = (body, prefixMessage) => {
-//   /*{
-//     "status": "200",
-//     "message": "통신이 처리 되었습니다.",
-//     "response": {
-//         "resultCode": "-1",
-//         "message": "인증키값이 유효 하지 않습니다."
-//     }
-//   }*/
-//   if (body.response) {
-//     if (body.response.resultCode === "-1") {
-//       const err = new Error(
-//         [prefixMessage, body.response.message].filter(Boolean).join(", ")
-//       );
+const returnResError = (body, prefixMessage) => {
+  /*{
+    "access_token": "87158447-1b65-4079-938d-68030d3bc5fa",
+    "token_type": "bearer",
+    "expires_in": 26663,
+    "scope": "read write"
+  }*/
+  const err = new Error([prefixMessage].filter(Boolean).join(", "));
 
-//       try {
-//         err.description = "JSON.stringify(body);\n" + JSON.stringify(body);
-//       } catch (ex) {
-//         // pass
-//       }
+  try {
+    err.description = "JSON.stringify(body);\n" + JSON.stringify(body);
+  } catch (ex) {
+    // pass
+  }
 
-//       throw err;
-//     }
-//   }
-// };
+  throw err;
+};
+
+const checkResError = (body, prefixMessage) => {
+  /*{
+    "access_token": "87158447-1b65-4079-938d-68030d3bc5fa",
+    "token_type": "bearer",
+    "expires_in": 26663,
+    "scope": "read write"
+  }*/
+  if (body.success === true && body.payload) {
+    if (body.payload.length === 0) {
+      returnResError(body, prefixMessage);
+    }
+  } else {
+    returnResError(body, prefixMessage);
+  }
+};
 
 module.exports.getToken = async ({ restApi }) => {
   const body = {};
@@ -33,7 +41,7 @@ module.exports.getToken = async ({ restApi }) => {
     grant_type: "client_credentials",
   };
 
-  const result = await restApi.get({
+  const res = await restApi.get({
     url: [
       "https://bsgpartners.api.groupware.pro/v1/oauth/token",
       Object.keys(queryObj)
@@ -46,9 +54,13 @@ module.exports.getToken = async ({ restApi }) => {
     body,
   });
 
-  // checkResError(result.body, "Failed to get token from gpro");
+  const result = res.body.access_token;
 
-  return result.body.access_token;
+  if (!result) {
+    returnResError(res.body, "Failed to get token from gpro");
+  }
+
+  return result;
 };
 
 module.exports.getEmployeesList = async (token, { restApi }) => {
@@ -61,7 +73,7 @@ module.exports.getEmployeesList = async (token, { restApi }) => {
     body: {},
   });
 
-  // checkResError(result.body, "Failed to get 임직원 list");
+  checkResError(result.body, "Failed to get 임직원 list");
 
   return result.body.payload;
 };
@@ -78,7 +90,7 @@ module.exports.getAssignmentsList = async (token, { restApi }) => {
     body: {},
   });
 
-  // checkResError(result.body, "Failed to get 발령 list");
+  checkResError(result.body, "Failed to get 발령 list");
 
   return result.body.payload;
 };
@@ -95,7 +107,7 @@ module.exports.getOrganizationsList = async (token, { restApi }) => {
     body: {},
   });
 
-  // checkResError(result.body, "Failed to get 부서 list");
+  checkResError(result.body, "Failed to get 부서 list");
 
   return result.body.payload;
 };
