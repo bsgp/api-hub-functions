@@ -258,16 +258,25 @@ module.exports = async (
           }
         })
       );
+      const hasError = updateResult.find((res) => res.statusCode !== 200);
+      if (hasError) {
+        draft.response.body = {
+          originData,
+          updateList,
+          updateResult,
+          E_STATUS: "F",
+          E_MESSAGE: "처리과정에 문제가 발생했습니다",
+        };
+      } else {
+        draft.response.body = {
+          originData,
+          updateList,
+          updateResult,
+          E_STATUS: "S",
+          E_MESSAGE: "저장되었습니다",
+        };
+      }
 
-      draft.response.body = {
-        newData,
-        originData,
-        changed: [...changed],
-        updateList,
-        updateResult,
-        E_STATUS: "F",
-        E_MESSAGE: "IF-CT-112",
-      };
       break;
     }
     default: {
