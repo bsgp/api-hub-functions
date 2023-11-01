@@ -71,7 +71,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
       }));
     }
     case "actual_billing": {
-      return data.actualBillingList.map((item) => ({
+      return data.actualBillng.map((item) => ({
         contract_id: `${contractID}` || item.contractID,
         id: item.id || (makeid && makeid(5)),
         parent_id: item.parent_id,
