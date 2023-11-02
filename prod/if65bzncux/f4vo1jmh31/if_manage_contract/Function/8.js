@@ -170,6 +170,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
       draft.response.body = {
         request: newData,
         list: list.sort((al, be) => {
+          if (al.post_date !== be.post_date) {
+            return Number(al.post_date) - Number(be.post_date);
+          }
           if (al.contract_id === be.contract_id) {
             return Number(al.index) - Number(be.index);
           } else
