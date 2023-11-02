@@ -47,8 +47,8 @@ module.exports = async (draft, { file }) => {
         name: "페이레터",
         domains: {
           dev: "qas",
-          qas: "http://billadminqa.golfnculture.local",
-          prd: "http://billadmin.golfnculture.local",
+          qas: "https://billadminqa.golfnculture.local",
+          prd: "https://billadmin.golfnculture.local",
         },
       },
       GSPOS: {
