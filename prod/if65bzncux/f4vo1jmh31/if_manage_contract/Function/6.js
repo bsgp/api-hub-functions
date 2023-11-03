@@ -244,19 +244,15 @@ module.exports = async (
             }
             default: {
               // type: "changed"; update changed
+              const data = after;
               await sql("mysql", sqlParams)
                 .insert(tables.change.name, [
-                  fn.getChange_Object({
-                    tableKey,
-                    data: { ...after },
-                    userID,
-                    makeid,
-                  }),
+                  fn.getChange_Object({ tableKey, data, userID, makeid }),
                 ])
                 .run();
               return await sql("mysql", sqlParams)
                 .update(tables[tableKey].name, { ...after, deleted: false })
-                .where({ contract_id: contractID, id: before.id })
+                .where({ contract_id: contractID, id: after.id })
                 .run();
             }
           }
