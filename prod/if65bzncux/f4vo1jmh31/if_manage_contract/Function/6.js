@@ -248,7 +248,7 @@ module.exports = async (
                 .insert(tables.change.name, [
                   fn.getChange_Object({
                     tableKey,
-                    data: { ...after, deleted: false },
+                    data: { ...after },
                     userID,
                     makeid,
                   }),
