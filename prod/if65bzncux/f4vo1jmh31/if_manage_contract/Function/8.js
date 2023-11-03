@@ -183,7 +183,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
         }),
 
         E_STATUS: "S",
-        E_MESSAGE: `IF-CT-115`,
+        E_MESSAGE: `조회가\n완료되었습니다`,
       };
       break;
     }
