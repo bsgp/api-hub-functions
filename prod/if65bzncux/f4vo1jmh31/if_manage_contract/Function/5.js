@@ -100,7 +100,7 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
         .where(function () {
           this.where("id", "like", itemID).orWhere("parent_id", "like", itemID);
         })
-        .whereNot({ deleted: true })
+        // .whereNot({ deleted: true })
         .run();
       const actualBillng = tryit(() => actualBillingQueryData.body.list, []);
       contract.actualBillng = fn.sortIndexFn(actualBillng);
