@@ -212,18 +212,18 @@ module.exports = async (
           const { type, before, after } = item;
           const tableKey = "actual_billing";
           switch (type) {
-            // case "created": {
-            //   // insert: 1번 항목인 경우 id를 cost_object id로 사용
-            //   const data = { ...after, id: after.id || makeid(5) };
-            //   await sql("mysql", sqlParams)
-            //     .insert(tables.change.name, [
-            //       fn.getChange_Object({ tableKey, data, userID, makeid }),
-            //     ])
-            //     .run();
-            //   return await sql("mysql", sqlParams)
-            //     .insert(tables[tableKey].name, data)
-            //     .run();
-            // }
+            case "created": {
+              // insert: 1번 항목인 경우 id를 cost_object id로 사용
+              const data = { ...after, id: after.id || makeid(5) };
+              await sql("mysql", sqlParams)
+                .insert(tables.change.name, [
+                  fn.getChange_Object({ tableKey, data, userID, makeid }),
+                ])
+                .run();
+              return await sql("mysql", sqlParams)
+                .insert(tables[tableKey].name, data)
+                .run();
+            }
             case "deleted": {
               // update deleted: true;
               await sql("mysql", sqlParams)
@@ -251,7 +251,7 @@ module.exports = async (
                 ])
                 .run();
               return await sql("mysql", sqlParams)
-                .update(tables[tableKey].name, { ...after, deleted: false })
+                .update(tables[tableKey].name, after)
                 .where({ contract_id: contractID, id: after.id })
                 .run();
             }
