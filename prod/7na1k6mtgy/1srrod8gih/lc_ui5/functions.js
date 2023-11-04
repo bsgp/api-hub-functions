@@ -68,11 +68,12 @@ const saveMeta = async (
   body,
   { dynamodb, tableName, zip, isFalsy, makeid }
 ) => {
-  const { id, description, title } = body;
+  const { id, description, wrapForms, title } = body;
 
   const data = {
     description,
     title,
+    wrapForms,
     paths: [],
     ...binaryAttributes.reduce((acc, key) => {
       if (body[key] !== undefined) {
