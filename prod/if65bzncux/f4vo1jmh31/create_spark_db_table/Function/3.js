@@ -69,14 +69,14 @@ module.exports = async (draft, { file, env }) => {
   };
 
   const upResult = await file.upload("config/tables.json", tables, {
-    gziped: true,
+    gzip: true,
     stage: env.CURRENT_ALIAS,
   });
   draft.response.body.upResult = upResult;
 
   // const newTableConfig =
   //   await file.upload("config/tables.json", tables, {
-  //   gziped: true,
+  //   gzip: true,
   //   stage: env.CURRENT_ALIAS,
   // });
   // const changed = Object.keys(tables).reduce((acc, curr) => {
