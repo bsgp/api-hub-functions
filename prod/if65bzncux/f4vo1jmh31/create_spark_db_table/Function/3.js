@@ -85,7 +85,7 @@ module.exports = async (draft, { file, env }) => {
       desc: "groupware letter approval info DB",
     },
   };
-  draft.json.changed = tables;
+  draft.json.changed = { ...lastestTableConfig };
   draft.response.body = { changed: tables, lastestTableConfig };
 
   // await file.upload("config/tables.json", tables, {
