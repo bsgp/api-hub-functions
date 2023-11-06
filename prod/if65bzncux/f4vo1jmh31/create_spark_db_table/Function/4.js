@@ -19,20 +19,20 @@ module.exports = async (draft, { fn, sql, env, makeid }) => {
       const result = await mysql.table
         .create(spec.name, fn[tableKey]({ mysql, makeid }))
         .run();
-      // if (result.statusCode !== 200) {
-      //   if (spec.desc === "Actual FI cost object DB table") {
-      //     const alterResult = await mysql.table
-      //       .alter(spec.name, function (table) {
-      //         table.string("fi_gjahr", 4).defaultTo("");
-      //         table.string("docu_date", 8).defaultTo("");
-      //         table.string("remark", 100).defaultTo("");
-      //       })
-      //       .run();
-      //     draft.response.body[spec.name] = alterResult;
-      //   }
-      // } else
-      draft.response.body[spec.name] =
-        result.statusCode === 200 ? "Succeed" : result.body;
+      if (result.statusCode !== 200) {
+        if (spec.desc === "Contract info DB table") {
+          const alterResult = await mysql.table
+            .alter(spec.name, function (table) {
+              table.string("seq", 3).defaultTo("0");
+              // table.string("docu_date", 8).defaultTo("");
+              // table.string("remark", 100).defaultTo("");
+            })
+            .run();
+          draft.response.body[spec.name] = alterResult;
+        }
+      } else
+        draft.response.body[spec.name] =
+          result.statusCode === 200 ? "Succeed" : result.body;
       return true;
     })
   );
