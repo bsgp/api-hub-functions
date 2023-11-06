@@ -64,6 +64,7 @@ module.exports = async (draft, { file, env }) => {
   draft.response.body = {
     changed: tables,
     lastestTableConfig,
+    configFile,
   };
 
   const upResult = await file.upload("config/tables.json", tables, {
