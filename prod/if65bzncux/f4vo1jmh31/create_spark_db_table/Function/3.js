@@ -74,7 +74,8 @@ module.exports = async (draft, { file, env }) => {
     lastestTableConfig,
   };
 
-  await file.upload("config/tables.json", draft.json.changed, sqlParams);
+  // await file.upload("config/tables.json", draft.json.changed, sqlParams);
+
   // const newTableConfig =
   //   await file.upload("config/tables.json", tables, sqlParams);
   // const changed = Object.keys(tables).reduce((acc, curr) => {
