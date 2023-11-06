@@ -63,18 +63,11 @@ module.exports = async (draft, { file, env }) => {
   };
   draft.json.changed = {
     ...lastestTableConfig,
-    changed_contract: tables.changed_contract,
+    // changed_contract: tables.changed_contract,
   };
   draft.response.body = { changed: draft.json.changed, tables };
 
-  await file.upload(
-    "config/tables.json",
-    {
-      ...lastestTableConfig,
-      changed_contract: tables.changed_contract,
-    },
-    sqlParams
-  );
+  await file.upload("config/tables.json", draft.json.changed, sqlParams);
   // const newTableConfig =
   //   await file.upload("config/tables.json", tables, sqlParams);
   // const changed = Object.keys(tables).reduce((acc, curr) => {
