@@ -61,10 +61,7 @@ module.exports = async (draft, { file, env }) => {
       desc: "groupware letter approval info DB",
     },
   };
-  draft.json.changed = {
-    ...lastestTableConfig,
-    changed_contract: tables.changed_contract,
-  };
+  draft.json.changed = tables;
   draft.response.body = {
     changed: tables,
     lastestTableConfig,
