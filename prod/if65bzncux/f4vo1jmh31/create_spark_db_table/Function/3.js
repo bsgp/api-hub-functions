@@ -1,11 +1,11 @@
 module.exports = async (draft, { file, env }) => {
-  const sqlParams = {
+  const fileOption = {
     gziped: true,
     stage: env.CURRENT_ALIAS,
   };
   let configFile;
   try {
-    configFile = await file.get("config/tables.json", sqlParams);
+    configFile = await file.get("config/tables.json", fileOption);
   } catch (err) {
     draft.response.body = { configFileMessage: "new Config file created" };
   }
@@ -74,10 +74,17 @@ module.exports = async (draft, { file, env }) => {
     lastestTableConfig,
   };
 
-  // await file.upload("config/tables.json", draft.json.changed, sqlParams);
+  await file.upload(
+    "config/tables.json",
+    {
+      ...lastestTableConfig,
+      changed_contract: tables.changed_contract,
+    },
+    fileOption
+  );
 
   // const newTableConfig =
-  //   await file.upload("config/tables.json", tables, sqlParams);
+  //   await file.upload("config/tables.json", tables, fileOption);
   // const changed = Object.keys(tables).reduce((acc, curr) => {
   //   if (
   //     !lastestTableConfig[curr] ||
