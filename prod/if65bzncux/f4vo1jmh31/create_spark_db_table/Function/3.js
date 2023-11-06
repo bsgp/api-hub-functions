@@ -70,7 +70,6 @@ module.exports = async (draft, { file, env }) => {
       ...lastestTableConfig,
       changed_contract: tables.changed_contract,
     },
-    tables,
     lastestTableConfig,
   };
 
