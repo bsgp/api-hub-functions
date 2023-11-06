@@ -62,6 +62,7 @@ module.exports = async (draft, { file, env }) => {
   };
   draft.json.changed = tables;
   draft.response.body = {
+    ...draft.response.body,
     changed: tables,
     lastestTableConfig,
     configFile,
