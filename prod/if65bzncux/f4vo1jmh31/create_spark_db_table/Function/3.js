@@ -65,7 +65,7 @@ module.exports = async (draft, { file, env }) => {
     ...lastestTableConfig,
     // changed_contract: tables.changed_contract,
   };
-  draft.response.body = { changed: draft.json.changed, tables };
+  draft.response.body = { changed: { ...draft.json.changed }, tables };
 
   await file.upload("config/tables.json", draft.json.changed, sqlParams);
   // const newTableConfig =
