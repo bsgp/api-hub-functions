@@ -1,10 +1,11 @@
 module.exports = async (draft, { file, env }) => {
+  const sqlParams = {
+    gziped: true,
+    stage: env.CURRENT_ALIAS,
+  };
   let configFile;
   try {
-    configFile = await file.get("config/tables.json", {
-      gziped: true,
-      stage: env.CURRENT_ALIAS,
-    });
+    configFile = await file.get("config/tables.json", sqlParams);
   } catch (err) {
     draft.response.body = { configFileMessage: "new Config file created" };
   }
@@ -21,6 +22,10 @@ module.exports = async (draft, { file, env }) => {
     contract: {
       name: "contract_9",
       desc: "Contract info DB table",
+    },
+    changed_contract: {
+      name: "changed_contract_1",
+      desc: "Changed Contract seq info DB table",
     },
     ref_doc: {
       name: "ref_doc_10",
@@ -58,18 +63,20 @@ module.exports = async (draft, { file, env }) => {
   };
   draft.json.changed = {
     ...lastestTableConfig,
-    actual_billing: tables.actual_billing,
+    changed_contract: tables.changed_contract,
   };
-  draft.response.body = { changed: lastestTableConfig, tables };
-  // await file.upload("config/tables.json", tables, {
-  //   gzip: true,
-  //   stage: env.CURRENT_ALIAS,
-  // });
-  // const newTableConfig = await file.upload("config/tables.json", tables, {
-  //   gzip: true,
-  //   stage: env.CURRENT_ALIAS,
-  // });
+  draft.response.body = { changed: draft.json.changed, tables };
 
+  await file.upload(
+    "config/tables.json",
+    {
+      ...lastestTableConfig,
+      changed_contract: tables.changed_contract,
+    },
+    sqlParams
+  );
+  // const newTableConfig =
+  //   await file.upload("config/tables.json", tables, sqlParams);
   // const changed = Object.keys(tables).reduce((acc, curr) => {
   //   if (
   //     !lastestTableConfig[curr] ||
