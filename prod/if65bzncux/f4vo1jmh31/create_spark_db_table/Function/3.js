@@ -16,11 +16,11 @@ module.exports = async (draft, { file, env }) => {
    */
   const tables = {
     change: {
-      name: "change_7",
+      name: "change_6",
       desc: "Spark DB change history table",
     },
     contract: {
-      name: "contract_9",
+      name: "contract_8",
       desc: "Contract info DB table",
     },
     changed_contract: {
@@ -28,20 +28,20 @@ module.exports = async (draft, { file, env }) => {
       desc: "Changed Contract seq info DB table",
     },
     ref_doc: {
-      name: "ref_doc_10",
+      name: "ref_doc_9",
       desc: "Reference document(MM,FI) info DB table",
     },
     cost_object: {
-      name: "cost_object_11",
+      name: "cost_object_10",
       desc: "MM,FI cost object DB table",
     },
     wbs: {
-      name: "wbs_1",
+      name: "wbs_0",
       desc: "WBS DB table",
     },
 
     bill: {
-      name: "bill_12",
+      name: "bill_11",
       desc: "bill reson text DB",
     },
     actual_billing: {
@@ -49,15 +49,15 @@ module.exports = async (draft, { file, env }) => {
       desc: "Actual FI cost object DB table",
     },
     party: {
-      name: "party_11",
+      name: "party_10",
       desc: "Party(supplier, customer) info DB",
     },
     attachment: {
-      name: "attachment_9",
+      name: "attachment_8",
       desc: "Attachment info DB",
     },
     letter_appr: {
-      name: "letter_appr_6",
+      name: "letter_appr_5",
       desc: "groupware letter approval info DB",
     },
   };
@@ -74,14 +74,7 @@ module.exports = async (draft, { file, env }) => {
     lastestTableConfig,
   };
 
-  await file.upload(
-    "config/tables.json",
-    {
-      ...lastestTableConfig,
-      changed_contract: tables.changed_contract,
-    },
-    fileOption
-  );
+  await file.upload("config/tables.json", tables, fileOption);
 
   // const newTableConfig =
   //   await file.upload("config/tables.json", tables, fileOption);
