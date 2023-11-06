@@ -375,6 +375,14 @@ module.exports = async (draft, { request }) => {
       };
       break;
     }
+    case "IF-PMM-ORD08": {
+      draft.response.body = {
+        ...draft.response.body,
+        E_STATUS: draft.response.body.ES_RETURN.STATUS,
+        E_MESSAGE: draft.response.body.ES_RETURN.MESSAGE,
+      };
+      break;
+    }
     case "IF-PMM-ORD09":
       draft.response.body = {
         ...draft.response.body,
