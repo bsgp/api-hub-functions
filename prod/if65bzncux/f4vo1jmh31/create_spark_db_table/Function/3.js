@@ -66,10 +66,7 @@ module.exports = async (draft, { file, env }) => {
     changed_contract: tables.changed_contract,
   };
   draft.response.body = {
-    changed: {
-      ...lastestTableConfig,
-      changed_contract: tables.changed_contract,
-    },
+    changed: tables,
     lastestTableConfig,
   };
 
