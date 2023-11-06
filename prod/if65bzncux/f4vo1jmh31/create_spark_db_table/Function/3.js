@@ -60,18 +60,13 @@ module.exports = async (draft, { file, env }) => {
     },
   };
   draft.json.changed = tables;
-  draft.response.body = {
-    ...draft.response.body,
-    changed: tables,
-    lastestTableConfig,
-    configFile,
-  };
+  draft.response.body = { changed: tables, lastestTableConfig };
 
-  const upResult = await file.upload("config/tables.json", tables, {
-    gzip: true,
-    stage: env.CURRENT_ALIAS,
-  });
-  draft.response.body.upResult = upResult;
+  // await file.upload("config/tables.json", tables, {
+  //   gzip: true,
+  //   stage: env.CURRENT_ALIAS
+
+  // });
 
   // const newTableConfig =
   //   await file.upload("config/tables.json", tables, {
