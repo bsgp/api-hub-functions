@@ -330,14 +330,11 @@ module.exports = async (draft, { request }) => {
         katalogStack
       );
       let E_STATUS = "F";
-      let E_MESSAGE = "저장된 내역이 없습니다";
       if (QMNUM || AUSVN || AUZTV || AUSBS || AUZTB || !!MSAUS) {
         E_STATUS = "S";
-        E_MESSAGE = "임시저장 된 내역이 있습니다.\n불러오시겠습니까?";
       }
       if (list.find((table) => table.length > 0)) {
         E_STATUS = "S";
-        E_MESSAGE = "임시저장 된 내역이 있습니다.\n불러오시겠습니까?";
       }
 
       const form = { QMNUM, AUSVN, AUSBS, MSAUS: !!MSAUS };
@@ -360,7 +357,8 @@ module.exports = async (draft, { request }) => {
       draft.response.body = {
         ...draft.response.body,
         E_STATUS,
-        E_MESSAGE,
+        E_MESSAGE: draft.response.body.ES_RETURN.MESSAGE,
+        B_MESSAGE: "임시저장 된 내역이 있습니다.",
         katalogStack,
         activity: {
           form,
@@ -374,6 +372,14 @@ module.exports = async (draft, { request }) => {
           katalogList: katalogStack,
           attachments: IT_ADDFILE.map(({ URL }) => URL),
         },
+      };
+      break;
+    }
+    case "IF-PMM-ORD08": {
+      draft.response.body = {
+        ...draft.response.body,
+        E_STATUS: draft.response.body.ES_RETURN.STATUS,
+        E_MESSAGE: draft.response.body.ES_RETURN.MESSAGE,
       };
       break;
     }
