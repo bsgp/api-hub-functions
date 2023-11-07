@@ -62,7 +62,7 @@ module.exports.contract =
     table.string("uni_contseq", 3).defaultTo(""); //  계약관리 일련번호
     table.string("uni_coregno", 10).defaultTo(""); // 계약소유자 사업자등록번호
     table.string("uni_contname", 200).defaultTo(""); // 계약명
-    table.string("uni_contdate", 3).defaultTo(""); // 계약일자(yyyyMMdd)
+    table.string("uni_contdate", 8).defaultTo(""); // 계약일자(yyyyMMdd)
     table.string("uni_contsts", 3).defaultTo(""); // 계약상태코드
     table.string("uni_contstsname", 3).defaultTo(""); // 계약상태명
     table.datetime("created_at", { precision: 6 }).defaultTo(mysql.fn.now(6));
