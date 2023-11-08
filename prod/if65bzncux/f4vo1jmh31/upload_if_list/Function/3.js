@@ -130,13 +130,13 @@ module.exports = async (draft, { file, env }) => {
       Type: "RFC",
       Name: "ZFI_IF_STD_CODE",
       TriggeredBy: "CONTRACT",
-      Path: "/rfc",
+      Path: "/rfc_contract",
     },
     ["IF-FI-012"]: {
       Type: "RFC",
       Name: "ZFI_IF_CONTRT_FIDOC",
       TriggeredBy: "CONTRACT",
-      Path: "/rfc",
+      Path: "/rfc_contract",
     },
     ["IF-FI-013"]: {
       Type: "RFC",
