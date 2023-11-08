@@ -16,7 +16,7 @@ module.exports = async (draft, { file, env }) => {
       Type: "RFC",
       Name: "ZCO_IF_CCTR_LIST",
       TriggeredBy: "CONTRACT",
-      Path: "/rfc",
+      Path: "/rfc_contract",
     },
     ["IF-CO-004"]: {
       Type: "RFC",
@@ -40,7 +40,7 @@ module.exports = async (draft, { file, env }) => {
       Type: "RFC",
       Name: "ZCO_IF_WBS_LIST",
       TriggeredBy: "CONTRACT",
-      Path: "/rfc",
+      Path: "/rfc_contract",
     },
     ["IF-CO-009"]: {
       Type: "RFC",
@@ -64,7 +64,7 @@ module.exports = async (draft, { file, env }) => {
       Type: "RFC",
       Name: "ZCO_IF_CONTRACT",
       TriggeredBy: "CONTRACT",
-      Path: "/rfc",
+      Path: "/rfc_contract",
     },
     ["IF-CO-035"]: {
       Type: "RFC",
