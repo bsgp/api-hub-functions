@@ -48,6 +48,9 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
       result: result.body.result,
     };
   } else {
+    /** 다른 flow에서 호출 시 rfc 정보를 받기 위해서 draft.json 설정*/
+    draft.json.rfcCallResult = result;
+
     const ET_DATA = tryit(() => result.body.result.ET_DATA, []) || [];
     switch (request.body.InterfaceId) {
       case "IF-FI-011": {
@@ -61,7 +64,7 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
                 text: ZCNTS1,
                 cost_type_id: ZZCDEZ,
                 cost_type: ZCNTS1,
-              })),
+              })).sort((al, be) => al.key - be.key),
             };
             break;
           }
@@ -69,20 +72,25 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
           case "FI03": {
             draft.response.body = {
               ...result.body.result,
-              list: ET_DATA.map(({ ZZCDEZ, ZCNTS1, ...args }) => ({
+              list: ET_DATA.map(({ ZZCDEZ, ZCNTS1, ZCNTS2, ...args }) => ({
                 key: ZZCDEZ,
                 text: ZCNTS1,
                 ref_id: ZZCDEZ,
                 name: ZCNTS1,
-                gl_group_id: args.ZCNTS2,
+                gl_group_id: ZCNTS2,
                 gl_group_text: args.ZCNTS3,
                 prdnt_name: args.ZCNTS9,
-                id_no: args.ZCNTS6,
+                // gl_group_id가 "3000"인 경우 id_no: ZCNTS5 (그 외:ZCNTS6)
+                id_no: (ZCNTS2 === "3000" && args.ZCNTS5) || args.ZCNTS6,
                 biz_no: args.ZCNTS5,
                 land_id: args.ZCNTS4,
                 address: [args.ZCNTS13, args.ZCNTS14].filter(Boolean).join(" "),
                 tel: "",
-              })),
+              })).sort(
+                (al, be) =>
+                  Number(al.key.replace(/\.|,|-/g, "")) -
+                  Number(be.key.replace(/\.|,|-/g, ""))
+              ),
             };
             break;
           }
@@ -129,7 +137,11 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
             text: KTEXT,
             cost_object_id: KOSTL,
             name: KTEXT,
-          })),
+          })).sort(
+            (al, be) =>
+              Number(al.key.replace(/\.|,|-/g, "")) -
+              Number(be.key.replace(/\.|,|-/g, ""))
+          ),
         };
         break;
       }
@@ -141,7 +153,11 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
             text: POST1,
             cost_object_id: POSID,
             name: POST1,
-          })),
+          })).sort(
+            (al, be) =>
+              Number(al.key.replace(/\.|,|-/g, "")) -
+              Number(be.key.replace(/\.|,|-/g, ""))
+          ),
         };
         break;
       }
@@ -154,7 +170,11 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
             text: MAKTX,
             matnr: MATNR,
             maktx: MAKTX,
-          })),
+          })).sort(
+            (al, be) =>
+              Number(al.key.replace(/\.|,|-/g, "")) -
+              Number(be.key.replace(/\.|,|-/g, ""))
+          ),
         };
         break;
       }
