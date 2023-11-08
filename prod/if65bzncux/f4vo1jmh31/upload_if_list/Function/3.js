@@ -166,13 +166,13 @@ module.exports = async (draft, { file, env }) => {
       Type: "RFC",
       Name: "ZMM_MASTER_LIST",
       TriggeredBy: "CONTRACT",
-      Path: "/rfc",
+      Path: "/rfc_contract",
     },
     ["IF-MM-002"]: {
       Type: "RFC",
       Name: "ZMM_PO_CREATION",
       TriggeredBy: "CONTRACT",
-      Path: "/rfc",
+      Path: "/rfc_contract",
     },
     ["IF-WS-001"]: {
       Type: "RFC",
