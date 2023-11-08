@@ -177,6 +177,7 @@ module.exports.wbs =
     table.string("id", 5).defaultTo(makeid(5)); // makeid()
 
     table.string("index", 5).defaultTo("");
+    table.string("seq", 3).defaultTo("0"); // 계약차수
     table.string("type", 3).defaultTo(""); // 귀속처유형(WBS, 코스트센터)
     table.string("cost_object_id", 36).defaultTo(""); // 귀속처(WBS, 코스트센터)
     table.string("name", 100).defaultTo(""); // 귀속처 명
