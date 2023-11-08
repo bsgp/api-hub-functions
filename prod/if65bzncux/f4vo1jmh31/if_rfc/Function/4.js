@@ -48,6 +48,9 @@ module.exports = async (draft, { request, rfc, clone, kst, tryit }) => {
       result: result.body.result,
     };
   } else {
+    /** 다른 flow에서 호출 시 rfc 정보를 받기 위해서 draft.json 설정*/
+    draft.json.rfcCallResult = result;
+
     const ET_DATA = tryit(() => result.body.result.ET_DATA, []) || [];
     switch (request.body.InterfaceId) {
       case "IF-FI-011": {
