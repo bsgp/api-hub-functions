@@ -48,9 +48,9 @@ module.exports = async (draft, { request, rfc, clone, kst }) => {
       result: result.body.result,
     };
   } else {
-    /** 다른 flow에서 호출 시 rfc 정보를 받기 위해서 draft.json 설정*/
-    draft.json.rfcCallResult = result;
-
     draft.response.body = result.body.result;
   }
+
+  /** 다른 flow에서 호출 시 rfc 정보를 받기 위해서 draft.json 설정*/
+  draft.json.rfcCallResult = result;
 };
