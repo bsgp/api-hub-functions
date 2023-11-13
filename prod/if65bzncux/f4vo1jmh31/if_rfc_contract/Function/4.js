@@ -128,7 +128,7 @@ module.exports = async (draft, { request, tryit }) => {
       break;
     }
     default: {
-      draft.response.body = result.body.result;
+      // draft.response.body = result.body.result;
       break;
     }
   }
