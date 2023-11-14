@@ -112,7 +112,7 @@ module.exports.getOrganizationsList = async (token, { restApi }) => {
   return result.body.payload;
 };
 
-module.exports.cancelFiDocument = async (token, { restApi }) => {
+module.exports.cancelFiDocument = async (token, body, { restApi }) => {
   const result = await restApi.post({
     url: [
       "https://bsgpartners.wf.api.groupware.pro/v1/fn/preDocument/cancel/sap",
@@ -121,7 +121,7 @@ module.exports.cancelFiDocument = async (token, { restApi }) => {
       "content-type": "application/json;charset=UTF-8",
       Authorization: ["Bearer", token].join(" "),
     },
-    body: {},
+    body,
   });
 
   checkResError(result.body, "역분개 실패");
