@@ -8,7 +8,7 @@ const returnResError = (body, prefixMessage) => {
   const err = new Error([prefixMessage].filter(Boolean).join(", "));
 
   try {
-    err.description = "JSON.stringify(body);\n" + JSON.stringify(body);
+    err.description = "JSON.stringify(res.body);\n" + JSON.stringify(body);
   } catch (ex) {
     // pass
   }
