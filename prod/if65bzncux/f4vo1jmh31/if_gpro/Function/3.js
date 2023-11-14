@@ -11,6 +11,7 @@ module.exports = async (draft, { fn, restApi }) => {
           draft.response.body = {
             E_STATUS: "S",
             E_MESSAGE: "성공",
+            RESULT: result,
             ...result,
           };
         } else {
