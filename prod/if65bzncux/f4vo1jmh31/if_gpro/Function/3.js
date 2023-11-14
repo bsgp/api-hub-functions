@@ -5,7 +5,13 @@ module.exports = async (draft, { fn, restApi }) => {
     case "IF-FI-004":
       try {
         const token = await fn.getToken({ restApi });
-        fn.cancelFiDocument(token, ifObj.Data, { restApi });
+        const result = fn.reverseFiDocument(token, ifObj.Data, { restApi });
+
+        draft.response.body = {
+          E_STATUS: "S",
+          E_MESSAGE: "성공",
+          ...result,
+        };
       } catch (ex) {
         draft.response.body = {
           E_STATUS: "E",
