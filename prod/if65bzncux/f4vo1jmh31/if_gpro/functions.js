@@ -24,9 +24,9 @@ const checkResError = (body, prefixMessage) => {
     "scope": "read write"
   }*/
   if (body.success === true) {
-    // if (body.payload.length === 0) {
-    //   returnResError(body, prefixMessage);
-    // }
+    if (body.payload === null) {
+      returnResError(body, prefixMessage);
+    }
   } else {
     returnResError(body, prefixMessage);
   }
