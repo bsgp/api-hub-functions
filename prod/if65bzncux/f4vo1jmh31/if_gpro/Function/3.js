@@ -4,7 +4,7 @@ module.exports = async (draft, { fn, restApi }) => {
   switch (ifObj.InterfaceId) {
     case "IF-FI-004":
       try {
-        const token = await fn.getToken();
+        const token = await fn.getToken({ restApi });
         fn.cancelFiDocument(token, {}, { restApi });
       } catch (ex) {
         draft.response.body = {
