@@ -9,9 +9,7 @@ module.exports = async (draft, { fn, restApi }) => {
       } catch (ex) {
         draft.response.body = {
           E_STATUS: "E",
-          E_MESSAGE: [ex.message, ex.errorDescription]
-            .filter(Boolean)
-            .join(" "),
+          E_MESSAGE: [ex.message, ex.description].filter(Boolean).join(" "),
         };
       }
 
