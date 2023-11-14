@@ -5,7 +5,9 @@ module.exports = async (draft, { fn, restApi }) => {
     case "IF-FI-004":
       try {
         const token = await fn.getToken({ restApi });
-        const result = fn.reverseFiDocument(token, ifObj.Data, { restApi });
+        const result = await fn.reverseFiDocument(token, ifObj.Data, {
+          restApi,
+        });
 
         if (result) {
           draft.response.body = {
