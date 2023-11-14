@@ -9,20 +9,11 @@ module.exports = async (draft, { fn, request, restApi }) => {
           restApi,
         });
 
-        if (result) {
-          draft.response.body = {
-            E_STATUS: "S",
-            E_MESSAGE: "성공",
-            RESULT: result,
-            ...result,
-          };
-        } else {
-          draft.response.body = {
-            E_STATUS: "E",
-            E_MESSAGE: "실패",
-            RESULT: result,
-          };
-        }
+        draft.response.body = {
+          E_STATUS: "S",
+          E_MESSAGE: "성공",
+          ...result,
+        };
       } catch (ex) {
         draft.response.body = {
           E_STATUS: "E",
