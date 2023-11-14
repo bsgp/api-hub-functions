@@ -23,10 +23,10 @@ const checkResError = (body, prefixMessage) => {
     "expires_in": 26663,
     "scope": "read write"
   }*/
-  if (body.success === true && body.payload) {
-    if (body.payload.length === 0) {
-      returnResError(body, prefixMessage);
-    }
+  if (body.success === true) {
+    // if (body.payload.length === 0) {
+    //   returnResError(body, prefixMessage);
+    // }
   } else {
     returnResError(body, prefixMessage);
   }
@@ -108,6 +108,23 @@ module.exports.getOrganizationsList = async (token, { restApi }) => {
   });
 
   checkResError(result.body, "Failed to get 부서 list");
+
+  return result.body.payload;
+};
+
+module.exports.cancelFiDocument = async (token, { restApi }) => {
+  const result = await restApi.post({
+    url: [
+      "https://bsgpartners.wf.api.groupware.pro/v1/fn/preDocument/cancel/sap",
+    ].join("?"),
+    headers: {
+      "content-type": "application/json;charset=UTF-8",
+      Authorization: ["Bearer", token].join(" "),
+    },
+    body: {},
+  });
+
+  checkResError(result.body, "역분개 실패");
 
   return result.body.payload;
 };
