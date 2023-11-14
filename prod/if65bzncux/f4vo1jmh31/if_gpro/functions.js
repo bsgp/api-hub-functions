@@ -112,7 +112,7 @@ module.exports.getOrganizationsList = async (token, { restApi }) => {
   return result.body.payload;
 };
 
-module.exports.cancelFiDocument = async (token, body, { restApi }) => {
+module.exports.reverseFiDocument = async (token, body, { restApi }) => {
   const result = await restApi.post({
     url: [
       "https://bsgpartners.wf.api.groupware.pro/v1/fn/preDocument/cancel/sap",
