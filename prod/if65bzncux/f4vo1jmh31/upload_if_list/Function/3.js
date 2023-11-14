@@ -126,6 +126,12 @@ module.exports = async (draft, { file, env }) => {
       TriggeredBy: "G_PRO",
       Path: "/rfc",
     },
+    ["IF-FI-004"]: {
+      Type: "API",
+      Name: "REVERSE_FI_DOC",
+      TriggeredBy: "SAP",
+      Path: "/gpro",
+    },
     ["IF-FI-011"]: {
       Type: "RFC",
       Name: "ZFI_IF_STD_CODE",
