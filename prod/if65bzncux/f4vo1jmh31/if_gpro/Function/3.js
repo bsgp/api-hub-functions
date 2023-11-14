@@ -1,11 +1,11 @@
-module.exports = async (draft, { fn, restApi }) => {
+module.exports = async (draft, { fn, request, restApi }) => {
   const { ifObj } = draft.json;
 
   switch (ifObj.InterfaceId) {
     case "IF-FI-004":
       try {
         const token = await fn.getToken({ restApi });
-        const result = await fn.reverseFiDocument(token, ifObj.Data, {
+        const result = await fn.reverseFiDocument(token, request.body.Data, {
           restApi,
         });
 
