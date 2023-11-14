@@ -41,7 +41,7 @@ module.exports.getToken = async ({ restApi }) => {
     grant_type: "client_credentials",
   };
 
-  const res = await restApi.get({
+  const res = await restApi.post({
     url: [
       "https://bsgpartners.api.groupware.pro/v1/oauth/token",
       Object.keys(queryObj)
