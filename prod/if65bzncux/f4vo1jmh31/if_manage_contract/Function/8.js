@@ -1,4 +1,4 @@
-module.exports = async (draft, { sql, env, tryit, fn, dayjs, ...args }) => {
+module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
   const { tables, newData, interfaceID } = draft.json;
 
   switch (interfaceID) {
@@ -56,7 +56,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, ...args }) => {
           `%${newData.contractName}%`
         );
       }
-
+      queryBuilder
+        .where(`${tables.contract.name}.bukrs`, user.bukrs)
+        .orWhere(`${tables.contract.name}.bukrs`, "");
       const queryResult = await queryBuilder.run();
       const list = tryit(
         () => queryResult.body.list.map((it) => ({ ...it })),
@@ -90,8 +92,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, ...args }) => {
             }
             return { ...args, type, party_name: name };
           }),
-        test: Object.keys(args),
-        user: { ...args.user },
+        // test: Object.keys(args),
         E_STATUS: "S",
         E_MESSAGE: `조회가\n완료되었습니다`,
       };
