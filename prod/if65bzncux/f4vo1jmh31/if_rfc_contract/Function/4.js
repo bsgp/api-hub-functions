@@ -67,7 +67,7 @@ module.exports = async (draft, { request, tryit }) => {
               key: company.ZZCDEZ,
               text: company.ZCNTS1,
               name: company.ZCNTS1,
-              ref_id: company.BUKRS,
+              ref_id: company.ZZCDEZ,
               prdnt_name: company.ZCNTS5,
               id_no: company.ZCNTS3,
               biz_no: "",
