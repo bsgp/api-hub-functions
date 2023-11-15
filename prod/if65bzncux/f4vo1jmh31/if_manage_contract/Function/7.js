@@ -1,4 +1,4 @@
-module.exports = async (draft, { sql, env, tryit, fn, makeid, file }) => {
+module.exports = async (draft, { sql, env, tryit, fn, makeid, file, user }) => {
   const { tables, newData, userID } = draft.json;
   const contractID = newData.form.contractID;
 
@@ -39,7 +39,11 @@ module.exports = async (draft, { sql, env, tryit, fn, makeid, file }) => {
 
   const changed = {};
   tableList.map((tableKey) => {
-    const tableData = fn.getDB_Object(newData, { key: tableKey, contractID });
+    const tableData = fn.getDB_Object(newData, {
+      key: tableKey,
+      contractID,
+      user,
+    });
     changed[tableKey] = tableData;
   });
 
