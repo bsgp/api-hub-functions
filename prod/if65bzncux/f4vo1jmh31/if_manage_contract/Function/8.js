@@ -109,6 +109,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           `${tables.contract.name}.id as contract_id`,
           `${tables.contract.name}.name as contract_name`,
           `${tables.contract.name}.renewal_ind`,
+          `${tables.contract.name}.bukrs`,
           `${tables.party.name}.contract_id`,
           `${tables.party.name}.ref_id`,
           `${tables.party.name}.stems10`,
@@ -176,18 +177,20 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
 
       draft.response.body = {
         request: newData,
-        list: list.sort((al, be) => {
-          if (al.post_date !== be.post_date) {
-            return Number(al.post_date) - Number(be.post_date);
-          }
-          if (al.contract_id === be.contract_id) {
-            return Number(al.index) - Number(be.index);
-          } else
-            return (
-              Number(al.contract_id.replace(/[A-z]/g, "")) -
-              Number(be.contract_id.replace(/[A-z]/g, ""))
-            );
-        }),
+        list: list
+          .filter((item) => item.bukrs === "" || item.bukrs === user.bukrs)
+          .sort((al, be) => {
+            if (al.post_date !== be.post_date) {
+              return Number(al.post_date) - Number(be.post_date);
+            }
+            if (al.contract_id === be.contract_id) {
+              return Number(al.index) - Number(be.index);
+            } else
+              return (
+                Number(al.contract_id.replace(/[A-z]/g, "")) -
+                Number(be.contract_id.replace(/[A-z]/g, ""))
+              );
+          }),
 
         E_STATUS: "S",
         E_MESSAGE: `조회가\n완료되었습니다`,
