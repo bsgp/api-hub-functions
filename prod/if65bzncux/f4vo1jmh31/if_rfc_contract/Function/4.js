@@ -50,10 +50,10 @@ module.exports = async (draft, { request, tryit }) => {
             list: ET_DATA.map((item) => ({
               index: 1,
               stems10: "1",
-              key: item.BUKRS,
+              key: item.ZZCDEZ,
               text: item.ZCNTS1,
               name: item.ZCNTS1,
-              ref_id: item.BUKRS,
+              ref_id: item.ZZCDEZ,
               prdnt_name: item.ZCNTS5,
               id_no: item.ZCNTS3,
               biz_no: "",
@@ -64,7 +64,7 @@ module.exports = async (draft, { request, tryit }) => {
             value: {
               index: 1,
               stems10: "1",
-              key: company.BUKRS,
+              key: company.ZZCDEZ,
               text: company.ZCNTS1,
               name: company.ZCNTS1,
               ref_id: company.BUKRS,
