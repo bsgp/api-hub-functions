@@ -47,6 +47,20 @@ module.exports = async (draft, { request, tryit }) => {
           const company = { ...ET_DATA[0] };
           draft.response.body = {
             ...result.body.result,
+            list: ET_DATA.map((item) => ({
+              index: 1,
+              stems10: "1",
+              key: item.BUKRS,
+              text: item.ZCNTS1,
+              name: item.ZCNTS1,
+              ref_id: item.BUKRS,
+              prdnt_name: item.ZCNTS5,
+              id_no: item.ZCNTS3,
+              biz_no: "",
+              land_id: "",
+              address: item.ZCNTS4,
+              tel: "",
+            })),
             value: {
               index: 1,
               stems10: "1",
