@@ -20,7 +20,7 @@ module.exports = async (draft, { request, rfc, clone, kst }) => {
 
   switch (request.body.InterfaceId) {
     case "IF-FI-012":
-      request.body.Data.IT_DATA.forEach((each) => {
+      rfcReqData.IT_DATA.forEach((each) => {
         if (each.XNEGP === "X") {
           if (each.WRBTR.startsWith("-")) {
             // pass
