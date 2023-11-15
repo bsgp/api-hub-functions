@@ -1,4 +1,4 @@
-module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
+module.exports = async (draft, { sql, env, tryit, fn, dayjs, ...args }) => {
   const { tables, newData, interfaceID } = draft.json;
 
   switch (interfaceID) {
@@ -90,7 +90,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             }
             return { ...args, type, party_name: name };
           }),
-        test: fn.convDate(dayjs, newData.contractDate[0], "YYYYMMDD", 9),
+        test: Object.keys(args),
         E_STATUS: "S",
         E_MESSAGE: `조회가\n완료되었습니다`,
       };
