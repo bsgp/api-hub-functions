@@ -1,13 +1,13 @@
 module.exports = async (
   draft,
-  { fn, dayjs, sql, env, tryit, makeid, file }
+  { fn, dayjs, sql, env, tryit, makeid, file, user }
 ) => {
   const { interfaceID, tables, newData, userID } = draft.json;
   const sqlParams = { useCustomRole: false, stage: env.CURRENT_ALIAS };
 
   switch (interfaceID) {
     case "IF-CT-102": {
-      const contract = fn.getDB_Object(newData, { key: "contract" });
+      const contract = fn.getDB_Object(newData, { key: "contract", user });
       // const builder = sql("mysql").select(tables.contract.name);
       // const contractValidator = await builder.validator;
       /** create new ContractID by maxID && insert contract table */
