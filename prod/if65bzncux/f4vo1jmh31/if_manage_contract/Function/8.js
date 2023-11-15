@@ -91,6 +91,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, ...args }) => {
             return { ...args, type, party_name: name };
           }),
         test: Object.keys(args),
+        user: { ...args.user },
         E_STATUS: "S",
         E_MESSAGE: `조회가\n완료되었습니다`,
       };
