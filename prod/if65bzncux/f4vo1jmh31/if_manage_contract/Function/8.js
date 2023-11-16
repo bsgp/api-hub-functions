@@ -161,10 +161,10 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
       if (newData.cost_type_id) {
         queryBuilder.where("cost_type_id", "like", newData.cost_type_id);
       }
-      queryBuilder.whereIn("bukrs", [user.bukrs, ""]);
-      // queryBuilder
-      //   .where(`${tables.contract.name}.bukrs`, user.bukrs)
-      //   .orWhere(`${tables.contract.name}.bukrs`, "");
+      if (!(user.bukrs || "").includes("*")) {
+        queryBuilder.whereIn("bukrs", [user.bukrs, ""]);
+      }
+
       const queryResult = await queryBuilder.run();
       const list = tryit(
         () => queryResult.body.list.map((it) => ({ ...it })),
@@ -173,20 +173,18 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
 
       draft.response.body = {
         request: newData,
-        list: list
-          .filter((item) => item.bukrs === "" || item.bukrs === user.bukrs)
-          .sort((al, be) => {
-            if (al.post_date !== be.post_date) {
-              return Number(al.post_date) - Number(be.post_date);
-            }
-            if (al.contract_id === be.contract_id) {
-              return Number(al.index) - Number(be.index);
-            } else
-              return (
-                Number(al.contract_id.replace(/[A-z]/g, "")) -
-                Number(be.contract_id.replace(/[A-z]/g, ""))
-              );
-          }),
+        list: list.sort((al, be) => {
+          if (al.post_date !== be.post_date) {
+            return Number(al.post_date) - Number(be.post_date);
+          }
+          if (al.contract_id === be.contract_id) {
+            return Number(al.index) - Number(be.index);
+          } else
+            return (
+              Number(al.contract_id.replace(/[A-z]/g, "")) -
+              Number(be.contract_id.replace(/[A-z]/g, ""))
+            );
+        }),
 
         E_STATUS: "S",
         E_MESSAGE: `조회가\n완료되었습니다`,
