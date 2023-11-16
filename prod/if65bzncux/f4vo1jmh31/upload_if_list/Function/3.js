@@ -84,6 +84,12 @@ module.exports = async (draft, { file, env }) => {
       TriggeredBy: "BSGON",
       Path: "/rfc",
     },
+    ["IF-CT-002"]: {
+      Type: "API",
+      Name: "POST_DRAFT",
+      TriggeredBy: "CONTRACT",
+      Path: "/gpro",
+    },
     ["IF-CT-007"]: {
       Type: "API",
       Name: "CT_TEMPLATE_LIST",
