@@ -161,7 +161,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
       if (newData.cost_type_id) {
         queryBuilder.where("cost_type_id", "like", newData.cost_type_id);
       }
-      queryBuilder.whereIn("bukrs", [user.bukrs]);
+      queryBuilder.whereIn("bukrs", [user.bukrs, ""]);
       // queryBuilder
       //   .where(`${tables.contract.name}.bukrs`, user.bukrs)
       //   .orWhere(`${tables.contract.name}.bukrs`, "");
