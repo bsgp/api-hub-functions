@@ -94,7 +94,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             }
             return { ...args, type, party_name: name };
           }),
-        // test: Object.keys(args),
+        test: fn.convDate(dayjs, newData.contractDate[0], "YYYYMMDD"),
         E_STATUS: "S",
         E_MESSAGE: `조회가\n완료되었습니다`,
       };
