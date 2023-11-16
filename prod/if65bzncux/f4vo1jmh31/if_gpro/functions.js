@@ -131,22 +131,25 @@ module.exports.reverseFiDocument = async (token, body, { restApi }) => {
 
 module.exports.postDraft = async (token, body, { restApi }) => {
   const draftBody = {
-    ...body,
     templateNo: "BSGP_CT_002",
-    draftTitle: "dkkd",
+    draftTitle: body.name,
     draftContent: JSON.stringify({
-      values: ["홍길동", "BSG SPARK 구축 프로젝트"],
-      labels: ["이름", "계약명"],
+      labels: ["계약명", "작성일", "비고"],
+      values: [
+        "BSG SPARK 구축 프로젝트",
+        "2023-11-16",
+        "계약관리 시스템에 신규 작성 완료하였습니다",
+      ],
     }),
     workflows: [
       {
-        email: "demo01@groupware.pro",
+        email: body.email,
         type: "DRF",
       },
-      {
-        email: "demo02@groupware.pro",
-        type: "APR",
-      },
+      // {
+      //   email: "demo02@groupware.pro",
+      //   type: "APR",
+      // },
       // REF 참조, RCP: 열람
     ],
   };
