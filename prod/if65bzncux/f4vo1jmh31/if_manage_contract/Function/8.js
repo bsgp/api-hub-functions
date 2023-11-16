@@ -54,11 +54,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           `%${newData.contractName}%`
         );
       }
-      // if (!(user.bukrs || "").includes("*")) {
-      //   queryBuilder
-      //     .where(`${tables.contract.name}.bukrs`, "like", user.bukrs)
-      //     .orWhere(`${tables.contract.name}.bukrs`, "like", "");
-      // }
+      if (!(user.bukrs || "").includes("*")) {
+        queryBuilder.whereIn("bukrs", [user.bukrs]);
+      }
       const queryResult = await queryBuilder.run();
       const list = tryit(
         () => queryResult.body.list.map((it) => ({ ...it })),
