@@ -58,8 +58,6 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
       //   queryBuilder
       //     .where(`${tables.contract.name}.bukrs`, "like", user.bukrs)
       //     .orWhere(`${tables.contract.name}.bukrs`, "like", "");
-      //   // .where(`${tables.contract.name}.bukrs`, user.bukrs)
-      //   // .orWhere(`${tables.contract.name}.bukrs`, "");
       // }
       const queryResult = await queryBuilder.run();
       const list = tryit(
