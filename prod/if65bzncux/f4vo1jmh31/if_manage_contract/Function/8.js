@@ -55,7 +55,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         );
       }
       if (!(user.bukrs || "").includes("*")) {
-        queryBuilder.whereIn("bukrs", [user.bukrs, ""]);
+        queryBuilder.whereIn("bukrs", [user.bukrs]);
       }
       const queryResult = await queryBuilder.run();
       const list = tryit(
