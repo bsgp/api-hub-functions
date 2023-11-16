@@ -146,10 +146,14 @@ module.exports.postDraft = async (token, body, { restApi }) => {
         email: body.email,
         type: "DRF",
       },
-      // {
-      //   email: "demo02@groupware.pro",
-      //   type: "APR",
-      // },
+      {
+        email: "demo02@groupware.pro",
+        type: "APR",
+      },
+      {
+        email: "demo02@groupware.pro",
+        type: "RCP",
+      },
       // REF 참조, RCP: 열람
     ],
   };
