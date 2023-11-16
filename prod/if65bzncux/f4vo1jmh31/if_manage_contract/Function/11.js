@@ -6,7 +6,7 @@ module.exports = async (draft, { sql, env }) => {
   })
     .update(tables.wbs.name, { last_send_date: newData.last_send_date })
     .where("contract_id", "like", newData.contract_id)
-    // .where("id", "like", newData.id)
+    .whereIn("id", newData.whereInList)
     .run();
   draft.response.body = {
     updateResult,
