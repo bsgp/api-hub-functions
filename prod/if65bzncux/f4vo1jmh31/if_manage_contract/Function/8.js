@@ -1,12 +1,10 @@
 module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
   const { tables, newData, interfaceID } = draft.json;
+  const sqlParams = { useCustomRole: false, stage: env.CURRENT_ALIAS };
 
   switch (interfaceID) {
     case "IF-CT-105": {
-      const queryBuilder = sql("mysql", {
-        useCustomRole: false,
-        stage: env.CURRENT_ALIAS,
-      })
+      const queryBuilder = sql("mysql", sqlParams)
         .select(tables.contract.name)
         .select(
           `${tables.contract.name}.*`,
@@ -101,10 +99,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
       break;
     }
     case "IF-CT-115": {
-      const queryBuilder = sql("mysql", {
-        useCustomRole: false,
-        stage: env.CURRENT_ALIAS,
-      })
+      const queryBuilder = sql("mysql", sqlParams)
         .select(tables.cost_object.name)
         .select(
           `${tables.cost_object.name}.*`,
