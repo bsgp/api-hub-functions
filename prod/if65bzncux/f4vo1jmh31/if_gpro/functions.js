@@ -135,8 +135,8 @@ module.exports.postDraft = async (token, body, { restApi }) => {
     templateNo: "BSGP_CT_002",
     draftTitle: "dkkd",
     draftContent: JSON.stringify({
-      values: [{ name: "홍길동" }, { name: "BSG SPARK 구축 프로젝트" }],
-      labels: [{ name: "이름" }, { name: "계약명" }],
+      values: ["홍길동", "BSG SPARK 구축 프로젝트"],
+      labels: ["이름", "계약명"],
     }),
     workflows: [
       {
