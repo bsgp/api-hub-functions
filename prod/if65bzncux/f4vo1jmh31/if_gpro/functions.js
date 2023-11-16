@@ -128,3 +128,41 @@ module.exports.reverseFiDocument = async (token, body, { restApi }) => {
 
   return result.body.payload;
 };
+
+module.exports.postDraft = async (token, body, { restApi }) => {
+  const draftBody = {
+    ...body,
+    templateNo: "BSGP_CT_002",
+    draftTitle: "dkkd",
+    draftContent: JSON.stringify({
+      values: [{ name: "홍길동" }, { name: "BSG SPARK 구축 프로젝트" }],
+      labels: [{ name: "이름" }, { name: "계약명" }],
+    }),
+    workflows: [
+      {
+        email: "demo01@groupware.pro",
+        type: "DRF",
+      },
+      {
+        email: "demo02@groupware.pro",
+        type: "APR",
+      },
+      // REF 참조, RCP: 열람
+    ],
+  };
+
+  const result = await restApi.post({
+    url: ["https://bsgpartners.wf.api.groupware.pro/v1/drafts/extDraft"].join(
+      "?"
+    ),
+    headers: {
+      "content-type": "application/json;charset=UTF-8",
+      Authorization: ["Bearer", token].join(" "),
+    },
+    body: draftBody,
+  });
+
+  checkResError(result.body, "기안서 상신 실패");
+
+  return result.body.payload;
+};
