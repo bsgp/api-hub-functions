@@ -132,7 +132,7 @@ module.exports.reverseFiDocument = async (token, body, { restApi }) => {
 module.exports.postDraft = async (token, body, { restApi }) => {
   const draftBody = {
     templateNo: "BSGP_CT_002",
-    draftTitle: body.name,
+    draftTitle: body.title,
     draftContent: JSON.stringify({
       labels: ["계약명", "작성일", "비고"],
       values: [
