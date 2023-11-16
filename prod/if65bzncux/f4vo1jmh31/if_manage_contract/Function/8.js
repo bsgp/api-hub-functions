@@ -54,13 +54,13 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           `%${newData.contractName}%`
         );
       }
-      if (!(user.bukrs || "").includes("*")) {
-        queryBuilder
-          .where(`${tables.contract.name}.bukrs`, "like", user.bukrs)
-          .orWhere(`${tables.contract.name}.bukrs`, "like", "");
-        // .where(`${tables.contract.name}.bukrs`, user.bukrs)
-        // .orWhere(`${tables.contract.name}.bukrs`, "");
-      }
+      // if (!(user.bukrs || "").includes("*")) {
+      //   queryBuilder
+      //     .where(`${tables.contract.name}.bukrs`, "like", user.bukrs)
+      //     .orWhere(`${tables.contract.name}.bukrs`, "like", "");
+      //   // .where(`${tables.contract.name}.bukrs`, user.bukrs)
+      //   // .orWhere(`${tables.contract.name}.bukrs`, "");
+      // }
       const queryResult = await queryBuilder.run();
       const list = tryit(
         () => queryResult.body.list.map((it) => ({ ...it })),
@@ -71,6 +71,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         request: newData,
         queryResult,
         list: list
+          .filter((item) => item.bukrs === "" || item.bukrs === user.bukrs)
           .reduce((acc, curr) => {
             const isExist = acc.findIndex(({ id }) => id === curr.id);
             if (isExist >= 0) {
