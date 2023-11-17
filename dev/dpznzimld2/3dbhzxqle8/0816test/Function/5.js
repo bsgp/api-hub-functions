@@ -8,5 +8,5 @@ module.exports = async (draft, context) => {
     draft.json.nextNodeKey = routeTo.exit;
   };
 
-  return setFailedResponse(context);
+  return setFailedResponse({ context, draft });
 };
