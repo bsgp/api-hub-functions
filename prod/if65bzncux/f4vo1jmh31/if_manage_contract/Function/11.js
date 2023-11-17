@@ -1,13 +1,15 @@
 module.exports = async (draft, { sql, env }) => {
   const { tables, newData } = draft.json;
-  const updateResult = await sql("mysql", {
+  const builder = sql("mysql", {
     useCustomRole: false,
     stage: env.CURRENT_ALIAS,
   })
     .update(tables.wbs.name, { last_send_date: newData.last_send_date })
-    .where("contract_id", "like", newData.contract_id)
-    .whereIn("id", newData.whereInList)
-    .run();
+    .where("contract_id", "like", newData.contract_id);
+  if (newData.whereInList && newData.whereInList.length > 0) {
+    builder.whereIn("id", newData.whereInList);
+  }
+  const updateResult = await builder.run();
   draft.response.body = {
     updateResult,
     newData,
