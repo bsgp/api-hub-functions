@@ -31,6 +31,9 @@ module.exports = async (draft, { request, task }) => {
   // at 6pm, 6am
   const twoTimes = "0 9,22 * * ? *";
 
+  // at 9am, 17
+  const twoTimes2 = request.stage === "0 0,8 * * ? *";
+
   // 14시, 18시, 20시, 02시, 08시
   const fiveTimes =
     request.stage === "prod"
@@ -55,6 +58,11 @@ module.exports = async (draft, { request, task }) => {
       InterfaceId: "IF-MM-003",
       Data: {},
       cron: threeTimes,
+    },
+    {
+      InterfaceId: "IF-MM-004",
+      Data: {},
+      cron: twoTimes2,
     },
     ...["5100", "5200", "6100"].map((werks) => ({
       TaskIdSuffix: werks,
