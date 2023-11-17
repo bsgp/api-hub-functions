@@ -104,6 +104,13 @@ module.exports = async (draft, { request, env, lib }) => {
           delete draft.json.parameters.prev;
         }
         break;
+      case "IF-MM-004":
+        draft.json.parameters = {
+          ...draft.json.parameters,
+          FDATE: kst.subtract(1, "months").startOf("month").format("YYYYMMDD"),
+          TDATE: kst.format("YYYYMMDD"),
+        };
+        break;
       case "IF-PP-001":
         draft.json.parameters = {
           ...draft.json.parameters,
