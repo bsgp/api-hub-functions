@@ -245,7 +245,7 @@ module.exports = async (draft, { request, file, lib, env }) => {
   }
 
   if (request.path && ifObj.Path) {
-    if (request.path === "unknown" || ifObj.Path === "/") {
+    if (request.path === "unknown" || request.Path === "-") {
       // pass
     } else {
       if (request.path !== ifObj.Path) {
