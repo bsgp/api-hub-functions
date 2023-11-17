@@ -54,11 +54,23 @@ module.exports = async (draft, { file, env }) => {
       TriggeredBy: "G_PRO",
       Path: "/rfc",
     },
+    ["IF-CO-010-BATCH"]: {
+      Type: "API-RFC",
+      Name: "ZCO_IF_HR_DEPT",
+      TriggeredBy: "EAI",
+      Path: "/",
+    },
     ["IF-CO-011"]: {
       Type: "RFC",
       Name: "ZCO_IF_HR_EMPLOYEE",
       TriggeredBy: "G_PRO",
       Path: "/rfc",
+    },
+    ["IF-CO-011-BATCH"]: {
+      Type: "API-RFC",
+      Name: "ZCO_IF_HR_EMPLOYEE",
+      TriggeredBy: "EAI",
+      Path: "/",
     },
     ["IF-CO-013"]: {
       Type: "RFC",
@@ -71,6 +83,12 @@ module.exports = async (draft, { file, env }) => {
       Name: "ZCO_IF_HR_EMPLOYEE_ORDER",
       TriggeredBy: "G_PRO",
       Path: "/rfc",
+    },
+    ["IF-CO-035-BATCH"]: {
+      Type: "API-RFC",
+      Name: "ZCO_IF_HR_EMPLOYEE_ORDER",
+      TriggeredBy: "EAI",
+      Path: "/",
     },
     ["IF-CO-036"]: {
       Type: "RFC",
