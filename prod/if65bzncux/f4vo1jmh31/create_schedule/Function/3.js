@@ -2,7 +2,7 @@ module.exports = async (draft, { request, task }) => {
   // const never = "0 0 * * ? 9999";
 
   // 5am
-  const oneTime = "20 6 * * ? *";
+  const oneTime = "30 6 * * ? *";
 
   const seqNumList = [
     {
