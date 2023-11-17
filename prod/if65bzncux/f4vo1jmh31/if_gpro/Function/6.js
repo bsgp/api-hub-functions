@@ -1,18 +1,34 @@
-module.exports = async (draft, { fn, request, restApi }) => {
+module.exports = async (draft, { fn, request, restApi, flow }) => {
   const { ifObj } = draft.json;
 
   switch (ifObj.InterfaceId) {
-    case "IF-CT-002":
+    case "IF-CO-010-BATCH":
       try {
         const token = await fn.getToken({ restApi });
         const result = await fn.postDraft(token, request.body.Data, {
           restApi,
         });
 
+        const rfcResult = await flow.run({
+          id: "if_rfc",
+          body: {
+            InterfaceId: "IF-CO-010",
+            Function: {
+              ...request.body.Function,
+              SysId: "G_PRO",
+              Type: "RFC",
+            },
+            Data: {
+              IT_DATA: result.payload,
+            },
+          },
+        });
+
         draft.response.body = {
           E_STATUS: "S",
           E_MESSAGE: "성공",
-          ...result,
+          GPRO: result,
+          SAP: rfcResult,
         };
       } catch (ex) {
         draft.response.body = {
