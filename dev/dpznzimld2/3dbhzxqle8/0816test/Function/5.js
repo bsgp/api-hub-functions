@@ -1,4 +1,5 @@
-module.exports = async (draft, { request }) => {
+module.exports = async (draft, context) => {
   // your
-  console.log(draft, request);
+  console.log({ draft });
+  console.log({ context });
 };
