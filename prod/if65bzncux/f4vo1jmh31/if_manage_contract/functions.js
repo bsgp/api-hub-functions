@@ -94,6 +94,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid, user }) => {
         fi_gjahr: item.fi_gjahr,
         fi_number: item.fi_number,
         fi_item_no: item.fi_item_no,
+        origin_item_index: item.origin_item_index,
       }));
     }
     case "wbs": {
