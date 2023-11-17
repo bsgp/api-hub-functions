@@ -5,7 +5,7 @@ module.exports = async (draft, { fn, request, restApi, flow }) => {
     case "IF-CO-010-BATCH":
       try {
         const token = await fn.getToken({ restApi });
-        const result = await fn.postDraft(token, request.body.Data, {
+        const result = await fn.getOrganizationsList(token, {
           restApi,
         });
 
@@ -19,7 +19,7 @@ module.exports = async (draft, { fn, request, restApi, flow }) => {
               Type: "RFC",
             },
             Data: {
-              IT_DATA: result.payload,
+              IT_DATA: result,
             },
           },
         });
