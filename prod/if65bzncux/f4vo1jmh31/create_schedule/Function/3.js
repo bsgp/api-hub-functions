@@ -2,28 +2,17 @@ module.exports = async (draft, { request, task }) => {
   // const never = "0 0 * * ? 9999";
 
   // 5am
-  const oneTime = "0 20 * * ? *";
+  const oneTime = "0 5 * * ? *";
 
   const seqNumList = [
     {
-      InterfaceId: "IF-CO-010",
+      InterfaceId: "IF-CO-010-BATCH",
       Data: {},
       Function: {
-        Name: "OEFSACCTSETUP_LOG",
+        Name: "ZCO_IF_HR_DEPT",
       },
       cron: oneTime,
-      flowName: "if_db",
-    },
-    {
-      InterfaceId: "IF-CO-011",
-      Data: {
-        // I_DATE: "20221101"
-      },
-      Function: {
-        Name: "OEPROFITLOSS_GDRA_LOG",
-      },
-      cron: oneTime,
-      flowName: "if_db",
+      flowName: "if_gpro",
     },
     // cron: "0 0/1 * * ? *",
     // cron: "0 17 L,1-9 * ? *",
@@ -45,10 +34,10 @@ module.exports = async (draft, { request, task }) => {
         InterfaceId: IF_ID,
         Data: item.Data,
         Function: {
-          UserId: "EAI Batch",
+          UserId: "EAI_Batch",
           UserText: "EAI Batch",
           SysId: "EAI",
-          Type: "API",
+          Type: "API-RFC",
           ...item.Function,
         },
       }
