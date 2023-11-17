@@ -77,7 +77,7 @@ module.exports = async (draft, { fn, request, restApi, flow }) => {
     case "IF-CO-035-BATCH":
       try {
         const token = await fn.getToken({ restApi });
-        const result = await fn.getOrganizationsList(token, {
+        const result = await fn.getAssignmentsList(token, {
           restApi,
         });
 
