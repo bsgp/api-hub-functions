@@ -19,21 +19,21 @@ module.exports = async (draft, { fn, sql, env, makeid }) => {
       const result = await mysql.table
         .create(spec.name, fn[tableKey]({ mysql, makeid }))
         .run();
-      if (result.statusCode !== 200) {
-        if (spec.desc === "Changed Contract seq info DB table") {
-          const alterResult = await mysql.table
-            .alter(spec.name, function (table) {
-              table.json("before").defaultTo("");
-              table.json("after").defaultTo("");
-              // table.string("docu_date", 8).defaultTo("");
-              // table.string("remark", 100).defaultTo("");
-            })
-            .run();
-          draft.response.body[spec.name] = alterResult;
-        }
-      } else
-        draft.response.body[spec.name] =
-          result.statusCode === 200 ? "Succeed" : result.body;
+      // if (result.statusCode !== 200) {
+      //   if (spec.desc === "Changed Contract seq info DB table") {
+      //     const alterResult = await mysql.table
+      //       .alter(spec.name, function (table) {
+      //         table.json("before").defaultTo("");
+      //         table.json("after").defaultTo("");
+      //         // table.string("docu_date", 8).defaultTo("");
+      //         // table.string("remark", 100).defaultTo("");
+      //       })
+      //       .run();
+      //     draft.response.body[spec.name] = alterResult;
+      //   }
+      // } else
+      draft.response.body[spec.name] =
+        result.statusCode === 200 ? "Succeed" : result.body;
       return true;
     })
   );
