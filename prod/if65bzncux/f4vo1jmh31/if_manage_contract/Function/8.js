@@ -71,7 +71,6 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         request: newData,
         queryResult,
         list: list
-          .filter((item) => item.bukrs === "" || item.bukrs === user.bukrs)
           .reduce((acc, curr) => {
             const isExist = acc.findIndex(({ id }) => id === curr.id);
             if (isExist >= 0) {
