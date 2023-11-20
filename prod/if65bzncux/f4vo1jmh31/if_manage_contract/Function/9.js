@@ -5,6 +5,18 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
 
   switch (interfaceID) {
     case "IF-CT-108": {
+      const cContractData = await sql("mysql", sqlParams)
+        .select(tables["changed_contract"].name)
+        // .where("contract_id", "like", `${contractID}`)
+        // .where("seq", "like", `${seq}`)
+        .run();
+      const currContract = tryit(() => cContractData.body.list, []);
+      draft.response.body = {
+        E_MESSAGE: "변경내역 조회가 완료되었습니다",
+        E_STATUS: "S",
+        contractID,
+        currContract,
+      };
       break;
     }
     case "IF-CT-109": {
