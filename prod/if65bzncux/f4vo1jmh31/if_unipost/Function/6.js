@@ -1,6 +1,7 @@
 module.exports = async (draft, { request, clone, tryit, file, env, sql }) => {
   const webhookData = clone(request.body.Data);
   const stage = env.CURRENT_ALIAS;
+  const sqlParams = { useCustomRole: false, stage };
   // await file.upload("unipost/test.json", webhookData, { stage });
   // {
   //   "secretKey":"",
@@ -50,7 +51,7 @@ module.exports = async (draft, { request, clone, tryit, file, env, sql }) => {
     stage,
   });
 
-  const updateResult = await sql("mysql", { useCustomRole: false, stage })
+  const updateResult = await sql("mysql", sqlParams)
     .update(tables.contract.name, {
       status: fStatus.id,
       uni_contno: contInfo.contNo, // 계약관리번호
