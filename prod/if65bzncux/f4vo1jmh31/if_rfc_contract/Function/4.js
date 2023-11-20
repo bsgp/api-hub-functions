@@ -63,7 +63,7 @@ module.exports = async (draft, { request, tryit }) => {
               address: item.ZCNTS4,
               tel: "",
               isCompany: true,
-              currency: item.ZCNTS2,
+              curr: item.ZCNTS2,
             })),
             value: {
               index: 1,
