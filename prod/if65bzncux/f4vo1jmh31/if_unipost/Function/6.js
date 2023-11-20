@@ -26,7 +26,7 @@ module.exports = async (draft, { request, clone, tryit, file, env, sql }) => {
 
   const contInfo = tryit(() => webhookData.contInfo, {}) || {};
   const contSts = tryit(() => contInfo.contSts, "");
-  const apiUserKey = tryit(() => contInfo.apiUserKey, "");
+  const contractID = tryit(() => contInfo.apiUserKey, "");
   const fStatus = statusList.find((item) => item.uni_id === contSts);
   if (!fStatus) {
     draft.response.body = {
@@ -36,12 +36,12 @@ module.exports = async (draft, { request, clone, tryit, file, env, sql }) => {
     };
     return;
   }
-  if (!apiUserKey) {
+  if (!contractID) {
     draft.response.body = {
       webhookData,
       fStatus,
       E_STATUS: "F",
-      E_MESSAGE: "Cannot find apiUserKey at webhookData",
+      E_MESSAGE: "Cannot find apiUserKey(contractID) at webhookData",
     };
     return;
   }
@@ -62,7 +62,7 @@ module.exports = async (draft, { request, clone, tryit, file, env, sql }) => {
       uni_contsts: contInfo.contSts, // 계약상태코드
       uni_contstsname: contInfo.contStsName, // 계약상태명
     })
-    .where({ id: apiUserKey })
+    .where({ id: contractID })
     .run();
 
   /**
