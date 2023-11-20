@@ -1,4 +1,7 @@
-module.exports = async (draft, { request, clone, tryit, file, env, sql }) => {
+module.exports = async (
+  draft,
+  { request, clone, tryit, file, env, sql, fn }
+) => {
   const webhookData = clone(request.body.Data);
   const stage = env.CURRENT_ALIAS;
   const sqlParams = { useCustomRole: false, stage };
@@ -70,11 +73,41 @@ module.exports = async (draft, { request, clone, tryit, file, env, sql }) => {
    * changed_contract: seq가 있으면 차수, 수정내역 업데이트
    * changed_contract: seq가 없으면 차수, 계약변경 내역 업데이트
    */
+  const tableList = ["party", "bill", "cost_object", "wbs", "attachment"];
+  const query = sql("mysql", sqlParams)
+    .select(tables.contract.name)
+    .where("id", "like", contractID);
+  const queryResult = await query.run();
+  const results = { contract: queryResult.body.list[0] };
+  await Promise.all(
+    tableList.map(async (tableKey) => {
+      const queryTableData = await sql("mysql", sqlParams)
+        .select(tables[tableKey].name)
+        .where("contract_id", "like", contractID)
+        .whereNot({ deleted: true })
+        .orderBy("index", "asc")
+        .run();
+      const tableData = tryit(() => queryTableData.body.list, []);
+      results[tableKey] = fn.sortIndexFn(tableData);
+      return true;
+    })
+  );
+
+  const contract = {
+    ...results.contract,
+    contractID,
+    partyList: results.party,
+    costObjectList: results.cost_object,
+    wbsList: results.wbs,
+    billList: results.bill,
+    attachmentList: results.attachment,
+  };
 
   draft.response.body = {
     webhookData,
     fStatus,
     updateResult,
+    contract,
     E_STATUS: updateResult.statusCode === "200" ? "S" : "F",
   };
 };
