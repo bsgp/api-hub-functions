@@ -68,6 +68,10 @@ module.exports = async (draft, { request, clone, tryit, file, env, sql }) => {
     .where({ id: apiUserKey })
     .run();
 
+  /**
+   * 서명완료 시 차수 업데이트
+   */
+
   draft.response.body = {
     webhookData,
     fStatus,
