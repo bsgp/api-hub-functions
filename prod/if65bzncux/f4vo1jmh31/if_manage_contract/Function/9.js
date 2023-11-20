@@ -4,6 +4,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
   const { contractID } = newData;
 
   switch (interfaceID) {
+    case "IF-CT-108": {
+      break;
+    }
     case "IF-CT-109": {
       const changedData = await sql("mysql", sqlParams)
         .select(tables["change"].name)
@@ -66,7 +69,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
       };
       break;
     }
-    default:
+    default: {
+      draft.response.body = { E_MESSAGE: "Wrong Interface ID", E_STATUS: "F" };
       break;
+    }
   }
 };
