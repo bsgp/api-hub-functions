@@ -55,7 +55,11 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         );
       }
       if (!(user.bukrs || "").includes("*")) {
-        queryBuilder.whereIn("bukrs", [user.bukrs]);
+        const allowBURKS = [user.bukrs];
+        if (user.bukrs === "1000") {
+          allowBURKS.push("");
+        }
+        queryBuilder.whereIn("bukrs", allowBURKS);
       }
       const queryResult = await queryBuilder.run();
       const list = tryit(
@@ -162,7 +166,11 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         queryBuilder.where("cost_type_id", "like", newData.cost_type_id);
       }
       if (!(user.bukrs || "").includes("*")) {
-        queryBuilder.whereIn("bukrs", [user.bukrs]);
+        const allowBURKS = [user.bukrs];
+        if (user.bukrs === "1000") {
+          allowBURKS.push("");
+        }
+        queryBuilder.whereIn("bukrs", allowBURKS);
       }
 
       const queryResult = await queryBuilder.run();
