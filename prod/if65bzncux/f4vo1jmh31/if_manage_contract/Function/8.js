@@ -162,7 +162,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         queryBuilder.where("cost_type_id", "like", newData.cost_type_id);
       }
       if (!(user.bukrs || "").includes("*")) {
-        queryBuilder.whereIn("bukrs", [user.bukrs, ""]);
+        queryBuilder.whereIn("bukrs", [user.bukrs]);
       }
 
       const queryResult = await queryBuilder.run();
