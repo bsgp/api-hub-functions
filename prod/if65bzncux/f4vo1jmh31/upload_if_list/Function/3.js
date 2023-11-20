@@ -108,6 +108,12 @@ module.exports = async (draft, { file, env }) => {
       TriggeredBy: "CONTRACT",
       Path: "/gpro",
     },
+    ["IF-CT-003"]: {
+      Type: "WEBHOOK",
+      Name: "DRAFT_UPDATED",
+      TriggeredBy: "G_PRO",
+      Path: "/gpro",
+    },
     ["IF-CT-007"]: {
       Type: "API",
       Name: "CT_TEMPLATE_LIST",
