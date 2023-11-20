@@ -16,6 +16,14 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
         .run();
 
       const chagedList = tryit(() => changedData.body.list, []);
+      const conversionFn = (arr = [], type = "") =>
+        arr
+          .filter((list) => list.type === type)
+          .map(({ changed_at, changed_by, content }) => ({
+            changed_at: fn.convDate(dayjs, changed_at),
+            changed_by,
+            content: JSON.stringify(content),
+          }));
 
       draft.response.body = {
         E_MESSAGE: "변경내역 조회가 완료되었습니다",
@@ -23,48 +31,12 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
         contractID,
         chagedList,
         history: {
-          contract: chagedList
-            .filter((list) => list.type === "contract")
-            .map(({ changed_at, changed_by, content }) => ({
-              changed_at: fn.convDate(dayjs, changed_at),
-              changed_by,
-              content: JSON.stringify(content),
-            })),
-          partyList: chagedList
-            .filter((list) => list.type === "party")
-            .map(({ changed_at, changed_by, content }) => ({
-              changed_at: fn.convDate(dayjs, changed_at),
-              changed_by,
-              content: JSON.stringify(content),
-            })),
-          costObjectList: chagedList
-            .filter((list) => list.type === "cost_object")
-            .map(({ changed_at, changed_by, content }) => ({
-              changed_at: fn.convDate(dayjs, changed_at),
-              changed_by,
-              content: JSON.stringify(content),
-            })),
-          wbsList: chagedList
-            .filter((list) => list.type === "wbs")
-            .map(({ changed_at, changed_by, content }) => ({
-              changed_at: fn.convDate(dayjs, changed_at),
-              changed_by,
-              content: JSON.stringify(content),
-            })),
-          billList: chagedList
-            .filter((list) => list.type === "bill")
-            .map(({ changed_at, changed_by, content }) => ({
-              changed_at: fn.convDate(dayjs, changed_at),
-              changed_by,
-              content: JSON.stringify(content),
-            })),
-          attachmentList: chagedList
-            .filter((list) => list.type === "attachment")
-            .map(({ changed_at, changed_by, content }) => ({
-              changed_at: fn.convDate(dayjs, changed_at),
-              changed_by,
-              content: JSON.stringify(content),
-            })),
+          contract: conversionFn(chagedList, "contract"),
+          partyList: conversionFn(chagedList, "party"),
+          costObjectList: conversionFn(chagedList, "cost_object"),
+          wbsList: conversionFn(chagedList, "wbs"),
+          billList: conversionFn(chagedList, "bill"),
+          attachmentList: conversionFn(chagedList, "attachment"),
         },
       };
       break;
