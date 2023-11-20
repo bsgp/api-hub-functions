@@ -81,6 +81,8 @@ module.exports.changed_contract =
 
     table.string("seq", 3).defaultTo(""); // 계약차수
     table.json("json"); // json 타입
+    table.json("before").defaultTo("");
+    table.json("after").defaultTo("");
 
     table.primary(["contract_id", "id"]);
   };
