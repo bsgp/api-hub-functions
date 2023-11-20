@@ -37,6 +37,7 @@ module.exports = async (draft, { request, tryit }) => {
               tel: "",
               isCompany: false,
               currency: null,
+              payment_terms: args.ZCNTS11,
             })).sort(
               (al, be) =>
                 Number(al.key.replace(/\.|,|-/g, "")) -
@@ -64,6 +65,7 @@ module.exports = async (draft, { request, tryit }) => {
               tel: "",
               isCompany: true,
               curr: item.ZCNTS2,
+              payment_terms: null,
             })),
             value: {
               index: 1,
