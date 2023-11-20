@@ -18,33 +18,33 @@ module.exports = async (draft, { request, rfc, clone, kst }) => {
     IFTIME: kst.format("HHmmss"),
   };
 
-  switch (request.body.InterfaceId) {
-    case "IF-FI-012":
-      rfcReqData.IT_DATA.forEach((each) => {
-        if (each.XNEGP === "X") {
-          if (each.WRBTR.startsWith("-") || each.WRBTR === "") {
-            // pass
-          } else {
-            each.WRBTR = "-".concat(each.WRBTR);
-          }
-          if (each.DMBTR.startsWith("-") || each.DMBTR === "") {
-            // pass
-          } else {
-            each.DMBTR = "-".concat(each.DMBTR);
-          }
-          if (each.WMWST.startsWith("-") || each.WMWST === "") {
-            // pass
-          } else {
-            each.WMWST = "-".concat(each.WMWST);
-          }
-          if (each.MWSTS.startsWith("-") || each.MWSTS === "") {
-            // pass
-          } else {
-            each.MWSTS = "-".concat(each.MWSTS);
-          }
-        }
-      });
-  }
+  // switch (request.body.InterfaceId) {
+  //   case "IF-FI-012":
+  //     rfcReqData.IT_DATA.forEach((each) => {
+  //       if (each.XNEGP === "X") {
+  //         if (each.WRBTR.startsWith("-") || each.WRBTR === "") {
+  //           // pass
+  //         } else {
+  //           each.WRBTR = "-".concat(each.WRBTR);
+  //         }
+  //         if (each.DMBTR.startsWith("-") || each.DMBTR === "") {
+  //           // pass
+  //         } else {
+  //           each.DMBTR = "-".concat(each.DMBTR);
+  //         }
+  //         if (each.WMWST.startsWith("-") || each.WMWST === "") {
+  //           // pass
+  //         } else {
+  //           each.WMWST = "-".concat(each.WMWST);
+  //         }
+  //         if (each.MWSTS.startsWith("-") || each.MWSTS === "") {
+  //           // pass
+  //         } else {
+  //           each.MWSTS = "-".concat(each.MWSTS);
+  //         }
+  //       }
+  //     });
+  // }
 
   const result = await rfc.invoke(
     rfcName,
