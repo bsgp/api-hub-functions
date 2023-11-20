@@ -334,6 +334,12 @@ module.exports = async (draft, { file, env }) => {
       RfcName: "",
       TriggeredBy: "SUPPORT",
     },
+    ["IF-CT-108"]: {
+      Type: "DB",
+      Name: "GET_COMPARED_SEQ_CONTRACT",
+      RfcName: "",
+      TriggeredBy: "SUPPORT",
+    },
     ["IF-CT-109"]: {
       Type: "DB",
       Name: "GET_CHANGED_HISTORY",
