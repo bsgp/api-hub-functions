@@ -69,7 +69,9 @@ module.exports = async (draft, { request, clone, tryit, file, env, sql }) => {
     .run();
 
   /**
-   * 서명완료 시 changed_contract: 차수, 수정내역 업데이트
+   * webhook으로 data를 받을 때
+   * changed_contract: seq가 있으면 차수, 수정내역 업데이트
+   * changed_contract: seq가 없으면 차수, 계약변경 내역 업데이트
    */
 
   draft.response.body = {
