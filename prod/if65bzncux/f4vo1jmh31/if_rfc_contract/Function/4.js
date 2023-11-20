@@ -35,8 +35,8 @@ module.exports = async (draft, { request, tryit }) => {
               land_id: args.ZCNTS4,
               address: [args.ZCNTS13, args.ZCNTS14].filter(Boolean).join(" "),
               tel: "",
-              isCompany: args.bukrs === "1000",
-              currency: (args.bukrs === "1000" && ZCNTS2) || "KRW",
+              isCompany: false,
+              currency: null,
             })).sort(
               (al, be) =>
                 Number(al.key.replace(/\.|,|-/g, "")) -
@@ -62,6 +62,8 @@ module.exports = async (draft, { request, tryit }) => {
               land_id: "",
               address: item.ZCNTS4,
               tel: "",
+              isCompany: true,
+              currency: item.ZCNTS2,
             })),
             value: {
               index: 1,
