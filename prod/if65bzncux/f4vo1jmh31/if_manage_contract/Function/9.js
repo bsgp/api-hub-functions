@@ -16,7 +16,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
         .run();
 
       const chagedList = tryit(() => changedData.body.list, []);
-      const conversionFn = (type = "") =>
+      const convFn = (type = "") =>
         chagedList
           .filter((list) => list.type === type)
           .map(({ changed_at, changed_by, content }) => ({
@@ -29,14 +29,14 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
         E_MESSAGE: "변경내역 조회가 완료되었습니다",
         E_STATUS: "S",
         contractID,
-        chagedList,
+        // chagedList,
         history: {
-          contract: conversionFn("contract"),
-          partyList: conversionFn("party"),
-          costObjectList: conversionFn("cost_object"),
-          wbsList: conversionFn("wbs"),
-          billList: conversionFn("bill"),
-          attachmentList: conversionFn("attachment"),
+          contract: convFn("contract"),
+          partyList: convFn("party"),
+          costObjectList: convFn("cost_object"),
+          wbsList: convFn("wbs"),
+          billList: convFn("bill"),
+          attachmentList: convFn("attachment"),
         },
       };
       break;
