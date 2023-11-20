@@ -31,6 +31,7 @@ module.exports = async (draft, { lib, file, env, request }) => {
     case "IF-CT-106": // GET_PARTY_LIST_FROM_DB
       draft.json.nextNodeKey = "Function#10";
       break;
+    case "IF-CT-108": // GET COMPARED SEQ CONTRACT
     case "IF-CT-109": // GET CHANGED HISTORY
       draft.json.nextNodeKey = "Function#9";
       break;
