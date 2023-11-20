@@ -16,8 +16,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
         .run();
 
       const chagedList = tryit(() => changedData.body.list, []);
-      const conversionFn = (arr = [], type = "") =>
-        arr
+      const conversionFn = (type = "") =>
+        chagedList
           .filter((list) => list.type === type)
           .map(({ changed_at, changed_by, content }) => ({
             changed_at: fn.convDate(dayjs, changed_at),
@@ -31,12 +31,12 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
         contractID,
         chagedList,
         history: {
-          contract: conversionFn(chagedList, "contract"),
-          partyList: conversionFn(chagedList, "party"),
-          costObjectList: conversionFn(chagedList, "cost_object"),
-          wbsList: conversionFn(chagedList, "wbs"),
-          billList: conversionFn(chagedList, "bill"),
-          attachmentList: conversionFn(chagedList, "attachment"),
+          contract: conversionFn("contract"),
+          partyList: conversionFn("party"),
+          costObjectList: conversionFn("cost_object"),
+          wbsList: conversionFn("wbs"),
+          billList: conversionFn("bill"),
+          attachmentList: conversionFn("attachment"),
         },
       };
       break;
