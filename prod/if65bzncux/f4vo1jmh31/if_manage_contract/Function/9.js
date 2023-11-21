@@ -106,6 +106,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           E_MESSAGE: "변경내역 조회가 완료되었습니다",
           E_STATUS: "S",
           newData,
+          args,
+          errormsg: err.message,
         };
       }
       break;
