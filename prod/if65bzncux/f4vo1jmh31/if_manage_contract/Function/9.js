@@ -40,10 +40,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
               apiUserKey: form.contractID,
               templateNo,
               contName: form.name,
-              // contDate: contextFn.getFormattedDate(
-              //   form.prod_date,
-              //   "YYYY-MM-DD"
-              // ),
+              contDate: fn.convDate(dayjs, form.prod_date, "YYYY-MM-DD"),
               contDocNo: form.id,
               signerList: partyList.map((party, idx) => ({
                 signerName: party.stems10_ko,
