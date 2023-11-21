@@ -103,3 +103,6 @@ module.exports.getTemplateList = async (secretKey, { restApi }) => {
 
   return result.body.response.templateList.list;
 };
+
+module.exports.sortIndexFn = (arr = []) =>
+  arr.sort((al, be) => Number(al.index) - Number(be.index));
