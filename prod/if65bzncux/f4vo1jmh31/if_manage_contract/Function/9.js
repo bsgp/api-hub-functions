@@ -14,19 +14,14 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
         const billToParty = partyList.find((party) => party.stems10 === "2");
         const c_claimsTime = billList
           .map(({ remark, dmbtr_supply, dmbtr_vat, post_date }) => {
-            return [
-              "▷",
-              remark,
-              "\t",
-              "공급가액: ₩",
-              fn.numberWithCommas(dmbtr_supply),
-              "\t",
-              "부가세: ₩",
-              fn.numberWithCommas(dmbtr_vat),
-              "\t",
-              "청구시점: ",
-              fn.convDate(dayjs, post_date, "YYYY-MM-DD"),
-            ].join("");
+            const cRemark = ["▷", remark].join("");
+            const suppAmt = fn.numberWithCommas(dmbtr_supply);
+            const cSuppAmt = ["공급가액: ₩", suppAmt].join("");
+            const taxAmt = fn.numberWithCommas(dmbtr_vat);
+            const cTaxAmt = ["부가세: ₩", taxAmt].join("");
+            const billDate = fn.convDate(dayjs, post_date, "YYYY-MM-DD");
+            const cBillDate = ["청구시점:", billDate].join(" ");
+            return [cRemark, cSuppAmt, cTaxAmt, cBillDate].join("\t");
           })
           .join("\n");
 
