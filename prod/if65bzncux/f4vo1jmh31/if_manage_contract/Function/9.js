@@ -4,8 +4,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
 
   switch (interfaceID) {
     case "IF-CT-108": {
-      const { type, templateNo, form, ...list } = newData;
-      const { partyList, attachmentList, payment_termList, billList } = list;
+      const { type, templateNo, form, ...args } = newData;
+      const { partyList, attachmentList, payment_termList, billList } = args;
 
       const fPaymentTerm =
         payment_termList.find((term) => term.key === form.payment_terms) || {};
