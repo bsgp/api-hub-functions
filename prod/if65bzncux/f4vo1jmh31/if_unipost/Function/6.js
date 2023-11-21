@@ -57,6 +57,7 @@ module.exports = async (
   const updateResult = await sql("mysql", sqlParams)
     .update(tables.contract.name, {
       status: fStatus.id,
+      seq: contInfo.contSeq,
       uni_contno: contInfo.contNo, // 계약관리번호
       uni_contseq: contInfo.contSeq, //  계약관리 일련번호
       uni_coregno: contInfo.coRegno, // 계약소유자 사업자등록번호
