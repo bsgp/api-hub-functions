@@ -25,7 +25,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
               fn.numberWithCommas(dmbtr_vat),
               "\t",
               "청구시점: ",
-              fn.getFormattedDate(post_date, "YYYY-MM-DD"),
+              fn.convDate(dayjs, post_date, "YYYY-MM-DD"),
             ].join("");
           })
           .join("\n");
