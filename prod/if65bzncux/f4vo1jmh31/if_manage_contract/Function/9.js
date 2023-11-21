@@ -4,6 +4,17 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
 
   switch (interfaceID) {
     case "IF-CT-108": {
+      /**
+       * type === "NEW" => INDATE at seq 0
+       * * json: curr all,
+       * * before: "",
+       * * after: curr contDocValues)
+       *
+       * type === "CHANGE" => INDATE at seq: curr'seq +1
+       * * json: curr all,
+       * * before: curr seq's changeCont,
+       * *after: curr contDocValues
+       */
       const { type, templateNo, form, ...args } = newData;
       const { partyList, attachmentList, payment_termList, billList } = args;
       try {
