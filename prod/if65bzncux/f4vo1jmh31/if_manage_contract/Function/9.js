@@ -16,6 +16,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
         E_STATUS: "S",
         contractID,
         currContract,
+        newData,
       };
       break;
     }
