@@ -214,3 +214,24 @@ module.exports.convDate = convDate;
 
 module.exports.sortIndexFn = (arr = []) =>
   arr.sort((al, be) => Number(al.index) - Number(be.index));
+
+const removeCommas = (val) => {
+  return String(val).replace(/,/g, "").replace(/\s/g, "");
+};
+
+function numberWithCommas(xx, options = {}) {
+  const { noTraillingZeroInDecimal = false } = options;
+  if (xx === undefined) {
+    return "0";
+  }
+  const parts = removeCommas(xx.toString()).split(".");
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  if (parts[1] && noTraillingZeroInDecimal === true) {
+    parts[1] = parts[1].replace(/0+$/, "");
+    if (parts[1] === "") {
+      return parts[0];
+    }
+  }
+  return parts.join(".");
+}
+module.exports.numberWithCommas = numberWithCommas;
