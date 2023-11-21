@@ -220,7 +220,7 @@ const removeCommas = (val) => {
 };
 
 function numberWithCommas(xx, options = {}) {
-  const { noTraillingZeroInDecimal = false } = options;
+  const { noTraillingZeroInDecimal = true } = options;
   if (xx === undefined) {
     return "0";
   }
