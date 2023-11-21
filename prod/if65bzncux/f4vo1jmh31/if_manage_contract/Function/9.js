@@ -6,14 +6,14 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
     case "IF-CT-108": {
       /**
        * type === "NEW" => INDATE at seq 0
-       * * json: curr all,
+       * * json: curr all (GET ALL DB TABLE)
        * * before: "",
-       * * after: curr contDocValues)
+       * * after: curr contDocValues
        *
        * type === "CHANGE" => INDATE at seq: curr'seq +1
-       * * json: curr all,
+       * * json: curr all (GET ALL DB TABLE)
        * * before: curr seq's changeCont,
-       * *after: curr contDocValues
+       * * after: curr contDocValues
        */
       const { type, templateNo, form, ...args } = newData;
       const { partyList, attachmentList, payment_termList, billList } = args;
