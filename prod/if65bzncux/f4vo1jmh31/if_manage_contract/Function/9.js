@@ -75,8 +75,6 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
                       return [flag, desc || fileName].join(" ");
                     }),
                   ].join(" \n"),
-                  // c_contName: form.name, // ??? "용역계약서",
-                  // c_attach:attachmentList.map(({ name }) => name).join("\n"),
                 },
               },
             };
