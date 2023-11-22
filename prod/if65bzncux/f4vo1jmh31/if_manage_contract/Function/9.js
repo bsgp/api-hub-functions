@@ -94,7 +94,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
                 contract_id: form.id,
                 seq: form.seq,
                 json: JSON.stringify({ form, ...args }),
-                before: "",
+                before: JSON.stringify({}),
                 after: JSON.stringify(jsonData),
               })
               .onConflict(["id", "seq"])
