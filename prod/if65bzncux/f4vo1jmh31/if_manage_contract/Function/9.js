@@ -164,6 +164,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
                 after: target[curr],
               };
             }
+            return acc;
           }, {});
 
           draft.response.body = {
