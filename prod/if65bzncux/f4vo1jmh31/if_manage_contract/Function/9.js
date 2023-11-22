@@ -40,6 +40,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           (str && [str, tag].join(" ")) || "해당없음";
 
         switch (type) {
+          case "CHANGE": {
+            break;
+          }
           default: {
             // type: "NEW"
             const jsonData = {
