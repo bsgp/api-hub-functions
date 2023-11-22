@@ -152,7 +152,19 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             .run();
           const dbData = tryit(() => changedContractData.body.list, []);
 
-          /** GET Diff */
+          /** GET Diff latestJsonData vs jsonData */
+          const source = latestJsonData.contInfo.contDocValues;
+          const target = jsonData.contInfo.contDocValues;
+
+          const diffItem = Object.keys(target).reduce((acc, curr) => {
+            if (target[curr] !== source[curr]) {
+              acc[curr] = {
+                key: curr,
+                before: source[curr],
+                after: target[curr],
+              };
+            }
+          }, {});
 
           draft.response.body = {
             E_MESSAGE: "변경내역 조회가 완료되었습니다",
@@ -160,6 +172,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             newData,
             latestData,
             dbData,
+            diffItem,
           };
           break;
         }
