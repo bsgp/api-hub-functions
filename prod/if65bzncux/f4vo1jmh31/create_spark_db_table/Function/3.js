@@ -89,7 +89,7 @@ module.exports = async (draft, { file, env }) => {
     ...lastestTableConfig,
     changed_contract: tables.changed_contract,
   };
-  draft.response.body = { changed: { ...lastestTableConfig }, tables };
+  draft.response.body = { changed: { ...draft.json.changed }, tables };
 
   // await file.upload("config/tables.json", tables, {
   //   gzip: true,
