@@ -122,43 +122,29 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             .where("seq", "like", form.seq)
             .run();
           const latestData = tryit(() => getLatestData.body.list[0], {});
-          // const latestJsonData = latestData && latestData.after;
-          // if (!latestJsonData) {
-          //   draft.response.body = {
-          //     E_MESSAGE: "이전 차수 계약정보가\n없습니다",
-          //     E_STATUS: "F",
-          //     newData,
-          //     latestData,
-          //   };
-          //   return;
-          // }
+          const latestJsonData = latestData && latestData.after;
+          if (!latestJsonData) {
+            draft.response.body = {
+              E_MESSAGE: "이전 차수 계약정보가\n없습니다",
+              E_STATUS: "F",
+              newData,
+              latestData,
+            };
+            return;
+          }
 
-          // const builder = sql("mysql", sqlParams);
-
+          const nextSeq = (Number(form.seq) + 1).toString();
           const newChangedContractData = await sql("mysql", sqlParams)
             .insert(tables["changed_contract"].name, {
               contract_id: form.id,
-              seq: "0",
+              seq: nextSeq,
               json: JSON.stringify({ form, ...args }),
-              before: JSON.stringify({}),
+              before: JSON.stringify(latestJsonData),
               after: JSON.stringify(jsonData),
             })
             .onConflict()
             .merge()
             .run();
-
-          // const nextSeq = (Number(form.seq) + 1).toString();
-          // const newChangedContractData = await sql("mysql", sqlParams)
-          //   .insert(tables["changed_contract"].name, {
-          //     contract_id: form.id,
-          //     seq: nextSeq,
-          //     json: JSON.stringify({ form, ...args }),
-          //     before: JSON.stringify(latestJsonData),
-          //     after: JSON.stringify(jsonData),
-          //   })
-          //   .onConflict()
-          //   .merge()
-          //   .run();
 
           const changedContractData = await sql("mysql", sqlParams)
             .select(tables["changed_contract"].name)
