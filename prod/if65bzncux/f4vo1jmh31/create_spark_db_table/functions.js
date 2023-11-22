@@ -71,21 +71,18 @@ module.exports.contract =
   };
 
 /** TABLE: changed_contract */
-module.exports.changed_contract =
-  ({ makeid }) =>
-  (table) => {
-    table.charset("utf8mb4");
+module.exports.changed_contract = () => (table) => {
+  table.charset("utf8mb4");
 
-    table.string("contract_id", 10).notNullable();
-    table.string("id", 5).defaultTo(makeid(5)); // makeid()
+  table.string("contract_id", 10).notNullable();
+  table.string("seq", 3).defaultTo(""); // 계약차수
 
-    table.string("seq", 3).defaultTo(""); // 계약차수
-    table.json("json"); // json 타입
-    table.json("before").defaultTo("");
-    table.json("after").defaultTo("");
+  table.json("json"); // json 타입
+  table.json("before").defaultTo("");
+  table.json("after").defaultTo("");
 
-    table.primary(["contract_id", "id"]);
-  };
+  table.primary(["contract_id", "seq"]);
+};
 
 /** TABLE: ref_doc */
 module.exports.ref_doc =
