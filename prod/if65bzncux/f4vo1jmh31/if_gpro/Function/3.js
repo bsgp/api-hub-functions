@@ -8,7 +8,7 @@ module.exports = async (draft) => {
 
       break;
     default:
-      if (ifObj.Function.Type === "WEBHOOK") {
+      if (ifObj.Type === "WEBHOOK") {
         draft.json.nextNodeKey = "Function#7";
       } else {
         draft.json.nextNodeKey = "Function#6";
