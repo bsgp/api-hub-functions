@@ -288,22 +288,36 @@ module.exports = async (draft, { file, env }) => {
       TriggeredBy: "WORKSHEET",
       Path: "/rfc",
     },
-    // ["IF-SD-GBS04"]: {
-    //   Type: "API",
-    //   Name: "SHOPS",
-    //   TriggeredBy: "SAP",
-    //   UrlPath: "/v1/sap-interface/eai/shop",
-    //   BodyToQueryString: false,
-    //   HttpHeaders: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   Path: "/gbos",
-    // },
-    // ["IF-CO-SAC02"]: {
-    //   Type: "DB",
-    //   Name: "OEPROFITLOSS_GDRA_LOG",
-    //   RfcName: "ZCO_IF_SAC02",
-    // },
+    ["IF-TS-009"]: {
+      Type: "RFC",
+      Name: "ZSIRFC2075",
+      TriggeredBy: "TIMESHEET",
+      Path: "/rfc",
+    },
+    ["IF-WS-005"]: {
+      Type: "RFC",
+      Name: "ZSIRFC1030",
+      TriggeredBy: "WORKSHEET",
+      Path: "/rfc",
+    },
+    ["IF-WS-006"]: {
+      Type: "RFC",
+      Name: "ZSIRFC1025",
+      TriggeredBy: "WORKSHEET",
+      Path: "/rfc",
+    },
+    ["IF-WS-007"]: {
+      Type: "RFC",
+      Name: "ZSIRFC1020",
+      TriggeredBy: "WORKSHEET",
+      Path: "/rfc",
+    },
+    ["IF-WS-008"]: {
+      Type: "RFC",
+      Name: "ZSIRFC1041",
+      TriggeredBy: "WORKSHEET",
+      Path: "/rfc",
+    },
     ["IF-CT-101"]: {
       Type: "DB",
       Name: "GET_DATA_FROM_DB",
