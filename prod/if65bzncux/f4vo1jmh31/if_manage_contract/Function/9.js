@@ -17,142 +17,134 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
        */
       const { type, templateNo, form, ...args } = newData;
       const { partyList, attachmentList, payment_termList, billList } = args;
-      try {
-        const fPaymentTerm =
-          payment_termList.find((term) => term.key === form.payment_terms) ||
-          {};
-        const c_paymentTerms = fPaymentTerm.text;
-        const billToParty = partyList.find((party) => party.stems10 === "2");
-        const c_claimsTime = billList
-          .map(({ remark, dmbtr_supply, dmbtr_vat, post_date }) => {
-            const cRemark = ["▷", remark].join("");
-            const suppAmt = fn.numberWithCommas(dmbtr_supply);
-            const cSuppAmt = ["공급가액: ₩", suppAmt].join("");
-            const taxAmt = fn.numberWithCommas(dmbtr_vat);
-            const cTaxAmt = ["부가세: ₩", taxAmt].join("");
-            const billDate = fn.convDate(dayjs, post_date, "YYYY-MM-DD");
-            const cBillDate = ["청구시점:", billDate].join(" ");
-            return [cRemark, cSuppAmt, cTaxAmt, cBillDate].join("\t");
-          })
-          .join("\n");
+      const fPaymentTerm =
+        payment_termList.find((term) => term.key === form.payment_terms) || {};
+      const c_paymentTerms = fPaymentTerm.text;
+      const billToParty = partyList.find((party) => party.stems10 === "2");
+      const c_claimsTime = billList
+        .map(({ remark, dmbtr_supply, dmbtr_vat, post_date }) => {
+          const cRemark = ["▷", remark].join("");
+          const suppAmt = fn.numberWithCommas(dmbtr_supply);
+          const cSuppAmt = ["공급가액: ₩", suppAmt].join("");
+          const taxAmt = fn.numberWithCommas(dmbtr_vat);
+          const cTaxAmt = ["부가세: ₩", taxAmt].join("");
+          const billDate = fn.convDate(dayjs, post_date, "YYYY-MM-DD");
+          const cBillDate = ["청구시점:", billDate].join(" ");
+          return [cRemark, cSuppAmt, cTaxAmt, cBillDate].join("\t");
+        })
+        .join("\n");
 
-        const addTextIfExist = (str, tag = "%") =>
-          (str && [str, tag].join(" ")) || "해당없음";
+      const addTextIfExist = (str, tag = "%") =>
+        (str && [str, tag].join(" ")) || "해당없음";
 
-        const jsonData = {
-          contInfo: {
-            apiUserKey: form.contractID,
-            templateNo,
-            contName: form.name,
-            contDate: fn.convDate(dayjs, form.prod_date, "YYYY-MM-DD"),
-            contDocNo: form.id,
-            signerList: partyList.map((party, idx) => ({
-              signerName: party.stems10_ko,
-              coRegno: party.id_no, // 사업자번호
-              coName: party.name,
-              coOwnNm: party.prdnt_name, // 대표자
-              coAddr: party.address, // 주소
-              usName: party.name, // 담당자
-              usCellno: `010-0000-000${idx}`, // 담당 연락처
-              usEmail: `xxx${idx}@unipost.co.kr`, // 담당 메일
-            })),
-            contDocValues: {
-              contSdate: form.start_date,
-              contEdate: form.end_date,
-              suppAmt: `${Number(form.dmbtr_supply)}`,
-              c_vatSts: billToParty.gl_group_id !== "3000" ? "VAT 별도" : " ",
-              // 부가세 텍스트
-              c_paymentTerms, // 지급조건
-              c_claimsTime, // 청구시점
-              c_contractDeposit: addTextIfExist(form.contract_deposit),
-              // 계약이행보증
-              c_firstPaymentReturnDeposit: addTextIfExist(
-                form.f_payment_return_deposit
-              ), // 선급금보증
-              c_warrHajaDeposit: addTextIfExist(form.warr_haja_deposit),
-              // 하자이행보증
-              c_delayedMoney: addTextIfExist(form.delayed_money, "/ 1000"),
-              // 지체상금율
-              c_etc: form.etc,
-              c_attach: [
-                "1. 보안서약서",
-                ...attachmentList.map(({ name = "", desc = "" }, idx) => {
-                  const flag = `${idx + 2}.`;
-                  const fileName = name.replace(/\.([^.]+)$/, "");
-                  return [flag, desc || fileName].join(" ");
-                }),
-              ].join(" \n"),
-            },
+      const jsonData = {
+        contInfo: {
+          apiUserKey: form.contractID,
+          templateNo,
+          contName: form.name,
+          contDate: fn.convDate(dayjs, form.prod_date, "YYYY-MM-DD"),
+          contDocNo: form.id,
+          signerList: partyList.map((party, idx) => ({
+            signerName: party.stems10_ko,
+            coRegno: party.id_no, // 사업자번호
+            coName: party.name,
+            coOwnNm: party.prdnt_name, // 대표자
+            coAddr: party.address, // 주소
+            usName: party.name, // 담당자
+            usCellno: `010-0000-000${idx}`, // 담당 연락처
+            usEmail: `xxx${idx}@unipost.co.kr`, // 담당 메일
+          })),
+          contDocValues: {
+            contSdate: form.start_date,
+            contEdate: form.end_date,
+            suppAmt: `${Number(form.dmbtr_supply)}`,
+            c_vatSts: billToParty.gl_group_id !== "3000" ? "VAT 별도" : " ",
+            // 부가세 텍스트
+            c_paymentTerms, // 지급조건
+            c_claimsTime, // 청구시점
+            c_contractDeposit: addTextIfExist(form.contract_deposit),
+            // 계약이행보증
+            c_firstPaymentReturnDeposit: addTextIfExist(
+              form.f_payment_return_deposit
+            ), // 선급금보증
+            c_warrHajaDeposit: addTextIfExist(form.warr_haja_deposit),
+            // 하자이행보증
+            c_delayedMoney: addTextIfExist(form.delayed_money, "/ 1000"),
+            // 지체상금율
+            c_etc: form.etc,
+            c_attach: [
+              "1. 보안서약서",
+              ...attachmentList.map(({ name = "", desc = "" }, idx) => {
+                const flag = `${idx + 2}.`;
+                const fileName = name.replace(/\.([^.]+)$/, "");
+                return [flag, desc || fileName].join(" ");
+              }),
+            ].join(" \n"),
           },
-        };
+        },
+      };
 
-        switch (type) {
-          case "CHANGE": {
-            const getLatestData = await sql("mysql", sqlParams)
-              .select(tables["changed_contract"].name)
-              .where("contract_id", "like", `${form.id}`)
-              .where("seq", "like", form.seq)
-              .run();
-            const latestData = tryit(() => getLatestData.body.list[0], {});
-            const latestJsonData = latestData.after;
-            if (!latestJsonData) {
-              draft.response.body = {
-                E_MESSAGE: "이전 차수 계약정보가 없습니다",
-                E_STATUS: "F",
-                newData,
-                latestData,
-              };
-              return;
-            }
+      switch (type) {
+        case "NEW": {
+          const createChangedContractData = await sql("mysql", sqlParams)
+            .insert(tables["changed_contract"].name, {
+              contract_id: form.id,
+              seq: form.seq,
+              json: JSON.stringify({ form, ...args }),
+              before: JSON.stringify({}),
+              after: JSON.stringify(jsonData),
+            })
+            .onConflict(["id", "seq"])
+            .merge()
+            .run();
 
+          const changedContractData = await sql("mysql", sqlParams)
+            .select(tables["changed_contract"].name)
+            .where("contract_id", "like", `${form.id}`)
+            .where("seq", "like", form.seq)
+            .run();
+          const dbData = tryit(() => changedContractData.body.list, []);
+          draft.response.body = {
+            E_MESSAGE: "변경내역 조회가 완료되었습니다",
+            E_STATUS: "S",
+            interfaceID,
+            newData,
+            jsonData,
+            createChangedContractData,
+            dbData,
+          };
+          break;
+        }
+        case "CHANGE": {
+          const getLatestData = await sql("mysql", sqlParams)
+            .select(tables["changed_contract"].name)
+            .where("contract_id", "like", `${form.id}`)
+            .where("seq", "like", form.seq)
+            .run();
+          const latestData = tryit(() => getLatestData.body.list[0], {});
+          const latestJsonData = latestData.after;
+          if (!latestJsonData) {
             draft.response.body = {
-              E_MESSAGE: "변경내역 조회가 완료되었습니다",
-              E_STATUS: "S",
+              E_MESSAGE: "이전 차수 계약정보가 없습니다",
+              E_STATUS: "F",
               newData,
               latestData,
             };
-            break;
+            return;
           }
-          default: {
-            // type: "NEW"
-            const createChangedContractData = await sql("mysql", sqlParams)
-              .insert(tables["changed_contract"].name, {
-                contract_id: form.id,
-                seq: form.seq,
-                json: JSON.stringify({ form, ...args }),
-                before: JSON.stringify({}),
-                after: JSON.stringify(jsonData),
-              })
-              .onConflict(["id", "seq"])
-              .merge()
-              .run();
 
-            const changedContractData = await sql("mysql", sqlParams)
-              .select(tables["changed_contract"].name)
-              .where("contract_id", "like", `${form.id}`)
-              .where("seq", "like", form.seq)
-              .run();
-            const dbData = tryit(() => changedContractData.body.list, []);
-            draft.response.body = {
-              E_MESSAGE: "변경내역 조회가 완료되었습니다",
-              E_STATUS: "S",
-              interfaceID,
-              newData,
-              jsonData,
-              createChangedContractData,
-              dbData,
-            };
-            break;
-          }
+          draft.response.body = {
+            E_MESSAGE: "변경내역 조회가 완료되었습니다",
+            E_STATUS: "S",
+            newData,
+            latestData,
+          };
+          break;
         }
-      } catch (err) {
-        draft.response.body = {
-          E_MESSAGE: "변경내역 조회가 완료되었습니다",
-          E_STATUS: "S",
-          newData,
-          args,
-          errormsg: err.message,
-        };
+        default: {
+          draft.response.body = { E_MESSAGE: "Wrong contType", E_STATUS: "F" };
+          break;
+        }
       }
       break;
     }
