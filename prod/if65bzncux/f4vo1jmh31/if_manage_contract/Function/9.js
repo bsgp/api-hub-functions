@@ -167,7 +167,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           }, {});
 
           const chgContContents = [];
-          const { contSdate, contEdate, suppAmt, c_vatSts, ...args } = diffItem;
+          const { contSdate, contEdate, suppAmt, c_vatSts, ...diffs } =
+            diffItem;
           if (contSdate || contEdate) {
             chgContContents.push({
               c_rowType: "date",
@@ -189,8 +190,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
               c_vatType: target.c_vatSts === "VAT 별도" ? "suppAmt" : "contAmt",
             });
           }
-          if (args && Object.keys(args).length > 0) {
-            Object.keys(args).map((key) => {
+          if (diffs && Object.keys(diffs).length > 0) {
+            Object.keys(diffs).map((key) => {
               chgContContents.push({
                 c_rowType: key,
                 c_rowName: key,
