@@ -132,18 +132,33 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             };
             return;
           }
-          const nextSeq = (Number(form.seq) + 1).toString();
-          const newChangedContractData = await sql("mysql", sqlParams)
+
+          const builder = sql("mysql", sqlParams);
+
+          const newChangedContractData = builder
             .insert(tables["changed_contract"].name, {
               contract_id: form.id,
-              seq: nextSeq,
+              seq: "0",
               json: JSON.stringify({ form, ...args }),
-              before: JSON.stringify(latestJsonData),
+              before: JSON.stringify({}),
               after: JSON.stringify(jsonData),
             })
-            .onConflict(["id", "seq"])
+            .onConflict()
             .merge()
             .run();
+
+          // const nextSeq = (Number(form.seq) + 1).toString();
+          // const newChangedContractData = builder
+          //   .insert(tables["changed_contract"].name, {
+          //     contract_id: form.id,
+          //     seq: nextSeq,
+          //     json: JSON.stringify({ form, ...args }),
+          //     before: JSON.stringify(latestJsonData),
+          //     after: JSON.stringify(jsonData),
+          //   })
+          //   .onConflict()
+          //   .merge()
+          //   .run();
 
           const changedContractData = await sql("mysql", sqlParams)
             .select(tables["changed_contract"].name)
