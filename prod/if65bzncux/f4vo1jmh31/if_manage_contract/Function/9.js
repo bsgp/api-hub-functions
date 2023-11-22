@@ -191,10 +191,20 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             });
           }
           if (diffs && Object.keys(diffs).length > 0) {
+            const diffKeyMapping = {
+              c_paymentTerms: "지급조건",
+              c_claimsTime: "청구시점",
+              c_contractDeposit: "계약이행보증",
+              c_firstPaymentReturnDeposit: "선급금보증",
+              c_warrHajaDeposit: "하자이행보증",
+              c_delayedMoney: "지체상금율",
+              c_etc: "기타",
+              c_attach: "첨부서류류",
+            };
             Object.keys(diffs).map((key) => {
               chgContContents.push({
                 c_rowType: key,
-                c_rowName: key,
+                c_rowName: diffKeyMapping[key] || "No KeyMapping",
                 before_content: source[key],
                 content: target[key],
               });
