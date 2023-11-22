@@ -134,7 +134,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           }
 
           const nextSeq = (Number(form.seq) + 1).toString();
-          const newChangedContractData = await sql("mysql", sqlParams)
+          await sql("mysql", sqlParams)
             .insert(tables["changed_contract"].name, {
               contract_id: form.id,
               seq: nextSeq,
@@ -152,12 +152,13 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             .run();
           const dbData = tryit(() => changedContractData.body.list, []);
 
+          /** GET Diff */
+
           draft.response.body = {
             E_MESSAGE: "변경내역 조회가 완료되었습니다",
             E_STATUS: "S",
             newData,
             latestData,
-            newChangedContractData,
             dbData,
           };
           break;
