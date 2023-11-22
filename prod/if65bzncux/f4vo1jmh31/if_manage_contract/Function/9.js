@@ -156,6 +156,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
               before: JSON.stringify(latestJsonData),
               after: JSON.stringify(jsonData),
             })
+            .where("contract_id", "like", `${form.id}`)
+            .where("seq", "like", nextSeq)
             .run();
 
           const changedContractData = await sql("mysql", sqlParams)
