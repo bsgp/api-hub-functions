@@ -132,10 +132,11 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             };
             return;
           }
+          const nextSeq = (Number(form.seq) + 1).toString();
           const newChangedContractData = await sql("mysql", sqlParams)
             .insert(tables["changed_contract"].name, {
               contract_id: form.id,
-              seq: form.seq,
+              seq: nextSeq,
               json: JSON.stringify({ form, ...args }),
               before: JSON.stringify(latestJsonData),
               after: JSON.stringify(jsonData),
