@@ -189,6 +189,16 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
               c_vatType: target.c_vatSts === "VAT 별도" ? "suppAmt" : "contAmt",
             });
           }
+          if (args && Object.keys(args).length > 0) {
+            Object.keys(args).map((key) => {
+              chgContContents.push({
+                c_rowType: key,
+                c_rowName: key,
+                before_content: source[key],
+                content: target[key],
+              });
+            });
+          }
 
           draft.response.body = {
             E_MESSAGE: "변경내역 조회가 완료되었습니다",
@@ -197,7 +207,19 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             latestData,
             dbData,
             diffItem,
-            chgContContents,
+            jsonData: {
+              contInfo: {
+                apiUserKey: form.id,
+                // apiUserData: "연동 DATA",
+                templateNo,
+                orgContNo: form.uni_contno,
+                orgContSeq: form.uni_contseq,
+                contName: form.name,
+                contDate: fn.convDate(dayjs, form.prod_date, "YYYY-MM-DD"),
+                contDocNo: form.id,
+                contDocValues: { chgContContents },
+              },
+            },
           };
           break;
         }
