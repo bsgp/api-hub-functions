@@ -125,7 +125,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           const latestJsonData = latestData && latestData.after;
           if (!latestJsonData) {
             draft.response.body = {
-              E_MESSAGE: "이전 차수 계약정보가 없습니다",
+              E_MESSAGE: "이전 차수 계약정보가\n없습니다",
               E_STATUS: "F",
               newData,
               latestData,
