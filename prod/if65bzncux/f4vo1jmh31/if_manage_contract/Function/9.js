@@ -122,16 +122,16 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             .where("seq", "like", form.seq)
             .run();
           const latestData = tryit(() => getLatestData.body.list[0], {});
-          const latestJsonData = latestData && latestData.after;
-          if (!latestJsonData) {
-            draft.response.body = {
-              E_MESSAGE: "이전 차수 계약정보가\n없습니다",
-              E_STATUS: "F",
-              newData,
-              latestData,
-            };
-            return;
-          }
+          // const latestJsonData = latestData && latestData.after;
+          // if (!latestJsonData) {
+          //   draft.response.body = {
+          //     E_MESSAGE: "이전 차수 계약정보가\n없습니다",
+          //     E_STATUS: "F",
+          //     newData,
+          //     latestData,
+          //   };
+          //   return;
+          // }
 
           const builder = sql("mysql", sqlParams);
 
