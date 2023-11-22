@@ -41,6 +41,11 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
 
         switch (type) {
           case "CHANGE": {
+            draft.response.body = {
+              E_MESSAGE: "변경내역 조회가 완료되었습니다",
+              E_STATUS: "S",
+              newData,
+            };
             break;
           }
           default: {
