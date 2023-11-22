@@ -199,7 +199,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
               c_warrHajaDeposit: "하자이행보증",
               c_delayedMoney: "지체상금율",
               c_etc: "기타",
-              c_attach: "첨부서류류",
+              c_attach: "첨부서류",
             };
             Object.keys(diffs).map((key) => {
               chgContContents.push({
