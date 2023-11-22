@@ -85,20 +85,13 @@ module.exports = async (draft, { file, env }) => {
       desc: "groupware letter approval info DB",
     },
   };
-  draft.json.changed = {
-    ...lastestTableConfig,
-    changed_contract: tables.changed_contract,
-  };
+  draft.json.changed = { ...lastestTableConfig };
   draft.response.body = { changed: { ...draft.json.changed }, tables };
 
   // await file.upload("config/tables.json", tables, {
   //   gzip: true,
   //   stage: env.CURRENT_ALIAS,
   // });
-  await file.upload("config/tables.json", draft.json.changed, {
-    gzip: true,
-    stage: env.CURRENT_ALIAS,
-  });
 
   // const newTableConfig =
   //   await file.upload("config/tables.json", tables, {
