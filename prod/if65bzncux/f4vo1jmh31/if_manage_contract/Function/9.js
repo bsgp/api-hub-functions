@@ -89,7 +89,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
                 },
               },
             };
-            const indateRes = await sql("mysql", sqlParams)
+            const createChangedContractData = await sql("mysql", sqlParams)
               .insert(tables["changed_contract"].name, {
                 contract_id: form.id,
                 seq: form.seq,
@@ -101,31 +101,24 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
               .merge()
               .run();
 
-            const cContractData = await sql("mysql", sqlParams)
+            const changedContractData = await sql("mysql", sqlParams)
               .select(tables["changed_contract"].name)
               .where("contract_id", "like", `${form.id}`)
               // .where("seq", "like", `${seq}`)
               .run();
-            const dbData = tryit(() => cContractData.body.list, []);
+            const dbData = tryit(() => changedContractData.body.list, []);
             draft.response.body = {
               E_MESSAGE: "변경내역 조회가 완료되었습니다",
               E_STATUS: "S",
-              // currContract,
               interfaceID,
               newData,
               jsonData,
-              indateRes,
+              createChangedContractData,
               dbData,
             };
             break;
           }
         }
-        // const cContractData = await sql("mysql", sqlParams)
-        //   .select(tables["changed_contract"].name)
-        //   // .where("contract_id", "like", `${contractID}`)
-        //   // .where("seq", "like", `${seq}`)
-        //   .run();
-        // const currContract = tryit(() => cContractData.body.list, []);
       } catch (err) {
         draft.response.body = {
           E_MESSAGE: "변경내역 조회가 완료되었습니다",
