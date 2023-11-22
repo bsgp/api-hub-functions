@@ -132,12 +132,32 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             };
             return;
           }
+          const newChangedContractData = await sql("mysql", sqlParams)
+            .insert(tables["changed_contract"].name, {
+              contract_id: form.id,
+              seq: form.seq,
+              json: JSON.stringify({ form, ...args }),
+              before: JSON.stringify({}),
+              after: JSON.stringify(jsonData),
+            })
+            .onConflict(["id", "seq"])
+            .merge()
+            .run();
+
+          const changedContractData = await sql("mysql", sqlParams)
+            .select(tables["changed_contract"].name)
+            .where("contract_id", "like", `${form.id}`)
+            // .where("seq", "like", form.seq)
+            .run();
+          const dbData = tryit(() => changedContractData.body.list, []);
 
           draft.response.body = {
             E_MESSAGE: "변경내역 조회가 완료되었습니다",
             E_STATUS: "S",
             newData,
             latestData,
+            newChangedContractData,
+            dbData,
           };
           break;
         }
