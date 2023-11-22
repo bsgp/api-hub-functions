@@ -159,13 +159,36 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           const diffItem = Object.keys(target).reduce((acc, curr) => {
             if (target[curr] !== source[curr]) {
               acc[curr] = {
-                key: curr,
                 before: source[curr],
                 after: target[curr],
               };
             }
             return acc;
           }, {});
+
+          const chgContContents = [];
+          const { contSdate, contEdate, suppAmt, c_vatSts, ...args } = diffItem;
+          if (contSdate || contEdate) {
+            chgContContents.push({
+              c_rowType: "date",
+              c_rowName: "계약기간",
+              before_contSdate: source.contSdate,
+              before_contEdate: source.contEdate,
+              contSdate: target.contSdate,
+              contEdate: target.contEdate,
+            });
+          }
+          if (suppAmt || c_vatSts) {
+            chgContContents.push({
+              c_rowType: "amt",
+              c_rowName: "계약총금액",
+              before_amt: source.suppAmt,
+              before_vatType:
+                source.c_vatSts === "VAT 별도" ? "suppAmt" : "contAmt",
+              c_amt: target.suppAmt,
+              c_vatType: target.c_vatSts === "VAT 별도" ? "suppAmt" : "contAmt",
+            });
+          }
 
           draft.response.body = {
             E_MESSAGE: "변경내역 조회가 완료되었습니다",
@@ -174,6 +197,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             latestData,
             dbData,
             diffItem,
+            chgContContents,
           };
           break;
         }
