@@ -149,15 +149,16 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
 
           const nextSeq = (Number(form.seq) + 1).toString();
           const newChangedContractData = await sql("mysql", sqlParams)
-            .upsert(tables["changed_contract"].name, {
+            .select(tables["changed_contract"].name)
+            .where("contract_id", "like", `${form.id}`)
+            .where("seq", "like", nextSeq)
+            .upsert({
               contract_id: form.id,
               seq: nextSeq,
               json: JSON.stringify({ form, ...args }),
               before: JSON.stringify(latestJsonData),
               after: JSON.stringify(jsonData),
             })
-            .where("contract_id", "like", `${form.id}`)
-            .where("seq", "like", nextSeq)
             .run();
 
           const changedContractData = await sql("mysql", sqlParams)
