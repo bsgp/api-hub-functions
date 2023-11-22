@@ -149,7 +149,6 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           const changedContractData = await sql("mysql", sqlParams)
             .select(tables["changed_contract"].name)
             .where("contract_id", "like", `${form.id}`)
-            // .where("seq", "like", form.seq)
             .run();
           const dbData = tryit(() => changedContractData.body.list, []);
 
