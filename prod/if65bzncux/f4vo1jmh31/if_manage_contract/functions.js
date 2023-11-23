@@ -68,7 +68,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid, user }) => {
         post_date: item.post_date,
         po_number: item.po_number,
         po_item_no: item.po_item_no,
-        extra_item: item.extra_item,
+        extra_item: !!item.extra_item,
         loekz: (item.loekz && "X") || "",
       }));
     }
