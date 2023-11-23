@@ -154,10 +154,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         if (dateType === "post_date") {
           queryBuilder.whereBetween(dateType, [from, to]);
         } else {
-          queryBuilder.whereBetween(`${tables.contract.name}.start_date`, [
-            from,
-            to,
-          ]);
+          const key = `${tables.contract.name}.start_date`;
+          queryBuilder.whereBetween(key, [from, to]);
         }
       }
       if (newData.contractID) {
