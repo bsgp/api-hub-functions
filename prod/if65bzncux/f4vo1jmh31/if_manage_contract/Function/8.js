@@ -4,6 +4,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
 
   switch (interfaceID) {
     case "IF-CT-105": {
+      // 계약리스트 조회
       const queryBuilder = sql("mysql", sqlParams)
         .select(tables.contract.name)
         .select(
@@ -111,6 +112,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
       break;
     }
     case "IF-CT-115": {
+      // 청구리스트 조회
       const queryBuilder = sql("mysql", sqlParams)
         .select(tables.cost_object.name)
         .select(
