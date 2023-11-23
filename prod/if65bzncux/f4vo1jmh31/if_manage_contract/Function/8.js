@@ -123,7 +123,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           `${tables.party.name}.ref_id`,
           `${tables.party.name}.stems10`,
           `${tables.party.name}.name as party_name`,
-          `${tables.party.name}.deleted as party_deleted`
+          `${tables.party.name}.deleted as party_deleted`,
+          `${tables.actual_billing.name}.fi_gjahr`,
+          `${tables.actual_billing.name}.fi_number`
         )
         .leftJoin(
           tables.contract.name,
@@ -136,7 +138,18 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           `${tables.cost_object.name}.contract_id`,
           "=",
           `${tables.party.name}.contract_id`
-        );
+        )
+        .leftJoin(tables.actual_billing.name, (builder) => {
+          builder
+            .on(
+              `${tables.cost_object.name}.contract_id`,
+              `${tables.actual_billing.name}.contract_id`
+            )
+            .on(
+              `${tables.cost_object.name}.id`,
+              `${tables.actual_billing.name}.id`
+            );
+        });
 
       queryBuilder.where("stems10", "like", "1");
       queryBuilder
