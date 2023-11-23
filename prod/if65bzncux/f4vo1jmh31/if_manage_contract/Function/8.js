@@ -121,6 +121,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           `${tables.contract.name}.name as contract_name`,
           `${tables.contract.name}.renewal_ind`,
           `${tables.contract.name}.bukrs`,
+          `${tables.contract.name}.start_date`,
+          `${tables.contract.name}.end_date`,
           `${tables.party.name}.contract_id`,
           `${tables.party.name}.ref_id`,
           `${tables.party.name}.stems10`,
