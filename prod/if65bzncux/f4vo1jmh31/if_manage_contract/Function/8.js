@@ -21,7 +21,6 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           `${tables.party.name}.contract_id`
         );
       // .orderBy(["id",{column:`${tables.party.name}.stems10`,order:"desc"}]);
-
       if (newData.contractID) {
         queryBuilder.where(
           `${tables.contract.name}.id`,
@@ -32,10 +31,21 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
       if (newData.partyID) {
         queryBuilder.where("ref_id", "like", newData.partyID);
       }
-      if (newData.contractDate[0] && newData.contractDate[1]) {
-        const from = fn.convDate(dayjs, newData.contractDate[0], "YYYYMMDD");
-        const to = fn.convDate(dayjs, newData.contractDate[1], "YYYYMMDD");
+      const { contractDate, start_date, end_date } = newData;
+      if (contractDate && contractDate[0] && contractDate[1]) {
+        const from = fn.convDate(dayjs, contractDate[0], "YYYYMMDD");
+        const to = fn.convDate(dayjs, contractDate[1], "YYYYMMDD");
         queryBuilder.whereBetween(`prod_date`, [from, to]);
+      }
+      if (start_date && start_date[0] && start_date[1]) {
+        const from = fn.convDate(dayjs, start_date[0], "YYYYMMDD");
+        const to = fn.convDate(dayjs, start_date[1], "YYYYMMDD");
+        queryBuilder.whereBetween(`start_date`, [from, to]);
+      }
+      if (end_date && end_date[0] && end_date[1]) {
+        const from = fn.convDate(dayjs, end_date[0], "YYYYMMDD");
+        const to = fn.convDate(dayjs, end_date[1], "YYYYMMDD");
+        queryBuilder.whereBetween(`end_date`, [from, to]);
       }
       if (newData.contractType) {
         queryBuilder.where(
