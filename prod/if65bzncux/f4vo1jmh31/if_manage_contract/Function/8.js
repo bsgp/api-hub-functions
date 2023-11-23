@@ -142,27 +142,23 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         .where(`${tables.contract.name}.type`, "like", "S")
         .whereNot(`${tables.cost_object.name}.deleted`, true);
 
-      const { post_date, start_date, end_date } = newData;
+      const { post_date, dateRange, dateType } = newData;
       if (post_date && post_date[0] && post_date[1]) {
         const from = fn.convDate(dayjs, post_date[0], "YYYYMMDD");
         const to = fn.convDate(dayjs, post_date[1], "YYYYMMDD");
         queryBuilder.whereBetween("post_date", [from, to]);
       }
-      if (start_date && start_date[0] && start_date[1]) {
-        const from = fn.convDate(dayjs, start_date[0], "YYYYMMDD");
-        const to = fn.convDate(dayjs, start_date[1], "YYYYMMDD");
-        queryBuilder.whereBetween(`${tables.contract.name}.start_date`, [
-          from,
-          to,
-        ]);
-      }
-      if (end_date && end_date[0] && end_date[1]) {
-        const from = fn.convDate(dayjs, end_date[0], "YYYYMMDD");
-        const to = fn.convDate(dayjs, end_date[1], "YYYYMMDD");
-        queryBuilder.whereBetween(`${tables.contract.name}.end_date`, [
-          from,
-          to,
-        ]);
+      if (dateRange && dateRange[0] && dateRange[1]) {
+        const from = fn.convDate(dayjs, dateRange[0], "YYYYMMDD");
+        const to = fn.convDate(dayjs, dateRange[1], "YYYYMMDD");
+        if (dateType === "post_date") {
+          queryBuilder.whereBetween(dateType, [from, to]);
+        } else {
+          queryBuilder.whereBetween(`${tables.contract.name}.start_date`, [
+            from,
+            to,
+          ]);
+        }
       }
       if (newData.contractID) {
         queryBuilder.where(
