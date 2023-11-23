@@ -21,7 +21,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           "=",
           `${tables.party.name}.contract_id`
         );
-      // .orderBy(["id",{column:`${tables.party.name}.stems10`,order:"desc"}]);
+
       if (newData.contractID) {
         queryBuilder.where(
           `${tables.contract.name}.id`,
@@ -67,6 +67,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         }
         queryBuilder.whereIn("bukrs", allowBURKS);
       }
+      queryBuilder.orderBy("created_at", "desc");
       const queryResult = await queryBuilder.run();
       const list = tryit(
         () => queryResult.body.list.map((it) => ({ ...it })),
