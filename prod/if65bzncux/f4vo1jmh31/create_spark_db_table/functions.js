@@ -129,6 +129,7 @@ module.exports.cost_object =
     table.string("post_date", 8).defaultTo(""); // 청구예정일
     table.string("loekz", 1).defaultTo(""); // 삭제지시자(구매)
     table.string("remark", 100).defaultTo(""); // 비고
+    table.boolean("extra_item").defaultTo(false); // 청구계획 추가항목
     table.boolean("deleted").defaultTo(false);
 
     table.primary(["contract_id", "id"]);
