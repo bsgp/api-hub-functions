@@ -23,7 +23,7 @@ module.exports = async (draft, { fn, sql, env, makeid }) => {
       //   if (spec.desc === "MM,FI cost object DB table") {
       //     const alterResult = await mysql.table
       //       .alter(spec.name, function (table) {
-      //         // table.string("docu_date", 8).defaultTo("");
+      //         // table.string("extra_item", 8).defaultTo("");
       //         table.string("remark", 100).defaultTo("");
       //       })
       //       .run();
