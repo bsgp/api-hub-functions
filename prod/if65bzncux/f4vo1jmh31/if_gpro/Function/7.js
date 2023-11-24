@@ -15,13 +15,21 @@
 // request.body.Data.draft.workflows[].organizationId
 // request.body.Data.draft.workflows[].organizationName
 
-module.exports = async (draft, { request, tryit, file, sql }) => {
+module.exports = async (draft, { request, tryit, file, sql, env }) => {
   const { ifObj } = draft.json;
   const { stage } = request;
 
-  // const statusMap = {
-  //   ""
-  // }
+  const aprStatusMap = {
+    DRF: "LRN",
+    REJ: "LRR",
+    COM: "LRC",
+  };
+
+  const statusMap = await file.get("config/contract_status.json", {
+    stage: env.CURRENT_ALIAS,
+    gziped: true,
+    toJSON: true,
+  });
 
   const tables = await file.get("config/tables.json", {
     gziped: true,
@@ -72,12 +80,22 @@ module.exports = async (draft, { request, tryit, file, sql }) => {
         }));
 
         const draftContent = JSON.parse(reqItem.draftContent);
-        const { contractId } = draftContent.values;
+        const { contractId, status: statusFromDraftContent } =
+          draftContent.values;
+
+        // if(draftTemplateNo.startsWith("BSGP_CT_002")){
+
+        // }
+        const updateData = {
+          apr_status: aprStatusMap[draftStatusCode],
+        };
+
+        if (draftStatusCode === "COM") {
+          updateData.status = statusMap[statusFromDraftContent].next;
+        }
 
         query
-          .update(tables.contract.name, {
-            status: "",
-          })
+          .update(tables.contract.name, updateData)
           .where({ id: contractId });
 
         const updateResult = await query.run();
