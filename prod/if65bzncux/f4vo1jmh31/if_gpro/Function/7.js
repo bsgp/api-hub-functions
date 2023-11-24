@@ -4,9 +4,7 @@ module.exports = async (draft, { request, tryit }) => {
   switch (ifObj.InterfaceId) {
     case "IF-CT-003":
       try {
-        const reqItem = tryit(() => request.body.Data.draft) || {
-          workflows: [],
-        };
+        const reqItem = tryit(() => request.body.Data.draft);
         // request.body.Data.draft.documentNo "BSG-231120-0003"
         // request.body.Data.draft.draftTemplateNo "BSGP-0005-1"
         // request.body.Data.draft.draftStatusCode "DRF"
@@ -23,6 +21,14 @@ module.exports = async (draft, { request, tryit }) => {
         // request.body.Data.draft.workflows[].workflowTypeCode
         // request.body.Data.draft.workflows[].organizationId
         // request.body.Data.draft.workflows[].organizationName
+
+        if (!reqItem) {
+          draft.response.body = {
+            E_STATUS: "E",
+            E_MESSAGE: "request.body.Data.draft에 데이터가 없습니다",
+          };
+          return;
+        }
 
         const {
           documentNo,
