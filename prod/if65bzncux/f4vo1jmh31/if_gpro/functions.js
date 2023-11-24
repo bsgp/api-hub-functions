@@ -131,7 +131,7 @@ module.exports.reverseFiDocument = async (token, body, { restApi }) => {
 
 module.exports.postDraft = async (token, body, { restApi }) => {
   const draftBody = {
-    templateNo: "BSGP_CT_002",
+    templateNo: "BSGP_CT_002_DEV",
     draftTitle: body.title,
     draftContent: JSON.stringify(body.content),
     workflows: body.workflows,
