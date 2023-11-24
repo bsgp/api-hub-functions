@@ -133,29 +133,23 @@ module.exports.postDraft = async (token, body, { restApi }) => {
   const draftBody = {
     templateNo: "BSGP_CT_002",
     draftTitle: body.title,
-    draftContent: JSON.stringify({
-      labels: ["계약명", "작성일", "비고"],
-      values: [
-        "BSG SPARK 구축 프로젝트",
-        "2023-11-16",
-        "계약관리 시스템에 신규 작성 완료하였습니다",
-      ],
-    }),
-    workflows: [
-      {
-        email: body.email,
-        type: "DRF",
-      },
-      {
-        email: "demo02@groupware.pro",
-        type: "APR",
-      },
-      {
-        email: "demo02@groupware.pro",
-        type: "RCP",
-      },
-      // REF 참조, RCP: 열람
-    ],
+    draftContent: JSON.stringify(body.content),
+    workflows: body.workflows,
+    // [
+    //   {
+    //     email: body.email,
+    //     type: "DRF",
+    //   },
+    // {
+    //   email: "demo02@groupware.pro",
+    //   type: "APR",
+    // },
+    // {
+    //   email: "demo02@groupware.pro",
+    //   type: "RCP",
+    // },
+    // REF 참조, RCP: 열람
+    // ],
   };
 
   const result = await restApi.post({
