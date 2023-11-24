@@ -15,6 +15,11 @@ module.exports = async (draft, { file, env }) => {
       next: "LRN",
       editable: true,
     },
+    DRD: {
+      name: "신규계약작성완료",
+      next: "DRD",
+      editable: false,
+    },
     LRN: {
       name: "FnA 내부기안 상신",
       next: "LRC",
@@ -27,7 +32,7 @@ module.exports = async (draft, { file, env }) => {
     },
     LRC: {
       name: "FnA 내부기안 승인완료",
-      next: ["END", "ENC", "ECC", "TCC", "DRC"],
+      next: ["END", "ENC", "ECC", "TCC", "CDN"],
       editable: false,
     },
     ENC: {
@@ -70,10 +75,15 @@ module.exports = async (draft, { file, env }) => {
       next: "LRN",
       editable: false,
     },
-    DRC: {
+    CDN: {
       name: "변경계약작성중",
-      next: "LRN",
+      next: "CDD",
       editable: true,
+    },
+    CDD: {
+      name: "변경계약작성완료",
+      next: "CDD",
+      editable: false,
     },
     MOD: {
       name: "수정중",
