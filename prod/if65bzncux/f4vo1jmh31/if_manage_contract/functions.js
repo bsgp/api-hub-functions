@@ -6,7 +6,7 @@ module.exports.getDB_Object = (
     return {
       id: data.form.contractID,
       prod_date: data.form.prod_date,
-      bukrs: user && user.bukrs,
+      bukrs: (user && user.bukrs) || data.form.bukrs,
       name: data.form.name,
       type: data.form.type,
       start_date: data.form.start_date,
