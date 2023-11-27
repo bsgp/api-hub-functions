@@ -273,7 +273,19 @@ module.exports.letter_appr =
     table.charset("utf8mb4");
 
     table.string("contract_id", 10).notNullable();
-    table.string("id", 5).defaultTo(makeid(5));
+    table.string("id").defaultTo(makeid(5));
+
+    table.string("gpro_document_no").defaultTo("");
+    table.string("gpro_draft_template_no").defaultTo("");
+    table.string("gpro_draft_status_code").defaultTo("");
+    table.string("gpro_draft_id").defaultTo("");
+    table.string("gpro_draft_templateId").defaultTo("");
+    table.string("gpro_draftTemplateType").defaultTo("");
+    table.string("gpro_userId").defaultTo("");
+    table.string("gpro_userName").defaultTo("");
+    table.string("gpro_organizationId").defaultTo("");
+    table.string("gpro_organizationName").defaultTo("");
+    table.json("gpro_workflows");
 
     table.primary(["contract_id", "id"]);
   };
