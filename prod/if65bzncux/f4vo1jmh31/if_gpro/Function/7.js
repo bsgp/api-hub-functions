@@ -96,7 +96,7 @@ module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
         }
         let contractID;
         if (!contractId) {
-          const getContractID = await flow.run({
+          const flowPayload = {
             id: "if_manage_contract",
             body: {
               Data: {
@@ -117,7 +117,9 @@ module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
               },
               InterfaceId: "IF-CT-102",
             },
-          });
+          };
+
+          const getContractID = await flow.run(flowPayload);
           contractID = getContractID.contractID;
         } else contractID = contractId;
 
