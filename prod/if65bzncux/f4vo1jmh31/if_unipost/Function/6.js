@@ -17,17 +17,26 @@ module.exports = async (draft, { request, clone, tryit, file, env, sql }) => {
   //   }
   // }
   const statusList = [
-    { id: "DRN", uni_id: "10", text: "작성중" },
+    { id: "DRN", uni_id: "10", text: "작성중", isNew: true },
+    { id: "CDN", uni_id: "10", text: "작성중", isNew: false },
     { id: "RSC", uni_id: "30", text: "진행중" },
-    { id: "DRN", uni_id: "50", text: "수정요청" },
-    { id: "DRN", uni_id: "51", text: "반려" },
-    { id: "SSC", uni_id: "70", text: "완료" },
+    { id: "DRN", uni_id: "50", text: "수정요청", isNew: true },
+    { id: "CDN", uni_id: "50", text: "수정요청", isNew: false },
+    { id: "DRN", uni_id: "51", text: "반려", isNew: true },
+    { id: "CDN", uni_id: "51", text: "반려", isNew: false },
+    { id: "SSC", uni_id: "70", text: "완료", isNew: true },
+    { id: "CDD", uni_id: "70", text: "완료", isNew: false },
   ];
 
   const contInfo = tryit(() => webhookData.contInfo, {}) || {};
   const contSts = tryit(() => contInfo.contSts, "");
   const contractID = tryit(() => contInfo.apiUserKey, "");
-  const fStatus = statusList.find((item) => item.uni_id === contSts);
+  const isNew = tryit(() => Number(contInfo.contSeq), "") === 0;
+  const fStatus = statusList.find(
+    (item) =>
+      item.uni_id === contSts &&
+      ((item.isNew && item.isNew === isNew) || item.isNew === undefined)
+  );
   if (!fStatus) {
     draft.response.body = {
       webhookData,
