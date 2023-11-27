@@ -123,6 +123,7 @@ module.exports = async (draft, { request, tryit, file, sql, env }) => {
           E_STATUS: "E",
           E_MESSAGE: [ex.message, ex.description].filter(Boolean).join(" "),
           stage,
+          tables,
         };
       }
 
