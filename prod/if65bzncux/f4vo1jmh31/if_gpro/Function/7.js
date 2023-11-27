@@ -108,6 +108,7 @@ module.exports = async (
                   curr_key: "KRW",
                   curr_local: "KRW",
                   type: "P",
+                  status: "APN",
                 },
               },
               Function: {
