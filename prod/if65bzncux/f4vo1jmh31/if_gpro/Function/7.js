@@ -43,7 +43,7 @@ module.exports = async (draft, { request, tryit, file, sql, env }) => {
   //   updateResult,
   //   E_STATUS: updateResult.statusCode === "200" ? "S" : "F",
   // };
-  let testID;
+
   switch (ifObj.InterfaceId) {
     case "IF-CT-003":
       try {
@@ -92,12 +92,11 @@ module.exports = async (draft, { request, tryit, file, sql, env }) => {
         if (draftStatusCode === "COM") {
           updateData.status = statusMap[statusFromDraftContent].next;
         }
-        testID = contractId;
+
         const query = sql("mysql", { useCustomRole: false, stage }).update(
           tables.contract.name,
           updateData
         );
-
         query.where({ id: contractId });
 
         const updateResult = await query.run();
@@ -124,9 +123,6 @@ module.exports = async (draft, { request, tryit, file, sql, env }) => {
         draft.response.body = {
           E_STATUS: "E",
           E_MESSAGE: [ex.message, ex.description].filter(Boolean).join(" "),
-          stage,
-          tables,
-          testID,
         };
       }
 
