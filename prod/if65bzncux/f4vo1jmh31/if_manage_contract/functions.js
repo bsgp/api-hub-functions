@@ -1,4 +1,7 @@
-module.exports.getDB_Object = (data, { key, contractID, makeid, user }) => {
+module.exports.getDB_Object = (
+  data = {},
+  { key, contractID, makeid, user }
+) => {
   if (key === "contract") {
     return {
       id: data.form.contractID,
