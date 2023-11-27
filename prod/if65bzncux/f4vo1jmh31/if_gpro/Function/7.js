@@ -93,13 +93,10 @@ module.exports = async (draft, { request, tryit, file, sql, env }) => {
           updateData.status = statusMap[statusFromDraftContent].next;
         }
 
-        const query = sql("mysql", { useCustomRole: false, stage }).update(
-          tables.contract.name,
-          updateData
-        );
-        query.where({ id: contractId });
-
-        const updateResult = await query.run();
+        const updateResult = await sql("mysql", { useCustomRole: false, stage })
+          .update(tables.contract.name, updateData)
+          .where({ id: contractId })
+          .run();
 
         draft.response.body = {
           E_STATUS: "S",
