@@ -15,7 +15,10 @@
 // request.body.Data.draft.workflows[].organizationId
 // request.body.Data.draft.workflows[].organizationName
 
-module.exports = async (draft, { request, tryit, file, sql, env }) => {
+module.exports = async (
+  draft,
+  { request, tryit, file, sql, env, fn, dayjs }
+) => {
   const { ifObj } = draft.json;
   const { stage } = request;
 
@@ -94,15 +97,37 @@ module.exports = async (draft, { request, tryit, file, sql, env }) => {
         if (draftStatusCode === "COM") {
           updateData.status = statusMap[statusFromDraftContent].next;
         }
+        let contractID;
+        if (!contractId) {
+          const cYear = fn.convDate(dayjs, new Date(), "YYYY");
+          const prefix = ["P", cYear].join("");
+          const query = sql("mysql", sqlParams)
+            .select(tables.contract.name)
+            .max("id", { as: "maxID" })
+            .where("id", "like", `${prefix}%`);
+
+          const queryResult = await query.run();
+          const maxID =
+            tryit(() => queryResult.body.list[0].maxID, "0000000000") ||
+            "0000000000";
+          contractID = [
+            prefix,
+            (Number(maxID.substring(5)) + 1).toString().padStart(5, "0"),
+          ].join("");
+
+          await sql("mysql", sqlParams)
+            .insert(tables.contract.name, { id: contractID, status: "APN" })
+            .run();
+        } else contractID = contractId;
         /** contract db update */
         const updateResult = await sql("mysql", sqlParams)
           .update(tables.contract.name, updateData)
-          .where({ id: contractId })
+          .where({ id: contractID })
           .run();
         /** letter_appr db update */
         const updateApprDBResult = await sql("mysql", sqlParams)
           .insert(tables["letter_appr"].name, {
-            contract_id: contractId,
+            contract_id: contractID,
             id: documentNo,
             gpro_document_no: documentNo,
             gpro_draft_template_no: draftTemplateNo,
