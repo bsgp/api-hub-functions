@@ -87,6 +87,7 @@ module.exports = async (draft, { request, tryit, file, sql, env }) => {
         // }
         const updateData = {
           apr_status: aprStatusMap[draftStatusCode],
+          gpro_document_no: documentNo,
         };
 
         if (draftStatusCode === "COM") {
