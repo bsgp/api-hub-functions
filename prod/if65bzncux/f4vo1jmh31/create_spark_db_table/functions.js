@@ -50,6 +50,7 @@ module.exports.contract =
     table.string("curr_local", 5).defaultTo(""); // 기본값: 로그인 회사 기본통화키
     // curr_key와 curr_local이 다를 경우 필수 입력
     table.string("status", 3).defaultTo(""); // 상태
+    table.string("apr_status", 3).defaultTo(""); // g-pro 기안 상태
     table.string("seq", 3).defaultTo("0"); // 회차
     table.string("payment_terms", 20).defaultTo(""); // 지급조건
     table.string("claims_time", 20).defaultTo(""); // 청구시점
