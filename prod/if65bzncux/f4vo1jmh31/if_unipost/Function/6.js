@@ -24,8 +24,7 @@ module.exports = async (draft, { request, clone, tryit, file, env, sql }) => {
     { id: "CDN", uni_id: "50", text: "변경계약 수정요청", isNew: false },
     { id: "DRN", uni_id: "51", text: "신규계약 반려", isNew: true },
     { id: "CDN", uni_id: "51", text: "변경계약 반려", isNew: false },
-    { id: "SSC", uni_id: "70", text: "신규계약 완료", isNew: true },
-    { id: "CDD", uni_id: "70", text: "변경계약 완료", isNew: false },
+    { id: "SSC", uni_id: "70", text: "신규계약 완료" },
   ];
 
   const contInfo = tryit(() => webhookData.contInfo, {}) || {};
