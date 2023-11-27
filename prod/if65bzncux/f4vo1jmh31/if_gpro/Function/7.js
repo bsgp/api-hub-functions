@@ -19,6 +19,7 @@ module.exports = async (draft, { request, tryit, file, sql, env }) => {
   const { ifObj } = draft.json;
   const { stage } = request;
 
+  const sqlParams = { useCustomRole: false, stage };
   const aprStatusMap = {
     DRF: "LRN",
     REJ: "LRR",
@@ -93,16 +94,37 @@ module.exports = async (draft, { request, tryit, file, sql, env }) => {
         if (draftStatusCode === "COM") {
           updateData.status = statusMap[statusFromDraftContent].next;
         }
-
-        const updateResult = await sql("mysql", { useCustomRole: false, stage })
+        /** contract db update */
+        const updateResult = await sql("mysql", sqlParams)
           .update(tables.contract.name, updateData)
           .where({ id: contractId })
+          .run();
+        /** letter_appr db update */
+        const updateApprDBResult = await sql("mysql", sqlParams)
+          .insert(tables["letter_appr"].name, {
+            contract_id: contractId,
+            id: documentNo,
+            gpro_document_no: documentNo,
+            gpro_draft_template_no: draftTemplateNo,
+            gpro_draft_status_code: draftStatusCode,
+            gpro_draft_id: draftId,
+            gpro_draft_templateId: draftTemplateId,
+            gpro_draftTemplateType: draftTemplateType,
+            gpro_userId: userId,
+            gpro_userName: userName,
+            gpro_organizationId: organizationId,
+            gpro_organizationName: organizationName,
+            gpro_workflows: JSON.stringify(workflows || []),
+          })
+          .onConflict()
+          .merge()
           .run();
 
         draft.response.body = {
           E_STATUS: "S",
           E_MESSAGE: "성공",
           updateResult,
+          updateApprDBResult,
           gpro: {
             documentNo,
             draftTemplateNo,
