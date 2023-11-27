@@ -34,7 +34,7 @@ module.exports = async (draft, { fn, sql, env, makeid }) => {
               table.string("gpro_userName").defaultTo("");
               table.string("gpro_organizationId").defaultTo("");
               table.string("gpro_organizationName").defaultTo("");
-              table.string("gpro_workflows").defaultTo("");
+              table.json("gpro_workflows");
               // table.boolean("extra_item").defaultTo(false);
             })
             .run();
