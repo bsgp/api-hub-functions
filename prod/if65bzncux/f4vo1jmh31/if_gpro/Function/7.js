@@ -99,7 +99,17 @@ module.exports = async (
         }
         let contractID;
         if (!contractId) {
-          contractID = "t";
+          const getContractID = await flow.run({
+            id: "",
+            body: {},
+          });
+          draft.response.body = {
+            E_STATUS: "S",
+            E_MESSAGE: "성공",
+            getContractID,
+            contractID: "t",
+          };
+          return;
         } else contractID = contractId;
 
         draft.response.body = {
