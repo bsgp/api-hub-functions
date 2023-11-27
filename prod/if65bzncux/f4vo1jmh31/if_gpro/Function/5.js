@@ -1,4 +1,4 @@
-module.exports = async (draft, { fn, request, restApi }) => {
+module.exports = async (draft, { fn, request, restApi, env }) => {
   const { ifObj } = draft.json;
 
   switch (ifObj.InterfaceId) {
@@ -27,6 +27,7 @@ module.exports = async (draft, { fn, request, restApi }) => {
         const token = await fn.getToken({ restApi });
         const result = await fn.postDraft(token, request.body.Data, {
           restApi,
+          CURRENT_ALIAS: env.CURRENT_ALIAS,
         });
 
         draft.response.body = {
