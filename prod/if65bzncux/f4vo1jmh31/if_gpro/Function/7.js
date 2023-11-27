@@ -112,8 +112,8 @@ module.exports = async (
                 },
               },
               Function: {
-                UserId: "test_user",
-                UserText: "Test User",
+                UserId: "g_pro",
+                UserText: "g_pro webhook",
                 Name: "POST_DATA_TO_DB",
                 SysId: "SUPPORT",
                 Type: "DB",
@@ -121,11 +121,12 @@ module.exports = async (
               InterfaceId: "IF-CT-102",
             },
           });
+          const contractID = getContractID.contractID;
           draft.response.body = {
             E_STATUS: "S",
             E_MESSAGE: "성공",
             getContractID,
-            contractID: "t",
+            contractID,
           };
           return;
         } else contractID = contractId;
