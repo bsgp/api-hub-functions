@@ -15,10 +15,7 @@
 // request.body.Data.draft.workflows[].organizationId
 // request.body.Data.draft.workflows[].organizationName
 
-module.exports = async (
-  draft,
-  { request, tryit, file, sql, env, flow, fn, dayjs }
-) => {
+module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
   const { ifObj } = draft.json;
   const { stage } = request;
 
@@ -121,20 +118,40 @@ module.exports = async (
               InterfaceId: "IF-CT-102",
             },
           });
-          const contractID = getContractID.contractID;
-          draft.response.body = {
-            E_STATUS: "S",
-            E_MESSAGE: "성공",
-            getContractID,
-            contractID,
-          };
-          return;
+          contractID = getContractID.contractID;
         } else contractID = contractId;
+
+        /** contract db update */
+        const updateResult = await sql("mysql", sqlParams)
+          .update(tables.contract.name, updateData)
+          .where({ id: contractID })
+          .run();
+        /** letter_appr db update */
+        const updateApprDBResult = await sql("mysql", sqlParams)
+          .insert(tables["letter_appr"].name, {
+            contract_id: contractID,
+            id: documentNo,
+            gpro_document_no: documentNo,
+            gpro_draft_template_no: draftTemplateNo,
+            gpro_draft_status_code: draftStatusCode,
+            gpro_draft_id: draftId,
+            gpro_draft_templateId: draftTemplateId,
+            gpro_draftTemplateType: draftTemplateType,
+            gpro_userId: userId,
+            gpro_userName: userName,
+            gpro_organizationId: organizationId,
+            gpro_organizationName: organizationName,
+            gpro_workflows: JSON.stringify(workflows || []),
+          })
+          .onConflict()
+          .merge()
+          .run();
 
         draft.response.body = {
           E_STATUS: "S",
           E_MESSAGE: "성공",
-          contractID,
+          updateResult,
+          updateApprDBResult,
           gpro: {
             documentNo,
             draftTemplateNo,
@@ -148,79 +165,7 @@ module.exports = async (
             organizationName,
             workflows,
           },
-          flow,
-          sql,
-          fn,
-          dayjs,
-          sqlParams,
-          tables,
         };
-        // if (!contractId) {
-        //   const cYear = fn.convDate(dayjs, new Date(), "YYYY");
-        //   const prefix = ["P", cYear].join("");
-        //   const query = sql("mysql", sqlParams)
-        //     .select(tables.contract.name)
-        //     .max("id", { as: "maxID" })
-        //     .where("id", "like", `${prefix}%`);
-
-        //   const queryResult = await query.run();
-        //   const maxID =
-        //     tryit(() => queryResult.body.list[0].maxID, "0000000000") ||
-        //     "0000000000";
-        //   contractID = [
-        //     prefix,
-        //     (Number(maxID.substring(5)) + 1).toString().padStart(5, "0"),
-        //   ].join("");
-
-        //   await sql("mysql", sqlParams)
-        //     .insert(tables.contract.name, { id: contractID, status: "APN" })
-        //     .run();
-        // } else contractID = contractId;
-        // /** contract db update */
-        // const updateResult = await sql("mysql", sqlParams)
-        //   .update(tables.contract.name, updateData)
-        //   .where({ id: contractID })
-        //   .run();
-        // /** letter_appr db update */
-        // const updateApprDBResult = await sql("mysql", sqlParams)
-        //   .insert(tables["letter_appr"].name, {
-        //     contract_id: contractID,
-        //     id: documentNo,
-        //     gpro_document_no: documentNo,
-        //     gpro_draft_template_no: draftTemplateNo,
-        //     gpro_draft_status_code: draftStatusCode,
-        //     gpro_draft_id: draftId,
-        //     gpro_draft_templateId: draftTemplateId,
-        //     gpro_draftTemplateType: draftTemplateType,
-        //     gpro_userId: userId,
-        //     gpro_userName: userName,
-        //     gpro_organizationId: organizationId,
-        //     gpro_organizationName: organizationName,
-        //     gpro_workflows: JSON.stringify(workflows || []),
-        //   })
-        //   .onConflict()
-        //   .merge()
-        //   .run();
-
-        // draft.response.body = {
-        //   E_STATUS: "S",
-        //   E_MESSAGE: "성공",
-        //   updateResult,
-        //   updateApprDBResult,
-        //   gpro: {
-        //     documentNo,
-        //     draftTemplateNo,
-        //     draftStatusCode,
-        //     draftId,
-        //     draftTemplateId,
-        //     draftTemplateType,
-        //     userId,
-        //     userName,
-        //     organizationId,
-        //     organizationName,
-        //     workflows,
-        //   },
-        // };
       } catch (ex) {
         draft.response.body = {
           E_STATUS: "E",
