@@ -45,6 +45,7 @@ module.exports = async (draft, { request, tryit, file, sql, env }) => {
   //   updateResult,
   //   E_STATUS: updateResult.statusCode === "200" ? "S" : "F",
   // };
+  let testID;
   switch (ifObj.InterfaceId) {
     case "IF-CT-003":
       try {
@@ -93,7 +94,7 @@ module.exports = async (draft, { request, tryit, file, sql, env }) => {
         if (draftStatusCode === "COM") {
           updateData.status = statusMap[statusFromDraftContent].next;
         }
-
+        testID = contractId;
         query
           .update(tables.contract.name, updateData)
           .where({ id: contractId });
@@ -124,6 +125,7 @@ module.exports = async (draft, { request, tryit, file, sql, env }) => {
           E_MESSAGE: [ex.message, ex.description].filter(Boolean).join(" "),
           stage,
           tables,
+          testID,
         };
       }
 
