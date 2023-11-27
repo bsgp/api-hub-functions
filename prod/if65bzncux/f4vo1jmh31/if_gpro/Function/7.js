@@ -100,8 +100,25 @@ module.exports = async (
         let contractID;
         if (!contractId) {
           const getContractID = await flow.run({
-            id: "",
-            body: {},
+            id: "if_manage_contract",
+            body: {
+              Data: {
+                form: {
+                  contractID: "",
+                  curr_key: "KRW",
+                  curr_local: "KRW",
+                  type: "P",
+                },
+              },
+              Function: {
+                UserId: "test_user",
+                UserText: "Test User",
+                Name: "POST_DATA_TO_DB",
+                SysId: "SUPPORT",
+                Type: "RFC",
+              },
+              InterfaceId: "IF-CT-102",
+            },
           });
           draft.response.body = {
             E_STATUS: "S",
