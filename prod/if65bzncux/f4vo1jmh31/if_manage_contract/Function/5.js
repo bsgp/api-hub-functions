@@ -27,6 +27,14 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
               return true;
             })
           );
+          if (results.contract.gpro_document_no) {
+            const queryTableData = await sql("mysql", sqlParams)
+              .select(tables["letter_appr"].name)
+              .where("contract_id", "like", contractID)
+              .run();
+            const tableData = tryit(() => queryTableData.body.list, []);
+            results["letter_appr"] = tableData;
+          }
 
           draft.response.body = {
             request_contractID: newData.contractID,
