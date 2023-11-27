@@ -20,10 +20,21 @@ module.exports = async (draft, { fn, sql, env, makeid }) => {
         .create(spec.name, fn[tableKey]({ mysql, makeid }))
         .run();
       if (result.statusCode !== 200) {
-        if (spec.desc === "Contract info DB table") {
+        if (spec.desc === "groupware letter approval info DB") {
           const alterResult = await mysql.table
             .alter(spec.name, function (table) {
-              table.string("apr_status", 3).defaultTo("");
+              // table.string("apr_status", 3).defaultTo("");
+              table.string("gpro_document_no").defaultTo("");
+              table.string("gpro_draft_template_no").defaultTo("");
+              table.string("gpro_draft_status_code").defaultTo("");
+              table.string("gpro_draft_id").defaultTo("");
+              table.string("gpro_draft_templateId").defaultTo("");
+              table.string("gpro_draftTemplateType").defaultTo("");
+              table.string("gpro_userId").defaultTo("");
+              table.string("gpro_userName").defaultTo("");
+              table.string("gpro_organizationId").defaultTo("");
+              table.string("gpro_organizationName").defaultTo("");
+              table.string("gpro_workflows").defaultTo("");
               // table.boolean("extra_item").defaultTo(false);
             })
             .run();
