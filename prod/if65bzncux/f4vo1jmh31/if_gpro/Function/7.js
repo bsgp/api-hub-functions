@@ -116,7 +116,7 @@ module.exports = async (
                 UserText: "Test User",
                 Name: "POST_DATA_TO_DB",
                 SysId: "SUPPORT",
-                Type: "RFC",
+                Type: "DB",
               },
               InterfaceId: "IF-CT-102",
             },
