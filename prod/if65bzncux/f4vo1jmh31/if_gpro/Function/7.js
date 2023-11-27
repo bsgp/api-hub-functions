@@ -37,8 +37,6 @@ module.exports = async (draft, { request, tryit, file, sql, env }) => {
     stage,
   });
 
-  const query = sql("mysql", { useCustomRole: false, stage });
-
   // draft.response.body = {
   //   webhookData,
   //   fStatus,
@@ -95,9 +93,12 @@ module.exports = async (draft, { request, tryit, file, sql, env }) => {
           updateData.status = statusMap[statusFromDraftContent].next;
         }
         testID = contractId;
-        query
-          .update(tables.contract.name, updateData)
-          .where({ id: contractId });
+        const query = sql("mysql", { useCustomRole: false, stage }).update(
+          tables.contract.name,
+          updateData
+        );
+
+        query.where({ id: contractId });
 
         const updateResult = await query.run();
 
