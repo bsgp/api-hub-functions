@@ -35,7 +35,7 @@ module.exports = async (draft, { request, clone, tryit, file, env, sql }) => {
   const fStatus = statusList.find(
     (item) =>
       item.uni_id === contSts &&
-      ((item.isNew && item.isNew === isNew) || item.isNew === undefined)
+      (item.isNew === undefined || item.isNew === isNew)
   );
   if (!fStatus) {
     draft.response.body = {
