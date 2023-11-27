@@ -42,7 +42,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid, user }) => {
   }
   switch (key) {
     case "ref_doc": {
-      return data.billList.map((item) => ({
+      return (data.billList || []).map((item) => ({
         contract_id: `${contractID}` || item.contractID,
         id: item.id || (makeid && makeid(5)),
         index: `${item.index}`,
@@ -52,7 +52,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid, user }) => {
       }));
     }
     case "cost_object": {
-      return data.costObjectList.map((item) => ({
+      return (data.costObjectList || []).map((item) => ({
         contract_id: `${contractID}` || item.contractID,
         id: item.id || (makeid && makeid(5)),
         index: `${item.index}`,
@@ -75,7 +75,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid, user }) => {
       }));
     }
     case "actual_billing": {
-      return data.actualBillng.map((item) => ({
+      return (data.actualBillng || []).map((item) => ({
         contract_id: `${contractID}` || item.contractID,
         id: item.id || (makeid && makeid(5)),
         parent_id: item.parent_id,
@@ -101,7 +101,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid, user }) => {
       }));
     }
     case "wbs": {
-      return data.wbsList.map((item) => ({
+      return (data.wbsList || []).map((item) => ({
         contract_id: `${contractID}` || item.contractID,
         id: item.id || (makeid && makeid(5)),
         index: `${item.index}`,
@@ -115,7 +115,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid, user }) => {
       }));
     }
     case "bill": {
-      return data.billList.map((item) => ({
+      return (data.billList || []).map((item) => ({
         contract_id: `${contractID}` || item.contractID,
         id: item.id || (makeid && makeid(5)),
         index: `${item.index}`,
@@ -128,7 +128,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid, user }) => {
       }));
     }
     case "party": {
-      return data.partyList.map((item) => ({
+      return (data.partyList || []).map((item) => ({
         contract_id: `${contractID}` || item.contractID,
         id: item.id || (makeid && makeid(5)),
         index: `${item.index}`,
@@ -149,7 +149,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid, user }) => {
       }));
     }
     case "attachment": {
-      return data.attachmentList.map((item) => ({
+      return (data.attachmentList || []).map((item) => ({
         contract_id: `${contractID}` || item.contractID,
         id: item.id || (makeid && makeid(5)),
         index: `${item.index}`,
