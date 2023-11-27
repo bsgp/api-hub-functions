@@ -59,6 +59,7 @@ module.exports.contract =
     table.string("warr_haja_deposit ", 20).defaultTo(""); // 하자이행보증
     table.string("delayed_money", 20).defaultTo(""); // 지체상금율
     table.string("etc", 200).defaultTo(""); // 기타
+    table.string("gpro_document_no").defaultTo(""); // 그룹웨어 문서번호
     table.string("uni_contno", 20).defaultTo(""); // 계약관리번호
     table.string("uni_contseq", 3).defaultTo(""); //  계약관리 일련번호
     table.string("uni_coregno", 10).defaultTo(""); // 계약소유자 사업자등록번호
