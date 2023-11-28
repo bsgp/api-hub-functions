@@ -35,7 +35,7 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
             const tableData = tryit(() => queryTableData.body.list, []);
             results["letter_appr"] = tableData;
           }
-          if (results.contract.status === "S") {
+          if (results.contract.type === "S") {
             const queryTableData = await sql("mysql", sqlParams)
               .select(tables["actual_billing"].name)
               .where("contract_id", "like", contractID)
