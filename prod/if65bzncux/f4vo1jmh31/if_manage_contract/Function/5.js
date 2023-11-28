@@ -43,7 +43,7 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
               .orderBy("index", "asc")
               .run();
             const tableData = tryit(() => queryTableData.body.list, []);
-            results["actual_billing"] = tableData;
+            results["actual_billing"] = fn.sortIndexFn(tableData);
           }
 
           draft.response.body = {
