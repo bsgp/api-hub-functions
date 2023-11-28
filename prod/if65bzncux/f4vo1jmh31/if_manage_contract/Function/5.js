@@ -35,6 +35,16 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
             const tableData = tryit(() => queryTableData.body.list, []);
             results["letter_appr"] = tableData;
           }
+          if (results.contract.status === "S") {
+            const queryTableData = await sql("mysql", sqlParams)
+              .select(tables["actual_billing"].name)
+              .where("contract_id", "like", contractID)
+              .whereNot({ deleted: true })
+              .orderBy("index", "asc")
+              .run();
+            const tableData = tryit(() => queryTableData.body.list, []);
+            results["actual_billing"] = tableData;
+          }
 
           draft.response.body = {
             request_contractID: newData.contractID,
@@ -47,6 +57,7 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
               billList: results.bill,
               attachmentList: results.attachment,
               approvalList: results.letter_appr || [],
+              actualBillingList: results.actual_billing || [],
             },
             E_STATUS: contractID ? "S" : "F",
             E_MESSAGE: contractID
