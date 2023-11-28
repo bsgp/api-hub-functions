@@ -31,7 +31,7 @@ module.exports = async (
         .insert(tables.contract.name, {
           ...contract,
           id: contractID,
-          status: "DRN",
+          status: contract.status || "DRN",
         })
         .run();
 
