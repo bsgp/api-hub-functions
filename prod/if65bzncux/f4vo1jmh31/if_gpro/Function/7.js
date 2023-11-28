@@ -152,6 +152,7 @@ module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
         draft.response.body = {
           E_STATUS: "S",
           E_MESSAGE: "성공",
+          contractID,
           updateResult,
           updateApprDBResult,
           gpro: {
