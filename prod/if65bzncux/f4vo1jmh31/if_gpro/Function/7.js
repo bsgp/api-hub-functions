@@ -93,6 +93,9 @@ module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
 
         if (draftStatusCode === "COM") {
           updateData.status = statusMap[statusFromDraftContent].next;
+          if (statusFromDraftContent === "CDD" && contractId.startsWith("S")) {
+            // updateData.seq = ""
+          }
         }
         let contractID;
         if (!contractId) {
