@@ -46,7 +46,7 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
               wbsList: results.wbs,
               billList: results.bill,
               attachmentList: results.attachment,
-              approvalList: results.letter_appr,
+              approvalList: results.letter_appr || [],
             },
             E_STATUS: contractID ? "S" : "F",
             E_MESSAGE: contractID
