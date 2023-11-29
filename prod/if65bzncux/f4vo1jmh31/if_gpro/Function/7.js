@@ -93,8 +93,15 @@ module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
 
         if (draftStatusCode === "COM") {
           updateData.status = statusMap[statusFromDraftContent].next;
-          if (statusFromDraftContent === "CDD" && contractId.startsWith("S")) {
-            // updateData.seq = ""
+          if (updateData.status === "CDD" && contractId.startsWith("S")) {
+            const getContract = sql("mysql", sqlParams)
+              .select(tables.contract.name)
+              .where("id", "like", contractId)
+              .run();
+            const currContract =
+              tryit(() => getContract.body.list[0], {}) || {};
+
+            updateData.seq = (Number(currContract.seq) + 1).toString();
           }
         }
         let contractID;
