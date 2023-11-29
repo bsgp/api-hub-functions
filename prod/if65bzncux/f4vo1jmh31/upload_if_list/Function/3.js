@@ -318,6 +318,30 @@ module.exports = async (draft, { file, env }) => {
       TriggeredBy: "WORKSHEET",
       Path: "/rfc",
     },
+    ["IF-TS-010"]: {
+      Type: "RFC",
+      Name: "ZSIRFC2065",
+      TriggeredBy: "TIMESHEET",
+      Path: "/rfc",
+    },
+    ["IF-WS-009"]: {
+      Type: "RFC",
+      Name: "ZSIRFC1010",
+      TriggeredBy: "WORKSHEET",
+      Path: "/rfc",
+    },
+    ["IF-WS-010"]: {
+      Type: "RFC",
+      Name: "ZSIRFC1031",
+      TriggeredBy: "WORKSHEET",
+      Path: "/rfc",
+    },
+    ["IF-WS-011"]: {
+      Type: "RFC",
+      Name: "ZSIRFC1090",
+      TriggeredBy: "WORKSHEET",
+      Path: "/rfc",
+    },
     ["IF-CT-101"]: {
       Type: "DB",
       Name: "GET_DATA_FROM_DB",
