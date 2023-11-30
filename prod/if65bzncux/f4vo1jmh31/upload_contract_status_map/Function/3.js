@@ -8,7 +8,7 @@ module.exports = async (draft, { file, env }) => {
     APN: {
       name: "사업부 기안 승인완료",
       next: "DRN",
-      editable: false,
+      editable: true,
     },
     DRN: {
       name: "신규계약작성중",
