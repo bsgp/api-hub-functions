@@ -12,7 +12,7 @@ module.exports = async (draft, { file, env }) => {
     },
     DRN: {
       name: "신규계약작성중",
-      next: "LRN",
+      next: "DRD",
       editable: true,
     },
     DRD: {
