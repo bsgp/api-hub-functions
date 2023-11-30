@@ -92,7 +92,9 @@ module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
         };
 
         if (draftStatusCode === "COM") {
-          updateData.status = statusMap[statusFromDraftContent].next;
+          if (statusFromDraftContent !== undefined) {
+            updateData.status = statusMap[statusFromDraftContent].next;
+          }
           if (updateData.status === "CDD" && contractId.startsWith("S")) {
             /** 매출계약 차수(seq) 업데이트*/
             const getContract = await sql("mysql", sqlParams)
