@@ -133,6 +133,7 @@ module.exports.postDraft = async (token, body, { restApi, CURRENT_ALIAS }) => {
   const draftBody = {
     templateNo: `BSGP_CT_002_${CURRENT_ALIAS.toUpperCase()}`,
     draftTitle: body.title,
+    externalCompanyCode: body.bukrs,
     draftContent: JSON.stringify(body.content),
     workflows: body.workflows,
     // [
