@@ -81,7 +81,7 @@ module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
 
         const draftContent = JSON.parse(reqItem.draftContent);
         const { contractId, status: statusFromDraftContent } =
-          draftContent.values;
+          draftContent.values || {};
 
         // if(draftTemplateNo.startsWith("BSGP_CT_002")){
 
