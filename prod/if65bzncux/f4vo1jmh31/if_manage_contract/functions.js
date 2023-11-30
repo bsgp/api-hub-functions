@@ -70,6 +70,7 @@ module.exports.getDB_Object = (
         dmbtr_vat_local: (item.dmbtr_vat_local || "").replace(/,/g, ""),
         matnr: item.matnr,
         maktx: item.maktx,
+        remark: item.remark,
         post_date: item.post_date,
         po_number: item.po_number,
         po_item_no: item.po_item_no,
