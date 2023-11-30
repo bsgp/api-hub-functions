@@ -1,10 +1,10 @@
 module.exports = async (draft, { file, env }) => {
   const statusMap = {
-    RQN: {
-      name: "사업부 기안 상신",
-      next: "APN",
-      editable: false,
-    },
+    // RQN: {
+    //   name: "사업부 기안 상신",
+    //   next: "APN",
+    //   editable: false,
+    // },
     APN: {
       name: "사업부 기안 승인완료",
       next: "DRN",
