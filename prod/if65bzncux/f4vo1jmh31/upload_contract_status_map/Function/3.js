@@ -42,7 +42,7 @@ module.exports = async (draft, { file, env }) => {
     },
     RSC: {
       name: "서명요청발송 완료",
-      next: ["OSR"],
+      next: ["OSR", "OSC"],
       editable: false,
     },
     OSC: {
