@@ -116,10 +116,11 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           break;
         }
         case "CHANGE": {
+          const lastSeq = (Number(form.seq) - 1).toString();
           const getLatestData = await sql("mysql", sqlParams)
             .select(tables["changed_contract"].name)
             .where("contract_id", "like", `${form.id}`)
-            .where("seq", "like", form.seq)
+            .where("seq", "like", lastSeq)
             .run();
           const latestData = tryit(() => getLatestData.body.list[0], {});
           const latestJsonData = latestData && latestData.after;
@@ -133,11 +134,10 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             return;
           }
 
-          const nextSeq = (Number(form.seq) + 1).toString();
           await sql("mysql", sqlParams)
             .insert(tables["changed_contract"].name, {
               contract_id: form.id,
-              seq: nextSeq,
+              seq: form.seq,
               json: JSON.stringify({ form, ...args }),
               before: JSON.stringify(latestJsonData),
               after: JSON.stringify(jsonData),
