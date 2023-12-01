@@ -18,7 +18,7 @@ module.exports = async (draft, { request, clone, tryit, file, env, sql }) => {
   // }
   const statusList = [
     { id: "ENC", uni_id: "10", text: "신규계약작성중", isNew: true },
-    { id: "ENC", uni_id: "10", text: "변경계약작성중", isNew: false },
+    { id: "ECC", uni_id: "10", text: "변경계약작성중", isNew: false },
     { id: "RSC", uni_id: "30", text: "진행중" },
     { id: "DRN", uni_id: "50", text: "신규계약 수정요청", isNew: true },
     { id: "CDN", uni_id: "50", text: "변경계약 수정요청", isNew: false },
