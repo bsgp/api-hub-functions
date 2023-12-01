@@ -224,7 +224,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
                 // apiUserData: "연동 DATA",
                 templateNo,
                 orgContNo: form.uni_contno,
-                orgContSeq: form.seq,
+                orgContSeq: lastSeq,
                 contName: form.name,
                 contDate: fn.convDate(dayjs, form.prod_date, "YYYY-MM-DD"),
                 contDocNo: form.id,
