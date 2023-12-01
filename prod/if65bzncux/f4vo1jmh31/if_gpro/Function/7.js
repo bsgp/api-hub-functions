@@ -95,17 +95,6 @@ module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
           if (statusFromDraftContent !== undefined) {
             updateData.status = statusMap[statusFromDraftContent].next;
           }
-          if (updateData.status === "CDD" && contractId.startsWith("S")) {
-            /** 매출계약 차수(seq) 업데이트*/
-            const getContract = await sql("mysql", sqlParams)
-              .select(tables.contract.name)
-              .where("id", "like", contractId)
-              .run();
-            const currContract =
-              tryit(() => getContract.body.list[0], {}) || {};
-
-            updateData.seq = (Number(currContract.seq) + 1).toString();
-          }
         }
         let contractID;
         if (!contractId) {
