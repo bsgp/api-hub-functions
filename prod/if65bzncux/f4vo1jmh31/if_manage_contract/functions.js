@@ -9,6 +9,7 @@ module.exports.getDB_Object = (
       bukrs: (user && user.bukrs) || data.form.bukrs,
       name: data.form.name,
       type: data.form.type,
+      seq: data.form.seq || undefined,
       start_date: data.form.start_date,
       end_date: data.form.end_date,
       renewal_ind: data.form.renewal_ind,
