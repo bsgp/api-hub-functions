@@ -58,7 +58,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             contSdate: form.start_date,
             contEdate: form.end_date,
             suppAmt: `${Number(form.dmbtr_supply)}`,
-            c_vatSts: billToParty.gl_group_id !== "3000" ? "VAT 별도" : " ",
+            c_vatType:
+              billToParty.gl_group_id !== "3000" ? "suppAmt" : "contAmt",
             // 부가세 텍스트
             c_paymentTerms, // 지급조건
             c_claimsTime, // 청구시점
