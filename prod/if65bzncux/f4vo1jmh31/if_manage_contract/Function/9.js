@@ -168,8 +168,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           }, {});
 
           const chgContContents = [];
-          const { contSdate, contEdate, suppAmt, c_vatSts, ...diffs } =
-            diffItem;
+          const { contSdate, contEdate, c_amt, c_vatType, ...diffs } = diffItem;
           if (contSdate || contEdate) {
             chgContContents.push({
               c_rowType: "date",
@@ -180,15 +179,16 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
               contEdate: target.contEdate,
             });
           }
-          if (suppAmt || c_vatSts) {
+          if (c_amt || c_vatType) {
             chgContContents.push({
               c_rowType: "amt",
               c_rowName: "계약총금액",
-              before_amt: source.suppAmt,
+              before_amt: source.c_amt,
               before_vatType:
-                source.c_vatSts === "VAT 별도" ? "suppAmt" : "contAmt",
-              c_amt: target.suppAmt,
-              c_vatType: target.c_vatSts === "VAT 별도" ? "suppAmt" : "contAmt",
+                source.c_vatType === "VAT 별도" ? "suppAmt" : "contAmt",
+              c_amt: target.c_amt,
+              c_vatType:
+                target.c_vatType === "VAT 별도" ? "suppAmt" : "contAmt",
             });
           }
           if (diffs && Object.keys(diffs).length > 0) {
