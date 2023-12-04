@@ -17,10 +17,20 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
        */
       const { type, templateNo, form, ...args } = newData;
       const { partyList, attachmentList, payment_termList, billList } = args;
+      const billToParty = partyList.find((party) => party.stems10 === "2");
+      if (!billToParty) {
+        draft.response.body = {
+          E_MESSAGE: "계약당사자 정보가\n없습니다",
+          E_STATUS: "F",
+          interfaceID,
+          newData,
+        };
+        return;
+      }
+
       const fPaymentTerm =
         payment_termList.find((term) => term.key === form.payment_terms) || {};
       const c_paymentTerms = fPaymentTerm.text;
-      const billToParty = partyList.find((party) => party.stems10 === "2");
       const c_claimsTime = billList
         .map(({ remark, dmbtr_supply, dmbtr_vat, post_date }) => {
           const cRemark = ["▷", remark].join("");
