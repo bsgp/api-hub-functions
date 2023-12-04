@@ -57,7 +57,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           contDocValues: {
             contSdate: form.start_date,
             contEdate: form.end_date,
-            suppAmt: Number(form.dmbtr_supply),
+            suppAmt: `${Number(form.dmbtr_supply)}`,
             c_vatType:
               billToParty.gl_group_id !== "3000" ? "suppAmt" : "contAmt",
             // 부가세 텍스트
