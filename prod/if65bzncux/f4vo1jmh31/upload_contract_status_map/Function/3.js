@@ -14,11 +14,13 @@ module.exports = async (draft, { file, env }) => {
       name: "신규계약작성중",
       next: "DRD",
       editable: true,
+      approval: true,
     },
     DRD: {
       name: "신규계약작성완료",
       next: "DRD",
       editable: false,
+      rewrite_S: true,
     },
     LRN: {
       name: "FnA 내부기안 상신",
@@ -54,6 +56,7 @@ module.exports = async (draft, { file, env }) => {
       name: "서명 완료",
       next: "END",
       editable: false,
+      rewrite_P: true,
     },
     OSR: {
       name: "상대방 서명 거부(반려)",
@@ -74,25 +77,30 @@ module.exports = async (draft, { file, env }) => {
       name: "폐기됨",
       next: "LRN",
       editable: false,
+      approval: true,
     },
     CDN: {
       name: "변경계약작성중",
       next: "CDD",
       editable: true,
+      approval: true,
     },
     CDD: {
       name: "변경계약작성완료",
       next: "CDD",
       editable: false,
+      rewrite_S: true,
     },
     MOD: {
       name: "수정중",
       next: "LRN",
       editable: true,
+      approval: true,
     },
     CNL: {
       name: "해지됨",
       editable: false,
+      approval: true,
     },
   };
 
