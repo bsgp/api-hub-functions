@@ -272,7 +272,7 @@ module.exports.letter_appr = () => (table) => {
   table.charset("utf8mb4");
 
   table.string("contract_id", 10).notNullable();
-  table.string("id").defaultTo();
+  table.string("id");
 
   table.string("gpro_document_no").defaultTo("");
   table.string("gpro_draft_template_no").defaultTo("");
