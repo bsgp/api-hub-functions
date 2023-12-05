@@ -1,4 +1,11 @@
-const binaryAttributes = ["forms", "functions", "tables", "headers", "dialogs"];
+const binaryAttributes = [
+  "forms",
+  "functions",
+  "tables",
+  "headers",
+  "dialogs",
+  "codes",
+];
 
 const getMetaById = async (
   id,
