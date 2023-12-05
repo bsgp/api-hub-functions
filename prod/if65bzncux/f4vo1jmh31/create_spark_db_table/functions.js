@@ -82,6 +82,7 @@ module.exports.changed_contract = () => (table) => {
   table.json("json"); // json 타입
   table.json("before").defaultTo("");
   table.json("after").defaultTo("");
+  table.boolean("comfirmed").defaultTo(false);
 
   table.primary(["contract_id", "seq"]);
 };
@@ -285,7 +286,6 @@ module.exports.letter_appr = () => (table) => {
   table.string("gpro_organizationId").defaultTo("");
   table.string("gpro_organizationName").defaultTo("");
   table.json("gpro_workflows");
-  table.boolean("comfirmed").defaultTo(false);
 
   table.primary(["contract_id", "id"]);
 };
