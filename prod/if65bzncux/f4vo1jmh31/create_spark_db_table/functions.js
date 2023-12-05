@@ -287,6 +287,7 @@ module.exports.letter_appr =
     table.string("gpro_organizationId").defaultTo("");
     table.string("gpro_organizationName").defaultTo("");
     table.json("gpro_workflows");
+    table.boolean("comfirmed").defaultTo(false);
 
     table.primary(["contract_id", "id"]);
   };
