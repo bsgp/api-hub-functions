@@ -23,7 +23,7 @@ module.exports = async (draft, { fn, sql, env, makeid }) => {
       //   if (spec.desc === "groupware letter approval info DB") {
       //     const alterResult = await mysql.table
       //       .alter(spec.name, function (table) {
-      //         table.string("gpro_document_no").defaultTo("");
+      //        table.boolean("comfirmed").defaultTo(false);
       //         // table.json("gpro_workflows");
       //         // table.string("apr_status", 3).defaultTo("");
       //         // table.boolean("extra_item").defaultTo(false);
