@@ -5,100 +5,91 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
   switch (interfaceID) {
     case "IF-CT-108": {
       /**
+       * type === "DIFF"
+       * * return difference curr-1's seq vs curr's seq jsonData
+       *
+       * type === "APPROVAL" =>  INDATE at curr seq
+       * * json: curr all (GET ALL DB TABLE)
+       * * return groupware conv jsonData
+       *
        * type === "NEW" => INDATE at seq 0
        * * json: curr all (GET ALL DB TABLE)
        * * before: "",
        * * after: curr contDocValues
+       * * return unipost jsonData
        *
-       * type === "CHANGE" => INDATE at seq: curr'seq +1
+       * type === "CHANGE" => INDATE at curr seq
        * * json: curr all (GET ALL DB TABLE)
-       * * before: curr seq's changeCont,
+       * * before: curr seq - 1's changeCont,
        * * after: curr contDocValues
+       * * return unipost conv jsonData
        */
-      const { type, templateNo, form, ...args } = newData;
-      const { partyList, attachmentList, payment_termList, billList } = args;
-      const billToParty = partyList.find((party) => party.stems10 === "2");
-      if (!billToParty) {
-        draft.response.body = {
-          E_MESSAGE: "계약당사자 정보가\n없습니다",
-          E_STATUS: "F",
-          interfaceID,
-          newData,
-        };
+      const { currentUser, type, templateNo, form, ...args } = newData;
+      const billFromParty = args.partyList.find(
+        (party) => party.stems10 === "1"
+      );
+      const billToParty = args.partyList.find((party) => party.stems10 === "2");
+      if (!billFromParty || !billToParty) {
+        const E_MESSAGE = "계약당사자 정보가\n없습니다";
+        draft.response.body = { E_MESSAGE, E_STATUS: "F", newData };
         return;
       }
 
-      const fPaymentTerm =
-        payment_termList.find((term) => term.key === form.payment_terms) || {};
-      const c_paymentTerms = fPaymentTerm.text;
-      const c_claimsTime = billList
-        .map(({ remark, dmbtr_supply, dmbtr_vat, post_date }) => {
-          const cRemark = ["▷", remark].join("");
-          const suppAmt = fn.numberWithCommas(dmbtr_supply);
-          const cSuppAmt = ["공급가액: ₩", suppAmt].join("");
-          const taxAmt = fn.numberWithCommas(dmbtr_vat);
-          const cTaxAmt = ["부가세: ₩", taxAmt].join("");
-          const billDate = fn.convDate(dayjs, post_date, "YYYY-MM-DD");
-          const cBillDate = ["청구시점:", billDate].join(" ");
-          return [cRemark, cSuppAmt, cTaxAmt, cBillDate].join("\t");
-        })
-        .join("\n");
-
-      const addTextIfExist = (str, tag = "%") =>
-        (str && [str, tag].join(" ")) || "해당없음";
-
-      const jsonData = {
-        contInfo: {
-          apiUserKey: form.contractID,
-          templateNo,
-          contName: form.name,
-          contDate: fn.convDate(dayjs, form.prod_date, "YYYY-MM-DD"),
-          contDocNo: form.id,
-          signerList: partyList.map((party, idx) => ({
-            signerName: party.stems10_ko,
-            coRegno: party.id_no, // 사업자번호
-            coName: party.name,
-            coOwnNm: party.prdnt_name, // 대표자
-            coAddr: party.address, // 주소
-            usName: party.name, // 담당자
-            usCellno: `010-0000-000${idx}`, // 담당 연락처
-            usEmail: `xxx${idx}@unipost.co.kr`, // 담당 메일
-          })),
-          contDocValues: {
-            contSdate: form.start_date,
-            contEdate: form.end_date,
-            c_amt: `${Number(form.dmbtr_supply)}`,
-            c_vatType:
-              billToParty.gl_group_id !== "3000" ? "suppAmt" : "contAmt",
-            // 부가세 텍스트
-            c_paymentTerms, // 지급조건
-            c_claimsTime, // 청구시점
-            c_contractDeposit: addTextIfExist(form.contract_deposit),
-            // 계약이행보증
-            c_firstPaymentReturnDeposit: addTextIfExist(
-              form.f_payment_return_deposit
-            ), // 선급금보증
-            c_warrHajaDeposit: addTextIfExist(form.warr_haja_deposit),
-            // 하자이행보증
-            c_delayedMoney: addTextIfExist(form.delayed_money, "/ 1000"),
-            // 지체상금율
-            c_etc: form.etc,
-            c_attach: [
-              "1. 보안서약서",
-              ...attachmentList.map(({ name = "", desc = "" }, idx) => {
-                const flag = `${idx + 2}.`;
-                const fileName = name.replace(/\.([^.]+)$/, "");
-                return [flag, desc || fileName].join(" ");
-              }),
-            ].join(" \n"),
-          },
-        },
-      };
-
       switch (type) {
+        case "DIFF": {
+          break;
+        }
+        case "APPROVAL": {
+          const title_prefix = [
+            type.text,
+            form.seq !== "0" && `${form.seq}차 변경계약`,
+          ]
+            .filter(Boolean)
+            .join("-");
+          // const latestApr = args.approvalList.find(
+          //   ({ id }) => id === form.gpro_document_no
+          // );
+          // const rcp_workflows=(latestApr && latestApr.gpro_workflows)||[];
+          const jsonData = {
+            title: [`[${title_prefix}]`, form.name].join(" "),
+            bukrs: currentUser.bukrs,
+            content: {
+              labels: {
+                url: "계약조회 URL",
+                contractId: "계약번호",
+                status: "계약상태",
+                name: "계약서명",
+                postDate: "작성일",
+                remark: "비고",
+              },
+              values: {
+                url: ["https://bsg.support/ccs/p", form.contractID].join("/"),
+                contractId: form.contractID,
+                status: form.status,
+                name: form.name,
+                postDate: form.prod_date,
+                remark: args.approvalDialog.remark,
+              },
+            },
+            workflows: [{ email: currentUser.email, type: "DRF" }],
+            // .concat(
+            //   rcp_workflows.map(({ userId }) => ({ userId, type: "RCP" }))
+            // ) //   REF 참조, RCP: 열람
+          };
+
+          draft.response.body = {
+            E_MESSAGE: "",
+            E_STATUS: "S",
+            interfaceID,
+            newData,
+            jsonData,
+          };
+          break;
+        }
         case "NEW": {
+          const jsonData = get_Unipost_JSON(newData);
           const createChangedContractData = await sql("mysql", sqlParams)
-            .insert(tables["changed_contract"].name, {
+            .insert(tables.changed_contract.name, {
               contract_id: form.id,
               seq: form.seq,
               json: JSON.stringify({ form, ...args }),
@@ -110,7 +101,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             .run();
 
           const changedContractData = await sql("mysql", sqlParams)
-            .select(tables["changed_contract"].name)
+            .select(tables.changed_contract.name)
             .where("contract_id", "like", `${form.id}`)
             .where("seq", "like", form.seq)
             .run();
@@ -129,7 +120,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
         case "CHANGE": {
           const lastSeq = (Number(form.seq) - 1).toString();
           const getLatestData = await sql("mysql", sqlParams)
-            .select(tables["changed_contract"].name)
+            .select(tables.changed_contract.name)
             .where("contract_id", "like", `${form.id}`)
             .where("seq", "like", lastSeq)
             .run();
@@ -144,9 +135,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             };
             return;
           }
-
+          const jsonData = get_Unipost_JSON(newData);
           await sql("mysql", sqlParams)
-            .insert(tables["changed_contract"].name, {
+            .insert(tables.changed_contract.name, {
               contract_id: form.id,
               seq: form.seq,
               json: JSON.stringify({ form, ...args }),
@@ -158,7 +149,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             .run();
 
           const changedContractData = await sql("mysql", sqlParams)
-            .select(tables["changed_contract"].name)
+            .select(tables.changed_contract.name)
             .where("contract_id", "like", `${form.id}`)
             .run();
           const dbData = tryit(() => changedContractData.body.list, []);
@@ -169,10 +160,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
 
           const diffItem = Object.keys(target).reduce((acc, curr) => {
             if (target[curr] !== source[curr]) {
-              acc[curr] = {
-                before: source[curr],
-                after: target[curr],
-              };
+              acc[curr] = { before: source[curr], after: target[curr] };
             }
             return acc;
           }, {});
@@ -212,7 +200,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
               c_etc: "기타",
               c_attach: "첨부서류",
             };
-            Object.keys(diffs).map((key) => {
+            Object.keys(diffs).forEach((key) => {
               chgContContents.push({
                 c_rowType: key,
                 c_rowName: diffKeyMapping[key] || "No KeyMapping",
@@ -250,12 +238,13 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           break;
         }
       }
+
       break;
     }
     case "IF-CT-109": {
       const { contractID } = newData;
       const changedData = await sql("mysql", sqlParams)
-        .select(tables["change"].name)
+        .select(tables.change.name)
         .where("row_key", "like", `${contractID}`)
         .orWhere("row_key", "like", `${contractID}%`)
         .orderBy("changed_at")
@@ -291,5 +280,73 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
       draft.response.body = { E_MESSAGE: "Wrong Interface ID", E_STATUS: "F" };
       break;
     }
+  }
+  function get_Unipost_JSON(newData) {
+    const { templateNo, form, ...args } = newData;
+    const { partyList, attachmentList, payment_termList, billList } = args;
+    const billToParty = partyList.find((party) => party.stems10 === "2");
+    const fPaymentTerm =
+      payment_termList.find((term) => term.key === form.payment_terms) || {};
+    const c_paymentTerms = fPaymentTerm.text;
+    const c_claimsTime = billList
+      .map(({ remark, dmbtr_supply, dmbtr_vat, post_date }) => {
+        const cRemark = ["▷", remark].join("");
+        const suppAmt = fn.numberWithCommas(dmbtr_supply);
+        const cSuppAmt = ["공급가액: ₩", suppAmt].join("");
+        const taxAmt = fn.numberWithCommas(dmbtr_vat);
+        const cTaxAmt = ["부가세: ₩", taxAmt].join("");
+        const billDate = fn.convDate(dayjs, post_date, "YYYY-MM-DD");
+        const cBillDate = ["청구시점:", billDate].join(" ");
+        return [cRemark, cSuppAmt, cTaxAmt, cBillDate].join("\t");
+      })
+      .join("\n");
+    const addTextIfExist = (str, tag = "%") =>
+      (str && [str, tag].join(" ")) || "해당없음";
+    return {
+      contInfo: {
+        apiUserKey: form.contractID,
+        templateNo,
+        contName: form.name,
+        contDate: fn.convDate(dayjs, form.prod_date, "YYYY-MM-DD"),
+        contDocNo: form.id,
+        signerList: partyList.map((party, idx) => ({
+          signerName: party.stems10_ko,
+          coRegno: party.id_no, // 사업자번호
+          coName: party.name,
+          coOwnNm: party.prdnt_name, // 대표자
+          coAddr: party.address, // 주소
+          usName: party.name, // 담당자
+          usCellno: `010-0000-000${idx}`, // 담당 연락처
+          usEmail: `xxx${idx}@unipost.co.kr`, // 담당 메일
+        })),
+        contDocValues: {
+          contSdate: form.start_date,
+          contEdate: form.end_date,
+          c_amt: `${Number(form.dmbtr_supply)}`,
+          c_vatType: billToParty.gl_group_id !== "3000" ? "suppAmt" : "contAmt",
+          // 부가세 텍스트
+          c_paymentTerms, // 지급조건
+          c_claimsTime, // 청구시점
+          c_contractDeposit: addTextIfExist(form.contract_deposit),
+          // 계약이행보증
+          c_firstPaymentReturnDeposit: addTextIfExist(
+            form.f_payment_return_deposit
+          ), // 선급금보증
+          c_warrHajaDeposit: addTextIfExist(form.warr_haja_deposit),
+          // 하자이행보증
+          c_delayedMoney: addTextIfExist(form.delayed_money, "/ 1000"),
+          // 지체상금율
+          c_etc: form.etc,
+          c_attach: [
+            "1. 보안서약서",
+            ...attachmentList.map(({ name = "", desc = "" }, idx) => {
+              const flag = `${idx + 2}.`;
+              const fileName = name.replace(/\.([^.]+)$/, "");
+              return [flag, desc || fileName].join(" ");
+            }),
+          ].join(" \n"),
+        },
+      },
+    };
   }
 };
