@@ -44,7 +44,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             .where("seq", "like", lastSeq)
             .run();
           const latestData = tryit(() => getLatestData.body.list[0], {});
-          const latestJsonData = latestData && latestData.after;
+          const latestJsonData = latestData && latestData.json;
           if (!latestJsonData) {
             draft.response.body = {
               E_MESSAGE: "이전 차수 계약정보가\n없습니다",
@@ -56,7 +56,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           }
           const jsonData = get_Unipost_JSON(newData);
           /** GET Diff latestJsonData vs jsonData */
-          const source = latestJsonData.contInfo.contDocValues;
+          const source =
+            get_Unipost_JSON(latestJsonData).contInfo.contDocValues;
           const target = jsonData.contInfo.contDocValues;
 
           const diffItem = Object.keys(target).reduce((acc, curr) => {
