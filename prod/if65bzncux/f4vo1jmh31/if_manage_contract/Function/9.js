@@ -72,8 +72,12 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             chgContContents.push({
               key: "date",
               text: "계약기간",
-              before: [source.contSdate, source.contEdate].join(" - "),
-              after: [target.contSdate, target.contEdate].join(" - "),
+              before: [source.contSdate, source.contEdate]
+                .map((date) => fn.convDate(dayjs, date, "YYYY-MM-DD"))
+                .join(" ~ "),
+              after: [target.contSdate, target.contEdate]
+                .map((date) => fn.convDate(dayjs, date, "YYYY-MM-DD"))
+                .join(" ~ "),
             });
           }
           if (c_amt || c_vatType) {
@@ -109,6 +113,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             E_MESSAGE: "준비 중입니다",
             E_STATUS: "F",
             list: chgContContents,
+            source,
+            target,
           };
           break;
         }
