@@ -166,7 +166,10 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         const from = fn.convDate(dayjs, dateRange[0], "YYYYMMDD");
         const to = fn.convDate(dayjs, dateRange[1], "YYYYMMDD");
         if (dateType === "post_date") {
-          queryBuilder.whereBetween(dateType, [from, to]);
+          queryBuilder.whereBetween(`${tables.cost_object.name}.post_date`, [
+            from,
+            to,
+          ]);
         } else {
           const key = [tables.contract.name, dateType].join(".");
           queryBuilder.whereBetween(key, [from, to]);
