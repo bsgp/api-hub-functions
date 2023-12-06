@@ -37,6 +37,10 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
 
       switch (type) {
         case "DIFF": {
+          draft.response.body = {
+            E_MESSAGE: "준비 중입니다",
+            E_STATUS: "F",
+          };
           break;
         }
         case "APPROVAL": {
