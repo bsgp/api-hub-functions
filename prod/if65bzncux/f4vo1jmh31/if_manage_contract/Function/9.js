@@ -120,6 +120,15 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           break;
         }
         case "APPROVAL": {
+          if (!currentUser.email) {
+            draft.response.body = {
+              E_MESSAGE: "사용자 이메일 정보가 없습니다다",
+              E_STATUS: "F",
+              interfaceID,
+              newData,
+            };
+            return;
+          }
           const title_prefix = [
             type.text,
             form.seq !== "0" && `${form.seq}차 변경계약`,
