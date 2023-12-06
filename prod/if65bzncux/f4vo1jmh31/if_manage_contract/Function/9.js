@@ -122,7 +122,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
         case "APPROVAL": {
           if (!currentUser.email) {
             draft.response.body = {
-              E_MESSAGE: "사용자 이메일 정보가 없습니다다",
+              E_MESSAGE: "사용자 이메일 정보가 없습니다",
               E_STATUS: "F",
               interfaceID,
               newData,
