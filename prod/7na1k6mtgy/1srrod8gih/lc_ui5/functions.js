@@ -4,7 +4,7 @@ const binaryAttributes = [
   "tables",
   "headers",
   "dialogs",
-  "codeEditors",
+  "codeeditors",
 ];
 
 const getMetaById = async (
