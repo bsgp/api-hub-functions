@@ -29,7 +29,7 @@ module.exports = async (draft, { file, env }) => {
     },
     LRR: {
       name: "FnA 내부기안 반려",
-      next: "MOD",
+      next: null,
       editable: true,
     },
     LRC: {
@@ -60,7 +60,7 @@ module.exports = async (draft, { file, env }) => {
     },
     OSR: {
       name: "상대방 서명 거부(반려)",
-      next: "MOD",
+      next: ["DRN", "CDN", "CNL"],
       editable: true,
     },
     ECC: {
