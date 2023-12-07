@@ -78,6 +78,42 @@ module.exports = async (draft, { file, env }) => {
       TriggeredBy: "CONTRACT",
       Path: "/rfc_contract",
     },
+    ["IF-CO-014"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_CCTR_AUTH",
+      TriggeredBy: "G_PRO",
+      Path: "/rfc",
+    },
+    ["IF-CO-015"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_CCTR_BUDGET_ACTUAL",
+      TriggeredBy: "G_PRO",
+      Path: "/rfc",
+    },
+    ["IF-CO-018"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_WBS_AUTH",
+      TriggeredBy: "G_PRO",
+      Path: "/rfc",
+    },
+    ["IF-CO-019"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_WBS_BUDGET_ACTUAL",
+      TriggeredBy: "G_PRO",
+      Path: "/rfc",
+    },
+    ["IF-CO-021"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_IO_AUTH",
+      TriggeredBy: "G_PRO",
+      Path: "/rfc",
+    },
+    ["IF-CO-022"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_IO_BUDGET_ACTUAL",
+      TriggeredBy: "G_PRO",
+      Path: "/rfc",
+    },
     ["IF-CO-035"]: {
       Type: "RFC",
       Name: "ZCO_IF_HR_EMPLOYEE_ORDER",
