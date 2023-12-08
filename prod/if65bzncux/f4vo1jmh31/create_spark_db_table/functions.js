@@ -277,6 +277,7 @@ module.exports.letter_appr = () => (table) => {
 
   table.string("gpro_document_no").defaultTo("");
   table.string("gpro_draft_template_no").defaultTo("");
+  table.string("gpro_draft_template_name").defaultTo("");
   table.string("gpro_draft_status_code").defaultTo("");
   table.string("gpro_draft_id").defaultTo("");
   table.string("gpro_draft_templateId").defaultTo("");
