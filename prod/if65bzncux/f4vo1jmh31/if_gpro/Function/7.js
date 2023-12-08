@@ -16,7 +16,8 @@
 // request.body.Data.draft.workflows[].organizationId
 // request.body.Data.draft.workflows[].organizationName
 
-module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
+module.exports = async (draft, context) => {
+  const { request, tryit, file, sql, env, flow, fn, dayjs } = context;
   const { ifObj } = draft.json;
   const { stage } = request;
 
@@ -34,13 +35,6 @@ module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
     toJSON: true,
     stage,
   });
-
-  // draft.response.body = {
-  //   webhookData,
-  //   fStatus,
-  //   updateResult,
-  //   E_STATUS: updateResult.statusCode === "200" ? "S" : "F",
-  // };
 
   switch (ifObj.InterfaceId) {
     case "IF-CT-003":
@@ -78,17 +72,6 @@ module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
         const { contractId, status: statusFromDraftContent } =
           draftContent.values || {};
 
-        const updateData = {
-          apr_status: aprStatusMap[draftStatusCode],
-          gpro_document_no: documentNo,
-        };
-
-        if (draftStatusCode === "COM") {
-          if (statusFromDraftContent !== undefined) {
-            updateData.status = statusMap[statusFromDraftContent].next;
-          }
-        }
-        let contractID;
         switch (draftTemplateNo) {
           case "BSGP-0005-2": {
             /**
@@ -108,20 +91,31 @@ module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
              * 기존 계약의 경우 해당 계약에 기안 상태 추가.
              * 신규: 계약번호를 생성하고 contract테이블에 Insert.
              */
+            const updateData = {
+              apr_status: aprStatusMap[draftStatusCode],
+              gpro_document_no: documentNo,
+            };
+
+            if (draftStatusCode === "COM") {
+              if (statusFromDraftContent !== undefined) {
+                updateData.status = statusMap[statusFromDraftContent].next;
+              }
+            }
+            let contractID;
             if (!contractId) {
+              const form = {
+                contractID: "",
+                name: draftTemplateName || "",
+                prod_date: fn.convDate(dayjs, new Date(), "YYYYMMDD HH:mm:ss"),
+                curr_key: "KRW",
+                curr_local: "KRW",
+                type: "P",
+                status: "APN",
+              };
               const flowPayload = {
                 id: "if_manage_contract",
                 body: {
-                  Data: {
-                    form: {
-                      contractID: "",
-                      name: draftTemplateName || "",
-                      curr_key: "KRW",
-                      curr_local: "KRW",
-                      type: "P",
-                      status: "APN",
-                    },
-                  },
+                  Data: { form },
                   Function: {
                     UserId: "g_pro",
                     UserText: "g_pro webhook",
@@ -167,6 +161,7 @@ module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
               E_STATUS: "S",
               E_MESSAGE: ["성공"].join(" "),
               contractID,
+              curr: fn.convDate(dayjs, new Date(), "YYYYMMDD"),
               updateResult,
               updateApprDBResult,
             };
