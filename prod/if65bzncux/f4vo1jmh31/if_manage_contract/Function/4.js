@@ -26,6 +26,7 @@ module.exports = async (draft, { lib, file, env, request }) => {
       break;
     case "IF-CT-105": // GET LIST
     case "IF-CT-115": // GET BILLING LIST
+    case "IF-CT-118": // GET_UNMAP_LETTER_FROM_DB
       draft.json.nextNodeKey = "Function#8";
       break;
     case "IF-CT-106": // GET_PARTY_LIST_FROM_DB
