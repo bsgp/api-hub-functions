@@ -290,3 +290,28 @@ module.exports.letter_appr = () => (table) => {
 
   table.primary(["contract_id", "id"]);
 };
+
+/** TABLE: unmap_letters */
+module.exports.unmap_letters = () => (table) => {
+  /** 매핑 필요 기안서 DB (변경, 해지 기안서) */
+  table.charset("utf8mb4");
+
+  table.string("id").notNullable();
+
+  // table.string("contract_id", 10).notNullable();
+  table.string("gpro_document_no").defaultTo("");
+  table.string("gpro_draft_template_no").defaultTo("");
+  table.string("gpro_draft_template_name").defaultTo("");
+  table.string("gpro_draft_status_code").defaultTo("");
+  table.string("gpro_draft_id").defaultTo("");
+  table.string("gpro_draft_templateId").defaultTo("");
+  table.string("gpro_draftTemplateType").defaultTo("");
+  table.string("gpro_userId").defaultTo("");
+  table.string("gpro_userName").defaultTo("");
+  table.string("gpro_organizationId").defaultTo("");
+  table.string("gpro_organizationName").defaultTo("");
+  table.json("gpro_workflows");
+  table.boolean("deleted").defaultTo(false);
+
+  table.primary(["id"]);
+};
