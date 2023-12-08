@@ -238,9 +238,47 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
     }
     case "IF-CT-118": {
       // GET_UNMAP_LETTER_FROM_DB
+      const DB_TABLE = tables.unmap_letters.name;
+      const queryBuilder = sql("mysql", sqlParams).select(DB_TABLE);
+
+      queryBuilder.whereNot(`${DB_TABLE}.deleted`, true);
+      const { dateRange } = newData; // dateType
+      if (dateRange && dateRange[0] && dateRange[1]) {
+        const from = fn.convDate(dayjs, dateRange[0], "YYYYMMDD");
+        const to = fn.convDate(dayjs, dateRange[1], "YYYYMMDD");
+        queryBuilder.whereBetween(`${DB_TABLE}.post_date`, [from, to]);
+      }
+      if (newData.gpro_document_no) {
+        queryBuilder.where(
+          `${DB_TABLE}.name`,
+          "like",
+          `%${newData.gpro_document_no}%`
+        );
+      }
+      if (newData.gpro_draft_template_name) {
+        queryBuilder.where(
+          `${DB_TABLE}.name`,
+          "like",
+          `%${newData.gpro_draft_template_name}%`
+        );
+      }
+      const queryResult = await queryBuilder.run();
+      const list = tryit(
+        () => queryResult.body.list.map((it) => ({ ...it })),
+        []
+      );
+
       draft.response.body = {
         request: newData,
-        list: [],
+        list: list.sort((al, be) => {
+          if (al.post_date !== be.post_date) {
+            return Number(al.post_date) - Number(be.post_date);
+          } else
+            return (
+              Number(al.gpro_document_no.replace(/[A-z]||-/g, "")) -
+              Number(be.gpro_document_no.replace(/[A-z]||-/g, ""))
+            );
+        }),
         E_STATUS: "F",
         E_MESSAGE: `GET_UNMAP_LETTER_FROM_DB`, //`조회가\n완료되었습니다`,
       };
