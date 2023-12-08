@@ -250,14 +250,14 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
       }
       if (newData.gpro_document_no) {
         queryBuilder.where(
-          `${DB_TABLE}.name`,
+          `${DB_TABLE}.gpro_document_no`,
           "like",
           `%${newData.gpro_document_no}%`
         );
       }
       if (newData.gpro_draft_template_name) {
         queryBuilder.where(
-          `${DB_TABLE}.name`,
+          `${DB_TABLE}.gpro_draft_template_name`,
           "like",
           `%${newData.gpro_draft_template_name}%`
         );
