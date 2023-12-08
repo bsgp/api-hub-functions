@@ -21,11 +21,7 @@ module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
   const { stage } = request;
 
   const sqlParams = { useCustomRole: false, stage };
-  const aprStatusMap = {
-    DRF: "LRN",
-    REJ: "LRR",
-    COM: "LRC",
-  };
+  const aprStatusMap = { DRF: "LRN", REJ: "LRR", COM: "LRC" };
 
   const statusMap = await file.get("config/contract_status.json", {
     stage: env.CURRENT_ALIAS,
