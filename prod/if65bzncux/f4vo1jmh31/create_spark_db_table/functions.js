@@ -298,7 +298,7 @@ module.exports.unmap_letters = () => (table) => {
 
   table.string("id").notNullable();
 
-  // table.string("contract_id", 10).notNullable();
+  table.string("contract_id", 10).defaultTo("");
   table.string("gpro_document_no").defaultTo("");
   table.string("gpro_draft_template_no").defaultTo("");
   table.string("gpro_draft_template_name").defaultTo("");
