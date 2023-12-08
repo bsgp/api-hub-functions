@@ -281,8 +281,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
               );
           })
           .map((it, idx) => ({ ...it, index: idx + 1 })),
-        E_STATUS: "F",
-        E_MESSAGE: `GET_UNMAP_LETTER_FROM_DB`, //`조회가\n완료되었습니다`,
+        E_STATUS: "S",
+        E_MESSAGE: `조회가\n완료되었습니다`,
       };
       break;
     }
