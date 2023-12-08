@@ -82,6 +82,7 @@ module.exports = async (draft, context) => {
             const insertUnmapDBResult = await sql("mysql", sqlParams)
               .insert(tables.letter_appr.name, {
                 id: documentNo,
+                post_date: fn.convDate(dayjs, new Date(), "YYYYMMDD"),
                 gpro_document_no: documentNo,
                 gpro_draft_template_no: draftTemplateNo,
                 gpro_draft_template_name: draftTemplateName,
@@ -128,7 +129,7 @@ module.exports = async (draft, context) => {
               const form = {
                 contractID: "",
                 name: draftTemplateName || "",
-                prod_date: fn.convDate(dayjs, new Date(), "YYYYMMDD HH:mm:ss"),
+                prod_date: fn.convDate(dayjs, new Date(), "YYYYMMDD"),
                 curr_key: "KRW",
                 curr_local: "KRW",
                 type: "P",
