@@ -23,7 +23,7 @@ module.exports = async (draft, { fn, sql, env, makeid }) => {
         if (spec.desc === "Changed Contract seq info DB table") {
           const alterResult = await mysql.table
             .alter(spec.name, function (table) {
-              table.boolean("comfirmed").defaultTo(false);
+              table.string("gpro_draft_template_name").defaultTo("");
               // table.json("gpro_workflows");
               // table.string("apr_status", 3).defaultTo("");
               // table.boolean("extra_item").defaultTo(false);
