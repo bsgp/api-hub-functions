@@ -106,7 +106,7 @@ module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
                     Data: {
                       form: {
                         contractID: "",
-                        name: draftTemplateName,
+                        name: draftTemplateName || "",
                         curr_key: "KRW",
                         curr_local: "KRW",
                         type: "P",
