@@ -311,6 +311,7 @@ module.exports.unmap_letters = () => (table) => {
   table.string("gpro_organizationId").defaultTo("");
   table.string("gpro_organizationName").defaultTo("");
   table.json("gpro_workflows");
+  table.string("post_date", 8).defaultTo(""); // 전기일
   table.boolean("deleted").defaultTo(false);
 
   table.primary(["id"]);
