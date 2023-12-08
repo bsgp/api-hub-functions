@@ -236,6 +236,16 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
       };
       break;
     }
+    case "IF-CT-118": {
+      // GET_UNMAP_LETTER_FROM_DB
+      draft.response.body = {
+        request: newData,
+        list: [],
+        E_STATUS: "F",
+        E_MESSAGE: `GET_UNMAP_LETTER_FROM_DB`, //`조회가\n완료되었습니다`,
+      };
+      break;
+    }
     default: {
       draft.response.body = {
         request: newData,
