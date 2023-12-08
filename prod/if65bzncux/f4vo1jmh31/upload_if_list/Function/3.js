@@ -468,6 +468,12 @@ module.exports = async (draft, { file, env }) => {
       RfcName: "",
       TriggeredBy: "SUPPORT",
     },
+    ["IF-CT-119"]: {
+      Type: "DB",
+      Name: "MAPPING_LETTER_AND_CONTRACT",
+      RfcName: "",
+      TriggeredBy: "SUPPORT",
+    },
     ["IF-FU-101"]: {
       Type: "FU",
       Name: "GET_FILE_UPLOAD_URL",
