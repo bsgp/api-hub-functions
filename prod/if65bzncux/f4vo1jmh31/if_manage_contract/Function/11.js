@@ -27,7 +27,7 @@ module.exports = async (draft, { sql, env }) => {
       // MAPPING_LETTER_AND_CONTRACT
       const { selected, contractID } = newData;
       draft.response.body = {
-        E_STATUS: "F",
+        E_STATUS: "S",
         E_MESSAGE: "준비중",
         selected,
         contractID,
