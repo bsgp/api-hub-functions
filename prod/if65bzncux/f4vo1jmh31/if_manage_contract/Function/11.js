@@ -4,6 +4,7 @@ module.exports = async (draft, { sql, env }) => {
 
   switch (interfaceID) {
     case "IF-CT-110": {
+      // UPDATE_WBS_CONTRACT
       const builder = sql("mysql", sqlParams)
         .update(tables.wbs.name, { last_send_date: newData.last_send_date })
         .where("contract_id", "like", newData.contract_id);
@@ -19,6 +20,14 @@ module.exports = async (draft, { sql, env }) => {
           updateResult.statusCode === 200
             ? "WBS 업데이트 정보를 저장했습니다"
             : "WBS 업데이트 과정에 문제가 발생했습니다",
+      };
+      break;
+    }
+    case "IF-CT-119": {
+      // MAPPING_LETTER_AND_CONTRACT
+      draft.response.body = {
+        E_STATUS: "F",
+        E_MESSAGE: "준비중",
       };
       break;
     }
