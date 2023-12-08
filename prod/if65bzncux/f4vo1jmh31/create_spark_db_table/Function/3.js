@@ -85,17 +85,23 @@ module.exports = async (draft, { file, env }) => {
       desc: "groupware letter approval info DB",
     },
     unmap_letters: {
-      name: "unmap_letters_0",
-      desc: "groupware letter approval info DB",
+      name: "unmap_letters_1",
+      desc: "groupware unMapped letter approval info DB",
     },
   };
-  draft.json.changed = { ...lastestTableConfig };
+  draft.json.changed = {
+    ...lastestTableConfig,
+    unmap_letters: {
+      name: "unmap_letters_1",
+      desc: "groupware unMapped letter approval info DB",
+    },
+  };
   draft.response.body = { changed: { ...draft.json.changed }, tables };
 
-  // await file.upload("config/tables.json", draft.json.changed, {
-  //   gzip: true,
-  //   stage: env.CURRENT_ALIAS,
-  // });
+  await file.upload("config/tables.json", draft.json.changed, {
+    gzip: true,
+    stage: env.CURRENT_ALIAS,
+  });
 
   // const newTableConfig =
   //   await file.upload("config/tables.json", tables, {
