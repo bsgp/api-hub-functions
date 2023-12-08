@@ -50,12 +50,9 @@ module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
     case "IF-CT-003":
       try {
         const reqItem = tryit(() => request.body.Data.draft);
-
         if (!reqItem) {
-          draft.response.body = {
-            E_STATUS: "E",
-            E_MESSAGE: "request.body.Data.draft에 데이터가 없습니다",
-          };
+          const E_MESSAGE = "request.body.Data.draft에 데이터가 없습니다";
+          draft.response.body = { E_STATUS: "E", E_MESSAGE };
           return;
         }
 
@@ -85,9 +82,6 @@ module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
         const { contractId, status: statusFromDraftContent } =
           draftContent.values || {};
 
-        // if(draftTemplateNo.startsWith("BSGP_CT_002")){
-
-        // }
         const updateData = {
           apr_status: aprStatusMap[draftStatusCode],
           gpro_document_no: documentNo,
