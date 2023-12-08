@@ -1,5 +1,6 @@
 // request.body.Data.draft.documentNo "BSG-231120-0003"
 // request.body.Data.draft.draftTemplateNo "BSGP-0005-1"
+// request.body.Data.draft.draftTemplateName "계약관리시스템 결재 신청서"
 // request.body.Data.draft.draftStatusCode "DRF"
 // request.body.Data.draft.draftId 280
 // request.body.Data.draft.draftTemplateId 1114
@@ -61,6 +62,7 @@ module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
         const {
           documentNo,
           draftTemplateNo,
+          draftTemplateName,
           draftStatusCode,
           draftId,
           draftTemplateId,
@@ -137,6 +139,7 @@ module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
             id: documentNo,
             gpro_document_no: documentNo,
             gpro_draft_template_no: draftTemplateNo,
+            gpro_draft_template_name: draftTemplateName,
             gpro_draft_status_code: draftStatusCode,
             gpro_draft_id: draftId,
             gpro_draft_templateId: draftTemplateId,
@@ -160,6 +163,7 @@ module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
           gpro: {
             documentNo,
             draftTemplateNo,
+            draftTemplateName,
             draftStatusCode,
             draftId,
             draftTemplateId,
