@@ -78,9 +78,9 @@ module.exports = async (draft, context) => {
              * BSGP-0005-2 (외주계약 변경/파기 요청) 등
              * unmap_letters 테이블로 Insert
              */
-            /** letter_appr db update */
+            /** unmap_letters db update */
             const insertUnmapDBResult = await sql("mysql", sqlParams)
-              .insert(tables.letter_appr.name, {
+              .insert(tables.unmap_letters.name, {
                 id: documentNo,
                 post_date: fn.convDate(dayjs, new Date(), "YYYYMMDD"),
                 gpro_document_no: documentNo,
