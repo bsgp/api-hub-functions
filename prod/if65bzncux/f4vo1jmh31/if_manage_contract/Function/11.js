@@ -26,7 +26,7 @@ module.exports = async (draft, { sql, env }) => {
     case "IF-CT-119": {
       // MAPPING_LETTER_AND_CONTRACT
       draft.response.body = {
-        E_STATUS: "F",
+        E_STATUS: "S",
         E_MESSAGE: "준비중",
       };
       break;
