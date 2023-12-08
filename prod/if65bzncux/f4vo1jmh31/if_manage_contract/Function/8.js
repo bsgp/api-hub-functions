@@ -241,8 +241,10 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
       const DB_TABLE = tables.unmap_letters.name;
       const queryBuilder = sql("mysql", sqlParams).select(DB_TABLE);
 
-      queryBuilder.whereNot(`${DB_TABLE}.deleted`, true);
-      const { dateRange } = newData; // dateType
+      const { includeALL, dateRange } = newData; // dateType
+      if (!includeALL) {
+        queryBuilder.whereNot(`${DB_TABLE}.deleted`, true);
+      }
       if (dateRange && dateRange[0] && dateRange[1]) {
         const from = fn.convDate(dayjs, dateRange[0], "YYYYMMDD");
         const to = fn.convDate(dayjs, dateRange[1], "YYYYMMDD");
