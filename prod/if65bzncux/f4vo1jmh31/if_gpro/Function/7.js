@@ -157,7 +157,7 @@ module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
 
               draft.response.body = {
                 E_STATUS: "S",
-                E_MESSAGE: "성공",
+                E_MESSAGE: ["성공"].join(" "),
                 contractID,
                 updateResult,
                 updateApprDBResult,
@@ -183,6 +183,24 @@ module.exports = async (draft, { request, tryit, file, sql, env, flow }) => {
                * BSGP-0005-2 (외주계약 변경/파기 요청) 등
                * unmap_letters테이블로 Insert
                */
+              draft.response.body = {
+                E_STATUS: "S",
+                E_MESSAGE: ["성공", draftTemplateNo].join(" "),
+                gpro: {
+                  documentNo,
+                  draftTemplateNo,
+                  draftTemplateName,
+                  draftStatusCode,
+                  draftId,
+                  draftTemplateId,
+                  draftTemplateType,
+                  userId,
+                  userName,
+                  organizationId,
+                  organizationName,
+                  workflows,
+                },
+              };
               break;
             }
           }
