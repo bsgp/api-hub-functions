@@ -270,15 +270,17 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
 
       draft.response.body = {
         request: newData,
-        list: list.sort((al, be) => {
-          if (al.post_date !== be.post_date) {
-            return Number(al.post_date) - Number(be.post_date);
-          } else
-            return (
-              Number(al.gpro_document_no.replace(/[A-z]||-/g, "")) -
-              Number(be.gpro_document_no.replace(/[A-z]||-/g, ""))
-            );
-        }),
+        list: list
+          .sort((al, be) => {
+            if (al.post_date !== be.post_date) {
+              return Number(al.post_date) - Number(be.post_date);
+            } else
+              return (
+                Number(al.gpro_document_no.replace(/[A-z]||-/g, "")) -
+                Number(be.gpro_document_no.replace(/[A-z]||-/g, ""))
+              );
+          })
+          .map((it, idx) => ({ ...it, index: idx + 1 })),
         E_STATUS: "F",
         E_MESSAGE: `GET_UNMAP_LETTER_FROM_DB`, //`조회가\n완료되었습니다`,
       };
