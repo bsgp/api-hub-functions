@@ -161,7 +161,7 @@ module.exports = async (draft, context) => {
               E_STATUS: "S",
               E_MESSAGE: ["성공"].join(" "),
               contractID,
-              curr: fn.convDate(dayjs, new Date(), "YYYYMMDD"),
+              curr: fn.convDate(dayjs, new Date()),
               updateResult,
               updateApprDBResult,
             };
