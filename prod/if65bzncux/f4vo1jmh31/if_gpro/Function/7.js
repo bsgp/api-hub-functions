@@ -78,10 +78,32 @@ module.exports = async (draft, context) => {
              * BSGP-0005-2 (외주계약 변경/파기 요청) 등
              * unmap_letters 테이블로 Insert
              */
+            /** letter_appr db update */
+            const insertUnmapDBResult = await sql("mysql", sqlParams)
+              .insert(tables.letter_appr.name, {
+                id: documentNo,
+                gpro_document_no: documentNo,
+                gpro_draft_template_no: draftTemplateNo,
+                gpro_draft_template_name: draftTemplateName,
+                gpro_draft_status_code: draftStatusCode,
+                gpro_draft_id: draftId,
+                gpro_draft_templateId: draftTemplateId,
+                gpro_draftTemplateType: draftTemplateType,
+                gpro_userId: userId,
+                gpro_userName: userName,
+                gpro_organizationId: organizationId,
+                gpro_organizationName: organizationName,
+                gpro_workflows: JSON.stringify(workflows || []),
+              })
+              .onConflict()
+              .merge()
+              .run();
+
             draft.response.body = {
               E_STATUS: "S",
               E_MESSAGE: ["성공", draftTemplateNo].join(" "),
               description: "unmap_letters 테이블로 Insert",
+              insertUnmapDBResult,
             };
             break;
           }
@@ -161,7 +183,6 @@ module.exports = async (draft, context) => {
               E_STATUS: "S",
               E_MESSAGE: ["성공"].join(" "),
               contractID,
-              curr: fn.convDate(dayjs, new Date()),
               updateResult,
               updateApprDBResult,
             };
