@@ -135,10 +135,10 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           ]
             .filter(Boolean)
             .join("-");
-          // const latestApr = args.approvalList.find(
-          //   ({ id }) => id === form.gpro_document_no
-          // );
-          // const rcp_workflows=(latestApr && latestApr.gpro_workflows)||[];
+          const latestApr = args.approvalList.find(
+            ({ id }) => id === form.gpro_document_no
+          );
+          const rcp_workflows = (latestApr && latestApr.gpro_workflows) || [];
           const jsonData = {
             title: [`[${title_prefix}]`, form.name].join(" "),
             bukrs: currentUser.bukrs,
@@ -160,10 +160,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
                 remark: args.approvalDialog.remark,
               },
             },
-            workflows: [{ email: currentUser.email, type: "DRF" }],
-            // .concat(
-            //   rcp_workflows.map(({ userId }) => ({ userId, type: "RCP" }))
-            // ) //   REF 참조, RCP: 열람
+            workflows: [{ email: currentUser.email, type: "DRF" }].concat(
+              rcp_workflows.map(({ userId }) => ({ userId, type: "REF" }))
+            ), //   REF 참조, RCP: 열람
           };
 
           draft.response.body = {
