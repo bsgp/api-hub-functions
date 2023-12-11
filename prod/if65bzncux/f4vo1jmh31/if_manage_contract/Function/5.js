@@ -137,8 +137,12 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
       const billToParty = partyList.find((party) => party.stems10 === "2");
       contract.partyList = partyList;
       contract.billFrom = {
-        id: billFromParty && billFromParty.ref_id,
-        text: billFromParty && billFromParty.name,
+        id:
+          contract.costObjectList[0].bill_from_id ||
+          (billFromParty && billFromParty.ref_id),
+        text:
+          contract.costObjectList[0].bill_from_text ||
+          (billFromParty && billFromParty.name),
       };
       contract.billTo = {
         id: billToParty && billToParty.ref_id,
