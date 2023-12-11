@@ -42,12 +42,36 @@ module.exports = async (draft, { sql, env }) => {
         .update(tables.unmap_letters.name, mappingData)
         .where({ id: source.id })
         .run();
+
+      /** letter_appr db update */
+      const updateApprDBResult = await sql("mysql", sqlParams)
+        .insert(tables.letter_appr.name, {
+          contract_id,
+          id: target.id,
+          gpro_document_no: target.gpro_document_no,
+          gpro_draft_template_no: target.gpro_draft_template_no,
+          gpro_draft_template_name: target.gpro_draft_template_name,
+          gpro_draft_status_code: target.gpro_draft_status_code,
+          gpro_draft_id: target.gpro_draft_id,
+          gpro_draft_templateId: target.gpro_draft_templateId,
+          gpro_draftTemplateType: target.gpro_draftTemplateType,
+          gpro_userId: target.gpro_userId,
+          gpro_userName: target.gpro_userName,
+          gpro_organizationId: target.gpro_organizationId,
+          gpro_organizationName: target.gpro_organizationName,
+          gpro_workflows: JSON.stringify(target.gpro_workflows || []),
+        })
+        .onConflict()
+        .merge()
+        .run();
+
       draft.response.body = {
         E_STATUS: "S",
         E_MESSAGE: "준비중",
         source,
         target,
         unmapResult,
+        updateApprDBResult,
       };
       break;
     }
