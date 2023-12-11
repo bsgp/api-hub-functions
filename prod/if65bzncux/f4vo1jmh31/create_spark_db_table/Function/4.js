@@ -20,7 +20,7 @@ module.exports = async (draft, { fn, sql, env, makeid }) => {
         .create(spec.name, fn[tableKey]({ mysql, makeid }))
         .run();
       if (result.statusCode !== 200) {
-        if (spec.desc === "Actual FI cost object DB table") {
+        if (spec.desc === "Contract info DB table") {
           const alterResult = await mysql.table
             .alter(spec.name, function (table) {
               table.boolean("variable_dmbt_ind").defaultTo(false); // 변동금액 지시자
