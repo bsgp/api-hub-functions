@@ -23,8 +23,7 @@ module.exports = async (draft, { fn, sql, env, makeid }) => {
         if (spec.desc === "Actual FI cost object DB table") {
           const alterResult = await mysql.table
             .alter(spec.name, function (table) {
-              table.string("bill_from_id", 36).defaultTo(""); // 계약당사자 id
-              table.string("bill_from_text", 100).defaultTo(""); // 계약당사자 text
+              table.boolean("variable_dmbt_ind").defaultTo(false); // 변동금액 지시자
               // table.json("gpro_workflows");
               // table.string("apr_status", 3).defaultTo("");
               // table.boolean("extra_item").defaultTo(false);
