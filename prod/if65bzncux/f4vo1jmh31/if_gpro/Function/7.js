@@ -108,7 +108,11 @@ module.exports = async (draft, context) => {
             };
             break;
           }
-          default: {
+          case "BSGP_CT_002_DEV":
+          case "BSGP_CT_002_QAS":
+          case "BSGP_CT_002_PRD":
+          case "BSGP-0005-1":
+          case "BSGP-0006": {
             /**
              * 기존 계약문서, 외주계약 신규 요청("BSGP-0005-2")
              * 기존 계약의 경우 해당 계약에 기안 상태 추가.
@@ -187,6 +191,9 @@ module.exports = async (draft, context) => {
               updateResult,
               updateApprDBResult,
             };
+            break;
+          }
+          default: {
             break;
           }
         }
