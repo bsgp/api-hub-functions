@@ -159,6 +159,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
                 postDate: form.prod_date,
                 remark: args.approvalDialog.remark,
               },
+              styles: {
+                status: "display:none;",
+              },
             },
             workflows: [{ email: currentUser.email, type: "DRF" }].concat(
               rcp_workflows
