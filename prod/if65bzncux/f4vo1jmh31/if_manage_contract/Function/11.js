@@ -73,13 +73,21 @@ module.exports = async (draft, { sql, env }) => {
         .merge()
         .run();
       /** contract db update */
-      const updateData = {
-        apr_status: "LRC",
-        gpro_document_no: source[0].id,
-      };
-      updateData.status = "CDN";
-      updateData.seq = (Number(target.seq) + 1).toString();
-      /** contract db update */
+      const gpro_draft_template_no = source[0].gpro_draft_template_no;
+      let updateData;
+      switch (gpro_draft_template_no) {
+        case "BSGP-0005-2": {
+          updateData = {
+            apr_status: "LRC",
+            gpro_document_no: source[0].id,
+          };
+          updateData.status = "CDN";
+          updateData.seq = (Number(target.seq) + 1).toString();
+          break;
+        }
+        default:
+          break;
+      }
       const updateResult = await sql("mysql", sqlParams)
         .update(tables.contract.name, updateData)
         .where({ id: contract_id })
