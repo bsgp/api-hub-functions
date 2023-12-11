@@ -36,11 +36,18 @@ module.exports = async (draft, { sql, env }) => {
         };
         return;
       }
+      /** unmap_letters db update */
+      const mappingData = { contract_id, deleted: true };
+      const unmapResult = await sql("mysql", sqlParams)
+        .update(tables.unmap_letters.name, mappingData)
+        .where({ id: source.id })
+        .run();
       draft.response.body = {
         E_STATUS: "S",
         E_MESSAGE: "준비중",
         source,
         target,
+        unmapResult,
       };
       break;
     }
