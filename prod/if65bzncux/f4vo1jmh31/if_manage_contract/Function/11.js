@@ -78,7 +78,7 @@ module.exports = async (draft, { sql, env }) => {
       switch (gpro_draft_template_no) {
         case "BSGP-0005-2": {
           updateData = {
-            apr_status: "LRC",
+            apr_status: "",
             gpro_document_no: source[0].id,
           };
           updateData.status = "CDN";
