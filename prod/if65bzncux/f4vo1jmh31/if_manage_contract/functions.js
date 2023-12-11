@@ -75,6 +75,8 @@ module.exports.getDB_Object = (
         post_date: item.post_date,
         po_number: item.po_number,
         po_item_no: item.po_item_no,
+        bill_from_id: item.bill_from_id,
+        bill_from_text: item.bill_from_text,
         extra_item: !!item.extra_item,
         loekz: (item.loekz && "X") || "",
       }));
@@ -103,6 +105,8 @@ module.exports.getDB_Object = (
         fi_number: item.fi_number,
         fi_item_no: item.fi_item_no,
         origin_item_index: item.origin_item_index,
+        bill_from_id: item.bill_from_id,
+        bill_from_text: item.bill_from_text,
       }));
     }
     case "wbs": {
