@@ -155,7 +155,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
       queryBuilder.where("stems10", "like", "1");
       queryBuilder
         .where(`${tables.contract.name}.type`, "like", "S")
-        .whereNot(`${tables.cost_object.name}.deleted`, true);
+        .where(`${tables.cost_object.name}.deleted`, "like", false);
 
       const { post_date, dateRange, dateType } = newData;
       if (post_date && post_date[0] && post_date[1]) {
@@ -177,13 +177,11 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         }
       }
       if (newData.contractID) {
-        queryBuilder
-          .where(
-            `${tables.contract.name}.id`,
-            "like",
-            `%${newData.contractID}%`
-          )
-          .whereNot(`${tables.cost_object.name}.deleted`, true);
+        queryBuilder.where(
+          `${tables.contract.name}.id`,
+          "like",
+          `%${newData.contractID}%`
+        );
       }
       if (newData.contractName) {
         queryBuilder.where(
