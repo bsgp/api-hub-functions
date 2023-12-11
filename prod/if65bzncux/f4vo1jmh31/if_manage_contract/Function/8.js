@@ -177,11 +177,13 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         }
       }
       if (newData.contractID) {
-        queryBuilder.where(
-          `${tables.contract.name}.id`,
-          "like",
-          `%${newData.contractID}%`
-        );
+        queryBuilder
+          .where(
+            `${tables.contract.name}.id`,
+            "like",
+            `%${newData.contractID}%`
+          )
+          .whereNot(`${tables.cost_object.name}.deleted`, true);
       }
       if (newData.contractName) {
         queryBuilder.where(
