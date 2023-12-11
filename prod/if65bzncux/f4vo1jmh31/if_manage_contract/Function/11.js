@@ -79,7 +79,7 @@ module.exports = async (draft, { sql, env }) => {
 
       draft.response.body = {
         E_STATUS: "S",
-        E_MESSAGE: "준비중",
+        E_MESSAGE: "매핑이 완료되었습니다",
         source,
         target,
         unmapResult,
