@@ -85,6 +85,14 @@ module.exports = async (draft, { sql, env }) => {
           updateData.seq = (Number(target.seq) + 1).toString();
           break;
         }
+        case "BSGP-0005-3": {
+          updateData = {
+            apr_status: "CNL",
+            gpro_document_no: source[0].id,
+          };
+          updateData.status = "CDN";
+          break;
+        }
         default:
           break;
       }
