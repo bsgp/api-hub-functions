@@ -161,7 +161,13 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
               },
             },
             workflows: [{ email: currentUser.email, type: "DRF" }].concat(
-              rcp_workflows.map(({ userId }) => ({ userId, type: "REF" }))
+              rcp_workflows.map(({ userId, organizationId }) => {
+                const defaultObj = { type: "REF" };
+                if (userId) {
+                  defaultObj.userId = userId;
+                } else defaultObj.organizationId = organizationId;
+                return defaultObj;
+              })
             ), //   REF 참조, RCP: 열람
           };
 
