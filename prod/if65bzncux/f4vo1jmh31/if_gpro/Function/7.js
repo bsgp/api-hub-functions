@@ -196,7 +196,7 @@ module.exports = async (draft, context) => {
           default: {
             draft.response.body = {
               E_STATUS: "E",
-              E_MESSAGE: ["실패", draftTemplateNo].join(" "),
+              E_MESSAGE: ["실패", draftTemplateNo].join(": "),
               description: "interface 템플릿 연결 필요",
             };
             break;
