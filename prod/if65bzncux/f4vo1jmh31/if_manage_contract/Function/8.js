@@ -111,6 +111,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
       // 청구리스트 조회
       const queryBuilder = sql("mysql", sqlParams)
         .select(tables.cost_object.name)
+        .whereNot(`${tables.cost_object.name}.deleted`, true)
         .select(
           `${tables.cost_object.name}.*`,
           `${tables.contract.name}.id as contract_id`,
