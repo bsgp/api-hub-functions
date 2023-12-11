@@ -40,34 +40,42 @@ module.exports = async (draft, { sql, env }) => {
       const mappingData = { contract_id, deleted: true };
       const unmapResult = await sql("mysql", sqlParams)
         .update(tables.unmap_letters.name, mappingData)
-        .where({ id: source.id })
+        .whereIn(
+          "id",
+          source.map(({ id }) => id)
+        )
         .run();
 
       /** letter_appr db update */
       const updateApprDBResult = await sql("mysql", sqlParams)
-        .insert(tables.letter_appr.name, {
-          contract_id,
-          id: target.id,
-          gpro_document_no: target.gpro_document_no,
-          gpro_draft_template_no: target.gpro_draft_template_no,
-          gpro_draft_template_name: target.gpro_draft_template_name,
-          gpro_draft_status_code: target.gpro_draft_status_code,
-          gpro_draft_id: target.gpro_draft_id,
-          gpro_draft_templateId: target.gpro_draft_templateId,
-          gpro_draftTemplateType: target.gpro_draftTemplateType,
-          gpro_userId: target.gpro_userId,
-          gpro_userName: target.gpro_userName,
-          gpro_organizationId: target.gpro_organizationId,
-          gpro_organizationName: target.gpro_organizationName,
-          gpro_workflows: JSON.stringify(target.gpro_workflows || []),
-        })
+        .insert(
+          tables.letter_appr.name,
+          source.map((sc) => {
+            return {
+              contract_id,
+              id: sc.id,
+              gpro_document_no: sc.gpro_document_no,
+              gpro_draft_template_no: sc.gpro_draft_template_no,
+              gpro_draft_template_name: sc.gpro_draft_template_name,
+              gpro_draft_status_code: sc.gpro_draft_status_code,
+              gpro_draft_id: sc.gpro_draft_id,
+              gpro_draft_templateId: sc.gpro_draft_templateId,
+              gpro_draftTemplateType: sc.gpro_draftTemplateType,
+              gpro_userId: sc.gpro_userId,
+              gpro_userName: sc.gpro_userName,
+              gpro_organizationId: sc.gpro_organizationId,
+              gpro_organizationName: sc.gpro_organizationName,
+              gpro_workflows: JSON.stringify(sc.gpro_workflows || []),
+            };
+          })
+        )
         .onConflict()
         .merge()
         .run();
       /** contract db update */
       const updateData = {
         apr_status: "LRC",
-        gpro_document_no: target.id,
+        gpro_document_no: source[0].id,
       };
       updateData.status = "CDN";
       updateData.seq = (Number(target.seq) + 1).toString();
