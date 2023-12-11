@@ -133,6 +133,8 @@ module.exports.cost_object =
     table.string("loekz", 1).defaultTo(""); // 삭제지시자(구매)
     table.string("remark", 100).defaultTo(""); // 비고
     table.boolean("extra_item").defaultTo(false); // 청구계획 추가항목
+    table.string("bill_from_id", 36).defaultTo(""); // 계약당사자 id
+    table.string("bill_from_text", 100).defaultTo(""); // 계약당사자 text
     table.boolean("deleted").defaultTo(false);
 
     table.primary(["contract_id", "id"]);
@@ -167,6 +169,8 @@ module.exports.actual_billing =
     table.string("post_date", 8).defaultTo(""); // 전기일
     table.string("docu_date", 8).defaultTo(""); // 증빙일
     table.string("remark", 100).defaultTo(""); // 비고
+    table.string("bill_from_id", 36).defaultTo(""); // 계약당사자 id
+    table.string("bill_from_text", 100).defaultTo(""); // 계약당사자 text
     table.boolean("deleted").defaultTo(false);
 
     table.primary(["contract_id", "id"]);
