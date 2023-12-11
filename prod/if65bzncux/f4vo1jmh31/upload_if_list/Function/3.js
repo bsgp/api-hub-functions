@@ -72,6 +72,12 @@ module.exports = async (draft, { file, env }) => {
       TriggeredBy: "EAI",
       Path: "/",
     },
+    ["IF-CO-012"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_WBS_REQUEST_FIELD",
+      TriggeredBy: "G_PRO",
+      Path: "/rfc",
+    },
     ["IF-CO-013"]: {
       Type: "RFC",
       Name: "ZCO_IF_CONTRACT",
@@ -90,6 +96,18 @@ module.exports = async (draft, { file, env }) => {
       TriggeredBy: "G_PRO",
       Path: "/rfc",
     },
+    ["IF-CO-016"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_CCTR_BUD_APPLY",
+      TriggeredBy: "G_PRO",
+      Path: "/rfc",
+    },
+    ["IF-CO-017"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_REC_APPROVAL_STATUS",
+      TriggeredBy: "G_PRO",
+      Path: "/rfc",
+    },
     ["IF-CO-018"]: {
       Type: "RFC",
       Name: "ZCO_IF_WBS_AUTH",
@@ -102,6 +120,12 @@ module.exports = async (draft, { file, env }) => {
       TriggeredBy: "G_PRO",
       Path: "/rfc",
     },
+    ["IF-CO-020"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_WBS_BUD_APPLY",
+      TriggeredBy: "G_PRO",
+      Path: "/rfc",
+    },
     ["IF-CO-021"]: {
       Type: "RFC",
       Name: "ZCO_IF_IO_AUTH",
@@ -111,6 +135,30 @@ module.exports = async (draft, { file, env }) => {
     ["IF-CO-022"]: {
       Type: "RFC",
       Name: "ZCO_IF_IO_BUDGET_ACTUAL",
+      TriggeredBy: "G_PRO",
+      Path: "/rfc",
+    },
+    ["IF-CO-023"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_IO_BUD_APPLY",
+      TriggeredBy: "G_PRO",
+      Path: "/rfc",
+    },
+    ["IF-CO-024"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_CCTR_BUD_ACT_REPORT",
+      TriggeredBy: "G_PRO",
+      Path: "/rfc",
+    },
+    ["IF-CO-025"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_WBS_BUD_ACT_REPORT",
+      TriggeredBy: "G_PRO",
+      Path: "/rfc",
+    },
+    ["IF-CO-026"]: {
+      Type: "RFC",
+      Name: "ZCO_IF_IO_BUD_ACT_REPORT",
       TriggeredBy: "G_PRO",
       Path: "/rfc",
     },
