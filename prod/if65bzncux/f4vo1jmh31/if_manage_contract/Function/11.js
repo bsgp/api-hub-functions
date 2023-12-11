@@ -64,6 +64,18 @@ module.exports = async (draft, { sql, env }) => {
         .onConflict()
         .merge()
         .run();
+      /** contract db update */
+      const updateData = {
+        apr_status: "LRC",
+        gpro_document_no: target.id,
+      };
+      updateData.status = "CDN";
+      updateData.seq = (Number(target.seq) + 1).toString();
+      /** contract db update */
+      const updateResult = await sql("mysql", sqlParams)
+        .update(tables.contract.name, updateData)
+        .where({ id: contract_id })
+        .run();
 
       draft.response.body = {
         E_STATUS: "S",
@@ -72,6 +84,7 @@ module.exports = async (draft, { sql, env }) => {
         target,
         unmapResult,
         updateApprDBResult,
+        updateResult,
       };
       break;
     }
