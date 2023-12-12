@@ -227,6 +227,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
 
       draft.response.body = {
         request: newData,
+        queryResult,
         list: list.sort((al, be) => {
           if (al.post_date !== be.post_date) {
             return Number(al.post_date) - Number(be.post_date);
