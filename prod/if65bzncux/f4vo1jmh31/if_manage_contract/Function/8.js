@@ -134,12 +134,20 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           "=",
           `${tables.contract.name}.id`
         )
-        .leftJoin(
-          tables.party.name,
-          `${tables.cost_object.name}.contract_id`,
-          "=",
-          `${tables.party.name}.contract_id`
-        )
+        .leftJoin(tables.party.name, (builder) => {
+          builder
+            .on(
+              `${tables.cost_object.name}.contract_id`,
+              `${tables.party.name}.contract_id`
+            )
+            .on(`${tables.cost_object.name}.bill_from_id`, "=", "");
+        })
+        // .leftJoin(
+        //   tables.party.name,
+        //   `${tables.cost_object.name}.contract_id`,
+        //   "=",
+        //   `${tables.party.name}.contract_id`
+        // )
         .leftJoin(tables.actual_billing.name, (builder) => {
           builder
             .on(
