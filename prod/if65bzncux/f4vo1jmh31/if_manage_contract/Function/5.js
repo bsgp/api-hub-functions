@@ -9,7 +9,6 @@ module.exports = async (draft, { sql, env, tryit, fn, user }) => {
         draft.response.body = { E_STATUS: "F", E_MESSAGE: "Wrong Request" };
         return;
       }
-
       const query = sql("mysql", sqlParams)
         .select(tables.contract.name)
         .where("id", "like", newData.contractID);
