@@ -169,16 +169,16 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             const latestJsonData = latestData && latestData.json;
             if (latestJsonData) {
               const latest = fn.numberWithCommas(latestJsonData.form.dmbtr);
-              const lAmt = [latest, latestJsonData.form.curr_key].join("");
+              const lAmt = [latest, latestJsonData.form.curr_key].join(" ");
               const curr = fn.numberWithCommas(form.dmbtr);
-              const cAmt = [curr, form.curr_key].join("");
-              const changedArr = ["변경전:", lAmt, "\t", "변경후:", cAmt];
+              const cAmt = [curr, form.curr_key].join(" ");
+              const changedArr = ["변경전:", lAmt, "\t=>\t", "변경후:", cAmt];
               if (latestJsonData.form.dmbtr !== form.dmbtr) {
                 contentObj.labels.dmbtr = "계약금액";
                 contentObj.values.dmbtr = changedArr.join(" ");
               } else {
                 contentObj.labels.dmbtr = "계약금액";
-                contentObj.values.dmbtr = changedArr.concat("(동일)").join(" ");
+                contentObj.values.dmbtr = [cAmt].concat("(동일)").join(" ");
               }
             }
           }
