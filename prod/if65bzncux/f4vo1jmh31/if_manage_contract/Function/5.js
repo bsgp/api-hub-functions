@@ -156,13 +156,14 @@ module.exports = async (draft, { sql, env, tryit, fn, user }) => {
           E_STATUS: "F",
           E_MESSAGE: "해당 청구내역에 권한이\n없습니다",
         };
+      } else {
+        draft.response.body = {
+          request_contractID: newData.contractID,
+          contract,
+          E_STATUS: "S",
+          E_MESSAGE: "조회가\nn완료되었습니다",
+        };
       }
-      draft.response.body = {
-        request_contractID: newData.contractID,
-        contract,
-        E_STATUS: "S",
-        E_MESSAGE: "조회가\nn완료되었습니다",
-      };
       break;
     }
     default: {
