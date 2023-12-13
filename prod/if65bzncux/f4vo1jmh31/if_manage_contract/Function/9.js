@@ -110,8 +110,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           }
 
           draft.response.body = {
-            E_MESSAGE: "준비 중입니다",
-            E_STATUS: "F",
+            E_MESSAGE: "전자계약 생성 시\n변경될 내역이\n조회되었습니다",
+            E_STATUS: "S",
             lastSeq,
             newData,
             latestData,
