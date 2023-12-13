@@ -113,9 +113,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           draft.response.body = {
             E_MESSAGE: "준비 중입니다",
             E_STATUS: "F",
+            lastSeq,
+            latestData,
             list: chgContContents,
-            source,
-            target,
           };
           break;
         }
