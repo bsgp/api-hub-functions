@@ -54,11 +54,9 @@ module.exports = async (draft, { sql, env, tryit, fn, user }) => {
       }
 
       if (user.bukrs !== "*" && results.contract.bukrs !== user.bukrs) {
-        draft.response.body = {
-          request_contractID: newData.contractID,
-          E_STATUS: "F",
-          E_MESSAGE: "해당 계약정보에 권한이\n없습니다",
-        };
+        const E_MESSAGE = "해당 계약정보에 권한이\n없습니다";
+        draft.response.body = { E_STATUS: "F", E_MESSAGE };
+        return;
       } else {
         draft.response.body = {
           request_contractID: newData.contractID,
