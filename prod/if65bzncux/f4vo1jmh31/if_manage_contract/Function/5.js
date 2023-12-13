@@ -1,4 +1,4 @@
-module.exports = async (draft, { sql, env, tryit, fn }) => {
+module.exports = async (draft, { sql, env, tryit, fn, user }) => {
   const { interfaceID, tables, newData } = draft.json;
   const sqlParams = { useCustomRole: false, stage: env.CURRENT_ALIAS };
 
@@ -149,11 +149,19 @@ module.exports = async (draft, { sql, env, tryit, fn }) => {
         text: billToParty && billToParty.name,
       };
 
+      if (user.bukrs !== "*" && contract.bukrs !== user.bukrs) {
+        draft.response.body = {
+          request_contractID: newData.contractID,
+          contract,
+          E_STATUS: "F",
+          E_MESSAGE: "해당 청구내역에 권한이\n없습니다",
+        };
+      }
       draft.response.body = {
         request_contractID: newData.contractID,
         contract,
         E_STATUS: "S",
-        E_MESSAGE: "IF-CT-111",
+        E_MESSAGE: "조회가\nn완료되었습니다",
       };
       break;
     }
