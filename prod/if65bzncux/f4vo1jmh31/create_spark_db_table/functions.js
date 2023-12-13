@@ -39,15 +39,19 @@ module.exports.contract =
     table.string("end_date", 8).defaultTo(""); //계약종료일
     table.boolean("renewal_ind"); // 자동연장 지시자
     table.string("renewal_period", 3).defaultTo(""); // 자동연장기간 (기본값: "1Y")
-    table.string("curr_key", 5).defaultTo("");
-    // KRW,USD,JPY..(기본값: 로그인 회사코드 기본 통화)
+    table.boolean("variable_dmbt_ind").defaultTo(false); // 변동금액 지시자
     table.decimal("dmbtr_supply", 23, 2).defaultTo(0); // 공급가액
     table.decimal("dmbtr_vat", 23, 2).defaultTo(0); // 부과세
     table.decimal("dmbtr", 23, 2).defaultTo(0); // curr_key와 매칭되는 금액
+    table.decimal("dmbtr_supply_local", 23, 2).defaultTo(0); // 로컬 공급가액
+    table.decimal("dmbtr_vat_local", 23, 2).defaultTo(0); // 로컬 부과세
     table.decimal("dmbtr_local", 23, 2).defaultTo(0);
-    // curr_key와 curr_local이 다를 경우 필수 입력
+    table.string("curr_key", 5).defaultTo("");
+    // KRW,USD,JPY..(기본값: 로그인 회사코드 기본 통화)
     table.string("curr_local", 5).defaultTo(""); // 기본값: 로그인 회사 기본통화키
+    // curr_key와 curr_local이 다를 경우 필수 입력
     table.string("status", 3).defaultTo(""); // 상태
+    table.string("apr_status", 3).defaultTo(""); // g-pro 기안 상태
     table.string("seq", 3).defaultTo("0"); // 회차
     table.string("payment_terms", 20).defaultTo(""); // 지급조건
     table.string("claims_time", 20).defaultTo(""); // 청구시점
@@ -56,17 +60,33 @@ module.exports.contract =
     table.string("warr_haja_deposit ", 20).defaultTo(""); // 하자이행보증
     table.string("delayed_money", 20).defaultTo(""); // 지체상금율
     table.string("etc", 200).defaultTo(""); // 기타
+    table.string("gpro_document_no").defaultTo(""); // 그룹웨어 문서번호
     table.string("uni_contno", 20).defaultTo(""); // 계약관리번호
     table.string("uni_contseq", 3).defaultTo(""); //  계약관리 일련번호
     table.string("uni_coregno", 10).defaultTo(""); // 계약소유자 사업자등록번호
     table.string("uni_contname", 200).defaultTo(""); // 계약명
-    table.string("uni_contdate", 3).defaultTo(""); // 계약일자(yyyyMMdd)
+    table.string("uni_contdate", 8).defaultTo(""); // 계약일자(yyyyMMdd)
     table.string("uni_contsts", 3).defaultTo(""); // 계약상태코드
     table.string("uni_contstsname", 3).defaultTo(""); // 계약상태명
     table.datetime("created_at", { precision: 6 }).defaultTo(mysql.fn.now(6));
 
     table.primary(["id"]);
   };
+
+/** TABLE: changed_contract */
+module.exports.changed_contract = () => (table) => {
+  table.charset("utf8mb4");
+
+  table.string("contract_id", 10).notNullable();
+  table.string("seq", 3).notNullable(); // 계약차수
+
+  table.json("json"); // json 타입
+  table.json("before").defaultTo("");
+  table.json("after").defaultTo("");
+  table.boolean("comfirmed").defaultTo(false);
+
+  table.primary(["contract_id", "seq"]);
+};
 
 /** TABLE: ref_doc */
 module.exports.ref_doc =
@@ -111,6 +131,47 @@ module.exports.cost_object =
     table.string("po_number ", 10).defaultTo(""); // 구매오더번호
     table.string("po_item_no", 10).defaultTo(""); // 구매오더항목번호
     table.string("post_date", 8).defaultTo(""); // 청구예정일
+    table.string("loekz", 1).defaultTo(""); // 삭제지시자(구매)
+    table.string("remark", 100).defaultTo(""); // 비고
+    table.boolean("extra_item").defaultTo(false); // 청구계획 추가항목
+    table.string("bill_from_id", 36).defaultTo(""); // 계약당사자 id
+    table.string("bill_from_text", 100).defaultTo(""); // 계약당사자 text
+    table.boolean("deleted").defaultTo(false);
+
+    table.primary(["contract_id", "id"]);
+  };
+
+/** TABLE: actual_billing */
+module.exports.actual_billing =
+  ({ makeid }) =>
+  (table) => {
+    table.charset("utf8mb4");
+
+    table.string("contract_id", 10).notNullable();
+    table.string("id", 5).defaultTo(makeid(5)); // makeid()
+
+    table.string("index", 5).defaultTo("");
+    table.string("parent_id", 5).defaultTo("");
+    table.string("type", 3).defaultTo(""); // 귀속처유형(WBS, 코스트센터)
+    table.string("cost_object_id", 36).defaultTo(""); // 귀속처(WBS, 코스트센터)
+    table.string("name", 100).defaultTo(""); // 귀속처 명
+    table.string("cost_type_id", 10).defaultTo("");
+    table.string("cost_type", 100).defaultTo("");
+    table.string("gl_account_id", 18).defaultTo("");
+    table.string("gl_account", 100).defaultTo("");
+    // 귀속 유형(cf: to-be 리스트파일 계약유형 시트)
+    table.decimal("dmbtr_supply", 23, 2).defaultTo(0);
+    table.decimal("dmbtr_supply_local", 23, 2).defaultTo(0);
+    table.decimal("dmbtr_vat", 23, 2).defaultTo(0);
+    table.decimal("dmbtr_vat_local", 23, 2).defaultTo(0);
+    table.string("fi_gjahr", 4).defaultTo(""); // 회계연도
+    table.string("fi_number ", 10).defaultTo(""); // 회계전표번호
+    table.string("fi_item_no", 4).defaultTo(""); // 회계전표항목번호
+    table.string("post_date", 8).defaultTo(""); // 전기일
+    table.string("docu_date", 8).defaultTo(""); // 증빙일
+    table.string("remark", 100).defaultTo(""); // 비고
+    table.string("bill_from_id", 36).defaultTo(""); // 계약당사자 id
+    table.string("bill_from_text", 100).defaultTo(""); // 계약당사자 text
     table.boolean("deleted").defaultTo(false);
 
     table.primary(["contract_id", "id"]);
@@ -126,6 +187,7 @@ module.exports.wbs =
     table.string("id", 5).defaultTo(makeid(5)); // makeid()
 
     table.string("index", 5).defaultTo("");
+    table.string("seq", 3).defaultTo("0"); // 계약차수
     table.string("type", 3).defaultTo(""); // 귀속처유형(WBS, 코스트센터)
     table.string("cost_object_id", 36).defaultTo(""); // 귀속처(WBS, 코스트센터)
     table.string("name", 100).defaultTo(""); // 귀속처 명
@@ -212,13 +274,50 @@ module.exports.attachment =
   };
 
 /** TABLE: letter_appr */
-module.exports.letter_appr =
-  ({ makeid }) =>
-  (table) => {
-    table.charset("utf8mb4");
+module.exports.letter_appr = () => (table) => {
+  table.charset("utf8mb4");
 
-    table.string("contract_id", 10).notNullable();
-    table.string("id", 5).defaultTo(makeid(5));
+  table.string("contract_id", 10).notNullable();
+  table.string("id");
 
-    table.primary(["contract_id", "id"]);
-  };
+  table.string("gpro_document_no").defaultTo("");
+  table.string("gpro_draft_template_no").defaultTo("");
+  table.string("gpro_draft_template_name").defaultTo("");
+  table.string("gpro_draft_status_code").defaultTo("");
+  table.string("gpro_draft_id").defaultTo("");
+  table.string("gpro_draft_templateId").defaultTo("");
+  table.string("gpro_draftTemplateType").defaultTo("");
+  table.string("gpro_userId").defaultTo("");
+  table.string("gpro_userName").defaultTo("");
+  table.string("gpro_organizationId").defaultTo("");
+  table.string("gpro_organizationName").defaultTo("");
+  table.json("gpro_workflows");
+
+  table.primary(["contract_id", "id"]);
+};
+
+/** TABLE: unmap_letters */
+module.exports.unmap_letters = () => (table) => {
+  /** 매핑 필요 기안서 DB (변경, 해지 기안서) */
+  table.charset("utf8mb4");
+
+  table.string("id").notNullable();
+
+  table.string("contract_id", 10).defaultTo("");
+  table.string("gpro_document_no").defaultTo("");
+  table.string("gpro_draft_template_no").defaultTo("");
+  table.string("gpro_draft_template_name").defaultTo("");
+  table.string("gpro_draft_status_code").defaultTo("");
+  table.string("gpro_draft_id").defaultTo("");
+  table.string("gpro_draft_templateId").defaultTo("");
+  table.string("gpro_draftTemplateType").defaultTo("");
+  table.string("gpro_userId").defaultTo("");
+  table.string("gpro_userName").defaultTo("");
+  table.string("gpro_organizationId").defaultTo("");
+  table.string("gpro_organizationName").defaultTo("");
+  table.json("gpro_workflows");
+  table.string("post_date", 8).defaultTo(""); // 전기일
+  table.boolean("deleted").defaultTo(false);
+
+  table.primary(["id"]);
+};

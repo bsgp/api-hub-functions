@@ -19,22 +19,21 @@ module.exports = async (draft, { fn, sql, env, makeid }) => {
       const result = await mysql.table
         .create(spec.name, fn[tableKey]({ mysql, makeid }))
         .run();
-      // if (result.statusCode !== 200) {
-      //   if (spec.desc === "Party(supplier, customer) info DB") {
-      //     const alterResult = await mysql.table
-      //       .alter(spec.name, function (table) {
-      //         table.string("gl_group_id", 20).defaultTo("").comment("계정그룹");
-      //         table
-      //           .string("gl_group_text", 20)
-      //           .defaultTo("")
-      //           .comment("계정그룹텍스트");
-      //       })
-      //       .run();
-      //     draft.response.body[spec.name] = alterResult;
-      //   }
-      // } else
-      draft.response.body[spec.name] =
-        result.statusCode === 200 ? "Succeed" : result.body;
+      if (result.statusCode !== 200) {
+        if (spec.desc === "Contract info DB table") {
+          const alterResult = await mysql.table
+            .alter(spec.name, function (table) {
+              table.boolean("variable_dmbt_ind").defaultTo(false); // 변동금액 지시자
+              // table.json("gpro_workflows");
+              // table.string("apr_status", 3).defaultTo("");
+              // table.boolean("extra_item").defaultTo(false);
+            })
+            .run();
+          draft.response.body[spec.name] = alterResult;
+        }
+      } else
+        draft.response.body[spec.name] =
+          result.statusCode === 200 ? "Succeed" : result.body;
       return true;
     })
   );
