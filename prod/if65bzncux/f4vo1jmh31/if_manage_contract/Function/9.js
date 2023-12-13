@@ -113,6 +113,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             E_MESSAGE: "준비 중입니다",
             E_STATUS: "F",
             lastSeq,
+            newData,
             latestData,
             list: chgContContents,
           };
