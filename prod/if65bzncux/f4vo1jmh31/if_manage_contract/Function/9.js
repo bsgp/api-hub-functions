@@ -54,11 +54,10 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             };
             return;
           }
-          const jsonData = get_Unipost_JSON(newData);
           /** GET Diff latestJsonData vs jsonData */
           const source =
             get_Unipost_JSON(latestJsonData).contInfo.contDocValues;
-          const target = jsonData.contInfo.contDocValues;
+          const target = get_Unipost_JSON(newData).contInfo.contDocValues;
 
           const diffItem = Object.keys(target).reduce((acc, curr) => {
             if (target[curr] !== source[curr]) {
