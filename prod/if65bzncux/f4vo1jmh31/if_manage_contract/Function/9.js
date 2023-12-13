@@ -168,8 +168,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             const latestData = tryit(() => getLatestData.body.list[0], {});
             const latestJsonData = latestData && latestData.json;
             if (latestJsonData) {
-              const latest = latestJsonData.form.dmbtr;
-              const curr = form.dmbtr;
+              const latest = fn.numberWithCommas(latestJsonData.form.dmbtr);
+              const curr = fn.numberWithCommas(form.dmbtr);
               const changedArr = ["변경전:", latest, "=>", "변경후:", curr];
               if (latestJsonData.form.dmbtr !== form.dmbtr) {
                 contentObj.labels.dmbtr = "계약금액";
