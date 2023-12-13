@@ -17,7 +17,6 @@ module.exports = async (draft, { sql, env, tryit, fn, user }) => {
           draft.response.body = { E_STATUS: "F", E_MESSAGE };
           return;
         }
-
         const results = { contract: queryResult.body.list[0] };
         await Promise.all(
           tableList.map(async (tableKey) => {
