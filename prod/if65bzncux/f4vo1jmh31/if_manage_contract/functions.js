@@ -1,22 +1,33 @@
-module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
+module.exports.getDB_Object = (
+  data = {},
+  { key, contractID, makeid, user }
+) => {
   if (key === "contract") {
     return {
       id: data.form.contractID,
       prod_date: data.form.prod_date,
-      bukrs: data.form.bukrs,
+      bukrs: (user && user.bukrs) || data.form.bukrs,
       name: data.form.name,
       type: data.form.type,
+      seq: data.form.seq || undefined,
       start_date: data.form.start_date,
       end_date: data.form.end_date,
       renewal_ind: data.form.renewal_ind,
       renewal_period: data.form.renewal_period,
+      variable_dmbt_ind: data.form.variable_dmbt_ind,
       curr_key: data.form.curr_key,
+      curr_local: data.form.curr_local,
       dmbtr_supply: (data.form.dmbtr_supply || "").replace(/,/g, ""),
       dmbtr_vat: (`${data.form.dmbtr_vat}` || "").replace(/,/g, ""),
       dmbtr: (`${data.form.dmbtr}` || "").replace(/,/g, ""),
+      dmbtr_supply_local: (data.form.dmbtr_supply_local || "").replace(
+        /,/g,
+        ""
+      ),
+      dmbtr_vat_local: (data.form.dmbtr_vat_local || "").replace(/,/g, ""),
       dmbtr_local: (data.form.dmbtr_local || "").replace(/,/g, ""),
-      curr_local: data.form.curr_local,
       status: data.form.status,
+      apr_status: data.form.apr_status,
       payment_terms: data.form.payment_terms,
       claims_time: data.form.claims_time,
       contract_deposit: data.form.contract_deposit,
@@ -24,6 +35,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
       warr_haja_deposit: data.form.warr_haja_deposit,
       delayed_money: data.form.delayed_money,
       etc: data.form.etc,
+      gpro_document_no: data.form.gpro_document_no,
       uni_coregno: data.form.uni_coregno,
       uni_contsts: data.form.uni_contsts,
       uni_contseq: data.form.uni_contseq,
@@ -35,7 +47,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
   }
   switch (key) {
     case "ref_doc": {
-      return data.billList.map((item) => ({
+      return (data.billList || []).map((item) => ({
         contract_id: `${contractID}` || item.contractID,
         id: item.id || (makeid && makeid(5)),
         index: `${item.index}`,
@@ -45,7 +57,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
       }));
     }
     case "cost_object": {
-      return data.costObjectList.map((item) => ({
+      return (data.costObjectList || []).map((item) => ({
         contract_id: `${contractID}` || item.contractID,
         id: item.id || (makeid && makeid(5)),
         index: `${item.index}`,
@@ -60,17 +72,46 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
         dmbtr_vat_local: (item.dmbtr_vat_local || "").replace(/,/g, ""),
         matnr: item.matnr,
         maktx: item.maktx,
+        remark: item.remark,
         post_date: item.post_date,
         po_number: item.po_number,
         po_item_no: item.po_item_no,
-        // curr_key: item.curr_key,
-        // curr_local: item.curr_local,
-        // start_date: item.start_date,
-        // end_date: item.end_date,
+        bill_from_id: item.bill_from_id,
+        bill_from_text: item.bill_from_text,
+        extra_item: !!item.extra_item,
+        loekz: (item.loekz && "X") || "",
+      }));
+    }
+    case "actual_billing": {
+      return (data.actualBillng || []).map((item) => ({
+        contract_id: `${contractID}` || item.contractID,
+        id: item.id || (makeid && makeid(5)),
+        parent_id: item.parent_id,
+        index: `${item.index}`,
+        type: item.type,
+        cost_object_id: item.cost_object_id,
+        name: item.name,
+        cost_type_id: item.cost_type_id,
+        cost_type: item.cost_type,
+        gl_account_id: item.gl_account_id,
+        gl_account: item.gl_account,
+        dmbtr_supply: (item.dmbtr_supply || "").replace(/,/g, ""),
+        dmbtr_supply_local: (item.dmbtr_supply_local || "").replace(/,/g, ""),
+        dmbtr_vat: (item.dmbtr_vat || "").replace(/,/g, ""),
+        dmbtr_vat_local: (item.dmbtr_vat_local || "").replace(/,/g, ""),
+        post_date: item.post_date,
+        docu_date: item.docu_date,
+        remark: item.remark,
+        fi_gjahr: item.fi_gjahr,
+        fi_number: item.fi_number,
+        fi_item_no: item.fi_item_no,
+        origin_item_index: item.origin_item_index,
+        bill_from_id: item.bill_from_id,
+        bill_from_text: item.bill_from_text,
       }));
     }
     case "wbs": {
-      return data.wbsList.map((item) => ({
+      return (data.wbsList || []).map((item) => ({
         contract_id: `${contractID}` || item.contractID,
         id: item.id || (makeid && makeid(5)),
         index: `${item.index}`,
@@ -84,7 +125,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
       }));
     }
     case "bill": {
-      return data.billList.map((item) => ({
+      return (data.billList || []).map((item) => ({
         contract_id: `${contractID}` || item.contractID,
         id: item.id || (makeid && makeid(5)),
         index: `${item.index}`,
@@ -97,7 +138,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
       }));
     }
     case "party": {
-      return data.partyList.map((item) => ({
+      return (data.partyList || []).map((item) => ({
         contract_id: `${contractID}` || item.contractID,
         id: item.id || (makeid && makeid(5)),
         index: `${item.index}`,
@@ -118,7 +159,7 @@ module.exports.getDB_Object = (data, { key, contractID, makeid }) => {
       }));
     }
     case "attachment": {
-      return data.attachmentList.map((item) => ({
+      return (data.attachmentList || []).map((item) => ({
         contract_id: `${contractID}` || item.contractID,
         id: item.id || (makeid && makeid(5)),
         index: `${item.index}`,
@@ -183,3 +224,30 @@ const convDate = (dayjs, dateStr, format = "YYYY-MM-DD HH:mm:ss", hour = 9) => {
 };
 
 module.exports.convDate = convDate;
+
+module.exports.sortIndexFn = (arr = []) =>
+  arr.sort(
+    (al, be) =>
+      Number(al.index.replace(/^a/, "")) - Number(be.index.replace(/^a/, ""))
+  );
+
+const removeCommas = (val) => {
+  return String(val).replace(/,/g, "").replace(/\s/g, "");
+};
+
+function numberWithCommas(xx, options = {}) {
+  const { noTraillingZeroInDecimal = true } = options;
+  if (xx === undefined) {
+    return "0";
+  }
+  const parts = removeCommas(xx.toString()).split(".");
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  if (parts[1] && noTraillingZeroInDecimal === true) {
+    parts[1] = parts[1].replace(/0+$/, "");
+    if (parts[1] === "") {
+      return parts[0];
+    }
+  }
+  return parts.join(".");
+}
+module.exports.numberWithCommas = numberWithCommas;
