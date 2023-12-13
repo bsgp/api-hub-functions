@@ -308,29 +308,44 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           }, {});
 
           const chgContContents = [];
-          const { contSdate, contEdate, c_amt, c_vatType, ...diffs } = diffItem;
+          const {
+            contSdate,
+            contEdate,
+            c_amt,
+            c_vatType,
+            c_claimsTime,
+            ...diffs
+          } = diffItem;
           if (contSdate || contEdate) {
-            chgContContents.push({
-              c_rowType: "date",
-              c_rowName: "계약기간",
-              before_contSdate: source.contSdate,
-              before_contEdate: source.contEdate,
-              contSdate: target.contSdate,
-              contEdate: target.contEdate,
-            });
+            //
           }
+          chgContContents.push({
+            c_rowType: "date",
+            c_rowName: "계약기간",
+            before_contSdate: source.contSdate,
+            before_contEdate: source.contEdate,
+            contSdate: target.contSdate,
+            contEdate: target.contEdate,
+          });
+
           if (c_amt || c_vatType) {
-            chgContContents.push({
-              c_rowType: "amt",
-              c_rowName: "계약총금액",
-              before_amt: source.c_amt,
-              before_vatType:
-                source.c_vatType === "VAT 별도" ? "suppAmt" : "contAmt",
-              c_amt: target.c_amt,
-              c_vatType:
-                target.c_vatType === "VAT 별도" ? "suppAmt" : "contAmt",
-            });
+            //
           }
+          chgContContents.push({
+            c_rowType: "amt",
+            c_rowName: "계약총금액",
+            before_amt: source.c_amt,
+            before_vatType:
+              source.c_vatType === "VAT 별도" ? "suppAmt" : "contAmt",
+            c_amt: target.c_amt,
+            c_vatType: target.c_vatType === "VAT 별도" ? "suppAmt" : "contAmt",
+          });
+          chgContContents.push({
+            c_rowType: c_claimsTime,
+            c_rowName: "청구시점",
+            before_content: source.c_claimsTime,
+            content: target.c_claimsTime,
+          });
           if (diffs && Object.keys(diffs).length > 0) {
             const diffKeyMapping = {
               c_paymentTerms: "지급조건",
