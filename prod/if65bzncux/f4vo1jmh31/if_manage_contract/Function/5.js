@@ -46,24 +46,30 @@ module.exports = async (draft, { sql, env, tryit, fn, user }) => {
             results["actual_billing"] = fn.sortIndexFn(tableData);
           }
 
-          draft.response.body = {
-            request_contractID: newData.contractID,
-            contract: {
-              ...results.contract,
-              contractID,
-              partyList: results.party,
-              costObjectList: results.cost_object,
-              wbsList: results.wbs,
-              billList: results.bill,
-              attachmentList: results.attachment,
-              approvalList: results.letter_appr || [],
-              actualBillingList: results.actual_billing || [],
-            },
-            E_STATUS: contractID ? "S" : "F",
-            E_MESSAGE: contractID
-              ? `계약번호: ${contractID}\n조회가\n완료되었습니다`
-              : "해당하는\n계약정보가\n없습니다",
-          };
+          if (user.bukrs !== "*" && results.contract.bukrs !== user.bukrs) {
+            draft.response.body = {
+              request_contractID: newData.contractID,
+              E_STATUS: "F",
+              E_MESSAGE: "해당 계약정보에 권한이\n없습니다",
+            };
+          } else {
+            draft.response.body = {
+              request_contractID: newData.contractID,
+              contract: {
+                ...results.contract,
+                contractID,
+                partyList: results.party,
+                costObjectList: results.cost_object,
+                wbsList: results.wbs,
+                billList: results.bill,
+                attachmentList: results.attachment,
+                approvalList: results.letter_appr || [],
+                actualBillingList: results.actual_billing || [],
+              },
+              E_STATUS: "S",
+              E_MESSAGE: `계약번호: ${contractID}\n조회가\n완료되었습니다`,
+            };
+          }
         } else {
           draft.response.body = {
             request_contractID: newData.contractID,
