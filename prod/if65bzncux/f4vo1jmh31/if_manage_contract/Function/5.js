@@ -12,13 +12,9 @@ module.exports = async (draft, { sql, env, tryit, fn, user }) => {
         const queryResult = await query.run();
 
         const contractID = tryit(() => queryResult.body.list[0].id, "");
-
         if (!contractID) {
-          draft.response.body = {
-            request_contractID: newData.contractID,
-            E_STATUS: "F",
-            E_MESSAGE: "해당하는\n계약정보가\n없습니다",
-          };
+          const E_MESSAGE = "해당하는 계약정보가\n없습니다";
+          draft.response.body = { E_STATUS: "F", E_MESSAGE };
           return;
         }
 
