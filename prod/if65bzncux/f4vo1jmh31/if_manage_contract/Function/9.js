@@ -135,6 +135,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           const title_prefix = [
             form.type === "P" ? "매입" : "매출",
             form.seq !== "0" && `${form.seq}차 변경계약`,
+            form.status === "CNL" && "해지계약",
           ]
             .filter(Boolean)
             .join("-");
@@ -161,7 +162,12 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
               status: "display:none;",
             },
           };
-          if (form.seq !== "0") {
+          if (form.status === "CNL") {
+            contentObj.labels.postDate = "계약기간";
+            contentObj.values.postDate = [form.start_date, form.end_date].join(
+              " ~ "
+            );
+          } else if (form.seq !== "0") {
             const lastSeq = (Number(form.seq) - 1).toString();
             const getLatestData = await sql("mysql", sqlParams)
               .select(tables.changed_contract.name)
