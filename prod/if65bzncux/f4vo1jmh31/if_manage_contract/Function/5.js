@@ -53,7 +53,11 @@ module.exports = async (draft, { sql, env, tryit, fn, user }) => {
         results["actual_billing"] = fn.sortIndexFn(tableData);
       }
 
-      if (user.bukrs !== "*" && results.contract.bukrs !== user.bukrs) {
+      if (
+        results.contract.bukrs !== "" &&
+        user.bukrs !== "*" &&
+        results.contract.bukrs !== user.bukrs
+      ) {
         const E_MESSAGE = "해당 계약정보에 권한이\n없습니다";
         draft.response.body = { E_STATUS: "F", E_MESSAGE };
         return;
