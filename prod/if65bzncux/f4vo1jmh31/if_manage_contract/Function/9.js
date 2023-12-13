@@ -81,11 +81,12 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             });
           }
           if (c_amt || c_vatType) {
+            const vatArr = { suppAmt: "VAT 별도", contAmt: "VAT 포함" };
             chgContContents.push({
               key: "amt",
               text: "계약총금액",
-              before: [source.c_amt, source.c_vatType].join(" "),
-              after: [target.c_amt, target.c_vatType].join(" "),
+              before: [source.c_amt, vatArr[source.c_vatType]].join(" "),
+              after: [target.c_amt, vatArr[target.c_vatType]].join(" "),
             });
           }
           if (diffs && Object.keys(diffs).length > 0) {
