@@ -167,15 +167,17 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
               .run();
             const latestData = tryit(() => getLatestData.body.list[0], {});
             const latestJsonData = latestData && latestData.json;
-            if (latestJsonData && latestJsonData.form.dmbtr !== form.dmbtr) {
-              contentObj.labels.dmbtr = "계약금액";
-              contentObj.values.dmbtr = [
-                "변경전:",
-                latestJsonData.form.dmbtr,
-                "=>",
-                "변경후:",
-                form.dmbtr,
-              ].join(" ");
+            if (latestJsonData) {
+              const latest = latestJsonData.form.dmbtr;
+              const curr = form.dmbtr;
+              const changedArr = ["변경전:", latest, "=>", "변경후:", curr];
+              if (latestJsonData.form.dmbtr !== form.dmbtr) {
+                contentObj.labels.dmbtr = "계약금액";
+                contentObj.values.dmbtr = changedArr.join(" ");
+              } else {
+                contentObj.labels.dmbtr = "계약금액";
+                contentObj.values.dmbtr = changedArr.concat("(동일)").join(" ");
+              }
             }
           }
 
