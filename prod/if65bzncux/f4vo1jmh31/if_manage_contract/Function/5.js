@@ -12,69 +12,71 @@ module.exports = async (draft, { sql, env, tryit, fn, user }) => {
         const queryResult = await query.run();
 
         const contractID = tryit(() => queryResult.body.list[0].id, "");
-        if (contractID) {
-          const results = { contract: queryResult.body.list[0] };
-          await Promise.all(
-            tableList.map(async (tableKey) => {
-              const queryTableData = await sql("mysql", sqlParams)
-                .select(tables[tableKey].name)
-                .where("contract_id", "like", contractID)
-                .whereNot({ deleted: true })
-                .orderBy("index", "asc")
-                .run();
-              const tableData = tryit(() => queryTableData.body.list, []);
-              results[tableKey] = fn.sortIndexFn(tableData);
-              return true;
-            })
-          );
-          if (results.contract.gpro_document_no) {
+
+        if (!contractID) {
+          draft.response.body = {
+            request_contractID: newData.contractID,
+            E_STATUS: "F",
+            E_MESSAGE: "해당하는\n계약정보가\n없습니다",
+          };
+          return;
+        }
+
+        const results = { contract: queryResult.body.list[0] };
+        await Promise.all(
+          tableList.map(async (tableKey) => {
             const queryTableData = await sql("mysql", sqlParams)
-              .select(tables["letter_appr"].name)
-              .where("contract_id", "like", contractID)
-              .run();
-            const tableData = tryit(() => queryTableData.body.list, []);
-            results["letter_appr"] = tableData;
-          }
-          if (results.contract.type === "S") {
-            const queryTableData = await sql("mysql", sqlParams)
-              .select(tables["actual_billing"].name)
+              .select(tables[tableKey].name)
               .where("contract_id", "like", contractID)
               .whereNot({ deleted: true })
               .orderBy("index", "asc")
               .run();
             const tableData = tryit(() => queryTableData.body.list, []);
-            results["actual_billing"] = fn.sortIndexFn(tableData);
-          }
+            results[tableKey] = fn.sortIndexFn(tableData);
+            return true;
+          })
+        );
+        if (results.contract.gpro_document_no) {
+          const queryTableData = await sql("mysql", sqlParams)
+            .select(tables["letter_appr"].name)
+            .where("contract_id", "like", contractID)
+            .run();
+          const tableData = tryit(() => queryTableData.body.list, []);
+          results["letter_appr"] = tableData;
+        }
+        if (results.contract.type === "S") {
+          const queryTableData = await sql("mysql", sqlParams)
+            .select(tables["actual_billing"].name)
+            .where("contract_id", "like", contractID)
+            .whereNot({ deleted: true })
+            .orderBy("index", "asc")
+            .run();
+          const tableData = tryit(() => queryTableData.body.list, []);
+          results["actual_billing"] = fn.sortIndexFn(tableData);
+        }
 
-          if (user.bukrs !== "*" && results.contract.bukrs !== user.bukrs) {
-            draft.response.body = {
-              request_contractID: newData.contractID,
-              E_STATUS: "F",
-              E_MESSAGE: "해당 계약정보에 권한이\n없습니다",
-            };
-          } else {
-            draft.response.body = {
-              request_contractID: newData.contractID,
-              contract: {
-                ...results.contract,
-                contractID,
-                partyList: results.party,
-                costObjectList: results.cost_object,
-                wbsList: results.wbs,
-                billList: results.bill,
-                attachmentList: results.attachment,
-                approvalList: results.letter_appr || [],
-                actualBillingList: results.actual_billing || [],
-              },
-              E_STATUS: "S",
-              E_MESSAGE: `계약번호: ${contractID}\n조회가\n완료되었습니다`,
-            };
-          }
-        } else {
+        if (user.bukrs !== "*" && results.contract.bukrs !== user.bukrs) {
           draft.response.body = {
             request_contractID: newData.contractID,
             E_STATUS: "F",
-            E_MESSAGE: "해당하는\n계약정보가\n없습니다",
+            E_MESSAGE: "해당 계약정보에 권한이\n없습니다",
+          };
+        } else {
+          draft.response.body = {
+            request_contractID: newData.contractID,
+            contract: {
+              ...results.contract,
+              contractID,
+              partyList: results.party,
+              costObjectList: results.cost_object,
+              wbsList: results.wbs,
+              billList: results.bill,
+              attachmentList: results.attachment,
+              approvalList: results.letter_appr || [],
+              actualBillingList: results.actual_billing || [],
+            },
+            E_STATUS: "S",
+            E_MESSAGE: `계약번호: ${contractID}\n조회가\n완료되었습니다`,
           };
         }
       } else
