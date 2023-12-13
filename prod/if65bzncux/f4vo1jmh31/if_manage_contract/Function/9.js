@@ -135,7 +135,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           const title_prefix = [
             form.type === "P" ? "매입" : "매출",
             form.seq !== "0" && `${form.seq}차 변경계약`,
-            form.status === "CNL" && "해지",
+            form.status === "CNL" && "계약 해지",
           ]
             .filter(Boolean)
             .join("-");
