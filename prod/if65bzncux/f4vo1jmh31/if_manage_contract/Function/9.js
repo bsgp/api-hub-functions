@@ -135,34 +135,60 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           ]
             .filter(Boolean)
             .join("-");
+
+          /** content */
+          const contentObj = {
+            labels: {
+              url: "계약조회 URL",
+              contractId: "계약번호",
+              status: "계약상태",
+              name: "계약서명",
+              postDate: "작성일",
+              remark: "비고",
+            },
+            values: {
+              url: ["https://bsg.support/ccs/p", form.contractID].join("/"),
+              contractId: form.contractID,
+              status: form.status,
+              name: form.name,
+              postDate: form.prod_date,
+              remark: args.approvalDialog.remark,
+            },
+            styles: {
+              status: "display:none;",
+            },
+          };
+          if (form.seq !== "0") {
+            const lastSeq = (Number(form.seq) - 1).toString();
+            const getLatestData = await sql("mysql", sqlParams)
+              .select(tables.changed_contract.name)
+              .where("contract_id", "like", `${form.id}`)
+              .where("seq", "like", lastSeq)
+              .run();
+            const latestData = tryit(() => getLatestData.body.list[0], {});
+            const latestJsonData = latestData && latestData.json;
+            if (latestJsonData && latestJsonData.form.dmbtr !== form.dmbtr) {
+              contentObj.labels.dmbtr = "계약금액";
+              contentObj.values.dmbtr = [
+                "변경전:",
+                latestJsonData.form.dmbtr,
+                "=>",
+                "변경후:",
+                form.dmbtr,
+              ].join(" ");
+            }
+          }
+
+          /**  workflows */
           const latestApr = args.approvalList.find(
             ({ id }) => id === form.gpro_document_no
           );
           const rcp_workflows = (latestApr && latestApr.gpro_workflows) || [];
+
           const jsonData = {
             title: [`[${title_prefix}]`, form.name].join(" "),
             bukrs: currentUser.bukrs,
-            content: {
-              labels: {
-                url: "계약조회 URL",
-                contractId: "계약번호",
-                status: "계약상태",
-                name: "계약서명",
-                postDate: "작성일",
-                remark: "비고",
-              },
-              values: {
-                url: ["https://bsg.support/ccs/p", form.contractID].join("/"),
-                contractId: form.contractID,
-                status: form.status,
-                name: form.name,
-                postDate: form.prod_date,
-                remark: args.approvalDialog.remark,
-              },
-              styles: {
-                status: "display:none;",
-              },
-            },
+            content: contentObj,
             workflows: [{ email: currentUser.email, type: "DRF" }].concat(
               rcp_workflows
                 .map(({ userId, organizationId }) => {
