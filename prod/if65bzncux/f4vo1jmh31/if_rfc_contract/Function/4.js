@@ -19,16 +19,20 @@ module.exports = async (draft, { request, tryit }) => {
         }
         case "FI02":
         case "FI03": {
-          // 9: 1800 ~ 1899년에 태어난 남성
-          // 0: 1800 ~ 1899년에 태어난 여성
-          // 1: 1900 ~ 1999년에 태어난 남성
-          // 2: 1900 ~ 1999년에 태어난 여성
-          // 3: 2000 ~ 2099년에 태어난 남성
-          // 4: 2000 ~ 2099년에 태어난 여성
-          // 5: 1900 ~ 1999년에 태어난 외국인 남성
-          // 6: 1900 ~ 1999년에 태어난 외국인 여성
-          // 7: 2000 ~ 2099년에 태어난 외국인 남성
-          // 8: 2000 ~ 2099년에 태어난 외국인 여성
+          const yearPrefix = {
+            9: "18", // 1800 ~ 1899년에 태어난 남성
+            0: "18", // 1800 ~ 1899년에 태어난 여성
+            1: "19", // 1900 ~ 1999년에 태어난 남성
+            2: "19", // 1900 ~ 1999년에 태어난 여성
+            3: "20", // 2000 ~ 2099년에 태어난 남성
+            4: "20", // 2000 ~ 2099년에 태어난 여성
+            5: "19", // 1900 ~ 1999년에 태어난 외국인 남성
+            6: "19", // 1900 ~ 1999년에 태어난 외국인 여성
+            7: "20", // 2000 ~ 2099년에 태어난 외국인 남성
+            8: "20", // 2000 ~ 2099년에 태어난 외국인 여성
+          };
+          const getBirthDate = (id_no) =>
+            [yearPrefix[id_no[6]], id_no.substring(0, 6)].join("");
           draft.response.body = {
             ...result.body.result,
             list: ET_DATA.map(({ ZZCDEZ, ZCNTS1, ZCNTS2, ...args }) => ({
@@ -41,11 +45,9 @@ module.exports = async (draft, { request, tryit }) => {
               prdnt_name: args.ZCNTS9,
               // gl_group_id가 "3000"인 경우 id_no: ZCNTS5 (그 외:ZCNTS6)
               id_no:
-                (ZCNTS2 === "3000" && args.ZCNTS5.substring(0, 6)) ||
-                args.ZCNTS6,
+                (ZCNTS2 === "3000" && getBirthDate(args.ZCNTS5)) || args.ZCNTS6,
               biz_no:
-                (ZCNTS2 === "3000" && args.ZCNTS5.substring(0, 6)) ||
-                args.ZCNTS6,
+                (ZCNTS2 === "3000" && getBirthDate(args.ZCNTS5)) || args.ZCNTS6,
               land_id: args.ZCNTS4,
               address: [args.ZCNTS13, args.ZCNTS14].filter(Boolean).join(" "),
               tel: "",
