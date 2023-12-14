@@ -474,7 +474,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
           }
         : {
             signerName: party.stems10_ko,
-            coRegno: party.id_no, // 사업자번호
+            birthDate: party.id_no,
             coName: party.name,
             coOwnNm: party.prdnt_name, // 대표자
             coAddr: party.address, // 주소
