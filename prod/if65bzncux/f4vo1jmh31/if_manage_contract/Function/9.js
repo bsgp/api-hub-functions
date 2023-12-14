@@ -151,7 +151,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
               remark: "비고",
             },
             values: {
-              url: ["https://bsg.support/ccs", form.contractID].join("/"),
+              url: ["https://bsg.support/ccs/viewer", form.contractID].join(
+                "/"
+              ),
               contractId: form.contractID,
               status: form.status,
               name: form.name,
