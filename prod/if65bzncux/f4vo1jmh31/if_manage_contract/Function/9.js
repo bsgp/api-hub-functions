@@ -459,16 +459,30 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
     const { templateNo, form, ...args } = newData;
     const { partyList, attachmentList, payment_termList, billList } = args;
 
-    const signerList = partyList.map((party, idx) => ({
-      signerName: party.stems10_ko,
-      coRegno: party.id_no, // 사업자번호
-      coName: party.name,
-      coOwnNm: party.prdnt_name, // 대표자
-      coAddr: party.address, // 주소
-      usName: party.name, // 담당자
-      usCellno: `010-0000-000${idx}`, // 담당 연락처
-      usEmail: `xxx${idx}@unipost.co.kr`, // 담당 메일
-    }));
+    const signerList = partyList.map((party, idx) =>
+      party.stems10 === "1" ||
+      (party.stems10 === "2" && party.gl_group_id !== "3000")
+        ? {
+            signerName: party.stems10_ko,
+            coRegno: party.id_no, // 사업자번호
+            coName: party.name,
+            coOwnNm: party.prdnt_name, // 대표자
+            coAddr: party.address, // 주소
+            usName: party.name, // 담당자
+            usCellno: `010-0000-000${idx}`, // 담당 연락처
+            usEmail: `xxx${idx}@unipost.co.kr`, // 담당 메일
+          }
+        : {
+            signerName: party.stems10_ko,
+            coRegno: party.id_no, // 사업자번호
+            coName: party.name,
+            coOwnNm: party.prdnt_name, // 대표자
+            coAddr: party.address, // 주소
+            usName: party.name, // 담당자
+            usCellno: `010-0000-000${idx}`, // 담당 연락처
+            usEmail: `xxx${idx}@unipost.co.kr`, // 담당 메일
+          }
+    );
     const billTo = partyList.find((party) => party.stems10 === "2");
     const c_vatType = billTo.gl_group_id !== "3000" ? "suppAmt" : "contAmt";
     const fPaymentTerm =
