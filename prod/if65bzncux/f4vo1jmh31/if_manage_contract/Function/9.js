@@ -151,7 +151,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
               remark: "비고",
             },
             values: {
-              url: ["https://bsg.support/ccs/p", form.contractID].join("/"),
+              url: ["https://bsg.support/spark", form.contractID].join("/"),
               contractId: form.contractID,
               status: form.status,
               name: form.name,
