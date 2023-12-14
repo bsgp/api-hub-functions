@@ -30,8 +30,12 @@ module.exports = async (draft, { request, tryit }) => {
               gl_group_text: args.ZCNTS3,
               prdnt_name: args.ZCNTS9,
               // gl_group_id가 "3000"인 경우 id_no: ZCNTS5 (그 외:ZCNTS6)
-              id_no: (ZCNTS2 === "3000" && args.ZCNTS5) || args.ZCNTS6,
-              biz_no: args.ZCNTS5,
+              id_no:
+                (ZCNTS2 === "3000" && args.ZCNTS5.substring(0, 6)) ||
+                args.ZCNTS6,
+              biz_no:
+                (ZCNTS2 === "3000" && args.ZCNTS5.substring(0, 6)) ||
+                args.ZCNTS6,
               land_id: args.ZCNTS4,
               address: [args.ZCNTS13, args.ZCNTS14].filter(Boolean).join(" "),
               tel: "",
