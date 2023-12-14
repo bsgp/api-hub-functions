@@ -32,7 +32,9 @@ module.exports = async (draft, { request, tryit }) => {
             8: "20", // 2000 ~ 2099년에 태어난 외국인 여성
           };
           const getBirthDate = (id_no) =>
-            [yearPrefix[id_no[6]], id_no.substring(0, 6)].join("");
+            [yearPrefix[id_no[6]], id_no.substring(0, 6)]
+              .filter(Boolean)
+              .join("");
           draft.response.body = {
             ...result.body.result,
             list: ET_DATA.map(({ ZZCDEZ, ZCNTS1, ZCNTS2, ...args }) => ({
