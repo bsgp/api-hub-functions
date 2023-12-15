@@ -285,6 +285,7 @@ module.exports.letter_appr = () => (table) => {
   table.string("gpro_draft_template_name").defaultTo("");
   table.string("gpro_draft_status_code").defaultTo("");
   table.string("gpro_draft_id").defaultTo("");
+  table.string("gpro_draft_name").defaultTo("");
   table.string("gpro_draft_templateId").defaultTo("");
   table.string("gpro_draftTemplateType").defaultTo("");
   table.string("gpro_userId").defaultTo("");
@@ -309,6 +310,7 @@ module.exports.unmap_letters = () => (table) => {
   table.string("gpro_draft_template_name").defaultTo("");
   table.string("gpro_draft_status_code").defaultTo("");
   table.string("gpro_draft_id").defaultTo("");
+  table.string("gpro_draft_name").defaultTo("");
   table.string("gpro_draft_templateId").defaultTo("");
   table.string("gpro_draftTemplateType").defaultTo("");
   table.string("gpro_userId").defaultTo("");
