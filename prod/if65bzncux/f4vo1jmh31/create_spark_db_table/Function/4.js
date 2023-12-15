@@ -23,7 +23,7 @@ module.exports = async (draft, { fn, sql, env, makeid }) => {
         if (spec.desc === "Contract info DB table") {
           const alterResult = await mysql.table
             .alter(spec.name, function (table) {
-              table.boolean("variable_dmbt_ind").defaultTo(false); // 변동금액 지시자
+              table.string("gpro_draft_name").defaultTo("");
               // table.json("gpro_workflows");
               // table.string("apr_status", 3).defaultTo("");
               // table.boolean("extra_item").defaultTo(false);
