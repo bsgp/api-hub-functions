@@ -59,6 +59,7 @@ module.exports = async (draft, { sql, env }) => {
               gpro_draft_template_name: sc.gpro_draft_template_name,
               gpro_draft_status_code: sc.gpro_draft_status_code,
               gpro_draft_id: sc.gpro_draft_id,
+              gpro_draft_name: sc.gpro_draft_name,
               gpro_draft_templateId: sc.gpro_draft_templateId,
               gpro_draftTemplateType: sc.gpro_draftTemplateType,
               gpro_userId: sc.gpro_userId,
