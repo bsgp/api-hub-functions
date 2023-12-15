@@ -534,6 +534,12 @@ module.exports = async (draft, { file, env }) => {
       RfcName: "",
       TriggeredBy: "CONTRACT",
     },
+    ["IF-CT-120"]: {
+      Type: "DB",
+      Name: "MIGRATION_CONTRACTS_TO_DB",
+      RfcName: "",
+      TriggeredBy: "CONTRACT",
+    },
     ["IF-FU-101"]: {
       Type: "FU",
       Name: "GET_FILE_UPLOAD_URL",
