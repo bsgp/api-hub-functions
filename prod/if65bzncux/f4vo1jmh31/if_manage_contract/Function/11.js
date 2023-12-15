@@ -113,6 +113,9 @@ module.exports = async (draft, { sql, env }) => {
       };
       break;
     }
+    case "": {
+      break;
+    }
     default: {
       draft.response.body = {
         E_STATUS: "F",
