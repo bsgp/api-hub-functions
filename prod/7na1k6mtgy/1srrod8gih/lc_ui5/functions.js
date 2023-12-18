@@ -265,11 +265,8 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
       }
     }
   } else {
-    // const pathRegExp = /(?<=:)[\w-]+/g;
-    // let index = 0;
+    const pathRegExp = /(?<=:)[\w-]+/g;
     let dataOldPath;
-
-    // const dynamicPath = path.replace(pathRegExp, () => `${index++}`);
 
     if (oldPath) {
       dataOldPath = await dynamodb.getItem(
@@ -297,11 +294,17 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
           { useCustomerRole: false }
         );
 
-        // await dynamodb.deleteItem(
-        //   tableName,
-        //   { pkid: "pattern", skid: dynamicPath },
-        //   { useCustomerRole: false }
-        // );
+        let oldParamsIndex = 0;
+        const oldDynamicPath = oldPath.replace(
+          pathRegExp,
+          () => `${oldParamsIndex++}`
+        );
+
+        await dynamodb.deleteItem(
+          tableName,
+          { pkid: "pattern", skid: oldDynamicPath },
+          { useCustomerRole: false }
+        );
       } else {
         throw new Error(["Old path", oldPath, "does not exist"].join(" "));
       }
@@ -323,22 +326,24 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
       }
     );
 
-    // const params = path.match(pathRegExp);
+    const params = path.match(pathRegExp);
+    let paramsIndex = 0;
+    const dynamicPath = path.replace(pathRegExp, () => `${paramsIndex++}`);
 
-    // const newPattern = {
-    //   metaId: id,
-    //   params: params || [],
-    //   length: path.split("/").length - 1,
-    // };
+    const newPattern = {
+      metaId: id,
+      params: params || [],
+      length: path.split("/").length - 1,
+    };
 
-    // await dynamodb.insertItem(
-    //   tableName,
-    //   { pkid: "pattern", skid: dynamicPath },
-    //   newPattern,
-    //   {
-    //     useCustomerRole: false,
-    //   }
-    // );
+    await dynamodb.insertItem(
+      tableName,
+      { pkid: "pattern", skid: dynamicPath },
+      newPattern,
+      {
+        useCustomerRole: false,
+      }
+    );
 
     await dynamodb.updateItem(
       tableName,
