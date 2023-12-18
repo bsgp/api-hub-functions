@@ -11,7 +11,7 @@ module.exports = async (draft, { request, file }) => {
   switch (request.method) {
     case "GET": {
       try {
-        const templateJSON = await file.get(path, { toJSON: true });
+        const templateJSON = await file.get(path, { toJSON: false });
 
         response_body = {
           E_STATUS: "S",
