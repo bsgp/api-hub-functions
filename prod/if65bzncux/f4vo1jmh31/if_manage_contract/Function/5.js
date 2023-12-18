@@ -59,7 +59,14 @@ module.exports = async (draft, { sql, env, tryit, fn, user }) => {
         results.contract.bukrs !== user.bukrs
       ) {
         const E_MESSAGE = "해당 계약정보에 권한이\n없습니다";
-        draft.response.body = { E_STATUS: "F", E_MESSAGE };
+        draft.response.body = {
+          E_STATUS: "F",
+          E_MESSAGE,
+          test: {
+            contract: results.contract.bukrs,
+            user: user.bukrs,
+          },
+        };
         return;
       } else {
         draft.response.body = {
