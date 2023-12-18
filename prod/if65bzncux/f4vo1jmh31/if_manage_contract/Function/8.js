@@ -60,7 +60,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           `%${newData.contractName}%`
         );
       }
-      if (!(user.bukrs || "").includes("*")) {
+      if (newData.bukrs) {
+        queryBuilder.whereIn("bukrs", [newData.bukrs]);
+      } else if (!(user.bukrs || "").includes("*")) {
         const allowBURKS = [user.bukrs];
         if (user.bukrs === "1000") {
           allowBURKS.push("");
