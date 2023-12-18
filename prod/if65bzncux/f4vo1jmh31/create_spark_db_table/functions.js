@@ -39,6 +39,7 @@ module.exports.contract =
     table.string("end_date", 8).defaultTo(""); //계약종료일
     table.boolean("renewal_ind"); // 자동연장 지시자
     table.string("renewal_period", 3).defaultTo(""); // 자동연장기간 (기본값: "1Y")
+    table.boolean("skip_sign_ind").defaultTo(false); // 전자계약 생략 지시자
     table.boolean("variable_dmbt_ind").defaultTo(false); // 변동금액 지시자
     table.decimal("dmbtr_supply", 23, 2).defaultTo(0); // 공급가액
     table.decimal("dmbtr_vat", 23, 2).defaultTo(0); // 부과세
