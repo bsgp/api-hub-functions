@@ -1,23 +1,23 @@
 module.exports = async (draft, { request, file }) => {
-  const { url } = request.body;
+  const { path } = request.body;
 
   let response_body = {
     E_STATUS: "S",
     E_MSG: "Saved",
     E_DATA: {},
-    E_PATH: { url: url },
+    E_PATH: { path: path },
   };
 
   switch (request.method) {
     case "GET": {
       try {
-        const templateJSON = await file.get(url, { toJSON: true });
+        const templateJSON = await file.get(path, { toJSON: true });
 
         response_body = {
           E_STATUS: "S",
           E_MSG: "GET IS DONE",
           E_DATA: { templateJSON: templateJSON },
-          E_PATH: { url: url },
+          E_PATH: { path: path },
         };
       } catch (err) {
         response_body = {
