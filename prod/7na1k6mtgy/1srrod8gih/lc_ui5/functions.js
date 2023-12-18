@@ -241,6 +241,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
           if (isFalsy(optionalData)) {
             throw new Error("Nothing to do with payload");
           } else {
+            console.log("::::::::::::", { optionalData });
             const result = await dynamodb.updateItem(
               tableName,
               { pkid: "path", skid: path },
