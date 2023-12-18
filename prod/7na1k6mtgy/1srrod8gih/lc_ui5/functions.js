@@ -70,9 +70,9 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
     //     },
     //   }
     // );
-
+    throw new Error({ query: dynamodb.query });
     // throw new Error({ patterns });
-    throw new Error("NOT Found Path");
+    // throw new Error("NOT Found Path");
   }
 
   const result = await getMetaById(resultPath.metaId, {
