@@ -70,7 +70,7 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
     //     },
     //   }
     // );
-    throw new Error({ query: dynamodb.query });
+    throw new Error({ query: JSON.stringify(dynamodb.query) });
     // throw new Error({ patterns });
     // throw new Error("NOT Found Path");
   }
