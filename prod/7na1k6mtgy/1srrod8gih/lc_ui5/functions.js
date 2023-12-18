@@ -255,9 +255,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
                 useCustomerRole: false,
               }
             );
-
-            throw new Error({ optionalData, result });
-            // return result;
+            return result;
           }
         }
       } else {
