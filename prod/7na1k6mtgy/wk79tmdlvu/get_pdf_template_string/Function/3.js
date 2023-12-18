@@ -23,7 +23,7 @@ module.exports = async (draft, { request, file }) => {
         response_body = {
           E_STATUS: "F",
           E_MSG: "GET IS FAILED",
-          E_DATA: { err },
+          E_DATA: { err: err },
           E_PATH: { path: path },
         };
       }
