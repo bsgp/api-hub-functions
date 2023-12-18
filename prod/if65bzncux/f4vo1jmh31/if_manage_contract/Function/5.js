@@ -64,7 +64,7 @@ module.exports = async (draft, { sql, env, tryit, fn, user }) => {
           E_MESSAGE,
           test: {
             contract: results.contract.bukrs,
-            user: user.bukrs,
+            user: { ...user },
           },
         };
         return;
