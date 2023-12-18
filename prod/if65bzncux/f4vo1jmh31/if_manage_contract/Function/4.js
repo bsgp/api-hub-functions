@@ -38,6 +38,7 @@ module.exports = async (draft, { lib, file, env, request }) => {
       break;
     case "IF-CT-110": // UPDATE_WBS_CONTRACT
     case "IF-CT-119": // MAPPING_LETTER_AND_CONTRACT
+    case "IF-CT-120": // MIGRATION_CONTRACTS_TO_DB
       draft.json.nextNodeKey = "Function#11";
       break;
     default:
