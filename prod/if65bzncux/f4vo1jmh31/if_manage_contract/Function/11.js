@@ -113,7 +113,11 @@ module.exports = async (draft, { sql, env }) => {
       };
       break;
     }
-    case "": {
+    case "IF-CT-120": {
+      draft.response.body = {
+        E_STATUS: "F",
+        E_MESSAGE: "치지직",
+      };
       break;
     }
     default: {
