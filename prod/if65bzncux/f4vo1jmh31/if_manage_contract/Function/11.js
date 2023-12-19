@@ -1,4 +1,4 @@
-module.exports = async (draft, { sql, env, tryit, fn, user, makeid }) => {
+module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
   const { tables, newData, interfaceID } = draft.json;
   const sqlParams = { useCustomRole: false, stage: env.CURRENT_ALIAS };
 
@@ -177,29 +177,39 @@ module.exports = async (draft, { sql, env, tryit, fn, user, makeid }) => {
             return { ...contract, id: contractID };
           }),
       ].flat();
-      const contractTableData = await sql("mysql", sqlParams)
-        .insert(tables.contract.name, contracts)
-        .run();
-      const partyTableData = await sql("mysql", sqlParams)
-        .insert(tables.party.name, partnerList)
-        .run();
 
-      const E_STATUS =
-        contractTableData.statusCode === 200 &&
-        partyTableData.statusCode === 200
-          ? "S"
-          : "E";
-      const E_MESSAGE =
-        E_STATUS === "S"
-          ? "Success"
-          : "데이터 저장과정에서 문제가 발생했습니다";
+      const test = file.get("migration/process.json", {
+        gziped: true,
+        toJSON: true,
+        stage: env.CURRENT_ALIAS,
+      }) || { test: "dfsdf" };
+      const E_STATUS = "F";
+      const E_MESSAGE = "???";
+
+      // const contractTableData = await sql("mysql", sqlParams)
+      //   .insert(tables.contract.name, contracts)
+      //   .run();
+      // const partyTableData = await sql("mysql", sqlParams)
+      //   .insert(tables.party.name, partnerList)
+      //   .run();
+
+      // const E_STATUS =
+      //   contractTableData.statusCode === 200 &&
+      //   partyTableData.statusCode === 200
+      //     ? "S"
+      //     : "E";
+      // const E_MESSAGE =
+      //   E_STATUS === "S"
+      //     ? "Success"
+      //     : "데이터 저장과정에서 문제가 발생했습니다";
       draft.response.body = {
         E_STATUS,
         E_MESSAGE,
         partnerList,
         contracts,
-        contractTableData,
-        partyTableData,
+        test,
+        // contractTableData,
+        // partyTableData,
       };
       break;
     }
