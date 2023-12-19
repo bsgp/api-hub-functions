@@ -183,9 +183,19 @@ module.exports = async (draft, { sql, env, tryit, fn, user, makeid }) => {
       const partyTableData = await sql("mysql", sqlParams)
         .insert(tables.party.name, partnerList)
         .run();
+
+      const E_STATUS =
+        contractTableData.statusCode === 200 &&
+        partyTableData.statusCode === 200
+          ? "S"
+          : "E";
+      const E_MESSAGE =
+        E_STATUS === "S"
+          ? "Success"
+          : "데이터 저장과정에서 문제가 발생했습니다";
       draft.response.body = {
-        E_STATUS: "F",
-        E_MESSAGE: "치지직",
+        E_STATUS,
+        E_MESSAGE,
         partnerList,
         contracts,
         contractTableData,
