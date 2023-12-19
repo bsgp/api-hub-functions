@@ -60,16 +60,15 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
     const parts = path.split("/");
     parts.shift();
     const prefixPath = parts[0] + "/";
-    console.info({ parts, prefixPath });
     const patterns = await dynamodb.query(
       tableName,
       { pkid: "pattern" },
-      { skid: ["begins_with", "/" + prefixPath] },
-      {
-        filters: {
-          length: { operation: "=", value: parts.length },
-        },
-      }
+      { skid: ["begins_with", "/" + prefixPath] }
+      // {
+      //   filters: {
+      //     length: { operation: "=", value: parts.length },
+      //   },
+      // }
     );
 
     console.info({ patterns });
