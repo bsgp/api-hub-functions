@@ -57,6 +57,7 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
   );
 
   if (!resultPath) {
+    console.info(":::::::::::::::here");
     // const parts = path.split("/");
     // parts.shift();
     // const prefixPath = parts[0] + "/";
