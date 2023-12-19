@@ -114,11 +114,16 @@ module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
       break;
     }
     case "IF-CT-120": {
-      const processStatus = await file.get("migration/process.json", {
-        gziped: true,
-        toJSON: true,
-        stage: env.CURRENT_ALIAS,
-      });
+      let processStatus;
+      try {
+        processStatus = await file.get("migration/process.json", {
+          gziped: true,
+          toJSON: true,
+          stage: env.CURRENT_ALIAS,
+        });
+      } catch (error) {
+        processStatus = {};
+      }
       if (processStatus && processStatus.locked) {
         draft.response.body = {
           E_STATUS: "F",
