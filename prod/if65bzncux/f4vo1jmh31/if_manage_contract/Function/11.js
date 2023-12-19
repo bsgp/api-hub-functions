@@ -1,4 +1,4 @@
-module.exports = async (draft, { sql, env }) => {
+module.exports = async (draft, { sql, env, tryit, fn, user, makeid }) => {
   const { tables, newData, interfaceID } = draft.json;
   const sqlParams = { useCustomRole: false, stage: env.CURRENT_ALIAS };
 
@@ -114,9 +114,74 @@ module.exports = async (draft, { sql, env }) => {
       break;
     }
     case "IF-CT-120": {
+      const { list } = newData;
+      /** create new ContractID by maxID && insert contract table */
+      const migration_Year = "2020";
+      const prefix_P = ["S", migration_Year].join("");
+      const prefix_S = ["S", migration_Year].join("");
+      const queryResult_P = await sql("mysql", sqlParams)
+        .select(tables.contract.name)
+        .max("id", { as: "maxID" })
+        .where("id", "like", `${prefix_P}%`)
+        .run();
+      const queryResult_S = await sql("mysql", sqlParams)
+        .select(tables.contract.name)
+        .max("id", { as: "maxID" })
+        .where("id", "like", `${prefix_S}%`)
+        .run();
+      const maxID_P =
+        tryit(() => queryResult_P.body.list[0].maxID, "0000000000") ||
+        "0000000000";
+      const maxID_S =
+        tryit(() => queryResult_S.body.list[0].maxID, "0000000000") ||
+        "0000000000";
+
+      const partnerList = [];
+      const contracts = [
+        list
+          .filter(({ form }) => form.type === "P")
+          .map((data, idx) => {
+            // const {form, partyList} = data;
+            const contract = fn.getDB_Object(data, { key: "contract", user });
+            const contractID = [
+              prefix_P,
+              (Number(maxID_P.substring(5)) + idx + 1)
+                .toString()
+                .padStart(5, "0"),
+            ].join("");
+            const partners = fn.getDB_Object(data, {
+              key: "party",
+              contractID,
+              makeid,
+            });
+            partnerList.push(...partners);
+            return { ...contract, id: contractID };
+          }),
+        list
+          .filter(({ form }) => form.type === "S")
+          .map((data, idx) => {
+            // const {form, partyList} = data;
+            const contract = fn.getDB_Object(data, { key: "contract", user });
+            const contractID = [
+              prefix_S,
+              (Number(maxID_S.substring(5)) + idx + 1)
+                .toString()
+                .padStart(5, "0"),
+            ].join("");
+            const partners = fn.getDB_Object(data, {
+              key: "party",
+              contractID,
+              makeid,
+            });
+            partnerList.push(...partners);
+            return { ...contract, id: contractID };
+          }),
+      ].flat();
       draft.response.body = {
         E_STATUS: "F",
         E_MESSAGE: "치지직",
+        partnerList,
+        contracts,
       };
       break;
     }
