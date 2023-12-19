@@ -104,12 +104,12 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
     if (matchRoutes.length === parts.length) {
       const baseLine = matchRoutes.shift();
       const allMatchRoute = baseLine.find((base) => {
-        const allPass = matchRoutes.map((matchRoute) => {
+        const matchResult = matchRoutes.map((matchRoute) => {
           return matchRoute.includes(base);
         });
 
-        const findFalse = allPass.findIndex((pass) => pass === false);
-        return findFalse === -1;
+        const findMissMatch = matchResult.findIndex((pass) => pass === false);
+        return findMissMatch === -1;
       });
 
       if (allMatchRoute) {
