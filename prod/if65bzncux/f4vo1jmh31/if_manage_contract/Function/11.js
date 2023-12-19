@@ -114,22 +114,22 @@ module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
       break;
     }
     case "IF-CT-120": {
-      // const processStatus = file.get("migration/process.json", {
-      //   gziped: true,
-      //   toJSON: true,
-      //   stage: env.CURRENT_ALIAS,
-      // });
-      // if (processStatus && processStatus.locked) {
-      //   draft.response.body = {
-      //     E_STATUS: "F",
-      //     E_MESSAGE: [
-      //       "Migration이 다른 사용자에 의해",
-      //       "실행 중입니다",
-      //       "잠시 후 실행하세요",
-      //     ].join("\n"),
-      //   };
-      //   return;
-      // }
+      const processStatus = file.get("migration/process.json", {
+        gziped: true,
+        toJSON: true,
+        stage: env.CURRENT_ALIAS,
+      });
+      if (processStatus && processStatus.locked) {
+        draft.response.body = {
+          E_STATUS: "F",
+          E_MESSAGE: [
+            "Migration이 다른 사용자에 의해",
+            "실행 중입니다",
+            "잠시 후 실행하세요",
+          ].join("\n"),
+        };
+        return;
+      }
 
       const { list } = newData;
       /** create new ContractID by maxID && insert contract table */
