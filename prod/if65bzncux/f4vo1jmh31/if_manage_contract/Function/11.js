@@ -200,12 +200,6 @@ module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
           }),
       ].flat();
 
-      const test =
-        file.get("migration/process.json", {
-          gziped: true,
-          toJSON: true,
-          stage: env.CURRENT_ALIAS,
-        }) || "sasas";
       const E_STATUS = "F";
       const E_MESSAGE = "???";
 
@@ -230,7 +224,6 @@ module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
         E_MESSAGE,
         partnerList,
         contracts,
-        test,
         // contractTableData,
         // partyTableData,
       };
