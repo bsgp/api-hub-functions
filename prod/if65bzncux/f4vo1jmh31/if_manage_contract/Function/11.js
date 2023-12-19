@@ -128,7 +128,7 @@ module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
             "잠시 후 실행하세요",
           ].join("\n"),
         };
-        break;
+        return;
       }
 
       const { list } = newData;
