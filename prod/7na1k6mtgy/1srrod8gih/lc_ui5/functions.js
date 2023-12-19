@@ -56,7 +56,7 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
     { useCustomerRole: false }
   );
 
-  let dynamicPath;
+  let dynamicPath = {};
 
   if (!resultPath) {
     const parts = path.replace("/", "").split("/");
@@ -132,7 +132,7 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
     includePaths: false,
   });
 
-  return result;
+  return { ...result, dynamicPath };
 };
 
 const saveMeta = async (
