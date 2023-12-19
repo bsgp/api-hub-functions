@@ -177,11 +177,19 @@ module.exports = async (draft, { sql, env, tryit, fn, user, makeid }) => {
             return { ...contract, id: contractID };
           }),
       ].flat();
+      const contractTableData = await sql("mysql", sqlParams)
+        .insert(tables.contract.name, contracts)
+        .run();
+      const partyTableData = await sql("mysql", sqlParams)
+        .insert(tables.party.name, partnerList)
+        .run();
       draft.response.body = {
         E_STATUS: "F",
         E_MESSAGE: "치지직",
         partnerList,
         contracts,
+        contractTableData,
+        partyTableData,
       };
       break;
     }
