@@ -56,28 +56,75 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
     { useCustomerRole: false }
   );
 
+  let dynamicPath;
+
   if (!resultPath) {
-    const parts = path.split("/");
-    parts.shift();
-    const prefixPath = parts[0] + "/";
-    const patterns = await dynamodb.query(
+    const parts = path.replace("/", "").split("/");
+    const prefixPath = parts.shift() + "/";
+    const routes = await dynamodb.query(
       tableName,
       { pkid: "pattern" },
       { skid: ["begins_with", "/" + prefixPath] },
       {
         filters: {
-          length: { operation: "=", value: parts.length },
+          length: { operation: "=", value: parts.length + 1 },
         },
         useCustomerRole: false,
       }
     );
 
-    console.info({ patterns });
+    const matchRoutes = [];
+    parts.forEach((part, index) => {
+      const objMatchRoute = routes.find((route) => {
+        const pattern = route.skid.replace(`/${prefixPath}`, "").split("/")[
+          index
+        ];
+        return part === pattern;
+      });
 
-    throw new Error("NOT Found Path");
+      if (objMatchRoute) {
+        matchRoutes.push([objMatchRoute.lOcKkEy]);
+        return;
+      }
+
+      const arrMatchRoute = routes
+        .filter((route) => {
+          const pattern = route.skid.replace(`/${prefixPath}`, "").split("/")[
+            index
+          ];
+          return pattern.startsWith(":");
+        })
+        .map((el) => el.lOcKkEy);
+
+      if (arrMatchRoute.length > 0) {
+        matchRoutes.push(arrMatchRoute);
+      }
+    });
+
+    const baseLine = matchRoutes.shift();
+    if (matchRoutes.length === parts.length) {
+      const allMatchRoute = baseLine.find((base) => {
+        const allPass = matchRoutes.map((matchRoute) => {
+          return matchRoute.includes(base);
+        });
+
+        const findFalse = allPass.findIndex((pass) => pass === false);
+        return findFalse === -1;
+      });
+
+      if (allMatchRoute) {
+        dynamicPath = routes.find((route) => route.lOcKkEy === allMatchRoute);
+      } else {
+        throw new Error("NOT Found Path");
+      }
+    } else {
+      throw new Error("NOT Found Path");
+    }
   }
 
-  const result = await getMetaById(resultPath.metaId, {
+  const metaId = resultPath ? resultPath.metaId : dynamicPath.metaId;
+
+  const result = await getMetaById(metaId, {
     dynamodb,
     tableName,
     binaryAttributes,
