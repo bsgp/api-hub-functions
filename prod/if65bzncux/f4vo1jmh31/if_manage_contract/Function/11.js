@@ -124,7 +124,7 @@ module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
       } catch (error) {
         processStatus = {};
       }
-      if (processStatus && processStatus.locked) {
+      if (processStatus && !processStatus.locked) {
         draft.response.body = {
           E_STATUS: "F",
           E_MESSAGE: [
