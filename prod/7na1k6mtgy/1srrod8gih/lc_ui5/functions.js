@@ -57,13 +57,13 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
   );
 
   if (!resultPath) {
-    const parts = path.split("/");
-    parts.shift();
-    const prefixPath = parts[0] + "/";
+    // const parts = path.split("/");
+    // parts.shift();
+    // const prefixPath = parts[0] + "/";
     const patterns = await dynamodb.query(
       tableName,
-      { pkid: "pattern" },
-      { skid: ["begins_with", "/" + prefixPath] }
+      { pkid: "pattern" }
+      // { skid: ["begins_with", "/" + prefixPath] }
       // {
       //   filters: {
       //     length: { operation: "=", value: parts.length },
