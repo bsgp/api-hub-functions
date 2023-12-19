@@ -57,22 +57,22 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
   );
 
   if (!resultPath) {
-    console.info(":::::::::::::::here");
-    // const parts = path.split("/");
-    // parts.shift();
-    // const prefixPath = parts[0] + "/";
-    // const patterns = await dynamodb.query(
-    //   tableName,
-    //   { pkid: "pattern" },
-    //   { skid: ["begins_with", "/" + prefixPath] },
-    //   {
-    //     filters: {
-    //       length: { operation: "=", value: parts.length },
-    //     },
-    //   }
-    // );
+    const parts = path.split("/");
+    parts.shift();
+    const prefixPath = parts[0] + "/";
+    console.info({ parts, prefixPath });
+    const patterns = await dynamodb.query(
+      tableName,
+      { pkid: "pattern" },
+      { skid: ["begins_with", "/" + prefixPath] },
+      {
+        filters: {
+          length: { operation: "=", value: parts.length },
+        },
+      }
+    );
 
-    // console.info({ patterns });
+    console.info({ patterns });
 
     throw new Error("NOT Found Path");
   }
