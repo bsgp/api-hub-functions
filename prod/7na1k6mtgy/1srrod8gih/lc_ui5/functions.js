@@ -73,6 +73,7 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
       }
     );
 
+    console.log({ routes });
     const matchRoutes = [];
     parts.forEach((part, index) => {
       const objMatchRoute = routes.find((route) => {
@@ -100,6 +101,8 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
         matchRoutes.push(arrMatchRoute);
       }
     });
+
+    console.log({ matchRoutes });
 
     const baseLine = matchRoutes.shift();
     if (matchRoutes.length === parts.length) {
