@@ -64,13 +64,12 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
       tableName,
       { pkid: "pattern" },
       { skid: ["begins_with", "/" + prefixPath] },
-      { useCustomerRole: false }
-      // { skid: ["begins_with", "/" + prefixPath] }
-      // {
-      //   filters: {
-      //     length: { operation: "=", value: parts.length },
-      //   },
-      // }
+      {
+        filters: {
+          length: { operation: "=", value: parts.length },
+        },
+        useCustomerRole: false,
+      }
     );
 
     console.info({ patterns });
