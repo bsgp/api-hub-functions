@@ -124,7 +124,7 @@ module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
       } catch (error) {
         processStatus = {};
       }
-      if (processStatus && !processStatus.locked) {
+      if (processStatus && processStatus.locked) {
         draft.response.body = {
           E_STATUS: "F",
           E_MESSAGE: [
@@ -135,6 +135,14 @@ module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
         };
         return;
       }
+      await file.upload(
+        "migration/process.json",
+        { locked: true },
+        {
+          gzip: true,
+          stage: env.CURRENT_ALIAS,
+        }
+      );
 
       const { list } = newData;
       /** create new ContractID by maxID && insert contract table */
@@ -219,6 +227,15 @@ module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
       //   E_STATUS === "S"
       //     ? "Success"
       //     : "데이터 저장과정에서 문제가 발생했습니다";
+
+      await file.upload(
+        "migration/process.json",
+        { locked: false },
+        {
+          gzip: true,
+          stage: env.CURRENT_ALIAS,
+        }
+      );
       draft.response.body = {
         E_STATUS,
         E_MESSAGE,
