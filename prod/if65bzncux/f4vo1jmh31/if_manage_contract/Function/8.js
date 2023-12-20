@@ -227,12 +227,17 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             (it, idx) =>
               list.findIndex((item) => item.contract_id === it) === idx
           );
+        const ab_queryResult = await sql("mysql", sqlParams)
+          .select(tables.actual_billing.name)
+          .whereIn("contract_id", [contractIDs])
+          .run();
 
         draft.response.body = {
           request: newData,
           queryResult,
           list,
           contractIDs,
+          ab_queryResult,
           E_STATUS: "S",
           E_MESSAGE: `조회가\n완료되었습니다 version2`,
         };
