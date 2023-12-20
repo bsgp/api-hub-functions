@@ -203,30 +203,29 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         }
 
         const queryResult = await queryBuilder.run();
-        const list = tryit(() => queryResult.body.list, []);
+        const list = tryit(() => queryResult.body.list, [])
+          .map((it) => ({ ...it }))
+          .filter(
+            ({ bill_from_id, ref_id }) =>
+              bill_from_id === "" || bill_from_id === ref_id
+          )
+          .sort((al, be) => {
+            if (al.post_date !== be.post_date) {
+              return Number(al.post_date) - Number(be.post_date);
+            }
+            if (al.contract_id === be.contract_id) {
+              return Number(al.index) - Number(be.index);
+            } else
+              return (
+                Number(al.contract_id.replace(/[A-z]/g, "")) -
+                Number(be.contract_id.replace(/[A-z]/g, ""))
+              );
+          });
 
         draft.response.body = {
           request: newData,
           queryResult,
-          list: list
-            .map((it) => ({ ...it }))
-            .filter(
-              ({ bill_from_id, ref_id }) =>
-                bill_from_id === "" || bill_from_id === ref_id
-            )
-            .sort((al, be) => {
-              if (al.post_date !== be.post_date) {
-                return Number(al.post_date) - Number(be.post_date);
-              }
-              if (al.contract_id === be.contract_id) {
-                return Number(al.index) - Number(be.index);
-              } else
-                return (
-                  Number(al.contract_id.replace(/[A-z]/g, "")) -
-                  Number(be.contract_id.replace(/[A-z]/g, ""))
-                );
-            }),
-
+          list,
           E_STATUS: "S",
           E_MESSAGE: `조회가\n완료되었습니다 version2`,
         };
