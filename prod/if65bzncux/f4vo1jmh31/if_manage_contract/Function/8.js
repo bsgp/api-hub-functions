@@ -232,13 +232,14 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           .whereIn("contract_id", contractIDs)
           .whereNot({ deleted: true })
           .run();
+        const actual_billing = tryit(() => ab_queryResult.body.list, []);
 
         draft.response.body = {
           request: newData,
           queryResult,
           list,
           contractIDs,
-          ab_queryResult,
+          actual_billing,
           E_STATUS: "S",
           E_MESSAGE: `조회가\n완료되었습니다 version2`,
         };
