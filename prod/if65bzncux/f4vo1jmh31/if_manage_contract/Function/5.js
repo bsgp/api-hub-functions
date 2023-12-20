@@ -81,18 +81,18 @@ module.exports = async (draft, { sql, env, tryit, fn, user }) => {
                     const totalBillAmt = fBills.reduce((acc, curr) => {
                       return acc + Number(curr.dmbtr_supply);
                     }, 0);
-                    let billing_stat, billing_stat_text;
+                    let bill_status, bill_status_text;
                     if (totalBillAmt === 0) {
-                      billing_stat = "1";
-                      billing_stat_text = "미완료";
+                      bill_status = "1";
+                      bill_status_text = "미완료";
                     } else if (totalBillAmt !== Number(item.dmbtr_supply)) {
-                      billing_stat = "2";
-                      billing_stat_text = "부분완료";
+                      bill_status = "2";
+                      bill_status_text = "부분완료";
                     } else {
-                      billing_stat = "3";
-                      billing_stat_text = "완료";
+                      bill_status = "3";
+                      bill_status_text = "완료";
                     }
-                    return { ...item, id, billing_stat, billing_stat_text };
+                    return { ...item, id, bill_status, bill_status_text };
                   }),
             wbsList: results.wbs,
             billList: results.bill,
