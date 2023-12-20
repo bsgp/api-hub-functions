@@ -221,11 +221,19 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
                 Number(be.contract_id.replace(/[A-z]/g, ""))
               );
           });
+        const contractIDs = list
+          .map(({ contract_id }) => contract_id)
+          .filter(
+            (it, idx) =>
+              list.findIndex((item) => item.contract_id === it.contract_id) ===
+              idx
+          );
 
         draft.response.body = {
           request: newData,
           queryResult,
           list,
+          contractIDs,
           E_STATUS: "S",
           E_MESSAGE: `조회가\n완료되었습니다 version2`,
         };
