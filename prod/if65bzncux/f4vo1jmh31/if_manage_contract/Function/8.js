@@ -209,6 +209,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           request: newData,
           queryResult,
           list: list
+            .map((it) => ({ ...it }))
             .filter(
               ({ bill_from_id, ref_id }) =>
                 bill_from_id === "" || bill_from_id === ref_id
