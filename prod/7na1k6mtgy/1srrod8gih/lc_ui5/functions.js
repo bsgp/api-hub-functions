@@ -262,6 +262,11 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
     throw new Error("path is required");
   }
 
+  const pathRegExp = /^\/([\w]{1,})((\/:|\/)[\w]{1,}){1,}$/;
+  if (!pathRegExp.test(path)) {
+    throw new Error("A path that violates the path generation rules");
+  }
+
   // get path from db;
   // if path exists:
   //   if (!path.metaId):
