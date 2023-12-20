@@ -230,7 +230,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             }),
 
           E_STATUS: "S",
-          E_MESSAGE: `조회가\n완료되었습니다`,
+          E_MESSAGE: `조회가\n완료되었습니다 version2`,
         };
         return;
       }
