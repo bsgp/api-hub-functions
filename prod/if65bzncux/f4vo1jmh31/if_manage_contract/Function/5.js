@@ -70,7 +70,12 @@ module.exports = async (draft, { sql, env, tryit, fn, user }) => {
             ...results.contract,
             contractID,
             partyList: results.party,
-            costObjectList: results.cost_object,
+            costObjectList:
+              results.contract.type === "P"
+                ? results.cost_object
+                : results.cost_object.map((it) => {
+                    return { ...it };
+                  }),
             wbsList: results.wbs,
             billList: results.bill,
             attachmentList: results.attachment,
