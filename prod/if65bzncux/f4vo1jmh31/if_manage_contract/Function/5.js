@@ -73,8 +73,26 @@ module.exports = async (draft, { sql, env, tryit, fn, user }) => {
             costObjectList:
               results.contract.type === "P"
                 ? results.cost_object
-                : results.cost_object.map((it) => {
-                    return { ...it };
+                : results.cost_object.map(({ id, ...item }) => {
+                    const fBills = (results.actual_billing || []).filter(
+                      (it) =>
+                        (it.id === id || it.parent_id === id) && it.fi_number
+                    );
+                    const totalBillAmt = fBills.reduce((acc, curr) => {
+                      return acc + Number(curr.dmbtr_supply);
+                    }, 0);
+                    let billing_stat, billing_stat_text;
+                    if (totalBillAmt === 0) {
+                      billing_stat = "1";
+                      billing_stat_text = "미완료";
+                    } else if (totalBillAmt !== Number(item.dmbtr_supply)) {
+                      billing_stat = "2";
+                      billing_stat_text = "부분완료";
+                    } else {
+                      billing_stat = "3";
+                      billing_stat_text = "완료";
+                    }
+                    return { ...item, id, billing_stat, billing_stat_text };
                   }),
             wbsList: results.wbs,
             billList: results.bill,
