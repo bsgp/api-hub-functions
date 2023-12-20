@@ -229,7 +229,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           );
         const ab_queryResult = await sql("mysql", sqlParams)
           .select(tables.actual_billing.name)
-          .whereIn("contract_id", [contractIDs])
+          .whereIn("contract_id", contractIDs)
+          .whereNot({ deleted: true })
           .run();
 
         draft.response.body = {
