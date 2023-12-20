@@ -111,6 +111,129 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
     }
     case "IF-CT-115": {
       // 청구리스트 조회
+      if (newData.version === "2") {
+        const queryBuilder = sql("mysql", sqlParams)
+          .select(tables.cost_object.name)
+          .select(
+            `${tables.cost_object.name}.*`,
+            `${tables.contract.name}.id as contract_id`,
+            `${tables.contract.name}.name as contract_name`,
+            `${tables.contract.name}.renewal_ind`,
+            `${tables.contract.name}.bukrs`,
+            `${tables.contract.name}.start_date`,
+            `${tables.contract.name}.end_date`,
+            `${tables.contract.name}.curr_key`,
+            `${tables.party.name}.contract_id`,
+            `${tables.party.name}.ref_id`,
+            `${tables.party.name}.stems10`,
+            `${tables.party.name}.name as party_name`,
+            `${tables.party.name}.deleted as party_deleted`
+          )
+          .leftJoin(
+            tables.contract.name,
+            `${tables.cost_object.name}.contract_id`,
+            "=",
+            `${tables.contract.name}.id`
+          )
+          .leftJoin(
+            tables.party.name,
+            `${tables.cost_object.name}.contract_id`,
+            "=",
+            `${tables.party.name}.contract_id`
+          );
+
+        queryBuilder.where("stems10", "like", "1");
+        queryBuilder
+          .where(`${tables.contract.name}.type`, "like", "S")
+          .whereNot(`${tables.cost_object.name}.deleted`, true)
+          .whereNot(`${tables.party.name}.deleted`, true);
+
+        const { post_date, dateRange, dateType } = newData;
+        if (post_date && post_date[0] && post_date[1]) {
+          const from = fn.convDate(dayjs, post_date[0], "YYYYMMDD");
+          const to = fn.convDate(dayjs, post_date[1], "YYYYMMDD");
+          queryBuilder.whereBetween("post_date", [from, to]);
+        }
+        if (dateRange && dateRange[0] && dateRange[1]) {
+          const from = fn.convDate(dayjs, dateRange[0], "YYYYMMDD");
+          const to = fn.convDate(dayjs, dateRange[1], "YYYYMMDD");
+          if (dateType === "post_date") {
+            queryBuilder.whereBetween(`${tables.cost_object.name}.post_date`, [
+              from,
+              to,
+            ]);
+          } else {
+            const key = [tables.contract.name, dateType].join(".");
+            queryBuilder.whereBetween(key, [from, to]);
+          }
+        }
+        if (newData.contractID) {
+          queryBuilder.where(
+            `${tables.contract.name}.id`,
+            "like",
+            `%${newData.contractID}%`
+          );
+        }
+        if (newData.contractName) {
+          queryBuilder.where(
+            `${tables.contract.name}.name`,
+            "like",
+            `%${newData.contractName}%`
+          );
+        }
+        if (newData.partyID) {
+          queryBuilder.where(
+            `${tables.party.name}.ref_id`,
+            "like",
+            newData.partyID
+          );
+        }
+        if (newData.cost_object_id) {
+          queryBuilder.where("cost_object_id", "like", newData.cost_object_id);
+        }
+        if (newData.cost_type_id) {
+          queryBuilder.where("cost_type_id", "like", newData.cost_type_id);
+        }
+        if (!(user.bukrs || "").includes("*")) {
+          const allowBURKS = [user.bukrs];
+          if (user.bukrs === "1000") {
+            allowBURKS.push("");
+          }
+          queryBuilder.whereIn("bukrs", allowBURKS);
+        }
+
+        const queryResult = await queryBuilder.run();
+        const list = tryit(
+          () => queryResult.body.list.map((it) => ({ ...it })),
+          []
+        );
+
+        draft.response.body = {
+          request: newData,
+          queryResult,
+          list: list
+            .filter(
+              ({ bill_from_id, ref_id }) =>
+                bill_from_id === "" || bill_from_id === ref_id
+            )
+            .sort((al, be) => {
+              if (al.post_date !== be.post_date) {
+                return Number(al.post_date) - Number(be.post_date);
+              }
+              if (al.contract_id === be.contract_id) {
+                return Number(al.index) - Number(be.index);
+              } else
+                return (
+                  Number(al.contract_id.replace(/[A-z]/g, "")) -
+                  Number(be.contract_id.replace(/[A-z]/g, ""))
+                );
+            }),
+
+          E_STATUS: "S",
+          E_MESSAGE: `조회가\n완료되었습니다`,
+        };
+        return;
+      }
       const queryBuilder = sql("mysql", sqlParams)
         .select(tables.cost_object.name)
         .select(
