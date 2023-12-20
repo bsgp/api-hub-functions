@@ -203,10 +203,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         }
 
         const queryResult = await queryBuilder.run();
-        const list = tryit(
-          () => queryResult.body.list.map((it) => ({ ...it })),
-          []
-        );
+        const list = tryit(() => queryResult.body.list, []);
 
         draft.response.body = {
           request: newData,
