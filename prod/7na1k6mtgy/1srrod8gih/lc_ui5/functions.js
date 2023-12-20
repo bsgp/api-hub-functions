@@ -363,12 +363,15 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
           pathRegExp,
           () => `${oldParamsIndex++}`
         );
-
-        await dynamodb.deleteItem(
-          tableName,
-          { pkid: "pattern", skid: oldDynamicPath },
-          { useCustomerRole: false }
-        );
+        try {
+          await dynamodb.deleteItem(
+            tableName,
+            { pkid: "pattern", skid: oldDynamicPath },
+            { useCustomerRole: false }
+          );
+        } catch {
+          //pass
+        }
       } else {
         throw new Error(["Old path", oldPath, "does not exist"].join(" "));
       }
