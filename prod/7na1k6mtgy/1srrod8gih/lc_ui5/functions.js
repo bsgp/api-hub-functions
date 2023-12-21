@@ -334,7 +334,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
       }
     }
   } else {
-    const pathRegExp = /(?<=:)[\w-]+/g;
+    const pathRegExp = /(?<=:)[\w]+/g;
     let dataOldPath;
 
     if (oldPath) {
