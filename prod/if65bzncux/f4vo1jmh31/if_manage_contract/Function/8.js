@@ -267,6 +267,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
               ["1", "2"].includes(it.bill_status)) ||
             newData.bill_status === it.bill_status
         );
+      // "1": "미완료(부분완료)", "3": "완료"
 
       draft.response.body = {
         request: newData,
