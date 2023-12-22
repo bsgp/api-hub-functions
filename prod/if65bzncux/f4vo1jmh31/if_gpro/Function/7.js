@@ -3,6 +3,7 @@
 // request.body.Data.draft.draftTemplateName "계약관리시스템 결재 신청서"
 // request.body.Data.draft.draftStatusCode "DRF"
 // request.body.Data.draft.draftId 280
+// request.body.Data.draft.draftName: "[매출] 디앤에이모터스&에이렌탈앤서비스"
 // request.body.Data.draft.draftTemplateId 1114
 // request.body.Data.draft.draftTemplateType "R"
 // request.body.Data.draft.userId 2
@@ -52,6 +53,7 @@ module.exports = async (draft, context) => {
           draftTemplateName,
           draftStatusCode,
           draftId,
+          draftName,
           draftTemplateId,
           draftTemplateType,
           userId,
@@ -88,6 +90,7 @@ module.exports = async (draft, context) => {
                 gpro_draft_template_name: draftTemplateName,
                 gpro_draft_status_code: draftStatusCode,
                 gpro_draft_id: draftId,
+                gpro_draft_name: draftName,
                 gpro_draft_templateId: draftTemplateId,
                 gpro_draftTemplateType: draftTemplateType,
                 gpro_userId: userId,
@@ -132,7 +135,7 @@ module.exports = async (draft, context) => {
             if (!contractId) {
               const form = {
                 contractID: "",
-                name: draftTemplateName || "",
+                name: draftName || "",
                 prod_date: fn.convDate(dayjs, new Date(), "YYYYMMDD"),
                 curr_key: "KRW",
                 curr_local: "KRW",
@@ -172,6 +175,7 @@ module.exports = async (draft, context) => {
                 gpro_draft_template_name: draftTemplateName,
                 gpro_draft_status_code: draftStatusCode,
                 gpro_draft_id: draftId,
+                gpro_draft_name: draftName,
                 gpro_draft_templateId: draftTemplateId,
                 gpro_draftTemplateType: draftTemplateType,
                 gpro_userId: userId,
