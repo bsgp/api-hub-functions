@@ -261,7 +261,11 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           return { ...item, id, bill_status, bill_status_text };
         })
         .filter(
-          (it) => !newData.bill_status || newData.bill_status === it.bill_status
+          (it) =>
+            !newData.bill_status ||
+            (newData.bill_status === "1" &&
+              ["1", "2"].includes(it.bill_status)) ||
+            newData.bill_status === it.bill_status
         );
 
       draft.response.body = {
