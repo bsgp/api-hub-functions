@@ -171,6 +171,7 @@ module.exports.actual_billing =
     table.string("post_date", 8).defaultTo(""); // 전기일
     table.string("docu_date", 8).defaultTo(""); // 증빙일
     table.string("remark", 100).defaultTo(""); // 비고
+    table.string("origin_item_index", 5).defaultTo("");
     table.string("bill_from_id", 36).defaultTo(""); // 계약당사자 id
     table.string("bill_from_text", 100).defaultTo(""); // 계약당사자 text
     table.boolean("deleted").defaultTo(false);
