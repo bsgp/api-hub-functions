@@ -1,4 +1,4 @@
-module.exports = async (draft, { request, restApi, fn }) => {
+module.exports = async (draft, { request, env, restApi, fn }) => {
   // const params = new URLSearchParams();
   // params.set("bukrs", "2000");
   // params.set("date_from", "20220801");
@@ -6,6 +6,11 @@ module.exports = async (draft, { request, restApi, fn }) => {
   // params.set("dctyp", "BZM01");
   // const queryString = params.toString();
 
+  const stage = env.CURRENT_ALIAS;
+  const unipostURL =
+    stage === "prd"
+      ? "https://cont.unipost.co.kr"
+      : "https://contdev.unipost.co.kr";
   const secretKey = await fn.getSecretKey({ restApi });
 
   switch (draft.json.ifObj.InterfaceId) {
@@ -26,7 +31,7 @@ module.exports = async (draft, { request, restApi, fn }) => {
         });
         draft.response.body = {
           E_STATUS: "S",
-          unipostURL: "https://contdev.unipost.co.kr",
+          unipostURL,
           token,
         };
       }
@@ -39,7 +44,7 @@ module.exports = async (draft, { request, restApi, fn }) => {
         });
         draft.response.body = {
           E_STATUS: "S",
-          unipostURL: "https://contdev.unipost.co.kr",
+          unipostURL,
           token,
         };
       }
