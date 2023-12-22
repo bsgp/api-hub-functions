@@ -13,6 +13,7 @@ module.exports = async (draft, { request, restApi, fn }) => {
       {
         const result = await fn.getTemplateList(secretKey, { restApi });
         draft.response.body = {
+          E_STATUS: "S",
           list: result,
         };
       }
@@ -24,6 +25,7 @@ module.exports = async (draft, { request, restApi, fn }) => {
           contNo: request.body.Data.ContNo,
         });
         draft.response.body = {
+          E_STATUS: "S",
           token,
         };
       }
@@ -35,6 +37,7 @@ module.exports = async (draft, { request, restApi, fn }) => {
           contNo: request.body.Data.ContNo,
         });
         draft.response.body = {
+          E_STATUS: "S",
           token,
         };
       }
