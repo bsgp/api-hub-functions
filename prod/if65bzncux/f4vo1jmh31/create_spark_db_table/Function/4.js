@@ -19,21 +19,21 @@ module.exports = async (draft, { fn, sql, env, makeid }) => {
       const result = await mysql.table
         .create(spec.name, fn[tableKey]({ mysql, makeid }))
         .run();
-      if (result.statusCode !== 200) {
-        if (spec.desc === "Contract info DB table") {
-          const alterResult = await mysql.table
-            .alter(spec.name, function (table) {
-              table.boolean("skip_sign_ind").defaultTo(false);
-              // table.json("gpro_workflows");
-              // table.string("apr_status", 3).defaultTo("");
-              // table.boolean("extra_item").defaultTo(false);
-            })
-            .run();
-          draft.response.body[spec.name] = alterResult;
-        }
-      } else
-        draft.response.body[spec.name] =
-          result.statusCode === 200 ? "Succeed" : result.body;
+      // if (result.statusCode !== 200) {
+      //   if (spec.desc === "Contract info DB table") {
+      //     const alterResult = await mysql.table
+      //       .alter(spec.name, function (table) {
+      //         table.boolean("skip_sign_ind").defaultTo(false);
+      //         // table.json("gpro_workflows");
+      //         // table.string("apr_status", 3).defaultTo("");
+      //         // table.boolean("extra_item").defaultTo(false);
+      //       })
+      //       .run();
+      //     draft.response.body[spec.name] = alterResult;
+      //   }
+      // } else
+      draft.response.body[spec.name] =
+        result.statusCode === 200 ? "Succeed" : result.body;
       return true;
     })
   );
