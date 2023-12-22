@@ -63,7 +63,7 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
     const prefixPath = parts.shift() + "/";
     const routes = await dynamodb.query(
       tableName,
-      { pkid: "pattern" },
+      { pkid: "path" },
       { skid: ["begins_with", "/" + prefixPath] },
       {
         filters: {
@@ -246,7 +246,10 @@ module.exports.getAllMeta = async ({ dynamodb, tableName }) => {
 };
 
 const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
-  const { id, path, oldPath } = data;
+  let { path, oldPath } = data;
+  const { id } = data;
+  const paramRegExp = /(?<=:)[\w]+/g;
+
   const optionalData = ["title"].reduce((acc, key) => {
     if (data[key] !== undefined) {
       acc[key] = data[key];
@@ -266,6 +269,9 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
   if (!pathRegExp.test(path)) {
     throw new Error("A path that violates the path generation rules");
   }
+
+  let paramsIndex = 0;
+  path = path.replace(paramRegExp, () => `${paramsIndex++}`);
 
   // get path from db;
   // if path exists:
@@ -334,10 +340,12 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
       }
     }
   } else {
-    const pathRegExp = /(?<=:)[\w]+/g;
     let dataOldPath;
 
     if (oldPath) {
+      let oldParamsIndex = 0;
+      oldPath = oldPath.replace(paramRegExp, () => `${oldParamsIndex++}`);
+
       dataOldPath = await dynamodb.getItem(
         tableName,
         { pkid: "path", skid: oldPath },
@@ -362,30 +370,20 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
           { pkid: "path", skid: oldPath },
           { useCustomerRole: false }
         );
-
-        let oldParamsIndex = 0;
-        const oldDynamicPath = oldPath.replace(
-          pathRegExp,
-          () => `${oldParamsIndex++}`
-        );
-        try {
-          await dynamodb.deleteItem(
-            tableName,
-            { pkid: "pattern", skid: oldDynamicPath },
-            { useCustomerRole: false }
-          );
-        } catch {
-          //pass
-        }
       } else {
         throw new Error(["Old path", oldPath, "does not exist"].join(" "));
       }
     }
 
+    const params = path.match(paramRegExp);
+    const length = path.split("/").length - 1;
+
     const newDataPath = {
       ...dataOldPath,
       metaId: id,
       value: path,
+      params,
+      length,
       ...optionalData,
     };
 
@@ -393,25 +391,6 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
       tableName,
       { pkid: "path", skid: path },
       newDataPath,
-      {
-        useCustomerRole: false,
-      }
-    );
-
-    const params = path.match(pathRegExp);
-    let paramsIndex = 0;
-    const dynamicPath = path.replace(pathRegExp, () => `${paramsIndex++}`);
-
-    const newPattern = {
-      metaId: id,
-      params: params || [],
-      length: path.split("/").length - 1,
-    };
-
-    await dynamodb.insertItem(
-      tableName,
-      { pkid: "pattern", skid: dynamicPath },
-      newPattern,
       {
         useCustomerRole: false,
       }
