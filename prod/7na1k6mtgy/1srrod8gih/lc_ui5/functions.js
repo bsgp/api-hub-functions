@@ -355,7 +355,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
         () => `${oldParamsIndex++}`
       );
 
-      [dataOldPath] = await dynamodb.query(
+      const [queryResult] = await dynamodb.query(
         tableName,
         { pkid: "path" },
         { skid: convertOldPath },
@@ -366,6 +366,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
           useCustomerRole: false,
         }
       );
+      dataOldPath = queryResult;
       if (dataOldPath) {
         if (dataOldPath.metaId && dataOldPath.metaId !== id) {
           throw new Error(
