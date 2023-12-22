@@ -16,7 +16,10 @@ module.exports = async (draft, { request, env, restApi, fn }) => {
   switch (draft.json.ifObj.InterfaceId) {
     case "IF-CT-007":
       {
-        const result = await fn.getTemplateList(secretKey, { restApi });
+        const result = await fn.getTemplateList(secretKey, {
+          restApi,
+          unipostURL,
+        });
         draft.response.body = {
           E_STATUS: "S",
           list: result,
@@ -27,6 +30,7 @@ module.exports = async (draft, { request, env, restApi, fn }) => {
       {
         const token = await fn.getTokenForWork(secretKey, {
           restApi,
+          unipostURL,
           contNo: request.body.Data.ContNo,
         });
         draft.response.body = {
@@ -40,6 +44,7 @@ module.exports = async (draft, { request, env, restApi, fn }) => {
       {
         const token = await fn.getTokenForRead(secretKey, {
           restApi,
+          unipostURL,
           contNo: request.body.Data.ContNo,
         });
         draft.response.body = {
