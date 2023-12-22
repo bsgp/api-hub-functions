@@ -5,12 +5,11 @@ module.exports = async (draft, { request, env, restApi, fn }) => {
   // params.set("date_to", "20220831");
   // params.set("dctyp", "BZM01");
   // const queryString = params.toString();
-
-  const stage = env.CURRENT_ALIAS;
   const unipostURL =
-    stage === "prd"
+    env.CURRENT_ALIAS === "prd"
       ? "https://cont.unipost.co.kr"
       : "https://contdev.unipost.co.kr";
+
   const opt = { restApi, unipostURL };
   const secretKey = await fn.getSecretKey(opt);
 
