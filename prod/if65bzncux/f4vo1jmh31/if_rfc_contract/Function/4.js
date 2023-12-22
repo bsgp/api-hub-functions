@@ -170,7 +170,7 @@ module.exports = async (draft, { request, tryit }) => {
       const { E_MESSAGE, ...props } = result.body.result;
       draft.response.body = {
         ...props,
-        E_MESSAGE: ["SAP_MESSAGE", E_MESSAGE].join(": "),
+        E_MESSAGE: ["SAP", E_MESSAGE].join(": "),
       };
       break;
     }
