@@ -146,7 +146,7 @@ module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
 
       const { list } = newData;
       /** create new ContractID by maxID && insert contract table */
-      const migration_Year = "1000";
+      const migration_Year = "2023";
       const prefix_P = ["P", migration_Year].join("");
       const prefix_S = ["S", migration_Year].join("");
       const queryResult_P = await sql("mysql", sqlParams)
