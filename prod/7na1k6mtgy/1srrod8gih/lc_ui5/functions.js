@@ -412,20 +412,6 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
       }
     );
 
-    await dynamodb.updateItem(
-      tableName,
-      { pkid: "meta", skid: id },
-      { paths: [convertPath] },
-      {
-        operations: {
-          paths: "+",
-        },
-        sets: {
-          paths: "string",
-        },
-        useCustomerRole: false,
-      }
-    );
     if (dataOldPath) {
       await dynamodb.updateItem(
         tableName,
@@ -442,6 +428,22 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
         }
       );
     }
+
+    await dynamodb.updateItem(
+      tableName,
+      { pkid: "meta", skid: id },
+      { paths: [convertPath] },
+      {
+        operations: {
+          paths: "+",
+        },
+        sets: {
+          paths: "string",
+        },
+        useCustomerRole: false,
+      }
+    );
+
     return result;
   }
 };
