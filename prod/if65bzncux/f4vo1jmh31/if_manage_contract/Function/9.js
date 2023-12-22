@@ -209,15 +209,14 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
             bukrs: currentUser.bukrs,
             content: contentObj,
             workflows: [{ email: currentUser.email, type: "DRF" }].concat(
-              rcp_workflows
-                .map(({ userId, organizationId }) => {
-                  const defaultObj = { type: "REF" };
-                  if (userId) {
-                    defaultObj.userId = userId;
-                  } else defaultObj.organizationId = organizationId;
-                  return defaultObj;
-                })
-                .filter(({ userId }) => !!userId)
+              rcp_workflows.map(({ userId, organizationId }) => {
+                const defaultObj = { type: "REF" };
+                if (userId) {
+                  defaultObj.userId = userId;
+                } else defaultObj.organizationId = organizationId;
+                return defaultObj;
+              })
+              // .filter(({ userId }) => !!userId)
             ), //   REF 참조, RCP: 열람
           };
 
