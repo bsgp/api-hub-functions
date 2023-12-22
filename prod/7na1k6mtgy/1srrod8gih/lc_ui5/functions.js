@@ -304,6 +304,8 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
     }
   );
 
+  console.log({ resultPath });
+
   if (resultPath) {
     if (!resultPath.metaId) {
       throw new Error(
