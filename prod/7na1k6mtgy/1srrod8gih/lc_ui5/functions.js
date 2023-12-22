@@ -293,11 +293,12 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
   //     get oldPath from db;
   //   insert {...oldPath, metaId: id, path, title}
 
-  const resultPath = await dynamodb.getItem(
+  const [resultPath] = await dynamodb.query(
     tableName,
-    { pkid: "path", skid: convertPath },
+    { pkid: "path" },
+    { skid: convertPath },
     {
-      conditions: {
+      filters: {
         value: { operation: "=", value: path },
       },
       useCustomerRole: false,
