@@ -270,6 +270,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
     throw new Error("A path that violates the path generation rules");
   }
 
+  const params = path.match(paramRegExp);
   let paramsIndex = 0;
   path = path.replace(paramRegExp, () => `${paramsIndex++}`);
 
@@ -375,7 +376,6 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
       }
     }
 
-    const params = path.match(paramRegExp);
     const length = path.split("/").length - 1;
 
     const newDataPath = {
