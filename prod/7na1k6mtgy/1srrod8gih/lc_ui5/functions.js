@@ -246,8 +246,7 @@ module.exports.getAllMeta = async ({ dynamodb, tableName }) => {
 };
 
 const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
-  let { path, oldPath } = data;
-  const { id } = data;
+  const { id, path, oldPath } = data;
   const paramRegExp = /(?<=:)[\w]+/g;
 
   const optionalData = ["title"].reduce((acc, key) => {
@@ -272,7 +271,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
 
   const params = path.match(paramRegExp);
   let paramsIndex = 0;
-  path = path.replace(paramRegExp, () => `${paramsIndex++}`);
+  const convertPath = path.replace(paramRegExp, () => `${paramsIndex++}`);
 
   // get path from db;
   // if path exists:
@@ -296,7 +295,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
 
   const resultPath = await dynamodb.getItem(
     tableName,
-    { pkid: "path", skid: path },
+    { pkid: "path", skid: convertPath },
     { useCustomerRole: false }
   );
 
@@ -319,7 +318,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
           } else {
             const result = await dynamodb.updateItem(
               tableName,
-              { pkid: "path", skid: path },
+              { pkid: "path", skid: convertPath },
               optionalData,
               {
                 conditions: {
@@ -345,11 +344,14 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
 
     if (oldPath) {
       let oldParamsIndex = 0;
-      oldPath = oldPath.replace(paramRegExp, () => `${oldParamsIndex++}`);
+      const convertOldPath = oldPath.replace(
+        paramRegExp,
+        () => `${oldParamsIndex++}`
+      );
 
       dataOldPath = await dynamodb.getItem(
         tableName,
-        { pkid: "path", skid: oldPath },
+        { pkid: "path", skid: convertOldPath },
         { useCustomerRole: false }
       );
       if (dataOldPath) {
@@ -368,7 +370,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
 
         await dynamodb.deleteItem(
           tableName,
-          { pkid: "path", skid: oldPath },
+          { pkid: "path", skid: convertOldPath },
           { useCustomerRole: false }
         );
       } else {
@@ -381,7 +383,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
     const newDataPath = {
       ...dataOldPath,
       metaId: id,
-      value: path,
+      value: convertPath,
       params,
       length,
       ...optionalData,
@@ -389,7 +391,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
 
     const result = await dynamodb.insertItem(
       tableName,
-      { pkid: "path", skid: path },
+      { pkid: "path", skid: convertPath },
       newDataPath,
       {
         useCustomerRole: false,
