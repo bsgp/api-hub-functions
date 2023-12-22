@@ -20,7 +20,7 @@ module.exports = async (draft, { fn, sql, env, makeid }) => {
         .create(spec.name, fn[tableKey]({ mysql, makeid }))
         .run();
       if (result.statusCode !== 200) {
-        if (spec.desc === "Contract info DB table") {
+        if (spec.desc === "Actual FI cost object DB table") {
           const alterResult = await mysql.table
             .alter(spec.name, function (table) {
               table.string("origin_item_index", 5).defaultTo("");
