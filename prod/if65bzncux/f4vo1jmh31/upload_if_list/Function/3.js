@@ -450,6 +450,24 @@ module.exports = async (draft, { file, env }) => {
       TriggeredBy: "WORKSHEET",
       Path: "/rfc",
     },
+    ["IF-WS-016"]: {
+      Type: "RFC",
+      Name: "ZSIRFC1039",
+      TriggeredBy: "WORKSHEET",
+      Path: "/rfc",
+    },
+    ["IF-WS-017"]: {
+      Type: "RFC",
+      Name: "ZSIRFC1062",
+      TriggeredBy: "WORKSHEET",
+      Path: "/rfc",
+    },
+    ["IF-WS-018"]: {
+      Type: "RFC",
+      Name: "ZSIRFC1047",
+      TriggeredBy: "WORKSHEET",
+      Path: "/rfc",
+    },
     ["IF-CT-101"]: {
       Type: "DB",
       Name: "GET_DATA_FROM_DB",
@@ -531,6 +549,12 @@ module.exports = async (draft, { file, env }) => {
     ["IF-CT-119"]: {
       Type: "DB",
       Name: "MAPPING_LETTER_AND_CONTRACT",
+      RfcName: "",
+      TriggeredBy: "CONTRACT",
+    },
+    ["IF-CT-120"]: {
+      Type: "DB",
+      Name: "MIGRATION_CONTRACTS_TO_DB",
       RfcName: "",
       TriggeredBy: "CONTRACT",
     },
