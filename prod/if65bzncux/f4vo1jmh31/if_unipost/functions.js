@@ -24,11 +24,9 @@ const checkResError = (body, prefixMessage) => {
   }
 };
 
-module.exports.getSecretKey = async ({ restApi }) => {
+module.exports.getSecretKey = async ({ restApi, unipostURL }) => {
   const result = await restApi.post({
-    url: ["https://contdev.unipost.co.kr/unicloud/cont/api/getSecretKey"].join(
-      "?"
-    ),
+    url: [unipostURL, "/unicloud/cont/api/getSecretKey"].join("/"),
     headers: {
       clientKey: "51147370C5A742709F3EB95213CFBE30",
     },
@@ -39,7 +37,11 @@ module.exports.getSecretKey = async ({ restApi }) => {
   return result.body.response.secretKey;
 };
 
-const getToken = async (secretKey, { usId, contNo }, { restApi }) => {
+const getToken = async (
+  secretKey,
+  { usId, contNo },
+  { restApi, unipostURL }
+) => {
   const body = {
     usId,
   };
@@ -48,9 +50,7 @@ const getToken = async (secretKey, { usId, contNo }, { restApi }) => {
   }
 
   const result = await restApi.post({
-    url: [
-      "https://contdev.unipost.co.kr/unicloud/cont/api/getContUserToken",
-    ].join("?"),
+    url: [unipostURL, "/unicloud/cont/api/getContUserToken"].join("/"),
     headers: {
       "content-type": "application/json;charset=UTF-8",
       secretKey,
@@ -63,33 +63,39 @@ const getToken = async (secretKey, { usId, contNo }, { restApi }) => {
   return result.body.response.token;
 };
 
-module.exports.getTokenForWork = async (secretKey, { contNo, restApi }) => {
+module.exports.getTokenForWork = async (
+  secretKey,
+  { contNo, restApi, unipostURL }
+) => {
   const result = await getToken(
     secretKey,
     { usId: "bsg_cont_work01", contNo },
     {
       restApi,
+      unipostURL,
     }
   );
   return result;
 };
 
-module.exports.getTokenForRead = async (secretKey, { contNo, restApi }) => {
+module.exports.getTokenForRead = async (
+  secretKey,
+  { contNo, restApi, unipostURL }
+) => {
   const result = await getToken(
     secretKey,
     { usId: "bsg_cont_read01", contNo },
     {
       restApi,
+      unipostURL,
     }
   );
   return result;
 };
 
-module.exports.getTemplateList = async (secretKey, { restApi }) => {
+module.exports.getTemplateList = async (secretKey, { restApi, unipostURL }) => {
   const result = await restApi.post({
-    url: [
-      "https://contdev.unipost.co.kr/unicloud/cont/api/getTemplateList",
-    ].join("?"),
+    url: [unipostURL, "/unicloud/cont/api/getTemplateList"].join("/"),
     headers: {
       "content-type": "application/json;charset=UTF-8",
       secretKey,
