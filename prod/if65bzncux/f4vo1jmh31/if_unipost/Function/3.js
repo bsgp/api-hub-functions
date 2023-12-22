@@ -26,6 +26,7 @@ module.exports = async (draft, { request, restApi, fn }) => {
         });
         draft.response.body = {
           E_STATUS: "S",
+          unipostURL: "https://contdev.unipost.co.kr",
           token,
         };
       }
@@ -38,6 +39,7 @@ module.exports = async (draft, { request, restApi, fn }) => {
         });
         draft.response.body = {
           E_STATUS: "S",
+          unipostURL: "https://contdev.unipost.co.kr",
           token,
         };
       }
