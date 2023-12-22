@@ -42,9 +42,7 @@ const getToken = async (
   { usId, contNo },
   { restApi, unipostURL }
 ) => {
-  const body = {
-    usId,
-  };
+  const body = { usId };
   if (contNo) {
     body.contNo = contNo;
   }
@@ -70,10 +68,7 @@ module.exports.getTokenForWork = async (
   const result = await getToken(
     secretKey,
     { usId: "bsg_cont_work01", contNo },
-    {
-      restApi,
-      unipostURL,
-    }
+    { restApi, unipostURL }
   );
   return result;
 };
@@ -85,10 +80,7 @@ module.exports.getTokenForRead = async (
   const result = await getToken(
     secretKey,
     { usId: "bsg_cont_read01", contNo },
-    {
-      restApi,
-      unipostURL,
-    }
+    { restApi, unipostURL }
   );
   return result;
 };
@@ -100,9 +92,7 @@ module.exports.getTemplateList = async (secretKey, { restApi, unipostURL }) => {
       "content-type": "application/json;charset=UTF-8",
       secretKey,
     },
-    body: {
-      searchInfo: {},
-    },
+    body: { searchInfo: {} },
   });
 
   checkResError(result.body, "Failed to get Template list");
