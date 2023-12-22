@@ -297,7 +297,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
     tableName,
     { pkid: "path", skid: convertPath },
     {
-      filters: {
+      conditons: {
         value: { operation: "=", value: path },
       },
       useCustomerRole: false,
