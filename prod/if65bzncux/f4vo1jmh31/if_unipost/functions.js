@@ -27,9 +27,7 @@ const checkResError = (body, prefixMessage) => {
 module.exports.getSecretKey = async ({ restApi, unipostURL }) => {
   const result = await restApi.post({
     url: [unipostURL, "/unicloud/cont/api/getSecretKey"].join("/"),
-    headers: {
-      clientKey: "51147370C5A742709F3EB95213CFBE30",
-    },
+    headers: { clientKey: "51147370C5A742709F3EB95213CFBE30" },
   });
 
   checkResError(result.body, "Failed to get secret key from unipost");
@@ -55,7 +53,6 @@ const getToken = async (
     },
     body,
   });
-
   checkResError(result.body, "Failed to get token from unipost");
 
   return result.body.response.token;
@@ -94,7 +91,6 @@ module.exports.getTemplateList = async (secretKey, { restApi, unipostURL }) => {
     },
     body: { searchInfo: {} },
   });
-
   checkResError(result.body, "Failed to get Template list");
 
   return result.body.response.templateList.list;
