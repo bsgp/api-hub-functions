@@ -232,10 +232,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         .run();
       const actual_billing = tryit(() => ab_queryResult.body.list, []);
 
-      draft.response.body = {
-        request: newData,
-        queryResult,
-        list: list.map(({ id, ...item }) => {
+      const convList = list
+        .map(({ id, ...item }) => {
           const fBills = (actual_billing || []).filter(
             (it) =>
               it.contract_id === item.contract_id &&
@@ -261,7 +259,15 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             bill_status_text = "완료";
           }
           return { ...item, id, bill_status, bill_status_text };
-        }),
+        })
+        .filter(
+          (it) => !newData.bill_status || newData.bill_status === it.bill_status
+        );
+
+      draft.response.body = {
+        request: newData,
+        queryResult,
+        list: convList,
         E_STATUS: "S",
         E_MESSAGE: `조회가\n완료되었습니다`,
       };
