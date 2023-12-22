@@ -4,7 +4,6 @@ module.exports = async (draft, { sql, env, tryit, fn, user }) => {
 
   switch (interfaceID) {
     case "IF-CT-101": {
-      const tableList = ["party", "bill", "cost_object", "wbs", "attachment"];
       if (!newData.contractID) {
         draft.response.body = { E_STATUS: "F", E_MESSAGE: "Wrong Request" };
         return;
@@ -21,6 +20,9 @@ module.exports = async (draft, { sql, env, tryit, fn, user }) => {
         return;
       }
       const results = { contract: queryResult.body.list[0] };
+
+      const tableList = ["party", "bill", "cost_object", "wbs", "attachment"];
+
       await Promise.all(
         tableList.map(async (tableKey) => {
           const queryTableData = await sql("mysql", sqlParams)
@@ -68,7 +70,34 @@ module.exports = async (draft, { sql, env, tryit, fn, user }) => {
             ...results.contract,
             contractID,
             partyList: results.party,
-            costObjectList: results.cost_object,
+            costObjectList:
+              results.contract.type === "P"
+                ? results.cost_object
+                : results.cost_object.map(({ id, ...item }) => {
+                    const fBills = (results.actual_billing || []).filter(
+                      (it) =>
+                        (it.id === id || it.parent_id === id) && it.fi_number
+                    );
+                    const totalBillAmt =
+                      Math.round(
+                        fBills.reduce((acc, curr) => {
+                          return acc + Number(curr.dmbtr_supply);
+                        }, 0) * 100
+                      ) / 100;
+
+                    let bill_status, bill_status_text;
+                    if (totalBillAmt === 0) {
+                      bill_status = "1";
+                      bill_status_text = "미완료";
+                    } else if (totalBillAmt !== Number(item.dmbtr_supply)) {
+                      bill_status = "2";
+                      bill_status_text = "부분완료";
+                    } else {
+                      bill_status = "3";
+                      bill_status_text = "완료";
+                    }
+                    return { ...item, id, bill_status, bill_status_text };
+                  }),
             wbsList: results.wbs,
             billList: results.bill,
             attachmentList: results.attachment,

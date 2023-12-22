@@ -14,6 +14,7 @@ module.exports.getDB_Object = (
       end_date: data.form.end_date,
       renewal_ind: data.form.renewal_ind,
       renewal_period: data.form.renewal_period,
+      skip_sign_ind: data.form.skip_sign_ind,
       variable_dmbt_ind: data.form.variable_dmbt_ind,
       curr_key: data.form.curr_key,
       curr_local: data.form.curr_local,

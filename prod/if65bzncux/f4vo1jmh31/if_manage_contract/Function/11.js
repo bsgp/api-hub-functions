@@ -1,4 +1,4 @@
-module.exports = async (draft, { sql, env }) => {
+module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
   const { tables, newData, interfaceID } = draft.json;
   const sqlParams = { useCustomRole: false, stage: env.CURRENT_ALIAS };
 
@@ -59,6 +59,7 @@ module.exports = async (draft, { sql, env }) => {
               gpro_draft_template_name: sc.gpro_draft_template_name,
               gpro_draft_status_code: sc.gpro_draft_status_code,
               gpro_draft_id: sc.gpro_draft_id,
+              gpro_draft_name: sc.gpro_draft_name,
               gpro_draft_templateId: sc.gpro_draft_templateId,
               gpro_draftTemplateType: sc.gpro_draftTemplateType,
               gpro_userId: sc.gpro_userId,
@@ -109,6 +110,136 @@ module.exports = async (draft, { sql, env }) => {
         unmapResult,
         updateApprDBResult,
         updateResult,
+      };
+      break;
+    }
+    case "IF-CT-120": {
+      let processStatus;
+      try {
+        processStatus = await file.get("migration/process.json", {
+          gziped: true,
+          toJSON: true,
+          stage: env.CURRENT_ALIAS,
+        });
+      } catch (error) {
+        processStatus = {};
+      }
+      if (processStatus && processStatus.locked) {
+        draft.response.body = {
+          E_STATUS: "F",
+          E_MESSAGE: [
+            "Migration이 다른 사용자에 의해",
+            "실행 중입니다",
+            "잠시 후 실행하세요",
+          ].join("\n"),
+        };
+        return;
+      }
+      await file.upload(
+        "migration/process.json",
+        { locked: true },
+        {
+          gzip: true,
+          stage: env.CURRENT_ALIAS,
+        }
+      );
+
+      const { list } = newData;
+      /** create new ContractID by maxID && insert contract table */
+      const migration_Year = "2023";
+      const prefix_P = ["P", migration_Year].join("");
+      const prefix_S = ["S", migration_Year].join("");
+      const queryResult_P = await sql("mysql", sqlParams)
+        .select(tables.contract.name)
+        .max("id", { as: "maxID" })
+        .where("id", "like", `${prefix_P}%`)
+        .run();
+      const queryResult_S = await sql("mysql", sqlParams)
+        .select(tables.contract.name)
+        .max("id", { as: "maxID" })
+        .where("id", "like", `${prefix_S}%`)
+        .run();
+      const maxID_P =
+        tryit(() => queryResult_P.body.list[0].maxID, "0000000000") ||
+        "0000000000";
+      const maxID_S =
+        tryit(() => queryResult_S.body.list[0].maxID, "0000000000") ||
+        "0000000000";
+
+      const partnerList = [];
+      const contracts = [
+        list
+          .filter(({ form }) => form.type === "P")
+          .map((data, idx) => {
+            // const {form, partyList} = data;
+            const contract = fn.getDB_Object(data, { key: "contract", user });
+            const contractID = [
+              prefix_P,
+              (Number(maxID_P.substring(5)) + idx + 1)
+                .toString()
+                .padStart(5, "0"),
+            ].join("");
+            const partners = fn.getDB_Object(data, {
+              key: "party",
+              contractID,
+              makeid,
+            });
+            partnerList.push(...partners);
+            return { ...contract, id: contractID };
+          }),
+        list
+          .filter(({ form }) => form.type === "S")
+          .map((data, idx) => {
+            // const {form, partyList} = data;
+            const contract = fn.getDB_Object(data, { key: "contract", user });
+            const contractID = [
+              prefix_S,
+              (Number(maxID_S.substring(5)) + idx + 1)
+                .toString()
+                .padStart(5, "0"),
+            ].join("");
+            const partners = fn.getDB_Object(data, {
+              key: "party",
+              contractID,
+              makeid,
+            });
+            partnerList.push(...partners);
+            return { ...contract, id: contractID };
+          }),
+      ].flat();
+
+      const contractTableData = await sql("mysql", sqlParams)
+        .insert(tables.contract.name, contracts)
+        .run();
+      const partyTableData = await sql("mysql", sqlParams)
+        .insert(tables.party.name, partnerList)
+        .run();
+
+      const E_STATUS =
+        contractTableData.statusCode === 200 &&
+        partyTableData.statusCode === 200
+          ? "S"
+          : "E";
+      const E_MESSAGE =
+        E_STATUS === "S"
+          ? "Success"
+          : "데이터 저장과정에서 문제가 발생했습니다";
+
+      await file.upload(
+        "migration/process.json",
+        { locked: false },
+        {
+          gzip: true,
+          stage: env.CURRENT_ALIAS,
+        }
+      );
+      draft.response.body = {
+        E_STATUS,
+        E_MESSAGE,
+        partnerList,
+        contracts,
+        contractTableData,
+        partyTableData,
       };
       break;
     }

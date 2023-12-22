@@ -60,7 +60,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           `%${newData.contractName}%`
         );
       }
-      if (!(user.bukrs || "").includes("*")) {
+      if (newData.bukrs) {
+        queryBuilder.whereIn("bukrs", [newData.bukrs]);
+      } else if (!(user.bukrs || "").includes("*")) {
         const allowBURKS = [user.bukrs];
         if (user.bukrs === "1000") {
           allowBURKS.push("");
@@ -124,9 +126,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           `${tables.party.name}.ref_id`,
           `${tables.party.name}.stems10`,
           `${tables.party.name}.name as party_name`,
-          `${tables.party.name}.deleted as party_deleted`,
-          `${tables.actual_billing.name}.fi_gjahr`,
-          `${tables.actual_billing.name}.fi_number`
+          `${tables.party.name}.deleted as party_deleted`
         )
         .leftJoin(
           tables.contract.name,
@@ -139,18 +139,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           `${tables.cost_object.name}.contract_id`,
           "=",
           `${tables.party.name}.contract_id`
-        )
-        .leftJoin(tables.actual_billing.name, (builder) => {
-          builder
-            .on(
-              `${tables.cost_object.name}.contract_id`,
-              `${tables.actual_billing.name}.contract_id`
-            )
-            .on(
-              `${tables.cost_object.name}.id`,
-              `${tables.actual_billing.name}.id`
-            );
-        });
+        );
 
       queryBuilder.where("stems10", "like", "1");
       queryBuilder
@@ -213,32 +202,66 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
       }
 
       const queryResult = await queryBuilder.run();
-      const list = tryit(
-        () => queryResult.body.list.map((it) => ({ ...it })),
-        []
-      );
+      const list = tryit(() => queryResult.body.list, [])
+        .map((it) => ({ ...it }))
+        .filter(
+          ({ bill_from_id, ref_id }) =>
+            bill_from_id === "" || bill_from_id === ref_id
+        )
+        .sort((al, be) => {
+          if (al.post_date !== be.post_date) {
+            return Number(al.post_date) - Number(be.post_date);
+          }
+          if (al.contract_id === be.contract_id) {
+            return Number(al.index) - Number(be.index);
+          } else
+            return (
+              Number(al.contract_id.replace(/[A-z]/g, "")) -
+              Number(be.contract_id.replace(/[A-z]/g, ""))
+            );
+        });
+      const contractIDs = list
+        .map(({ contract_id }) => contract_id)
+        .filter(
+          (it, idx) => list.findIndex((item) => item.contract_id === it) === idx
+        );
+      const ab_queryResult = await sql("mysql", sqlParams)
+        .select(tables.actual_billing.name)
+        .whereIn("contract_id", contractIDs)
+        .whereNot({ deleted: true })
+        .run();
+      const actual_billing = tryit(() => ab_queryResult.body.list, []);
 
       draft.response.body = {
         request: newData,
         queryResult,
-        list: list
-          .filter(
-            ({ bill_from_id, ref_id }) =>
-              bill_from_id === "" || bill_from_id === ref_id
-          )
-          .sort((al, be) => {
-            if (al.post_date !== be.post_date) {
-              return Number(al.post_date) - Number(be.post_date);
-            }
-            if (al.contract_id === be.contract_id) {
-              return Number(al.index) - Number(be.index);
-            } else
-              return (
-                Number(al.contract_id.replace(/[A-z]/g, "")) -
-                Number(be.contract_id.replace(/[A-z]/g, ""))
-              );
-          }),
+        list: list.map(({ id, ...item }) => {
+          const fBills = (actual_billing || []).filter(
+            (it) =>
+              it.contract_id === item.contract_id &&
+              (it.id === id || it.parent_id === id) &&
+              it.fi_number
+          );
+          const totalBillAmt =
+            Math.round(
+              fBills.reduce((acc, curr) => {
+                return acc + Number(curr.dmbtr_supply);
+              }, 0) * 100
+            ) / 100;
 
+          let bill_status, bill_status_text;
+          if (totalBillAmt === 0) {
+            bill_status = "1";
+            bill_status_text = "미완료";
+          } else if (totalBillAmt !== Number(item.dmbtr_supply)) {
+            bill_status = "2";
+            bill_status_text = "부분완료";
+          } else {
+            bill_status = "3";
+            bill_status_text = "완료";
+          }
+          return { ...item, id, bill_status, bill_status_text };
+        }),
         E_STATUS: "S",
         E_MESSAGE: `조회가\n완료되었습니다`,
       };
