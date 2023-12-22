@@ -11,7 +11,7 @@ module.exports = async (draft, { request, env, restApi, fn }) => {
     stage === "prd"
       ? "https://cont.unipost.co.kr"
       : "https://contdev.unipost.co.kr";
-  const secretKey = await fn.getSecretKey({ restApi });
+  const secretKey = await fn.getSecretKey({ restApi, unipostURL });
 
   switch (draft.json.ifObj.InterfaceId) {
     case "IF-CT-007":
