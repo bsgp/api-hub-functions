@@ -305,7 +305,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
   //   }
   // );
 
-  const resultPath = await dynamodb.get(
+  const resultPath = await dynamodb.getItem(
     tableName,
     { pkid: "path", skid: convertPath, value: path },
     { useCustomerRole: false }
