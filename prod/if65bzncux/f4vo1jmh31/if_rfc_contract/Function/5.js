@@ -8,5 +8,6 @@ module.exports = async (draft, { request }) => {
       errorMessage: "Access is blocked by firewall",
     };
     draft.response.statusCode = 403;
+    draft.json.terminateFlow = true;
   }
 };
