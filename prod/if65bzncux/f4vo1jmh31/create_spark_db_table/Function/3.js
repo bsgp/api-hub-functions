@@ -41,51 +41,51 @@ module.exports = async (draft, { file, env }) => {
   // };
   const tables = {
     change: {
-      name: "change_15",
+      name: "change_16",
       desc: "Spark DB change history table",
     },
     contract: {
-      name: "contract_15",
+      name: "contract_16",
       desc: "Contract info DB table",
     },
     changed_contract: {
-      name: "changed_contract_15",
+      name: "changed_contract_16",
       desc: "Changed Contract seq info DB table",
     },
     ref_doc: {
-      name: "ref_doc_15",
+      name: "ref_doc_16",
       desc: "Reference document(MM,FI) info DB table",
     },
     cost_object: {
-      name: "cost_object_15",
+      name: "cost_object_16",
       desc: "MM,FI cost object DB table",
     },
     wbs: {
-      name: "wbs_15",
+      name: "wbs_16",
       desc: "WBS DB table",
     },
     bill: {
-      name: "bill_15",
+      name: "bill_16",
       desc: "bill reson text DB",
     },
     actual_billing: {
-      name: "actual_billing_15",
+      name: "actual_billing_16",
       desc: "Actual FI cost object DB table",
     },
     party: {
-      name: "party_15",
+      name: "party_16",
       desc: "Party(supplier, customer) info DB",
     },
     attachment: {
-      name: "attachment_15",
+      name: "attachment_16",
       desc: "Attachment info DB",
     },
     letter_appr: {
-      name: "letter_appr_15",
+      name: "letter_appr_16",
       desc: "groupware letter approval info DB",
     },
     unmap_letters: {
-      name: "unmap_letters_15",
+      name: "unmap_letters_16",
       desc: "groupware unMapped letter approval info DB",
     },
   };
