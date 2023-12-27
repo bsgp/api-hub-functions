@@ -254,9 +254,19 @@ function extractObjByKey(keys, obj) {
   }, {});
 }
 
+function numberingPath(origin) {
+  const paramRegExp = /(?<=:)[\w]+/g;
+
+  let paramsIndex = 0;
+  const newPath = origin.replace(paramRegExp, () => `${paramsIndex++}`);
+
+  const params = origin.match(paramRegExp);
+
+  return [newPath, params];
+}
+
 const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
   const { id, metaId, path, oldPath } = data;
-  const paramRegExp = /(?<=:)[\w]+/g;
 
   const optionalData = extractObjByKey(["title"], data);
 
@@ -273,9 +283,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
     throw new Error("A path that violates the path generation rules");
   }
 
-  const params = path.match(paramRegExp);
-  let paramsIndex = 0;
-  const convertPath = path.replace(paramRegExp, () => `${paramsIndex++}`);
+  const [convertPath, params] = numberingPath(path);
 
   // get path from db;
   // if path exists:
@@ -353,11 +361,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
     let dataOldPath;
     let convertOldPath;
     if (oldPath) {
-      let oldParamsIndex = 0;
-      convertOldPath = oldPath.replace(
-        paramRegExp,
-        () => `${oldParamsIndex++}`
-      );
+      [convertOldPath] = numberingPath(oldPath);
 
       const [queryResult] = await dynamodb.query(
         tableName,
