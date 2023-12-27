@@ -1,5 +1,5 @@
 module.exports = async (draft, { request }) => {
-  const whitelist = ["121.165.132.241", "121.133.35.204", "121.166.167.60"];
+  const whitelist = ["121.165.132.241", "121.133.35.204"];
 
   if (whitelist.includes(request.sourceIP)) {
     // pass
