@@ -285,6 +285,53 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
 
   const [convertPath, params] = numberingPath(path);
 
+  if (id) {
+    const itemsById = await dynamodb.query(
+      tableName,
+      { pkid: "path" },
+      { id },
+      {
+        filters: {
+          metaId: { operation: "=", value: metaId },
+        },
+        indexName: "pkid_id_index",
+        useCustomerRole: false,
+      }
+    );
+
+    if (itemsById.length === 0) {
+      throw new Error(`Not found id ${id}`);
+    } else if (itemsById.length > 1) {
+      throw new Error(`Found ${itemsById.length} items using id ${id}`);
+    }
+
+    const oldItem = itemsById[0];
+
+    if (oldItem.origin === path) {
+      const result = await dynamodb.updateItem(
+        tableName,
+        { pkid: "path", skid: convertPath },
+        optionalData,
+        {
+          useCustomerRole: false,
+        }
+      );
+      return result;
+    }
+
+    if (oldItem.skid === convertPath) {
+      const result = await dynamodb.updateItem(
+        tableName,
+        { pkid: "path", skid: convertPath },
+        { ...optionalData, origin: path, params },
+        {
+          useCustomerRole: false,
+        }
+      );
+      return result;
+    }
+  }
+
   // get path from db;
   // if path exists:
   //   if (!path.metaId):
