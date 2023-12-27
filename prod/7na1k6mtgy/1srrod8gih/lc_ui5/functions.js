@@ -245,19 +245,23 @@ module.exports.getAllMeta = async ({ dynamodb, tableName }) => {
   return results;
 };
 
-const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
-  const { id, path, oldPath } = data;
-  const paramRegExp = /(?<=:)[\w]+/g;
-
-  const optionalData = ["title"].reduce((acc, key) => {
-    if (data[key] !== undefined) {
-      acc[key] = data[key];
+function extractObjByKey(keys, obj) {
+  return ["title"].reduce((acc, key) => {
+    if (obj[key] !== undefined) {
+      acc[key] = obj[key];
     }
     return acc;
   }, {});
+}
 
-  if (!id) {
-    throw new Error("id is required");
+const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
+  const { id, metaId, path, oldPath } = data;
+  const paramRegExp = /(?<=:)[\w]+/g;
+
+  const optionalData = extractObjByKey(["title"], data);
+
+  if (!metaId) {
+    throw new Error("metaId is required");
   }
 
   if (!path) {
