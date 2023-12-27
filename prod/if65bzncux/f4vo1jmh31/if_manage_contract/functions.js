@@ -5,13 +5,13 @@ module.exports.getDB_Object = (
   if (key === "contract") {
     return {
       id: data.form.contractID,
-      prod_date: data.form.prod_date,
+      prod_date: (data.form.prod_date || "").replace(/-/g, ""),
       bukrs: (user && user.bukrs) || data.form.bukrs,
       name: data.form.name,
       type: data.form.type,
       seq: data.form.seq || undefined,
-      start_date: data.form.start_date,
-      end_date: data.form.end_date,
+      start_date: (data.form.start_date || "").replace(/-/g, ""),
+      end_date: (data.form.end_date || "").replace(/-/g, ""),
       renewal_ind: data.form.renewal_ind,
       renewal_period: data.form.renewal_period,
       skip_sign_ind: data.form.skip_sign_ind,
