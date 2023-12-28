@@ -265,10 +265,10 @@ function numberingPath(origin) {
   return [newPath, params];
 }
 
-const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
-  const { id, metaId, path, oldPath } = data;
+const doUpdatePath = async (data, { dynamodb, tableName, makeid }) => {
+  const { id, metaId, path } = data;
 
-  const optionalData = extractObjByKey(["title"], data);
+  const optionalData = extractObjByKey(["title", "metaId"], data);
 
   if (!metaId) {
     throw new Error("metaId is required");
@@ -285,32 +285,23 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
 
   const [convertPath, params] = numberingPath(path);
 
-  if (id) {
-    const itemsById = await dynamodb.query(
+  const isUpdate = !!id;
+
+  if (isUpdate) {
+    const itemById = await dynamodb.getItem(
       tableName,
-      { pkid: "path" },
-      { id },
-      {
-        filters: {
-          metaId: { operation: "=", value: metaId },
-        },
-        indexName: "pkid_id_index",
-        useCustomerRole: false,
-      }
+      { pkid: "path", skid: id },
+      { useCustomerRole: false }
     );
 
-    if (itemsById.length === 0) {
+    if (!itemById) {
       throw new Error(`Not found id ${id}`);
-    } else if (itemsById.length > 1) {
-      throw new Error(`Found ${itemsById.length} items using id ${id}`);
     }
 
-    const oldItem = itemsById[0];
-
-    if (oldItem.origin === path) {
+    if (itemById.origin === path) {
       const result = await dynamodb.updateItem(
         tableName,
-        { pkid: "path", skid: convertPath },
+        { pkid: "path", skid: id },
         optionalData,
         {
           useCustomerRole: false,
@@ -319,10 +310,10 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
       return result;
     }
 
-    if (oldItem.skid === convertPath) {
+    if (itemById.numbered === convertPath) {
       const result = await dynamodb.updateItem(
         tableName,
-        { pkid: "path", skid: convertPath },
+        { pkid: "path", skid: id },
         { ...optionalData, origin: path, params },
         {
           useCustomerRole: false,
@@ -332,174 +323,106 @@ const doUpdatePath = async (data, { dynamodb, tableName, isFalsy }) => {
     }
   }
 
-  // get path from db;
-  // if path exists:
-  //   if (!path.metaId):
-  //     return errorMessage =
-  //       {path} exists but not relative with any meta,
-  //       remove db record since it is invalid db record;
-  //   else:
-  //     if(path.metaId === id):
-  //       if(oldPath && path !== oldPath):
-  //         throw error = {path} already exists in this meta;
-  //       else:
-  //         update db set title;
-  //     else:
-  //       return errorMessage =
-  //         {path} is relative with meta {metaId}
-  // else:
-  //   if(oldPath):
-  //     get oldPath from db;
-  //   insert {...oldPath, metaId: id, path, title}
+  const filtersForDup = {
+    numbered: { operation: "=", value: convertPath },
+  };
 
-  const [resultPath] = await dynamodb.query(
+  if (isUpdate) {
+    filtersForDup.skid = { operation: "<>", value: id };
+  }
+
+  const itemsByNumbered = await dynamodb.query(
     tableName,
     { pkid: "path" },
-    { skid: convertPath },
+    { numbered: convertPath },
     {
-      filters: {
-        value: { operation: "=", value: path },
-      },
+      filters: filtersForDup,
+      indexName: "pkid_numbered_index",
       useCustomerRole: false,
     }
   );
 
-  if (resultPath) {
-    if (!resultPath.metaId) {
+  if (itemsByNumbered.length === 0) {
+    if (isUpdate) {
+      const result = await dynamodb.updateItem(
+        tableName,
+        { pkid: "path", skid: id },
+        { ...optionalData, origin: path, params },
+        {
+          useCustomerRole: false,
+        }
+      );
+      return result;
+    } else {
+      const result = await dynamodb.insertItem(
+        tableName,
+        { pkid: "path", skid: makeid(7) },
+        { ...optionalData, origin: path, params },
+        {
+          useCustomerRole: false,
+        }
+      );
+      return result;
+    }
+  } else {
+    const sameItem = itemsByNumbered[0];
+    if (isUpdate) {
       throw new Error(
         [
-          path,
-          "exists but not related to any meta,",
-          "remove from db since this is invalid db record",
+          "ID",
+          sameItem.id,
+          "Path",
+          sameItem.origin,
+          "과 같은 라우팅 패턴이기때문에 변경 불가합니다",
         ].join(" ")
       );
     } else {
-      if (resultPath.metaId === id) {
-        if (oldPath && path !== oldPath) {
-          throw new Error([path, "already exists in this meta"].join(" "));
-        } else {
-          if (isFalsy(optionalData)) {
-            throw new Error("Nothing to do with payload");
-          } else {
-            const result = await dynamodb.updateItem(
-              tableName,
-              { pkid: "path", skid: convertPath },
-              optionalData,
-              {
-                conditions: {
-                  metaId: {
-                    operation: "=",
-                    value: id,
-                  },
-                },
-                useCustomerRole: false,
-              }
-            );
-            return result;
-          }
-        }
-      } else {
-        throw new Error(
-          [path, "is relative with meta", resultPath.metaId].join(" ")
-        );
-      }
-    }
-  } else {
-    let dataOldPath;
-    let convertOldPath;
-    if (oldPath) {
-      [convertOldPath] = numberingPath(oldPath);
-
-      const [queryResult] = await dynamodb.query(
-        tableName,
-        { pkid: "path" },
-        { skid: convertOldPath },
-        {
-          filters: {
-            value: { operation: "=", value: oldPath },
-          },
-          useCustomerRole: false,
-        }
-      );
-      dataOldPath = queryResult;
-      if (dataOldPath) {
-        if (dataOldPath.metaId && dataOldPath.metaId !== id) {
-          throw new Error(
-            [
-              "Can not replace",
-              oldPath,
-              "which exists in other meta",
-              dataOldPath.metaId,
-              "with",
-              path,
-            ].join(" ")
-          );
-        }
-
-        await dynamodb.deleteItem(
-          tableName,
-          { pkid: "path", skid: convertOldPath },
-          { useCustomerRole: false }
-        );
-      } else {
-        throw new Error(["Old path", oldPath, "does not exist"].join(" "));
-      }
-    }
-
-    const length = path.split("/").length - 1;
-
-    const newDataPath = {
-      ...dataOldPath,
-      metaId: id,
-      value: path,
-      params,
-      length,
-      ...optionalData,
-    };
-
-    const result = await dynamodb.insertItem(
-      tableName,
-      { pkid: "path", skid: convertPath },
-      newDataPath,
-      {
-        useCustomerRole: false,
-      }
-    );
-
-    if (dataOldPath) {
-      await dynamodb.updateItem(
-        tableName,
-        { pkid: "meta", skid: id },
-        { paths: [convertOldPath] },
-        {
-          operations: {
-            paths: "-",
-          },
-          sets: {
-            paths: "string",
-          },
-          useCustomerRole: false,
-        }
+      throw new Error(
+        [
+          "ID",
+          sameItem.id,
+          "Path",
+          sameItem.origin,
+          "과 같은 라우팅 패턴이기때문에 등록 불가합니다",
+        ].join(" ")
       );
     }
-
-    await dynamodb.updateItem(
-      tableName,
-      { pkid: "meta", skid: id },
-      { paths: [convertPath] },
-      {
-        operations: {
-          paths: "+",
-        },
-        sets: {
-          paths: "string",
-        },
-        useCustomerRole: false,
-      }
-    );
-
-    return result;
   }
+
+  // if (dataOldPath) {
+  //   await dynamodb.updateItem(
+  //     tableName,
+  //     { pkid: "meta", skid: id },
+  //     { paths: [convertOldPath] },
+  //     {
+  //       operations: {
+  //         paths: "-",
+  //       },
+  //       sets: {
+  //         paths: "string",
+  //       },
+  //       useCustomerRole: false,
+  //     }
+  //   );
+  // }
+
+  // await dynamodb.updateItem(
+  //   tableName,
+  //   { pkid: "meta", skid: id },
+  //   { paths: [convertPath] },
+  //   {
+  //     operations: {
+  //       paths: "+",
+  //     },
+  //     sets: {
+  //       paths: "string",
+  //     },
+  //     useCustomerRole: false,
+  //   }
+  // );
+
+  // return result;
+  // }
 };
 module.exports.doUpdatePath = doUpdatePath;
 
