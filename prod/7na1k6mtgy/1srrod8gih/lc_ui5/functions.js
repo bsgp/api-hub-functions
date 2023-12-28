@@ -322,7 +322,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, makeid }) => {
       params,
       numbered: convertPath,
     };
-    console.log("insert?:", itemData, isUpdate);
+
     if (isUpdate) {
       const result = await dynamodb.updateItem(
         tableName,
