@@ -128,7 +128,7 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
       }
 
       const staticMatchRoute = routes.find((route) => {
-        const pattern = route.origin.split("/")[index];
+        const pattern = route.origin.split("/").filter(Boolean)[index];
 
         // 우선 변수가 아닌 static 값으로 비교
         if (pattern.startsWith(":")) {
@@ -157,7 +157,7 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
       // }
 
       const varMatchRoute = routes.find((route) => {
-        const pattern = route.origin.split("/")[index];
+        const pattern = route.origin.split("/").filter(Boolean)[index];
 
         // static 값으로 매칭되는 route가 없을때 변수를 확인함
         if (pattern.startsWith(":")) {
