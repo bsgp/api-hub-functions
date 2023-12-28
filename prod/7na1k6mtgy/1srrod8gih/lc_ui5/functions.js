@@ -23,16 +23,7 @@ const getMetaById = async (
     throw newError;
   }
 
-  // let paths;
   if (includePaths === true) {
-    // if (result.paths && result.paths.length > 0) {
-    //   paths = await dynamodb.batchGetItem(
-    //     tableName,
-    //     result.paths.map((path) => ({ pkid: "path", skid: path })),
-    //     { useCustomerRole: false }
-    //   );
-    //   // paths = paths.map((path) => ({ ...path, oldPath: path.value }));
-    // }
     result.paths = await dynamodb.query(
       tableName,
       { pkid: "path" },
@@ -42,27 +33,12 @@ const getMetaById = async (
         useCustomerRole: false,
       }
     );
-
-    //   await dynamodb.transaction(
-    //   result.paths.map((path) => ({
-    //     tableName,
-    //     type: "Update",
-    //     keys: { pkid: "path", skid: path.value },
-    //     values: {
-    //       value: path.value,
-    //       title: path.title,
-    //       metaId: resId,
-    //     },
-    //   })),
-    //   { useCustomerRole: false }
-    // );
   } else {
     delete result.paths;
   }
 
   return {
     ...result,
-    // paths,
     ...binaryAttributes.reduce((acc, key) => {
       if (result[key] !== undefined) {
         acc[key] = JSON.parse(unzip(result[key]));
@@ -93,8 +69,6 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
 
   const foundExactMatchedPath = resultPaths.length === 1;
 
-  // let dynamicPath = {};
-  // const params = {};
   let targetPath;
 
   if (foundExactMatchedPath === true) {
@@ -120,7 +94,6 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
       }
     );
 
-    // const matchRoutes = [];
     // ["ccs", "viewer", "P202300020"] = parts
     parts.forEach((part, index) => {
       if (index === 0 || routes.length === 0) {
@@ -142,26 +115,11 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
         return;
       }
 
-      // const arrMatchRoute = routes
-      //   .filter((route) => {
-      //     const pattern = route.skid.
-      // replace(`/${prefixPath}`, "").split("/")[
-      //       index
-      //     ];
-      //     return pattern.startsWith(":");
-      //   })
-      //   .map((el) => el.lOcKkEy);
-
-      // if (arrMatchRoute.length > 0) {
-      //   matchRoutes.push(arrMatchRoute);
-      // }
-
       const varMatchRoute = routes.find((route) => {
         const pattern = route.origin.split("/").filter(Boolean)[index];
 
         // static 값으로 매칭되는 route가 없을때 변수를 확인함
         if (pattern.startsWith(":")) {
-          // params[pattern.replace(":","")] = part;
           return true;
         }
         return false;
@@ -178,30 +136,6 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
       throw new Error(`Not found meta by path ${path}`);
     }
     targetPath = routes[0];
-
-    // });
-
-    // if (matchRoutes.length === parts.length) {
-    //   const baseLine = matchRoutes.shift();
-    //   const allMatchRoute = baseLine.find((base) => {
-    //     const matchResult = matchRoutes.map((matchRoute) => {
-    //       return matchRoute.includes(base);
-    //     });
-
-    //     const findMissMatch =
-    // matchResult.findIndex((pass) => pass === false);
-    //     return findMissMatch === -1;
-    //   });
-
-    //   if (allMatchRoute) {
-    //     dynamicPath =
-    // routes.find((route) => route.lOcKkEy === allMatchRoute);
-    //   } else {
-    //     throw new Error("NOT Found Path");
-    //   }
-    // } else {
-    //   throw new Error("NOT Found Path");
-    // }
   }
 
   const metaId = targetPath.metaId;
@@ -233,20 +167,6 @@ const saveMeta = async (body, { dynamodb, tableName, zip, makeid }) => {
     }, {}),
   };
 
-  // if (isFalsy(data.paths)) {
-  //   delete data.paths;
-  // }
-
-  // const filteredPaths = data.paths
-  //   ? data.paths.filter((path) => path.value)
-  //   : [];
-
-  // if (filteredPaths.length > 0) {
-  //   data.paths = filteredPaths.map((path) => path.value);
-  // } else {
-  //   delete data.paths;
-  // }
-
   let resId;
   let result;
   if (id) {
@@ -254,10 +174,6 @@ const saveMeta = async (body, { dynamodb, tableName, zip, makeid }) => {
 
     const metaOperations = {};
     const metaSets = {};
-    // if (data.paths) {
-    //   metaOperations.paths = "ADD";
-    //   metaSets.paths = "string";
-    // }
 
     result = await dynamodb.updateItem(
       tableName,
@@ -266,12 +182,6 @@ const saveMeta = async (body, { dynamodb, tableName, zip, makeid }) => {
       {
         operations: metaOperations,
         sets: metaSets,
-        // conditions: {
-        //   skid: {
-        //     operation: "=",
-        //     value: id,
-        //   },
-        // },
         useCustomerRole: false,
       }
     );
@@ -279,9 +189,6 @@ const saveMeta = async (body, { dynamodb, tableName, zip, makeid }) => {
     resId = makeid(10);
 
     const metaSets = {};
-    // if (data.paths) {
-    //   metaSets.paths = "string";
-    // }
 
     result = await dynamodb.insertItem(
       tableName,
@@ -293,22 +200,6 @@ const saveMeta = async (body, { dynamodb, tableName, zip, makeid }) => {
       }
     );
   }
-
-  // if (filteredPaths.length > 0) {
-  //   await dynamodb.transaction(
-  //     filteredPaths.map((path) => ({
-  //       tableName,
-  //       type: "Update",
-  //       keys: { pkid: "path", skid: path.value },
-  //       values: {
-  //         value: path.value,
-  //         title: path.title,
-  //         metaId: resId,
-  //       },
-  //     })),
-  //     { useCustomerRole: false }
-  //   );
-  // }
 
   return result;
 };
@@ -480,41 +371,6 @@ const doUpdatePath = async (data, { dynamodb, tableName, makeid }) => {
       );
     }
   }
-
-  // if (dataOldPath) {
-  //   await dynamodb.updateItem(
-  //     tableName,
-  //     { pkid: "meta", skid: id },
-  //     { paths: [convertOldPath] },
-  //     {
-  //       operations: {
-  //         paths: "-",
-  //       },
-  //       sets: {
-  //         paths: "string",
-  //       },
-  //       useCustomerRole: false,
-  //     }
-  //   );
-  // }
-
-  // await dynamodb.updateItem(
-  //   tableName,
-  //   { pkid: "meta", skid: id },
-  //   { paths: [convertPath] },
-  //   {
-  //     operations: {
-  //       paths: "+",
-  //     },
-  //     sets: {
-  //       paths: "string",
-  //     },
-  //     useCustomerRole: false,
-  //   }
-  // );
-
-  // return result;
-  // }
 };
 module.exports.doUpdatePath = doUpdatePath;
 
@@ -531,19 +387,6 @@ module.exports.doCopyMetaToDev = async (
     zip,
     makeid,
   });
-
-  // if (isFalsy(metaData.paths)) {
-  //   // pass
-  // } else {
-  //   for (let idx = 0; idx < metaData.paths.length; idx += 1) {
-  //     const path = metaData.paths[idx];
-
-  //     await doUpdatePath(
-  //       { metaId: path.metaId, path: path.value, ...path },
-  //       { dynamodb, tableName: devTableName, isFalsy }
-  //     );
-  //   }
-  // }
 
   return {
     message: "복사 완료",
