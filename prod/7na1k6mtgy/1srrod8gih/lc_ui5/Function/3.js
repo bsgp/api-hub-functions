@@ -82,7 +82,7 @@ module.exports = async (
           const result = await fn.doUpdatePath(updatePath, {
             dynamodb,
             tableName,
-            isFalsy,
+            makeid,
           });
           draft.response.body = result;
         }
