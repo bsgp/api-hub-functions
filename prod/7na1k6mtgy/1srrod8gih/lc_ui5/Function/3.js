@@ -1,13 +1,10 @@
-module.exports = async (draft, { request, dynamodb, zip, unzip }) => {
-  const { path: uriPath, description, title } = request.body;
-  const tableName = ["lc_ui5", request.stage].join("_");
-  const binaryAttributes = [
-    "forms",
-    "functions",
-    "tables",
-    "headers",
-    "dialogs",
-  ];
+module.exports = async (
+  draft,
+  { request, dynamodb, zip, unzip, makeid, fn }
+) => {
+  const tablePrefix = "lc_ui5";
+  const tableName = [tablePrefix, request.stage].join("_");
+  const devTableName = [tablePrefix, "dev"].join("_");
 
   switch (request.method) {
     case "POST":
@@ -20,73 +17,72 @@ module.exports = async (draft, { request, dynamodb, zip, unzip }) => {
           });
         }
 
-        await dynamodb.updateItem(
+        const saveResult = await fn.saveMeta(request.body, {
+          dynamodb,
           tableName,
-          { pkid: "path", skid: uriPath },
-          {
-            path: uriPath,
-            description,
-            title,
-            ...binaryAttributes.reduce((acc, key) => {
-              if (request.body[key] !== undefined) {
-                acc[key] = zip(JSON.stringify(request.body[key]));
-              }
-              return acc;
-            }, {}),
-          },
-          { useCustomerRole: false }
-        );
+          zip,
+          makeid,
+        });
 
-        draft.response.body = {
-          path: uriPath,
-        };
+        const result = await fn.getMetaById(saveResult.id, {
+          dynamodb,
+          tableName,
+          unzip,
+        });
+
+        draft.response.body = result;
       }
       break;
     case "GET":
       {
-        if (uriPath === "*") {
-          const results = await dynamodb.query(
-            tableName,
-            { pkid: "path" },
-            {},
-            { useCustomerRole: false }
-          );
+        const { id, paths, path: uriPath } = request.body;
+        if (id === "*") {
+          const results = await fn.getAllMeta({ dynamodb, tableName });
 
           draft.response.body = {
             count: results.length,
-            list: results.map((result) => ({
-              ...result,
-              ...binaryAttributes.reduce((acc, key) => {
-                acc[key] = undefined;
-                return acc;
-              }, {}),
-            })),
+            list: results,
           };
-        } else if (!uriPath) {
-          throw new Error("Path must not be empty");
-        } else {
-          const result = await dynamodb.getItem(
+        } else if (id) {
+          const result = await fn.getMetaById(id, {
+            dynamodb,
             tableName,
-            { pkid: "path", skid: uriPath },
-            { useCustomerRole: false }
-          );
-          if (result === undefined) {
-            const newError = new Error("No metadata for the requested path");
-            newError.errorCode = "NO_META";
-            throw newError;
-          }
-
-          draft.response.body = {
-            ...result,
-            path: uriPath,
-            ...binaryAttributes.reduce((acc, key) => {
-              if (result[key] !== undefined) {
-                acc[key] = JSON.parse(unzip(result[key]));
-              }
-
-              return acc;
-            }, {}),
-          };
+            unzip,
+          });
+          draft.response.body = result;
+        } else if (uriPath) {
+          const result = await fn.getMetaByPath(uriPath, {
+            dynamodb,
+            tableName,
+            paths,
+            unzip,
+          });
+          draft.response.body = result;
+        } else {
+          throw new Error("Invalid GET Request");
+        }
+      }
+      break;
+    case "PUT":
+      {
+        const { copyMetaToDev, updatePath } = request.body;
+        if (copyMetaToDev) {
+          const result = await fn.doCopyMetaToDev(copyMetaToDev, {
+            dynamodb,
+            tableName,
+            devTableName,
+            unzip,
+            zip,
+            makeid,
+          });
+          draft.response.body = result;
+        } else if (updatePath) {
+          const result = await fn.doUpdatePath(updatePath, {
+            dynamodb,
+            tableName,
+            makeid,
+          });
+          draft.response.body = result;
         }
       }
       break;
