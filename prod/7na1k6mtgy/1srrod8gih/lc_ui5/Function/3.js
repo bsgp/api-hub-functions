@@ -1,6 +1,6 @@
 module.exports = async (
   draft,
-  { request, dynamodb, zip, unzip, makeid, isFalsy, fn }
+  { request, dynamodb, zip, unzip, makeid, fn }
 ) => {
   const tablePrefix = "lc_ui5";
   const tableName = [tablePrefix, request.stage].join("_");
@@ -21,7 +21,6 @@ module.exports = async (
           dynamodb,
           tableName,
           zip,
-          isFalsy,
           makeid,
         });
 
@@ -74,7 +73,6 @@ module.exports = async (
             devTableName,
             unzip,
             zip,
-            isFalsy,
             makeid,
           });
           draft.response.body = result;
