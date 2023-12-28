@@ -356,7 +356,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, makeid }) => {
       const result = await dynamodb.updateItem(
         tableName,
         { pkid: "path", skid: id },
-        { ...optionalData, origin: path, params },
+        { ...optionalData, origin: path, params, numbered: convertPath },
         {
           useCustomerRole: false,
         }
@@ -366,7 +366,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, makeid }) => {
       const result = await dynamodb.insertItem(
         tableName,
         { pkid: "path", skid: makeid(7) },
-        { ...optionalData, origin: path, params },
+        { ...optionalData, origin: path, params, numbered: convertPath },
         {
           useCustomerRole: false,
         }
