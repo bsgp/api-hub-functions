@@ -316,16 +316,18 @@ const doUpdatePath = async (data, { dynamodb, tableName, makeid }) => {
   );
 
   if (itemsByNumbered.length === 0) {
+    const itemData = {
+      ...optionalData,
+      origin: path,
+      params,
+      numbered: convertPath,
+    };
+    console.log("insert?:", itemData, isUpdate);
     if (isUpdate) {
       const result = await dynamodb.updateItem(
         tableName,
         { pkid: "path", skid: id },
-        {
-          ...optionalData,
-          origin: path,
-          params,
-          numbered: convertPath,
-        },
+        itemData,
         {
           useCustomerRole: false,
         }
@@ -335,12 +337,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, makeid }) => {
       const result = await dynamodb.insertItem(
         tableName,
         { pkid: "path", skid: makeid(7) },
-        {
-          ...optionalData,
-          origin: path,
-          params,
-          numbered: convertPath,
-        },
+        itemData,
         {
           useCustomerRole: false,
         }
