@@ -42,6 +42,20 @@ const getMetaById = async (
         useCustomerRole: false,
       }
     );
+
+    //   await dynamodb.transaction(
+    //   result.paths.map((path) => ({
+    //     tableName,
+    //     type: "Update",
+    //     keys: { pkid: "path", skid: path.value },
+    //     values: {
+    //       value: path.value,
+    //       title: path.title,
+    //       metaId: resId,
+    //     },
+    //   })),
+    //   { useCustomerRole: false }
+    // );
   } else {
     delete result.paths;
   }
@@ -379,7 +393,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, makeid }) => {
       throw new Error(
         [
           "ID",
-          sameItem.id,
+          sameItem.skid,
           "Path",
           sameItem.origin,
           "과 같은 라우팅 패턴이기때문에 변경 불가합니다",
@@ -389,7 +403,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, makeid }) => {
       throw new Error(
         [
           "ID",
-          sameItem.id,
+          sameItem.skid,
           "Path",
           sameItem.origin,
           "과 같은 라우팅 패턴이기때문에 등록 불가합니다",
