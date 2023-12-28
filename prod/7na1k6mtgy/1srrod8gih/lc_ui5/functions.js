@@ -95,10 +95,10 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
 
   // let dynamicPath = {};
   // const params = {};
-  let metaId;
+  let targetPath;
 
   if (foundExactMatchedPath === true) {
-    metaId = resultPaths[0].metaId;
+    targetPath = resultPaths[0];
   } else {
     const parts = path.split("/").filter(Boolean);
 
@@ -177,7 +177,7 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
     if (routes.length === 0) {
       throw new Error(`Not found meta by path ${path}`);
     }
-    metaId = routes[0].metaId;
+    targetPath = routes[0];
 
     // });
 
@@ -204,6 +204,8 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
     // }
   }
 
+  const metaId = targetPath.metaId;
+
   const result = await getMetaById(metaId, {
     dynamodb,
     tableName,
@@ -212,7 +214,7 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
     includePaths: false,
   });
 
-  return { ...result };
+  return { ...result, paths: [targetPath] };
 };
 
 const saveMeta = async (body, { dynamodb, tableName, zip, makeid }) => {
