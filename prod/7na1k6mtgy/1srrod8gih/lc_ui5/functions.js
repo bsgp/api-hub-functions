@@ -6,7 +6,7 @@ const binaryAttributes = [
   "dialogs",
   "codeeditors",
 ];
-//test
+
 const getMetaById = async (
   id,
   { dynamodb, tableName, unzip, includePaths = true }
