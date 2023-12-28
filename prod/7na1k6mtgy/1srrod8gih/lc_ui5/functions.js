@@ -75,79 +75,134 @@ const getMetaById = async (
 module.exports.getMetaById = getMetaById;
 
 module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
-  const resultPath = await dynamodb.getItem(
+  const resultPaths = await dynamodb.queryItem(
     tableName,
-    { pkid: "path", skid: path },
-    { useCustomerRole: false }
+    { pkid: "path" },
+    { origin: path },
+    { indexName: "pkid-origin-index", useCustomerRole: false }
   );
 
-  let dynamicPath = {};
+  if (resultPaths.length > 1) {
+    throw new Error(
+      [
+        resultPaths.map((each) => `Meta ${each.metaId}`).join(", "),
+        "들에 같은 Path가 지정되어 있습니다",
+      ].join(" ")
+    );
+  }
 
-  if (!resultPath) {
-    const parts = path.replace("/", "").split("/");
-    const prefixPath = parts.shift() + "/";
-    const routes = await dynamodb.query(
+  const foundExactMatchedPath = resultPaths.length === 1;
+
+  // let dynamicPath = {};
+  // const params = {};
+  let metaId;
+
+  if (foundExactMatchedPath === true) {
+    metaId = resultPaths[0].metaId;
+  } else {
+    const parts = path.split("/").filter(Boolean);
+
+    if (parts.length <= 1) {
+      throw new Error("지원하지 않는 URL Path입니다");
+    }
+
+    const prefixPath = "/" + parts[0] + "/";
+    let routes = await dynamodb.query(
       tableName,
       { pkid: "path" },
-      { skid: ["begins_with", "/" + prefixPath] },
+      { origin: ["begins_with", prefixPath] },
       {
+        indexName: "pkid-origin-index",
         filters: {
-          length: { operation: "=", value: parts.length + 1 },
+          length: { operation: "=", value: parts.length },
         },
         useCustomerRole: false,
       }
     );
 
-    const matchRoutes = [];
+    // const matchRoutes = [];
+    // ["ccs", "viewer", "P202300020"] = parts
     parts.forEach((part, index) => {
-      const objMatchRoute = routes.find((route) => {
-        const pattern = route.skid.replace(`/${prefixPath}`, "").split("/")[
-          index
-        ];
-        return part === pattern;
-      });
-
-      if (objMatchRoute) {
-        matchRoutes.push([objMatchRoute.lOcKkEy]);
+      if (index === 0 || routes.length === 0) {
         return;
       }
 
-      const arrMatchRoute = routes
-        .filter((route) => {
-          const pattern = route.skid.replace(`/${prefixPath}`, "").split("/")[
-            index
-          ];
-          return pattern.startsWith(":");
-        })
-        .map((el) => el.lOcKkEy);
+      const staticMatchRoute = routes.find((route) => {
+        const pattern = route.origin.split("/")[index];
 
-      if (arrMatchRoute.length > 0) {
-        matchRoutes.push(arrMatchRoute);
+        // 우선 변수가 아닌 static 값으로 비교
+        if (pattern.startsWith(":")) {
+          return false;
+        }
+        return part === pattern;
+      });
+
+      if (staticMatchRoute) {
+        routes = [staticMatchRoute];
+        return;
+      }
+
+      // const arrMatchRoute = routes
+      //   .filter((route) => {
+      //     const pattern = route.skid.
+      // replace(`/${prefixPath}`, "").split("/")[
+      //       index
+      //     ];
+      //     return pattern.startsWith(":");
+      //   })
+      //   .map((el) => el.lOcKkEy);
+
+      // if (arrMatchRoute.length > 0) {
+      //   matchRoutes.push(arrMatchRoute);
+      // }
+
+      const varMatchRoute = routes.find((route) => {
+        const pattern = route.origin.split("/")[index];
+
+        // static 값으로 매칭되는 route가 없을때 변수를 확인함
+        if (pattern.startsWith(":")) {
+          // params[pattern.replace(":","")] = part;
+          return true;
+        }
+        return false;
+      });
+
+      if (varMatchRoute) {
+        routes = [varMatchRoute];
+      } else {
+        routes = [];
       }
     });
 
-    if (matchRoutes.length === parts.length) {
-      const baseLine = matchRoutes.shift();
-      const allMatchRoute = baseLine.find((base) => {
-        const matchResult = matchRoutes.map((matchRoute) => {
-          return matchRoute.includes(base);
-        });
-
-        const findMissMatch = matchResult.findIndex((pass) => pass === false);
-        return findMissMatch === -1;
-      });
-
-      if (allMatchRoute) {
-        dynamicPath = routes.find((route) => route.lOcKkEy === allMatchRoute);
-      } else {
-        throw new Error("NOT Found Path");
-      }
-    } else {
-      throw new Error("NOT Found Path");
+    if (routes.length === 0) {
+      throw new Error(`Not found meta by path ${path}`);
     }
-  }
+    metaId = routes[0].metaId;
 
-  const metaId = resultPath ? resultPath.metaId : dynamicPath.metaId;
+    // });
+
+    // if (matchRoutes.length === parts.length) {
+    //   const baseLine = matchRoutes.shift();
+    //   const allMatchRoute = baseLine.find((base) => {
+    //     const matchResult = matchRoutes.map((matchRoute) => {
+    //       return matchRoute.includes(base);
+    //     });
+
+    //     const findMissMatch =
+    // matchResult.findIndex((pass) => pass === false);
+    //     return findMissMatch === -1;
+    //   });
+
+    //   if (allMatchRoute) {
+    //     dynamicPath =
+    // routes.find((route) => route.lOcKkEy === allMatchRoute);
+    //   } else {
+    //     throw new Error("NOT Found Path");
+    //   }
+    // } else {
+    //   throw new Error("NOT Found Path");
+    // }
+  }
 
   const result = await getMetaById(metaId, {
     dynamodb,
@@ -157,7 +212,7 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
     includePaths: false,
   });
 
-  return { ...result, dynamicPath };
+  return { ...result };
 };
 
 const saveMeta = async (body, { dynamodb, tableName, zip, makeid }) => {
@@ -307,6 +362,8 @@ const doUpdatePath = async (data, { dynamodb, tableName, makeid }) => {
   }
 
   const [convertPath, params] = numberingPath(path);
+  const pathLength = path.split("/").filter(Boolean).length;
+  optionalData.length = pathLength;
 
   const isUpdate = !!id;
 
@@ -370,7 +427,12 @@ const doUpdatePath = async (data, { dynamodb, tableName, makeid }) => {
       const result = await dynamodb.updateItem(
         tableName,
         { pkid: "path", skid: id },
-        { ...optionalData, origin: path, params, numbered: convertPath },
+        {
+          ...optionalData,
+          origin: path,
+          params,
+          numbered: convertPath,
+        },
         {
           useCustomerRole: false,
         }
@@ -380,7 +442,12 @@ const doUpdatePath = async (data, { dynamodb, tableName, makeid }) => {
       const result = await dynamodb.insertItem(
         tableName,
         { pkid: "path", skid: makeid(7) },
-        { ...optionalData, origin: path, params, numbered: convertPath },
+        {
+          ...optionalData,
+          origin: path,
+          params,
+          numbered: convertPath,
+        },
         {
           useCustomerRole: false,
         }
