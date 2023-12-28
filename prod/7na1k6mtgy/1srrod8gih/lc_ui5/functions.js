@@ -38,7 +38,7 @@ const getMetaById = async (
       { pkid: "path" },
       { metaId: id },
       {
-        indexName: "pkid_metaid_index",
+        indexName: "pkid-metaId-index",
         useCustomerRole: false,
       }
     );
@@ -333,7 +333,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, makeid }) => {
   }
 
   const filtersForDup = {
-    numbered: { operation: "=", value: convertPath },
+    // numbered: { operation: "=", value: convertPath },
   };
 
   if (isUpdate) {
@@ -346,7 +346,7 @@ const doUpdatePath = async (data, { dynamodb, tableName, makeid }) => {
     { numbered: convertPath },
     {
       filters: filtersForDup,
-      indexName: "pkid_numbered_index",
+      indexName: "pkid-numbered-index",
       useCustomerRole: false,
     }
   );
