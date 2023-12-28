@@ -217,7 +217,7 @@ module.exports.getAllMeta = async ({ dynamodb, tableName }) => {
 };
 
 function extractObjByKey(keys, obj) {
-  return ["title"].reduce((acc, key) => {
+  return keys.reduce((acc, key) => {
     if (obj[key] !== undefined) {
       acc[key] = obj[key];
     }
