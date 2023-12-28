@@ -75,7 +75,7 @@ const getMetaById = async (
 module.exports.getMetaById = getMetaById;
 
 module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
-  const resultPaths = await dynamodb.queryItem(
+  const resultPaths = await dynamodb.query(
     tableName,
     { pkid: "path" },
     { origin: path },
