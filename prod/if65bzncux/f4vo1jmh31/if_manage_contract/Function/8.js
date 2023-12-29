@@ -18,17 +18,6 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           )
           .leftJoin(`${tables.party.name} as party`, function () {
             this.on(`party.contract_id`, `contract.id`);
-          })
-          .where(function () {
-            this.where("contract.type", "S")
-              .andWhere("party.stems10", "1")
-              .andWhere("party.index", "2")
-              .andWhere("party.deleted", false);
-          })
-          .orWhere(function () {
-            this.where("contract.type", "P")
-              .andWhere("stems10", "2")
-              .andWhere("party.deleted", false);
           });
 
         if (newData.contractID) {
@@ -48,9 +37,34 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           const to = fn.convDate(dayjs, dateRange[1], "YYYYMMDD");
           queryBuilder.whereBetween(`contract.${dateType}`, [from, to]);
         }
-        if (newData.contractType) {
-          queryBuilder.where(`contract.type`, "like", newData.contractType);
+        if (newData.contractType === "S") {
+          queryBuilder.where(function () {
+            this.where("contract.type", "S")
+              .andWhere("party.stems10", "1")
+              .andWhere("party.index", "2")
+              .andWhere("party.deleted", false);
+          });
+        } else if (newData.contractType === "P") {
+          queryBuilder.where(function () {
+            this.where("contract.type", "P")
+              .andWhere("stems10", "2")
+              .andWhere("party.deleted", false);
+          });
+        } else {
+          queryBuilder
+            .where(function () {
+              this.where("contract.type", "S")
+                .andWhere("party.stems10", "1")
+                .andWhere("party.index", "2")
+                .andWhere("party.deleted", false);
+            })
+            .orWhere(function () {
+              this.where("contract.type", "P")
+                .andWhere("stems10", "2")
+                .andWhere("party.deleted", false);
+            });
         }
+
         if (newData.contractStatus) {
           queryBuilder.where("contract.status", "like", newData.contractStatus);
         }
