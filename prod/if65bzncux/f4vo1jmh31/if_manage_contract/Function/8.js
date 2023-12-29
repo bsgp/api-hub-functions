@@ -26,6 +26,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
                   .andWhere("party.stems10", "1")
                   .andWhere("party.index", "2")
                   .andWhere("party.deleted", false);
+                //매출인 경우 partner가 1개 이상일 수 있음
               })
                 .orWhere(function () {
                   this.where("contract.type", "P")
