@@ -48,7 +48,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             .orWhere(function () {
               this.where("contract.type", "S").andWhere(
                 "party.contract_id",
-                null
+                ""
               );
             });
         } else if (newData.contractType === "P") {
@@ -61,7 +61,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             .orWhere(function () {
               this.where("contract.type", "S").andWhere(
                 "party.contract_id",
-                null
+                ""
               );
             });
         } else {
@@ -78,7 +78,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
                 .andWhere("party.deleted", false);
             })
             .orWhere(function () {
-              this.where("party.contract_id", null);
+              this.where("party.contract_id", "");
             });
         }
 
