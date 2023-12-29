@@ -36,6 +36,11 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             //     .andOn(`${tables.party.name}.stems10`, "2");
             // });
           })
+          .where((builder) =>
+            builder
+              .where({ type: "S", stems10: "1" })
+              .orWhere({ type: "P", stems10: "2" })
+          )
           .where("party.deleted", false);
 
         //       .leftOuterJoin('accounts', function () {
