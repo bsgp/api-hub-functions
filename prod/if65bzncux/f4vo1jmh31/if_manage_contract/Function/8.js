@@ -9,7 +9,6 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         const queryBuilder = sql("mysql", sqlParams)
           .select(`*`)
           .from(`${tables.contract.name}`)
-          .as("contract")
           // .select(
           //   `contract.*`
           //   // `${tables.party.name}.contract_id`,
@@ -20,7 +19,11 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           // )
           .leftJoin(tables.party.name, function () {
             this.on(function () {
-              this.on(`contract.id`, "=", `${tables.party.name}.contract_id`);
+              this.on(
+                `${tables.contract.name}.id`,
+                "=",
+                `${tables.party.name}.contract_id`
+              );
               // .andOn(function () {
               //   this.on(`contract.type`, "S").andOn(
               //     `${tables.party.name}.stems10`,
