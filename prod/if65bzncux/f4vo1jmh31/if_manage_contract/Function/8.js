@@ -6,9 +6,85 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
     case "IF-CT-105": {
       // 계약리스트 조회
       if (newData.version === "v2") {
+        const queryBuilder = sql("mysql", sqlParams)
+          .select(tables.contract.name)
+          .select(
+            `${tables.contract.name}.*`,
+            `${tables.party.name}.contract_id`,
+            `${tables.party.name}.ref_id`,
+            `${tables.party.name}.stems10`,
+            `${tables.party.name}.name as party_name`,
+            `${tables.party.name}.deleted as party_deleted`
+          )
+          .leftJoin(tables.party.name, function () {
+            this.on(
+              `${tables.contract.name}.id`,
+              "like",
+              `%${newData.contractID}%`
+            );
+          });
+
+        //       .leftOuterJoin('accounts', function () {
+        //   this
+        //     .on('users.id', 'account.user_id')
+        //     .andOn(function () {
+        //       this.on('users.state', '=', 'NULL');
+        //       this.orOn('users.state', 'accounts.state');
+        //     });
+        // });
+        if (newData.contractID) {
+          queryBuilder.where(
+            `${tables.contract.name}.id`,
+            "like",
+            `%${newData.contractID}%`
+          );
+        }
+        if (newData.partyID) {
+          queryBuilder.where("ref_id", "like", newData.partyID);
+        }
+        const { contractDate, dateRange, dateType } = newData;
+        if (contractDate && contractDate[0] && contractDate[1]) {
+          const from = fn.convDate(dayjs, contractDate[0], "YYYYMMDD");
+          const to = fn.convDate(dayjs, contractDate[1], "YYYYMMDD");
+          queryBuilder.whereBetween(`prod_date`, [from, to]);
+        }
+        if (dateRange && dateRange[0] && dateRange[1]) {
+          const from = fn.convDate(dayjs, dateRange[0], "YYYYMMDD");
+          const to = fn.convDate(dayjs, dateRange[1], "YYYYMMDD");
+          queryBuilder.whereBetween(dateType, [from, to]);
+        }
+        if (newData.contractType) {
+          queryBuilder.where(
+            `${tables.contract.name}.type`,
+            "like",
+            newData.contractType
+          );
+        }
+        if (newData.contractStatus) {
+          queryBuilder.where("status", "like", newData.contractStatus);
+        }
+        if (newData.contractName) {
+          queryBuilder.where(
+            `${tables.contract.name}.name`,
+            "like",
+            `%${newData.contractName}%`
+          );
+        }
+        if (newData.bukrs) {
+          queryBuilder.whereIn("bukrs", [newData.bukrs]);
+        } else if (!(user.bukrs || "").includes("*")) {
+          const allowBURKS = [user.bukrs];
+          if (user.bukrs === "1000") {
+            allowBURKS.push("");
+          }
+          queryBuilder.whereIn("bukrs", allowBURKS);
+        }
+        queryBuilder.orderBy("created_at", "desc");
+        const queryResult = await queryBuilder.run();
+
         draft.response.body = {
           request: newData,
-          // queryResult,
+          queryResult,
           // list: list
           //   .reduce((acc, curr) => {
           //     const isExist = acc.findIndex(({ id }) => id === curr.id);
