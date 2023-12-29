@@ -5,6 +5,39 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
   switch (interfaceID) {
     case "IF-CT-105": {
       // 계약리스트 조회
+      if (newData.version === "v2") {
+        draft.response.body = {
+          request: newData,
+          // queryResult,
+          // list: list
+          //   .reduce((acc, curr) => {
+          //     const isExist = acc.findIndex(({ id }) => id === curr.id);
+          //     if (isExist >= 0) {
+          //       const { type, stems10, party_deleted } = curr;
+          //       if (type === "P" && stems10 === "2" && !party_deleted) {
+          //         acc[isExist] = curr;
+          //       }
+          //       if (type === "S" && stems10 === "1" && !party_deleted) {
+          //         acc[isExist] = curr;
+          //       }
+          //     } else acc.push(curr);
+          //     return acc;
+          //   }, [])
+          //   .map(({ party_name, stems10, type, ...args }) => {
+          //     let name = "";
+          //     if (type === "P" && stems10 === "2") {
+          //       name = party_name;
+          //     }
+          //     if (type === "S" && stems10 === "1") {
+          //       name = party_name;
+          //     }
+          //     return { ...args, type, party_name: name };
+          //   }),
+          E_STATUS: "S",
+          E_MESSAGE: `조회가\n완료되었습니다 v2`,
+        };
+        return;
+      }
       const queryBuilder = sql("mysql", sqlParams)
         .select(tables.contract.name)
         .select(
