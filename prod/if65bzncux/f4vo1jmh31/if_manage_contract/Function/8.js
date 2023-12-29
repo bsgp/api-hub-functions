@@ -16,26 +16,29 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             `party.name as party_name`,
             `party.deleted as party_deleted`
           )
-          .leftJoin(`${tables.party.name} as party`, function () {
-            this.on(function () {
-              this.on(`party.contract_id`, `contract.id`);
-              // .andOn(function () {
-              //   this.on(`contract.type`, "S").andOn(
-              //     `${tables.party.name}.stems10`,
-              //     "1"
-              //   );
+          .leftJoin(
+            `${tables.party.name} as party`.where("party.deleted", false),
+            function () {
+              this.on(function () {
+                this.on(`party.contract_id`, `contract.id`);
+                // .andOn(function () {
+                //   this.on(`contract.type`, "S").andOn(
+                //     `${tables.party.name}.stems10`,
+                //     "1"
+                //   );
+                // });
+              });
+              // .orOn(function () {
+              //   this.on(
+              //     `${tables.contract.name}.id`,
+              //     "=",
+              //     `${tables.party.name}.contract_id`
+              //   )
+              //     .andOn(`${tables.contract.name}.type`, "P")
+              //     .andOn(`${tables.party.name}.stems10`, "2");
               // });
-            });
-            // .orOn(function () {
-            //   this.on(
-            //     `${tables.contract.name}.id`,
-            //     "=",
-            //     `${tables.party.name}.contract_id`
-            //   )
-            //     .andOn(`${tables.contract.name}.type`, "P")
-            //     .andOn(`${tables.party.name}.stems10`, "2");
-            // });
-          });
+            }
+          );
 
         //       .leftOuterJoin('accounts', function () {
         //   this
