@@ -22,7 +22,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           .where(function () {
             this.where(function () {
               this.where("party.contract_id", null);
-            }).andWhere("party.deleted", false);
+            }).orWhere("party.deleted", false);
           });
 
         if (newData.contractType === "S") {
