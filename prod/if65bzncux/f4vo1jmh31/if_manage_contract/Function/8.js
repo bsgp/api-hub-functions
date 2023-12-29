@@ -84,7 +84,6 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
 
         draft.response.body = {
           request: newData,
-          queryBuilder,
           queryResult,
           list: tryit(() => queryResult.body.list.map((it) => ({ ...it })), []),
           E_STATUS: "F",
