@@ -9,37 +9,26 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         const queryBuilder = sql("mysql", sqlParams)
           .select(`${tables.contract.name} as contract`)
           .select(`contract.*`)
-          .leftJoin(
-            sql("mysql", sqlParams)
-              .select(
-                `contract_id`,
-                `ref_id`,
-                `stems10`,
-                `name as party_name`,
-                `deleted as party_deleted`
-              )
-              .from(`${tables.party.name}`),
-            function () {
-              this.on(function () {
-                this.on(`contract_id`, `contract.id`);
-                // .andOn(function () {
-                //   this.on(`contract.type`, "S").andOn(
-                //     `${tables.party.name}.stems10`,
-                //     "1"
-                //   );
-                // });
-              });
-              // .orOn(function () {
-              //   this.on(
-              //     `${tables.contract.name}.id`,
-              //     "=",
-              //     `${tables.party.name}.contract_id`
-              //   )
-              //     .andOn(`${tables.contract.name}.type`, "P")
-              //     .andOn(`${tables.party.name}.stems10`, "2");
+          .leftJoin(`${tables.party.name}`, function () {
+            this.on(function () {
+              this.on(`contract_id`, `contract.id`);
+              // .andOn(function () {
+              //   this.on(`contract.type`, "S").andOn(
+              //     `${tables.party.name}.stems10`,
+              //     "1"
+              //   );
               // });
-            }
-          );
+            });
+            // .orOn(function () {
+            //   this.on(
+            //     `${tables.contract.name}.id`,
+            //     "=",
+            //     `${tables.party.name}.contract_id`
+            //   )
+            //     .andOn(`${tables.contract.name}.type`, "P")
+            //     .andOn(`${tables.party.name}.stems10`, "2");
+            // });
+          });
 
         //       .leftOuterJoin('accounts', function () {
         //   this
