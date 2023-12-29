@@ -23,16 +23,16 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
                 "=",
                 `${tables.party.name}.contract_id`
               )
-                .andOn(`${tables.contract.name}.type`, "=", "S")
-                .andOn(`${tables.party.name}.stems10`, "=", "1");
+                .andOn(`${tables.contract.name}.type`, "like", "S")
+                .andOn(`${tables.party.name}.stems10`, "like", "1");
             }).orOn(function () {
               this.on(
                 `${tables.contract.name}.id`,
                 "=",
                 `${tables.party.name}.contract_id`
               )
-                .andOn(`${tables.contract.name}.type`, "=", "P")
-                .andOn(`${tables.party.name}.stems10`, "=", "2");
+                .andOn(`${tables.contract.name}.type`, "like", "P")
+                .andOn(`${tables.party.name}.stems10`, "like", "2");
             });
           });
 
