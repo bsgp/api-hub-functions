@@ -36,24 +36,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             });
           });
 
-        if (newData.contractType === "S") {
-          queryBuilder.where(function () {
-            this.where("contract.type", "S");
-          });
-        } else if (newData.contractType === "P") {
-          queryBuilder.where(function () {
-            this.where("contract.type", "P");
-          });
-        } else {
-          queryBuilder
-            .where(function () {
-              this.where("contract.type", "S")
-                .andWhere("party.stems10", "1")
-                .andWhere("party.index", "2");
-            })
-            .orWhere(function () {
-              this.where("contract.type", "P").andWhere("stems10", "2");
-            });
+        if (newData.contractType) {
+          queryBuilder.where(`contract.type`, "like", newData.contractType);
         }
 
         if (newData.contractID) {
