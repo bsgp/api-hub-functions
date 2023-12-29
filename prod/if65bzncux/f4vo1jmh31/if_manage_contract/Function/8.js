@@ -32,11 +32,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           });
 
         if (newData.contractID) {
-          queryBuilder.where(
-            `${tables.contract.name}.id`,
-            "like",
-            `%${newData.contractID}%`
-          );
+          queryBuilder.where(`contract.id`, "like", `%${newData.contractID}%`);
         }
         if (newData.partyID) {
           queryBuilder.where("ref_id", "like", newData.partyID);
@@ -53,18 +49,14 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           queryBuilder.whereBetween(dateType, [from, to]);
         }
         if (newData.contractType) {
-          queryBuilder.where(
-            `${tables.contract.name}.type`,
-            "like",
-            newData.contractType
-          );
+          queryBuilder.where(`contract.type`, "like", newData.contractType);
         }
         if (newData.contractStatus) {
           queryBuilder.where("status", "like", newData.contractStatus);
         }
         if (newData.contractName) {
           queryBuilder.where(
-            `${tables.contract.name}.name`,
+            `contract.name`,
             "like",
             `%${newData.contractName}%`
           );
