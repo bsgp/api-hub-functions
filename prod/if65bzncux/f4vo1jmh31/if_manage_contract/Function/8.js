@@ -13,15 +13,15 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             sql("mysql", sqlParams)
               .select(`${tables.party.name} as party`)
               .select(
-                `party.contract_id`,
-                `party.ref_id`,
-                `party.stems10`,
-                `party.name as party_name`,
-                `party.deleted as party_deleted`
+                `contract_id`,
+                `ref_id`,
+                `stems10`,
+                `name as party_name`,
+                `deleted as party_deleted`
               ),
             function () {
               this.on(function () {
-                this.on(`party.contract_id`, `contract.id`);
+                this.on(`contract_id`, `contract.id`);
                 // .andOn(function () {
                 //   this.on(`contract.type`, "S").andOn(
                 //     `${tables.party.name}.stems10`,
