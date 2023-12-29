@@ -18,10 +18,10 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           )
           .leftJoin(`${tables.party.name} as party`, function () {
             this.on(`party.contract_id`, `contract.id`).on(function () {
-              this.where("contract.type", "S")
-                .andWhere("party.stems10", "1")
-                .andWhere("party.index", "2")
-                .andWhere("party.deleted", false);
+              this.on("contract.type", "S")
+                .on("party.stems10", "1")
+                .on("party.index", "2")
+                .on("party.deleted", false);
             });
           });
 
