@@ -21,8 +21,19 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           })
           .where(function () {
             this.where(function () {
-              this.where("party.contract_id", "=", null);
-            }).orWhere("party.deleted", false);
+              this.where(function () {
+                this.where("contract.type", "S")
+                  .andWhere("party.stems10", "1")
+                  .andWhere("party.index", "2")
+                  .andWhere("party.deleted", false);
+              })
+                .orWhere(function () {
+                  this.where("contract.type", "P")
+                    .andWhere("stems10", "2")
+                    .andWhere("party.deleted", false);
+                })
+                .orWhere("party.contract_id", "=", null);
+            });
           });
 
         if (newData.contractType === "S") {
