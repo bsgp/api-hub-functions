@@ -7,7 +7,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
       // 계약리스트 조회
       if (newData.version === "v2") {
         const queryBuilder = sql("mysql", sqlParams)
-          .select(`${tables.contract.name}`)
+          .select(`*`)
+          .from(`${tables.contract.name}`)
           .as("contract")
           .select(
             `contract.*`
