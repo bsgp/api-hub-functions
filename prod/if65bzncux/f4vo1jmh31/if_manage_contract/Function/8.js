@@ -10,32 +10,35 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           .select(`${tables.contract.name} as contract`)
           .select(
             `contract.*`,
-            `${tables.party.name}.contract_id`,
-            `${tables.party.name}.ref_id`,
-            `${tables.party.name}.stems10`,
-            `${tables.party.name}.name as party_name`,
-            `${tables.party.name}.deleted as party_deleted`
+            `party.contract_id`,
+            `party.ref_id`,
+            `party.stems10`,
+            `party.name as party_name`,
+            `party.deleted as party_deleted`
           )
-          .leftJoin(tables.party.name, function () {
-            this.on(function () {
-              this.on(`contract.id`, "=", `${tables.party.name}.contract_id`);
-              // .andOn(function () {
-              //   this.on(`contract.type`, "S").andOn(
-              //     `${tables.party.name}.stems10`,
-              //     "1"
-              //   );
+          .leftJoin(
+            sql("mysql", sqlParams).select(`${tables.party.name} as party`),
+            function () {
+              this.on(function () {
+                this.on(`contract.id`, "=", `party.contract_id`);
+                // .andOn(function () {
+                //   this.on(`contract.type`, "S").andOn(
+                //     `${tables.party.name}.stems10`,
+                //     "1"
+                //   );
+                // });
+              });
+              // .orOn(function () {
+              //   this.on(
+              //     `${tables.contract.name}.id`,
+              //     "=",
+              //     `${tables.party.name}.contract_id`
+              //   )
+              //     .andOn(`${tables.contract.name}.type`, "P")
+              //     .andOn(`${tables.party.name}.stems10`, "2");
               // });
-            });
-            // .orOn(function () {
-            //   this.on(
-            //     `${tables.contract.name}.id`,
-            //     "=",
-            //     `${tables.party.name}.contract_id`
-            //   )
-            //     .andOn(`${tables.contract.name}.type`, "P")
-            //     .andOn(`${tables.party.name}.stems10`, "2");
-            // });
-          });
+            }
+          );
 
         //       .leftOuterJoin('accounts', function () {
         //   this
