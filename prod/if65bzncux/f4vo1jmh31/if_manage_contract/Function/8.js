@@ -20,23 +20,6 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             this.on(`party.contract_id`, `contract.id`);
           });
 
-        if (newData.contractID) {
-          queryBuilder.where(`contract.id`, "like", `%${newData.contractID}%`);
-        }
-        if (newData.partyID) {
-          queryBuilder.where("ref_id", "like", newData.partyID);
-        }
-        const { contractDate, dateRange, dateType } = newData;
-        if (contractDate && contractDate[0] && contractDate[1]) {
-          const from = fn.convDate(dayjs, contractDate[0], "YYYYMMDD");
-          const to = fn.convDate(dayjs, contractDate[1], "YYYYMMDD");
-          queryBuilder.whereBetween(`contract.prod_date`, [from, to]);
-        }
-        if (dateRange && dateRange[0] && dateRange[1]) {
-          const from = fn.convDate(dayjs, dateRange[0], "YYYYMMDD");
-          const to = fn.convDate(dayjs, dateRange[1], "YYYYMMDD");
-          queryBuilder.whereBetween(`contract.${dateType}`, [from, to]);
-        }
         if (newData.contractType === "S") {
           queryBuilder
             .where(function () {
@@ -80,6 +63,24 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             .orWhere(function () {
               this.where("party.contract_id", null);
             });
+        }
+
+        if (newData.contractID) {
+          queryBuilder.where(`contract.id`, "like", `%${newData.contractID}%`);
+        }
+        if (newData.partyID) {
+          queryBuilder.where("ref_id", "like", newData.partyID);
+        }
+        const { contractDate, dateRange, dateType } = newData;
+        if (contractDate && contractDate[0] && contractDate[1]) {
+          const from = fn.convDate(dayjs, contractDate[0], "YYYYMMDD");
+          const to = fn.convDate(dayjs, contractDate[1], "YYYYMMDD");
+          queryBuilder.whereBetween(`contract.prod_date`, [from, to]);
+        }
+        if (dateRange && dateRange[0] && dateRange[1]) {
+          const from = fn.convDate(dayjs, dateRange[0], "YYYYMMDD");
+          const to = fn.convDate(dayjs, dateRange[1], "YYYYMMDD");
+          queryBuilder.whereBetween(`contract.${dateType}`, [from, to]);
         }
 
         if (newData.contractStatus) {
