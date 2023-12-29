@@ -8,16 +8,17 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
       if (newData.version === "v2") {
         const queryBuilder = sql("mysql", sqlParams)
           .select(`${tables.contract.name} as contract`)
-          .select(
-            `contract.*`,
-            `party.contract_id`,
-            `party.ref_id`,
-            `party.stems10`,
-            `party.name as party_name`,
-            `party.deleted as party_deleted`
-          )
+          .select(`contract.*`)
           .leftJoin(
-            sql("mysql", sqlParams).select(`${tables.party.name} as party`),
+            sql("mysql", sqlParams)
+              .select(`${tables.party.name} as party`)
+              .select(
+                `party.contract_id`,
+                `party.ref_id`,
+                `party.stems10`,
+                `party.name as party_name`,
+                `party.deleted as party_deleted`
+              ),
             function () {
               this.on(function () {
                 this.on(`contract.id`, "=", `party.contract_id`);
