@@ -32,7 +32,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           });
 
         if (newData.contractID) {
-          queryBuilder.where(`contract.id`, "like", `%${newData.contractID}%`);
+          queryBuilder.where(`id`, "like", `%${newData.contractID}%`);
         }
         if (newData.partyID) {
           queryBuilder.where("ref_id", "like", newData.partyID);
@@ -55,11 +55,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           queryBuilder.where("status", "like", newData.contractStatus);
         }
         if (newData.contractName) {
-          queryBuilder.where(
-            `contract.name`,
-            "like",
-            `%${newData.contractName}%`
-          );
+          queryBuilder.where(`name`, "like", `%${newData.contractName}%`);
         }
         if (newData.bukrs) {
           queryBuilder.whereIn("bukrs", [newData.bukrs]);
