@@ -21,7 +21,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
               ),
             function () {
               this.on(function () {
-                this.on(`contract.id`, "=", `party.contract_id`);
+                this.on(`party.contract_id`, `contract.id`);
                 // .andOn(function () {
                 //   this.on(`contract.type`, "S").andOn(
                 //     `${tables.party.name}.stems10`,
