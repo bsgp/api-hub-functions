@@ -32,7 +32,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           });
 
         if (newData.contractID) {
-          queryBuilder.where(`id`, "like", `%${newData.contractID}%`);
+          queryBuilder.where(`contract.id`, "like", `%${newData.contractID}%`);
         }
         if (newData.partyID) {
           queryBuilder.where("ref_id", "like", newData.partyID);
@@ -41,32 +41,36 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         if (contractDate && contractDate[0] && contractDate[1]) {
           const from = fn.convDate(dayjs, contractDate[0], "YYYYMMDD");
           const to = fn.convDate(dayjs, contractDate[1], "YYYYMMDD");
-          queryBuilder.whereBetween(`prod_date`, [from, to]);
+          queryBuilder.whereBetween(`contract.prod_date`, [from, to]);
         }
         if (dateRange && dateRange[0] && dateRange[1]) {
           const from = fn.convDate(dayjs, dateRange[0], "YYYYMMDD");
           const to = fn.convDate(dayjs, dateRange[1], "YYYYMMDD");
-          queryBuilder.whereBetween(dateType, [from, to]);
+          queryBuilder.whereBetween(`contract.${dateType}`, [from, to]);
         }
         if (newData.contractType) {
           queryBuilder.where(`contract.type`, "like", newData.contractType);
         }
         if (newData.contractStatus) {
-          queryBuilder.where("status", "like", newData.contractStatus);
+          queryBuilder.where("contract.status", "like", newData.contractStatus);
         }
         if (newData.contractName) {
-          queryBuilder.where(`name`, "like", `%${newData.contractName}%`);
+          queryBuilder.where(
+            `contract.name`,
+            "like",
+            `%${newData.contractName}%`
+          );
         }
         if (newData.bukrs) {
-          queryBuilder.whereIn("bukrs", [newData.bukrs]);
+          queryBuilder.whereIn("contract.bukrs", [newData.bukrs]);
         } else if (!(user.bukrs || "").includes("*")) {
           const allowBURKS = [user.bukrs];
           if (user.bukrs === "1000") {
             allowBURKS.push("");
           }
-          queryBuilder.whereIn("bukrs", allowBURKS);
+          queryBuilder.whereIn("contract.bukrs", allowBURKS);
         }
-        queryBuilder.orderBy("created_at", "desc");
+        queryBuilder.orderBy("contract.created_at", "desc");
         const queryResult = await queryBuilder.run();
 
         draft.response.body = {
