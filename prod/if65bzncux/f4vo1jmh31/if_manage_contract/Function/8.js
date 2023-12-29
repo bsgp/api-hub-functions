@@ -18,50 +18,32 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           )
           .leftJoin(`${tables.party.name} as party`, function () {
             this.on(`party.contract_id`, `contract.id`);
+          })
+          .where(function () {
+            this.where(function () {
+              this.where("party.contract_id", null);
+            }).andWhere("party.deleted", false);
           });
 
         if (newData.contractType === "S") {
-          queryBuilder
-            .where(function () {
-              this.where("contract.type", "S")
-                .andWhere("party.stems10", "1")
-                .andWhere("party.index", "2")
-                .andWhere("party.deleted", false);
-            })
-            .orWhere(function () {
-              this.where("contract.type", "S").andWhere(
-                "party.contract_id",
-                null
-              );
-            });
+          queryBuilder.where(function () {
+            this.where("contract.type", "S")
+              .andWhere("party.stems10", "1")
+              .andWhere("party.index", "2");
+          });
         } else if (newData.contractType === "P") {
-          queryBuilder
-            .where(function () {
-              this.where("contract.type", "P")
-                .andWhere("stems10", "2")
-                .andWhere("party.deleted", false);
-            })
-            .orWhere(function () {
-              this.where("contract.type", "P").andWhere(
-                "party.contract_id",
-                null
-              );
-            });
+          queryBuilder.where(function () {
+            this.where("contract.type", "P").andWhere("stems10", "2");
+          });
         } else {
           queryBuilder
             .where(function () {
               this.where("contract.type", "S")
                 .andWhere("party.stems10", "1")
-                .andWhere("party.index", "2")
-                .andWhere("party.deleted", false);
+                .andWhere("party.index", "2");
             })
             .orWhere(function () {
-              this.where("contract.type", "P")
-                .andWhere("stems10", "2")
-                .andWhere("party.deleted", false);
-            })
-            .orWhere(function () {
-              this.where("party.contract_id", null);
+              this.where("contract.type", "P").andWhere("stems10", "2");
             });
         }
 
