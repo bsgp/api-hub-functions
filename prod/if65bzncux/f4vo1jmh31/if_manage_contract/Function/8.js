@@ -32,7 +32,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
                     .andWhere("stems10", "2")
                     .andWhere("party.deleted", false);
                 })
-                .orWhere("party.contract_id", "=", null);
+                .orWhere(function () {
+                  this.whereNull("party.contract_id");
+                });
             });
           });
 
