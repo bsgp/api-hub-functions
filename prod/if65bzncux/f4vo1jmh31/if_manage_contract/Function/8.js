@@ -37,17 +37,17 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             // });
           })
           .where(function () {
-            this.where("contract.type", "S").andWhere("stems10", "1");
+            this.where("contract.type", "S")
+              .andWhere("stems10", "1")
+              .andWhere("stems10", "1")
+              .andWhere("index", "2")
+              .andWhere("party.deleted", false);
           })
           .orWhere(function () {
-            this.where("contract.type", "P").andWhere("stems10", "2");
-          })
-          // (builder) =>
-          // builder
-          //   .where({ type: "S", stems10: "1" })
-          //   .orWhere({ type: "P", stems10: "2" })
-
-          .where("party.deleted", false);
+            this.where("contract.type", "P")
+              .andWhere("stems10", "2")
+              .andWhere("party.deleted", false);
+          });
 
         //       .leftOuterJoin('accounts', function () {
         //   this
