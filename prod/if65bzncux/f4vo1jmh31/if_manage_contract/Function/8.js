@@ -36,11 +36,17 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             //     .andOn(`${tables.party.name}.stems10`, "2");
             // });
           })
-          .where((builder) =>
-            builder
-              .where({ type: "S", stems10: "1" })
-              .orWhere({ type: "P", stems10: "2" })
-          )
+          .where(function () {
+            this.where("contract.type", "S").andWhere("stems10", "1");
+          })
+          .orWhere(function () {
+            this.where("contract.type", "P").andWhere("stems10", "2");
+          })
+          // (builder) =>
+          // builder
+          //   .where({ type: "S", stems10: "1" })
+          //   .orWhere({ type: "P", stems10: "2" })
+
           .where("party.deleted", false);
 
         //       .leftOuterJoin('accounts', function () {
