@@ -76,7 +76,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         draft.response.body = {
           request: newData,
           queryResult,
-          list,
+          list: tryit(() => queryResult.body.list.map((it) => ({ ...it })), []),
           // list: list
           //   .reduce((acc, curr) => {
           //     const isExist = acc.findIndex(({ id }) => id === curr.id);
