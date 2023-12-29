@@ -10,7 +10,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           .select(`${tables.contract.name}.*`)
           .as("contract")
           .select(
-            `${tables.contract.name}.*`
+            `contract.*`
             // `${tables.party.name}.contract_id`,
             // `${tables.party.name}.ref_id`,
             // `${tables.party.name}.stems10`,
