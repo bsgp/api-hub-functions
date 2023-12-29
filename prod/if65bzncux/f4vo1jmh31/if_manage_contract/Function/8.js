@@ -38,18 +38,32 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           queryBuilder.whereBetween(`contract.${dateType}`, [from, to]);
         }
         if (newData.contractType === "S") {
-          queryBuilder.where(function () {
-            this.where("contract.type", "S")
-              .andWhere("party.stems10", "1")
-              .andWhere("party.index", "2")
-              .andWhere("party.deleted", false);
-          });
+          queryBuilder
+            .where(function () {
+              this.where("contract.type", "S")
+                .andWhere("party.stems10", "1")
+                .andWhere("party.index", "2")
+                .andWhere("party.deleted", false);
+            })
+            .orWhere(function () {
+              this.where("contract.type", "S").andWhere(
+                "party.contract_id",
+                null
+              );
+            });
         } else if (newData.contractType === "P") {
-          queryBuilder.where(function () {
-            this.where("contract.type", "P")
-              .andWhere("stems10", "2")
-              .andWhere("party.deleted", false);
-          });
+          queryBuilder
+            .where(function () {
+              this.where("contract.type", "P")
+                .andWhere("stems10", "2")
+                .andWhere("party.deleted", false);
+            })
+            .orWhere(function () {
+              this.where("contract.type", "S").andWhere(
+                "party.contract_id",
+                null
+              );
+            });
         } else {
           queryBuilder
             .where(function () {
@@ -62,6 +76,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
               this.where("contract.type", "P")
                 .andWhere("stems10", "2")
                 .andWhere("party.deleted", false);
+            })
+            .orWhere(function () {
+              this.where("party.contract_id", null);
             });
         }
 
