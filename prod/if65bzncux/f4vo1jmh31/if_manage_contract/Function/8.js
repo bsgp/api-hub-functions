@@ -31,45 +31,44 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
               .andWhere("party.deleted", false);
           });
 
-        /** */
-        // if (newData.contractID) {
-        //   queryBuilder.where(
-        //     `${tables.contract.name}.id`,
-        //     "like",
-        //     `%${newData.contractID}%`
-        //   );
-        // }
-        // if (newData.partyID) {
-        //   queryBuilder.where("ref_id", "like", newData.partyID);
-        // }
-        // const { contractDate, dateRange, dateType } = newData;
-        // if (contractDate && contractDate[0] && contractDate[1]) {
-        //   const from = fn.convDate(dayjs, contractDate[0], "YYYYMMDD");
-        //   const to = fn.convDate(dayjs, contractDate[1], "YYYYMMDD");
-        //   queryBuilder.whereBetween(`prod_date`, [from, to]);
-        // }
-        // if (dateRange && dateRange[0] && dateRange[1]) {
-        //   const from = fn.convDate(dayjs, dateRange[0], "YYYYMMDD");
-        //   const to = fn.convDate(dayjs, dateRange[1], "YYYYMMDD");
-        //   queryBuilder.whereBetween(dateType, [from, to]);
-        // }
-        // if (newData.contractType) {
-        //   queryBuilder.where(
-        //     `${tables.contract.name}.type`,
-        //     "like",
-        //     newData.contractType
-        //   );
-        // }
-        // if (newData.contractStatus) {
-        //   queryBuilder.where("status", "like", newData.contractStatus);
-        // }
-        // if (newData.contractName) {
-        //   queryBuilder.where(
-        //     `${tables.contract.name}.name`,
-        //     "like",
-        //     `%${newData.contractName}%`
-        //   );
-        // }
+        if (newData.contractID) {
+          queryBuilder.where(
+            `${tables.contract.name}.id`,
+            "like",
+            `%${newData.contractID}%`
+          );
+        }
+        if (newData.partyID) {
+          queryBuilder.where("ref_id", "like", newData.partyID);
+        }
+        const { contractDate, dateRange, dateType } = newData;
+        if (contractDate && contractDate[0] && contractDate[1]) {
+          const from = fn.convDate(dayjs, contractDate[0], "YYYYMMDD");
+          const to = fn.convDate(dayjs, contractDate[1], "YYYYMMDD");
+          queryBuilder.whereBetween(`prod_date`, [from, to]);
+        }
+        if (dateRange && dateRange[0] && dateRange[1]) {
+          const from = fn.convDate(dayjs, dateRange[0], "YYYYMMDD");
+          const to = fn.convDate(dayjs, dateRange[1], "YYYYMMDD");
+          queryBuilder.whereBetween(dateType, [from, to]);
+        }
+        if (newData.contractType) {
+          queryBuilder.where(
+            `${tables.contract.name}.type`,
+            "like",
+            newData.contractType
+          );
+        }
+        if (newData.contractStatus) {
+          queryBuilder.where("status", "like", newData.contractStatus);
+        }
+        if (newData.contractName) {
+          queryBuilder.where(
+            `${tables.contract.name}.name`,
+            "like",
+            `%${newData.contractName}%`
+          );
+        }
         // if (newData.bukrs) {
         //   queryBuilder.whereIn("bukrs", [newData.bukrs]);
         // } else if (!(user.bukrs || "").includes("*")) {
@@ -85,6 +84,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         draft.response.body = {
           request: newData,
           queryResult,
+          list,
           // list: list
           //   .reduce((acc, curr) => {
           //     const isExist = acc.findIndex(({ id }) => id === curr.id);
