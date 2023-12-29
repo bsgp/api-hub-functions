@@ -7,9 +7,10 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
       // 계약리스트 조회
       if (newData.version === "v2") {
         const queryBuilder = sql("mysql", sqlParams)
-          .select(`${tables.contract.name}.*`)
+          .select(`${tables.contract.name}`)
+          .as("contract")
           .select(
-            `${tables.contract.name}.*`
+            `contract.*`
             // `${tables.party.name}.contract_id`,
             // `${tables.party.name}.ref_id`,
             // `${tables.party.name}.stems10`,
@@ -18,11 +19,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           )
           .leftJoin(tables.party.name, function () {
             this.on(function () {
-              this.on(
-                `${tables.contract.name}.id`,
-                "=",
-                `${tables.party.name}.contract_id`
-              );
+              this.on(`contract.id`, "=", `${tables.party.name}.contract_id`);
               // .andOn(function () {
               //   this.on(`contract.type`, "S").andOn(
               //     `${tables.party.name}.stems10`,
