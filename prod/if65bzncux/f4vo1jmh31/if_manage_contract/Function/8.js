@@ -38,9 +38,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           })
           .where(function () {
             this.where("contract.type", "S")
-              .andWhere("stems10", "1")
-              .andWhere("stems10", "1")
-              .andWhere("index", "2")
+              .andWhere("party.stems10", "1")
+              .andWhere("party.index", "2")
               .andWhere("party.deleted", false);
           })
           .orWhere(function () {
