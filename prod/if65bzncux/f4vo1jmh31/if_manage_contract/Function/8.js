@@ -9,7 +9,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         const queryBuilder = sql("mysql", sqlParams)
           .from(`${tables.contract.name}`)
           .select(
-            `contract.*``${tables.party.name}.contract_id`,
+            `contract.*`,
+            `${tables.party.name}.contract_id`,
             `${tables.party.name}.ref_id`,
             `${tables.party.name}.stems10`,
             `${tables.party.name}.name as party_name`,
