@@ -18,7 +18,12 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           //   // `${tables.party.name}.deleted as party_deleted`
           // )
           .leftJoin(tables.party.name, function () {
-            this.on(function () {
+            this.select(
+              `ref_id`,
+              `stems10`,
+              `name as party_name`,
+              `deleted as party_deleted`
+            ).on(function () {
               this.on(
                 `${tables.contract.name}.id`,
                 "=",
