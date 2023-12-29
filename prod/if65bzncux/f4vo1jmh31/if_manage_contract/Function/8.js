@@ -9,12 +9,12 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         const queryBuilder = sql("mysql", sqlParams)
           .select(tables.contract.name)
           .select(
-            `${tables.contract.name}.*`,
-            `${tables.party.name}.contract_id`,
-            `${tables.party.name}.ref_id`,
-            `${tables.party.name}.stems10`,
-            `${tables.party.name}.name as party_name`,
-            `${tables.party.name}.deleted as party_deleted`
+            `${tables.contract.name}.*`
+            // `${tables.party.name}.contract_id`,
+            // `${tables.party.name}.ref_id`,
+            // `${tables.party.name}.stems10`,
+            // `${tables.party.name}.name as party_name`,
+            // `${tables.party.name}.deleted as party_deleted`
           )
           .leftJoin(tables.party.name, function () {
             this.on(function () {
@@ -22,9 +22,12 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
                 `${tables.contract.name}.id`,
                 "=",
                 `${tables.party.name}.contract_id`
-              )
-                .andOn(`${tables.contract.name}.type`, "S")
-                .andOn(`${tables.party.name}.stems10`, "1");
+              ).andOn(function () {
+                this.on(`${tables.contract.name}.type`, "S").andOn(
+                  `${tables.party.name}.stems10`,
+                  "1"
+                );
+              });
             }).orOn(function () {
               this.on(
                 `${tables.contract.name}.id`,
