@@ -33,7 +33,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           //     }
           //     return { ...args, type, party_name: name };
           //   }),
-          E_STATUS: "S",
+          E_STATUS: "F",
           E_MESSAGE: `조회가\n완료되었습니다 v2`,
         };
         return;
