@@ -28,15 +28,16 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
                   "1"
                 );
               });
-            }).orOn(function () {
-              this.on(
-                `${tables.contract.name}.id`,
-                "=",
-                `${tables.party.name}.contract_id`
-              )
-                .andOn(`${tables.contract.name}.type`, "P")
-                .andOn(`${tables.party.name}.stems10`, "2");
             });
+            // .orOn(function () {
+            //   this.on(
+            //     `${tables.contract.name}.id`,
+            //     "=",
+            //     `${tables.party.name}.contract_id`
+            //   )
+            //     .andOn(`${tables.contract.name}.type`, "P")
+            //     .andOn(`${tables.party.name}.stems10`, "2");
+            // });
           });
 
         //       .leftOuterJoin('accounts', function () {
