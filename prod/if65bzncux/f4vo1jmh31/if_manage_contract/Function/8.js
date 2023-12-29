@@ -87,30 +87,6 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           queryBuilder,
           queryResult,
           list: tryit(() => queryResult.body.list.map((it) => ({ ...it })), []),
-          // list: list
-          //   .reduce((acc, curr) => {
-          //     const isExist = acc.findIndex(({ id }) => id === curr.id);
-          //     if (isExist >= 0) {
-          //       const { type, stems10, party_deleted } = curr;
-          //       if (type === "P" && stems10 === "2" && !party_deleted) {
-          //         acc[isExist] = curr;
-          //       }
-          //       if (type === "S" && stems10 === "1" && !party_deleted) {
-          //         acc[isExist] = curr;
-          //       }
-          //     } else acc.push(curr);
-          //     return acc;
-          //   }, [])
-          //   .map(({ party_name, stems10, type, ...args }) => {
-          //     let name = "";
-          //     if (type === "P" && stems10 === "2") {
-          //       name = party_name;
-          //     }
-          //     if (type === "S" && stems10 === "1") {
-          //       name = party_name;
-          //     }
-          //     return { ...args, type, party_name: name };
-          //   }),
           E_STATUS: "F",
           E_MESSAGE: `조회가\n완료되었습니다 v2`,
         };
