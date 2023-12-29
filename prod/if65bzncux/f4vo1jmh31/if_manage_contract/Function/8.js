@@ -19,8 +19,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           .leftJoin(tables.party.name, function () {
             this.on(
               `${tables.contract.name}.id`,
-              "like",
-              `%${newData.contractID}%`
+              "=",
+              `${tables.party.name}.contract_id`
             );
           });
 
