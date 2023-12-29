@@ -7,23 +7,16 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
       // 계약리스트 조회
       if (newData.version === "v2") {
         const queryBuilder = sql("mysql", sqlParams)
-          .select(`*`)
           .from(`${tables.contract.name}`)
-          // .select(
-          //   `contract.*`
-          //   // `${tables.party.name}.contract_id`,
-          //   // `${tables.party.name}.ref_id`,
-          //   // `${tables.party.name}.stems10`,
-          //   // `${tables.party.name}.name as party_name`,
-          //   // `${tables.party.name}.deleted as party_deleted`
-          // )
+          .select(
+            `contract.*``${tables.party.name}.contract_id`,
+            `${tables.party.name}.ref_id`,
+            `${tables.party.name}.stems10`,
+            `${tables.party.name}.name as party_name`,
+            `${tables.party.name}.deleted as party_deleted`
+          )
           .leftJoin(tables.party.name, function () {
-            this.select(
-              `ref_id`,
-              `stems10`,
-              `name as party_name`,
-              `deleted as party_deleted`
-            ).on(function () {
+            this.on(function () {
               this.on(
                 `${tables.contract.name}.id`,
                 "=",
