@@ -65,21 +65,21 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
               );
             });
         } else {
-          queryBuilder
-            .where(function () {
-              this.where("contract.type", "S")
-                .andWhere("party.stems10", "1")
-                .andWhere("party.index", "2")
-                .andWhere("party.deleted", false);
-            })
-            .orWhere(function () {
-              this.where("contract.type", "P")
-                .andWhere("stems10", "2")
-                .andWhere("party.deleted", false);
-            })
-            .orWhere(function () {
-              this.where("party.contract_id", "");
-            });
+          // queryBuilder
+          //   .where(function () {
+          //     this.where("contract.type", "S")
+          //       .andWhere("party.stems10", "1")
+          //       .andWhere("party.index", "2")
+          //       .andWhere("party.deleted", false);
+          //   })
+          //   .orWhere(function () {
+          //     this.where("contract.type", "P")
+          //       .andWhere("stems10", "2")
+          //       .andWhere("party.deleted", false);
+          //   })
+          //   .orWhere(function () {
+          //     this.where("party.contract_id", "");
+          //   });
         }
 
         if (newData.contractStatus) {
