@@ -31,14 +31,6 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
               .andWhere("party.deleted", false);
           });
 
-        //       .leftOuterJoin('accounts', function () {
-        //   this
-        //     .on('users.id', 'account.user_id')
-        //     .andOn(function () {
-        //       this.on('users.state', '=', 'NULL');
-        //       this.orOn('users.state', 'accounts.state');
-        //     });
-        // });
         /** */
         // if (newData.contractID) {
         //   queryBuilder.where(
@@ -87,7 +79,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         //   }
         //   queryBuilder.whereIn("bukrs", allowBURKS);
         // }
-        // queryBuilder.orderBy("created_at", "desc");
+        queryBuilder.orderBy("created_at", "desc");
         const queryResult = await queryBuilder.run();
 
         draft.response.body = {
