@@ -23,16 +23,16 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
                 "=",
                 `${tables.party.name}.contract_id`
               )
-                .andOn(`${tables.contract.name}.type`, "like", "S")
-                .andOn(`${tables.party.name}.stems10`, "like", "1");
+                .andOn(`${tables.contract.name}.type`, "S")
+                .andOn(`${tables.party.name}.stems10`, "1");
             }).orOn(function () {
               this.on(
                 `${tables.contract.name}.id`,
                 "=",
                 `${tables.party.name}.contract_id`
               )
-                .andOn(`${tables.contract.name}.type`, "like", "P")
-                .andOn(`${tables.party.name}.stems10`, "like", "2");
+                .andOn(`${tables.contract.name}.type`, "P")
+                .andOn(`${tables.party.name}.stems10`, "2");
             });
           });
 
@@ -44,54 +44,55 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         //       this.orOn('users.state', 'accounts.state');
         //     });
         // });
-        if (newData.contractID) {
-          queryBuilder.where(
-            `${tables.contract.name}.id`,
-            "like",
-            `%${newData.contractID}%`
-          );
-        }
-        if (newData.partyID) {
-          queryBuilder.where("ref_id", "like", newData.partyID);
-        }
-        const { contractDate, dateRange, dateType } = newData;
-        if (contractDate && contractDate[0] && contractDate[1]) {
-          const from = fn.convDate(dayjs, contractDate[0], "YYYYMMDD");
-          const to = fn.convDate(dayjs, contractDate[1], "YYYYMMDD");
-          queryBuilder.whereBetween(`prod_date`, [from, to]);
-        }
-        if (dateRange && dateRange[0] && dateRange[1]) {
-          const from = fn.convDate(dayjs, dateRange[0], "YYYYMMDD");
-          const to = fn.convDate(dayjs, dateRange[1], "YYYYMMDD");
-          queryBuilder.whereBetween(dateType, [from, to]);
-        }
-        if (newData.contractType) {
-          queryBuilder.where(
-            `${tables.contract.name}.type`,
-            "like",
-            newData.contractType
-          );
-        }
-        if (newData.contractStatus) {
-          queryBuilder.where("status", "like", newData.contractStatus);
-        }
-        if (newData.contractName) {
-          queryBuilder.where(
-            `${tables.contract.name}.name`,
-            "like",
-            `%${newData.contractName}%`
-          );
-        }
-        if (newData.bukrs) {
-          queryBuilder.whereIn("bukrs", [newData.bukrs]);
-        } else if (!(user.bukrs || "").includes("*")) {
-          const allowBURKS = [user.bukrs];
-          if (user.bukrs === "1000") {
-            allowBURKS.push("");
-          }
-          queryBuilder.whereIn("bukrs", allowBURKS);
-        }
-        queryBuilder.orderBy("created_at", "desc");
+        /** */
+        // if (newData.contractID) {
+        //   queryBuilder.where(
+        //     `${tables.contract.name}.id`,
+        //     "like",
+        //     `%${newData.contractID}%`
+        //   );
+        // }
+        // if (newData.partyID) {
+        //   queryBuilder.where("ref_id", "like", newData.partyID);
+        // }
+        // const { contractDate, dateRange, dateType } = newData;
+        // if (contractDate && contractDate[0] && contractDate[1]) {
+        //   const from = fn.convDate(dayjs, contractDate[0], "YYYYMMDD");
+        //   const to = fn.convDate(dayjs, contractDate[1], "YYYYMMDD");
+        //   queryBuilder.whereBetween(`prod_date`, [from, to]);
+        // }
+        // if (dateRange && dateRange[0] && dateRange[1]) {
+        //   const from = fn.convDate(dayjs, dateRange[0], "YYYYMMDD");
+        //   const to = fn.convDate(dayjs, dateRange[1], "YYYYMMDD");
+        //   queryBuilder.whereBetween(dateType, [from, to]);
+        // }
+        // if (newData.contractType) {
+        //   queryBuilder.where(
+        //     `${tables.contract.name}.type`,
+        //     "like",
+        //     newData.contractType
+        //   );
+        // }
+        // if (newData.contractStatus) {
+        //   queryBuilder.where("status", "like", newData.contractStatus);
+        // }
+        // if (newData.contractName) {
+        //   queryBuilder.where(
+        //     `${tables.contract.name}.name`,
+        //     "like",
+        //     `%${newData.contractName}%`
+        //   );
+        // }
+        // if (newData.bukrs) {
+        //   queryBuilder.whereIn("bukrs", [newData.bukrs]);
+        // } else if (!(user.bukrs || "").includes("*")) {
+        //   const allowBURKS = [user.bukrs];
+        //   if (user.bukrs === "1000") {
+        //     allowBURKS.push("");
+        //   }
+        //   queryBuilder.whereIn("bukrs", allowBURKS);
+        // }
+        // queryBuilder.orderBy("created_at", "desc");
         const queryResult = await queryBuilder.run();
 
         draft.response.body = {
