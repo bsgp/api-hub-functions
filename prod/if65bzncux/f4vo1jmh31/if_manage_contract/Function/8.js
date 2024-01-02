@@ -68,7 +68,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         }
         queryBuilder.whereIn("contract.bukrs", allowBURKS);
       }
-      queryBuilder.orderBy("contract.created_at", "desc");
+      queryBuilder
+        .orderBy("contract.created_at", "desc")
+        .orderBy("contract.id", "desc");
       const queryResult = await queryBuilder.run();
 
       draft.response.body = {
