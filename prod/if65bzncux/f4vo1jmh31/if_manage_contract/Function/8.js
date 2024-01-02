@@ -18,7 +18,11 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           )
           .leftJoin(`${tables.party.name} as party`, function () {
             this.on(`party.contract_id`, `contract.id`).on(function () {
-              this.on("party.contract_id", "like", "S%")
+              this.on(
+                "party.contract_id",
+                "=",
+                sql("mysql", sqlParams).raw("?", ["S"])
+              )
                 .on("party.stems10", "1")
                 .on("party.index", "2")
                 .on("party.deleted", false);
