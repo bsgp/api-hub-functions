@@ -16,16 +16,13 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             `party.name as party_name`,
             `party.deleted as party_deleted`
           )
-          .leftJoin(
-            sql("mysql", sqlParams).select(`${tables.party.name} as party`),
-            function () {
-              this.on(`party.contract_id`, `contract.id`).on(function () {
-                this.on("party.stems10", "1")
-                  .on("party.index", "2")
-                  .on("party.deleted", false);
-              });
-            }
-          );
+          .leftJoin(this.select(`${tables.party.name} as party`), function () {
+            this.on(`party.contract_id`, `contract.id`).on(function () {
+              this.on("party.stems10", "1")
+                .on("party.index", "2")
+                .on("party.deleted", false);
+            });
+          });
 
         // .leftJoin(`${tables.party.name} as party`, function () {
         //   this.on(`party.contract_id`, `contract.id`);
