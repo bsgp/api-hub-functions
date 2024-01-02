@@ -74,7 +74,6 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
 
       draft.response.body = {
         request: newData,
-        queryResult,
         list: tryit(() => queryResult.body.list.map((it) => ({ ...it })), []),
         E_STATUS: queryResult.statusCode === 200 ? "S" : "F",
         E_MESSAGE:
@@ -82,6 +81,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             ? `조회가\n완료되었습니다`
             : "조회 과정에서 문제가\n발생했습니다",
       };
+      if (draft.response.body.E_STATUS !== "S") {
+        draft.response.body.queryResult = queryResult;
+      }
       // return;
       // }
       // const queryBuilder = sql("mysql", sqlParams)
@@ -337,13 +339,13 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
 
         draft.response.body = {
           request: newData,
-          queryResult,
           list: convList,
-          // E_STATUS: "S",
-          // E_MESSAGE: `조회가\n완료되었습니다`,
           E_STATUS: "S",
-          E_MESSAGE: `FIXING`,
+          E_MESSAGE: `조회가\n완료되었습니다`,
         };
+        if (draft.response.body.E_STATUS !== "S") {
+          draft.response.body.queryResult = queryResult;
+        }
         return;
       }
       const queryBuilder = sql("mysql", sqlParams)
