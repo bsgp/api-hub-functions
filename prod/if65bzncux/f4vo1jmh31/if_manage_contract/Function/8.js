@@ -327,7 +327,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           .filter(({ bill_status }) => {
             switch (newData.bill_status) {
               case "1":
-                return ["1", "2"].includes(bill_status);
+                return bill_status === "1" || bill_status === "2";
               case "3":
                 return bill_status === "3";
               default:
