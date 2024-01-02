@@ -23,8 +23,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
                 this.on(function () {
                   //매출인 경우 partner가 1개 이상일 수 있음
                   this.onIn("party.contract_id", ["S%"])
-                    .onIn("party.stems10", "1")
-                    .onIn("party.index", "2");
+                    .onIn("party.stems10", ["1"])
+                    .onIn("party.index", ["2"]);
                 });
                 // .orOn(function () {
                 //   this.onIn("party.contract_id", ["P%"]);
