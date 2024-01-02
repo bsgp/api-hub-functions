@@ -17,7 +17,10 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             `party.deleted as party_deleted`
           )
           .leftJoin(`${tables.party.name} as party`, function () {
-            this.on(`party.contract_id`, `contract.id`);
+            this.on(`party.contract_id`, `contract.id`).on(
+              "party.deleted",
+              false
+            );
           })
           .where(function () {
             this.where(function () {
@@ -34,16 +37,17 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
                     .andWhere("party.deleted", false);
                 })
                 .orWhere(function () {
-                  this.whereNull("party.contract_id").orWhere(function () {
-                    this.whereNotExists(function () {
-                      this.where(function () {
-                        this.where("contract.type", "S")
-                          .andWhere("party.stems10", "1")
-                          .andWhere("party.index", "2")
-                          .andWhere("party.deleted", false);
-                      });
-                    });
-                  });
+                  this.whereNull("party.contract_id");
+                  // .orWhere(function () {
+                  //   this.whereNotExists(function () {
+                  //     this.where(function () {
+                  //       this.where("contract.type", "S")
+                  //         .andWhere("party.stems10", "1")
+                  //         .andWhere("party.index", "2")
+                  //         .andWhere("party.deleted", false);
+                  //     });
+                  //   });
+                  // });
                 });
             });
           });
