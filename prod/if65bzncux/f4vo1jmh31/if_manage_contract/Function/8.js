@@ -300,12 +300,12 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         const actual_billing = tryit(() => ab_queryResult.body.list, []);
 
         const convList = list
-          .map(({ id, ...item }) => {
+          .map(({ ...item }) => {
             const fBills = (actual_billing || []).filter(
-              (it) =>
-                it.contract_id === item.contract_id &&
-                (it.id === id || it.parent_id === id) &&
-                it.fi_number
+              ({ contract_id, id, parent_id, fi_number }) =>
+                contract_id === item.contract_id &&
+                (id === item.id || parent_id === item.id) &&
+                fi_number
             );
             const sumBillAmt = fBills.reduce((acc, { dmbtr_supply }) => {
               return acc + Number(dmbtr_supply);
@@ -323,7 +323,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
               bill_status = "3";
               bill_status_text = "완료";
             }
-            return { ...item, id, bill_status, bill_status_text };
+            return { ...item, bill_status, bill_status_text };
           })
           .filter(
             (it) =>
