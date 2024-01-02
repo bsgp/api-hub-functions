@@ -20,7 +20,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             this.on(`party.contract_id`, `contract.id`)
               .onNotIn("party.deleted", [true])
               .on(function () {
-                this.on("contract.type", "S");
+                this.onIn("party.contract_id", ["S%"]);
                 this.onIn("party.stems10", "1");
                 this.onIn("party.index", "2");
               });
