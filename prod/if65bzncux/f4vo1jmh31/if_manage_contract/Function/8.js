@@ -306,10 +306,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
                 (it.id === id || it.parent_id === id) &&
                 it.fi_number
             );
-            const sumBillAmt = fBills.reduce(
-              (acc, curr) => acc + Number(curr.dmbtr_supply),
-              0
-            );
+            const sumBillAmt = fBills.reduce((acc, { dmbtr_supply }) => {
+              return acc + Number(dmbtr_supply);
+            }, 0);
             const totalBillAmt = Math.round(sumBillAmt * 100) / 100;
 
             let bill_status, bill_status_text;
