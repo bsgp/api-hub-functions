@@ -189,6 +189,18 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
     }
     case "IF-CT-115": {
       // 청구리스트 조회
+      if (newData.version === "v2") {
+        draft.response.body = {
+          request: newData,
+          // queryResult,
+          // list: convList,
+          // E_STATUS: "S",
+          // E_MESSAGE: `조회가\n완료되었습니다`,
+          E_STATUS: "F",
+          E_MESSAGE: `FIXING`,
+        };
+        return;
+      }
       const queryBuilder = sql("mysql", sqlParams)
         .select(tables.cost_object.name)
         .select(
