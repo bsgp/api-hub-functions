@@ -19,10 +19,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
 
         if (newData.partyID) {
           queryBuilder.leftJoin(`${tables.party.name} as party`, function () {
-            this.on(`party.contract_id`, `contract.id`).onNotIn(
-              "party.deleted",
-              [true]
-            );
+            this.on(`party.contract_id`, `contract.id`);
+            this.onNotIn("party.deleted", [true]);
           });
           queryBuilder.where("ref_id", "like", newData.partyID);
         } else {
