@@ -194,37 +194,37 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           .select(`${tables.cost_object.name} as bills`)
           .select(
             `bills.*`,
-            `${tables.contract.name}.id as contract_id`,
-            `${tables.contract.name}.name as contract_name`,
-            `${tables.contract.name}.renewal_ind`,
-            `${tables.contract.name}.bukrs`,
-            `${tables.contract.name}.start_date`,
-            `${tables.contract.name}.end_date`,
-            `${tables.contract.name}.curr_key`,
-            `${tables.party.name}.contract_id`,
-            `${tables.party.name}.ref_id`,
-            `${tables.party.name}.stems10`,
-            `${tables.party.name}.name as party_name`,
-            `${tables.party.name}.deleted as party_deleted`
+            `contract.id as contract_id`,
+            `contract.name as contract_name`,
+            `contract.renewal_ind`,
+            `contract.bukrs`,
+            `contract.start_date`,
+            `contract.end_date`,
+            `contract.curr_key`,
+            `party.contract_id`,
+            `party.ref_id`,
+            `party.stems10`,
+            `party.name as party_name`,
+            `party.deleted as party_deleted`
           )
           .leftJoin(
-            tables.contract.name,
+            `${tables.contract.name} as contract`,
             `bills.contract_id`,
             "=",
-            `${tables.contract.name}.id`
+            `contract.id`
           )
           .leftJoin(
-            tables.party.name,
+            `${tables.party.name} as party`,
             `bills.contract_id`,
             "=",
-            `${tables.party.name}.contract_id`
+            `party.contract_id`
           );
 
         queryBuilder.where("stems10", "like", "1");
         queryBuilder
-          .where(`${tables.contract.name}.type`, "like", "S")
+          .where(`contract.type`, "like", "S")
           .whereNot(`bills.deleted`, true)
-          .whereNot(`${tables.party.name}.deleted`, true);
+          .whereNot(`party.deleted`, true);
 
         const { post_date, dateRange, dateType } = newData;
         if (post_date && post_date[0] && post_date[1]) {
@@ -243,25 +243,17 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           }
         }
         if (newData.contractID) {
-          queryBuilder.where(
-            `${tables.contract.name}.id`,
-            "like",
-            `%${newData.contractID}%`
-          );
+          queryBuilder.where(`contract.id`, "like", `%${newData.contractID}%`);
         }
         if (newData.contractName) {
           queryBuilder.where(
-            `${tables.contract.name}.name`,
+            `contract.name`,
             "like",
             `%${newData.contractName}%`
           );
         }
         if (newData.partyID) {
-          queryBuilder.where(
-            `${tables.party.name}.ref_id`,
-            "like",
-            newData.partyID
-          );
+          queryBuilder.where(`party.ref_id`, "like", newData.partyID);
         }
         if (newData.cost_object_id) {
           queryBuilder.where("cost_object_id", "like", newData.cost_object_id);
