@@ -207,18 +207,12 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             `party.name as party_name`,
             `party.deleted as party_deleted`
           )
-          .leftJoin(
-            `${tables.contract.name} as contract`,
-            `bills.contract_id`,
-            "=",
-            `contract.id`
-          )
-          .leftJoin(
-            `${tables.party.name} as party`,
-            `bills.contract_id`,
-            "=",
-            `party.contract_id`
-          );
+          .leftJoin(`${tables.contract.name} as contract`, function () {
+            this.on(`bills.contract_id`, `contract.id`);
+          })
+          .leftJoin(`${tables.party.name} as party`, function () {
+            this.on(`bills.contract_id`, `party.contract_id`);
+          });
 
         queryBuilder.where("stems10", "like", "1");
         queryBuilder
