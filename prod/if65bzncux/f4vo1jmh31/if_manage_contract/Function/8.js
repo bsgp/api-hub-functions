@@ -298,11 +298,11 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           .run();
         const actual_billing = tryit(() => ab_queryResult.body.list, []);
 
+        const { bill_status } = newData;
         const bill_status_filterFn = (it) =>
-          !newData.bill_status ||
-          (newData.bill_status === "1" &&
-            ["1", "2"].includes(it.bill_status)) ||
-          newData.bill_status === it.bill_status;
+          !bill_status ||
+          (bill_status === "1" && ["1", "2"].includes(it.bill_status)) ||
+          bill_status === it.bill_status;
 
         const convList = list
           .map(({ ...item }) => {
