@@ -25,10 +25,11 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
                   this.onIn("party.contract_id", ["S%"]);
                   this.onIn("party.stems10", "1");
                   this.onIn("party.index", "2");
-                }).orOn(function () {
-                  this.onIn("party.contract_id", ["P%"]);
-                  this.onIn("party.stems10", "2");
                 });
+                // .orOn(function () {
+                //   this.onIn("party.contract_id", ["P%"]);
+                //   this.onIn("party.stems10", "2");
+                // });
               });
           });
 
