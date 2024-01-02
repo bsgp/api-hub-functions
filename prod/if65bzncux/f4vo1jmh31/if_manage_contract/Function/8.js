@@ -209,19 +209,17 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           )
           .leftJoin(`${tables.contract.name} as contract`, function () {
             this.on(`contract.id`, `bills.contract_id`);
+            this.onIn(`contract.type`, ["S"]);
           })
           .leftJoin(`${tables.party.name} as party`, function () {
-            this.on(`party.contract_id`, `bills.contract_id`).onNotIn(
-              "party.deleted",
-              [true]
-            );
+            this.on(`party.contract_id`, `bills.contract_id`);
+            this.onNotIn("party.deleted", [true]);
           });
 
         queryBuilder.where("stems10", "like", "1");
         queryBuilder
           .where(`contract.type`, "like", "S")
-          .whereNot(`bills.deleted`, true)
-          .whereNot(`party.deleted`, true);
+          .whereNot(`bills.deleted`, true);
 
         const { post_date, dateRange, dateType } = newData;
         if (post_date && post_date[0] && post_date[1]) {
