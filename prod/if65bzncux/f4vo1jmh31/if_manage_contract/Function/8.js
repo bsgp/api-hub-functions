@@ -21,7 +21,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
               this.on(
                 "party.contract_id",
                 "=",
-                sql("mysql", sqlParams).raw("?", ["S"])
+                sql("mysql", sqlParams)
+                  .select(tables.party.name)
+                  .raw("?", ["S"])
               )
                 .on("party.stems10", "1")
                 .on("party.index", "2")
