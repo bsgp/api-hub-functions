@@ -288,8 +288,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         const contractIDs = list
           .map(({ contract_id }) => contract_id)
           .filter(
-            (it, idx) =>
-              list.findIndex((item) => item.contract_id === it) === idx
+            (id, idx) => list.findIndex((it) => it.contract_id === id) === idx
           );
         const ab_queryResult = await sql("mysql", sqlParams)
           .select(tables.actual_billing.name)
