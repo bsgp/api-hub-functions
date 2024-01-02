@@ -5,189 +5,186 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
   switch (interfaceID) {
     case "IF-CT-105": {
       // 계약리스트 조회
-      if (newData.version === "v2") {
-        const queryBuilder = sql("mysql", sqlParams)
-          .select(`${tables.contract.name} as contract`)
-          .select(
-            `contract.*`,
-            `party.contract_id`,
-            `party.ref_id`,
-            `party.stems10`,
-            `party.name as party_name`,
-            `party.deleted as party_deleted`
-          );
-
-        if (newData.partyID) {
-          queryBuilder.leftJoin(`${tables.party.name} as party`, function () {
-            this.on(`party.contract_id`, `contract.id`);
-            this.onNotIn("party.deleted", [true]);
-          });
-          queryBuilder.where("ref_id", "like", newData.partyID);
-        } else {
-          queryBuilder
-            .leftJoin(`${tables.party.name} as party`, function () {
-              this.on(`party.contract_id`, `contract.id`)
-                .onNotIn("party.deleted", [true])
-                .onNotIn("party.ref_id", ["1000", "KR01", "US01"]);
-            })
-            .groupBy("contract.id"); //매출인 경우 partner가 1개 이상일 수 있음
-        }
-
-        if (newData.contractType) {
-          queryBuilder.where(`contract.type`, "like", newData.contractType);
-        }
-
-        if (newData.contractID) {
-          queryBuilder.where(`contract.id`, "like", `%${newData.contractID}%`);
-        }
-
-        const { contractDate, dateRange, dateType } = newData;
-        if (contractDate && contractDate[0] && contractDate[1]) {
-          const from = fn.convDate(dayjs, contractDate[0], "YYYYMMDD");
-          const to = fn.convDate(dayjs, contractDate[1], "YYYYMMDD");
-          queryBuilder.whereBetween(`contract.prod_date`, [from, to]);
-        }
-        if (dateRange && dateRange[0] && dateRange[1]) {
-          const from = fn.convDate(dayjs, dateRange[0], "YYYYMMDD");
-          const to = fn.convDate(dayjs, dateRange[1], "YYYYMMDD");
-          queryBuilder.whereBetween(`contract.${dateType}`, [from, to]);
-        }
-
-        if (newData.contractStatus) {
-          queryBuilder.where("contract.status", "like", newData.contractStatus);
-        }
-        if (newData.contractName) {
-          queryBuilder.where(
-            `contract.name`,
-            "like",
-            `%${newData.contractName}%`
-          );
-        }
-        if (newData.bukrs) {
-          queryBuilder.whereIn("contract.bukrs", [newData.bukrs]);
-        } else if (!(user.bukrs || "").includes("*")) {
-          const allowBURKS = [user.bukrs];
-          if (user.bukrs === "1000") {
-            allowBURKS.push("");
-          }
-          queryBuilder.whereIn("contract.bukrs", allowBURKS);
-        }
-        queryBuilder.orderBy("contract.created_at", "desc");
-        const queryResult = await queryBuilder.run();
-
-        draft.response.body = {
-          request: newData,
-          queryResult,
-          list: tryit(() => queryResult.body.list.map((it) => ({ ...it })), []),
-          E_STATUS: queryResult.statusCode === 200 ? "S" : "F",
-          E_MESSAGE:
-            queryResult.statusCode === 200
-              ? `조회가\n완료되었습니다`
-              : "조회 과정에서 문제가\n발생했습니다",
-        };
-        return;
-      }
+      // if (newData.version === "v2") {
       const queryBuilder = sql("mysql", sqlParams)
-        .select(tables.contract.name)
+        .select(`${tables.contract.name} as contract`)
         .select(
-          `${tables.contract.name}.*`,
-          `${tables.party.name}.contract_id`,
-          `${tables.party.name}.ref_id`,
-          `${tables.party.name}.stems10`,
-          `${tables.party.name}.name as party_name`,
-          `${tables.party.name}.deleted as party_deleted`
-        )
-        .leftJoin(
-          tables.party.name,
-          `${tables.contract.name}.id`,
-          "=",
-          `${tables.party.name}.contract_id`
+          `contract.*`,
+          `party.contract_id`,
+          `party.ref_id`,
+          `party.stems10`,
+          `party.name as party_name`,
+          `party.deleted as party_deleted`
         );
 
-      if (newData.contractID) {
-        queryBuilder.where(
-          `${tables.contract.name}.id`,
-          "like",
-          `%${newData.contractID}%`
-        );
-      }
       if (newData.partyID) {
+        queryBuilder.leftJoin(`${tables.party.name} as party`, function () {
+          this.on(`party.contract_id`, `contract.id`);
+          this.onNotIn("party.deleted", [true]);
+        });
         queryBuilder.where("ref_id", "like", newData.partyID);
+      } else {
+        queryBuilder
+          .leftJoin(`${tables.party.name} as party`, function () {
+            this.on(`party.contract_id`, `contract.id`)
+              .onNotIn("party.deleted", [true])
+              .onNotIn("party.ref_id", ["1000", "KR01", "US01"]);
+          })
+          .groupBy("contract.id"); //매출인 경우 partner가 1개 이상일 수 있음
+      }
+
+      if (newData.contractType) {
+        queryBuilder.where(`contract.type`, "like", newData.contractType);
+      }
+      if (newData.contractID) {
+        queryBuilder.where(`contract.id`, "like", `%${newData.contractID}%`);
       }
       const { contractDate, dateRange, dateType } = newData;
       if (contractDate && contractDate[0] && contractDate[1]) {
         const from = fn.convDate(dayjs, contractDate[0], "YYYYMMDD");
         const to = fn.convDate(dayjs, contractDate[1], "YYYYMMDD");
-        queryBuilder.whereBetween(`prod_date`, [from, to]);
+        queryBuilder.whereBetween(`contract.prod_date`, [from, to]);
       }
       if (dateRange && dateRange[0] && dateRange[1]) {
         const from = fn.convDate(dayjs, dateRange[0], "YYYYMMDD");
         const to = fn.convDate(dayjs, dateRange[1], "YYYYMMDD");
-        queryBuilder.whereBetween(dateType, [from, to]);
-      }
-      if (newData.contractType) {
-        queryBuilder.where(
-          `${tables.contract.name}.type`,
-          "like",
-          newData.contractType
-        );
+        queryBuilder.whereBetween(`contract.${dateType}`, [from, to]);
       }
       if (newData.contractStatus) {
-        queryBuilder.where("status", "like", newData.contractStatus);
+        queryBuilder.where("contract.status", "like", newData.contractStatus);
       }
       if (newData.contractName) {
         queryBuilder.where(
-          `${tables.contract.name}.name`,
+          `contract.name`,
           "like",
           `%${newData.contractName}%`
         );
       }
       if (newData.bukrs) {
-        queryBuilder.whereIn("bukrs", [newData.bukrs]);
+        queryBuilder.whereIn("contract.bukrs", [newData.bukrs]);
       } else if (!(user.bukrs || "").includes("*")) {
         const allowBURKS = [user.bukrs];
         if (user.bukrs === "1000") {
           allowBURKS.push("");
         }
-        queryBuilder.whereIn("bukrs", allowBURKS);
+        queryBuilder.whereIn("contract.bukrs", allowBURKS);
       }
-      queryBuilder.orderBy("created_at", "desc");
+      queryBuilder.orderBy("contract.created_at", "desc");
       const queryResult = await queryBuilder.run();
-      const list = tryit(
-        () => queryResult.body.list.map((it) => ({ ...it })),
-        []
-      );
 
       draft.response.body = {
         request: newData,
         queryResult,
-        list: list
-          .reduce((acc, curr) => {
-            const isExist = acc.findIndex(({ id }) => id === curr.id);
-            if (isExist >= 0) {
-              const { type, stems10, party_deleted } = curr;
-              if (type === "P" && stems10 === "2" && !party_deleted) {
-                acc[isExist] = curr;
-              }
-              if (type === "S" && stems10 === "1" && !party_deleted) {
-                acc[isExist] = curr;
-              }
-            } else acc.push(curr);
-            return acc;
-          }, [])
-          .map(({ party_name, stems10, type, ...args }) => {
-            let name = "";
-            if (type === "P" && stems10 === "2") {
-              name = party_name;
-            }
-            if (type === "S" && stems10 === "1") {
-              name = party_name;
-            }
-            return { ...args, type, party_name: name };
-          }),
-        E_STATUS: "S",
-        E_MESSAGE: `조회가\n완료되었습니다`,
+        list: tryit(() => queryResult.body.list.map((it) => ({ ...it })), []),
+        E_STATUS: queryResult.statusCode === 200 ? "S" : "F",
+        E_MESSAGE:
+          queryResult.statusCode === 200
+            ? `조회가\n완료되었습니다`
+            : "조회 과정에서 문제가\n발생했습니다",
       };
+      // return;
+      // }
+      // const queryBuilder = sql("mysql", sqlParams)
+      //   .select(tables.contract.name)
+      //   .select(
+      //     `${tables.contract.name}.*`,
+      //     `${tables.party.name}.contract_id`,
+      //     `${tables.party.name}.ref_id`,
+      //     `${tables.party.name}.stems10`,
+      //     `${tables.party.name}.name as party_name`,
+      //     `${tables.party.name}.deleted as party_deleted`
+      //   )
+      //   .leftJoin(
+      //     tables.party.name,
+      //     `${tables.contract.name}.id`,
+      //     "=",
+      //     `${tables.party.name}.contract_id`
+      //   );
+
+      // if (newData.contractID) {
+      //   queryBuilder.where(
+      //     `${tables.contract.name}.id`,
+      //     "like",
+      //     `%${newData.contractID}%`
+      //   );
+      // }
+      // if (newData.partyID) {
+      //   queryBuilder.where("ref_id", "like", newData.partyID);
+      // }
+      // const { contractDate, dateRange, dateType } = newData;
+      // if (contractDate && contractDate[0] && contractDate[1]) {
+      //   const from = fn.convDate(dayjs, contractDate[0], "YYYYMMDD");
+      //   const to = fn.convDate(dayjs, contractDate[1], "YYYYMMDD");
+      //   queryBuilder.whereBetween(`prod_date`, [from, to]);
+      // }
+      // if (dateRange && dateRange[0] && dateRange[1]) {
+      //   const from = fn.convDate(dayjs, dateRange[0], "YYYYMMDD");
+      //   const to = fn.convDate(dayjs, dateRange[1], "YYYYMMDD");
+      //   queryBuilder.whereBetween(dateType, [from, to]);
+      // }
+      // if (newData.contractType) {
+      //   queryBuilder.where(
+      //     `${tables.contract.name}.type`,
+      //     "like",
+      //     newData.contractType
+      //   );
+      // }
+      // if (newData.contractStatus) {
+      //   queryBuilder.where("status", "like", newData.contractStatus);
+      // }
+      // if (newData.contractName) {
+      //   queryBuilder.where(
+      //     `${tables.contract.name}.name`,
+      //     "like",
+      //     `%${newData.contractName}%`
+      //   );
+      // }
+      // if (newData.bukrs) {
+      //   queryBuilder.whereIn("bukrs", [newData.bukrs]);
+      // } else if (!(user.bukrs || "").includes("*")) {
+      //   const allowBURKS = [user.bukrs];
+      //   if (user.bukrs === "1000") {
+      //     allowBURKS.push("");
+      //   }
+      //   queryBuilder.whereIn("bukrs", allowBURKS);
+      // }
+      // queryBuilder.orderBy("created_at", "desc");
+      // const queryResult = await queryBuilder.run();
+      // const list = tryit(
+      //   () => queryResult.body.list.map((it) => ({ ...it })),
+      //   []
+      // );
+
+      // draft.response.body = {
+      //   request: newData,
+      //   queryResult,
+      //   list: list
+      //     .reduce((acc, curr) => {
+      //       const isExist = acc.findIndex(({ id }) => id === curr.id);
+      //       if (isExist >= 0) {
+      //         const { type, stems10, party_deleted } = curr;
+      //         if (type === "P" && stems10 === "2" && !party_deleted) {
+      //           acc[isExist] = curr;
+      //         }
+      //         if (type === "S" && stems10 === "1" && !party_deleted) {
+      //           acc[isExist] = curr;
+      //         }
+      //       } else acc.push(curr);
+      //       return acc;
+      //     }, [])
+      //     .map(({ party_name, stems10, type, ...args }) => {
+      //       let name = "";
+      //       if (type === "P" && stems10 === "2") {
+      //         name = party_name;
+      //       }
+      //       if (type === "S" && stems10 === "1") {
+      //         name = party_name;
+      //       }
+      //       return { ...args, type, party_name: name };
+      //     }),
+      //   E_STATUS: "S",
+      //   E_MESSAGE: `조회가\n완료되었습니다`,
+      // };
       break;
     }
     case "IF-CT-115": {
