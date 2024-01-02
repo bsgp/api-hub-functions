@@ -30,35 +30,6 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
                 this.onIn("party.stems10", "2");
               });
           });
-        // .where(function () {
-        //   this.where(function () {
-        //     this.where(function () {
-        //       //매출인 경우 partner가 1개 이상일 수 있음
-        //       this.where("contract.type", "S")
-        //         .andWhere("party.stems10", "1")
-        //         .andWhere("party.index", "2")
-        //         .andWhere("party.deleted", false);
-        //     })
-        //       .orWhere(function () {
-        //         this.where("contract.type", "P")
-        //           .andWhere("stems10", "2")
-        //           .andWhere("party.deleted", false);
-        //       })
-        //       .orWhere(function () {
-        //         this.whereNull("party.contract_id");
-        //         // .orWhere(function () {
-        //         //   this.whereNotExists(function () {
-        //         //     this.where(function () {
-        //         //       this.where("contract.type", "S")
-        //         //         .andWhere("party.stems10", "1")
-        //         //         .andWhere("party.index", "2")
-        //         //         .andWhere("party.deleted", false);
-        //         //     });
-        //         //   });
-        //         // });
-        //       });
-        //   });
-        // });
         /** */
         // .leftJoin(`${tables.party.name} as party`, function () {
         //   this.on(`party.contract_id`, `contract.id`);
