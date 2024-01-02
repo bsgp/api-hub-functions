@@ -286,12 +286,11 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           []
         );
         const contractIDs = list
+          .map(({ contract_id }) => contract_id)
           .filter(
             (it, idx) =>
-              list.findIndex((item) => item.contract_id === it.contract_id) ===
-              idx
-          )
-          .map(({ contract_id }) => contract_id);
+              list.findIndex((item) => item.contract_id === it) === idx
+          );
         const ab_queryResult = await sql("mysql", sqlParams)
           .select(tables.actual_billing.name)
           .whereIn("contract_id", contractIDs)
