@@ -353,7 +353,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           list: convList,
           // E_STATUS: "S",
           // E_MESSAGE: `조회가\n완료되었습니다`,
-          E_STATUS: "F",
+          E_STATUS: "S",
           E_MESSAGE: `FIXING`,
         };
         return;
