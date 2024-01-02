@@ -265,24 +265,26 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         }
 
         const queryResult = await queryBuilder.run();
-        const list = tryit(() => queryResult.body.list, [])
-          // .map((it) => ({ ...it }))
-          .filter(
-            ({ bill_from_id, ref_id }) =>
-              bill_from_id === "" || bill_from_id === ref_id
-          )
-          .sort((al, be) => {
-            if (al.post_date !== be.post_date) {
-              return Number(al.post_date) - Number(be.post_date);
-            }
-            if (al.contract_id === be.contract_id) {
-              return Number(al.index) - Number(be.index);
-            } else
-              return (
-                Number(al.contract_id.replace(/[A-z]/g, "")) -
-                Number(be.contract_id.replace(/[A-z]/g, ""))
-              );
-          });
+        const list = tryit(
+          () =>
+            queryResult.body.list
+              .filter(
+                (it) => it.bill_from_id === "" || it.bill_from_id === it.ref_id
+              )
+              .sort((al, be) => {
+                if (al.post_date !== be.post_date) {
+                  return Number(al.post_date) - Number(be.post_date);
+                }
+                if (al.contract_id === be.contract_id) {
+                  return Number(al.index) - Number(be.index);
+                } else
+                  return (
+                    Number(al.contract_id.replace(/[A-z]/g, "")) -
+                    Number(be.contract_id.replace(/[A-z]/g, ""))
+                  );
+              }),
+          []
+        );
         const contractIDs = list
           .map(({ contract_id }) => contract_id)
           .filter(
