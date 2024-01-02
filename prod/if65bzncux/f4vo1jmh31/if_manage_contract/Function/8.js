@@ -5,147 +5,223 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
   switch (interfaceID) {
     case "IF-CT-105": {
       // 계약리스트 조회
+      // if (newData.version === "v2") {
       const queryBuilder = sql("mysql", sqlParams)
-        .select(tables.contract.name)
+        .select(`${tables.contract.name} as contract`)
         .select(
-          `${tables.contract.name}.*`,
-          `${tables.party.name}.contract_id`,
-          `${tables.party.name}.ref_id`,
-          `${tables.party.name}.stems10`,
-          `${tables.party.name}.name as party_name`,
-          `${tables.party.name}.deleted as party_deleted`
-        )
-        .leftJoin(
-          tables.party.name,
-          `${tables.contract.name}.id`,
-          "=",
-          `${tables.party.name}.contract_id`
+          `contract.*`,
+          `party.contract_id`,
+          `party.ref_id`,
+          `party.stems10`,
+          `party.name as party_name`,
+          `party.deleted as party_deleted`
         );
 
-      if (newData.contractID) {
-        queryBuilder.where(
-          `${tables.contract.name}.id`,
-          "like",
-          `%${newData.contractID}%`
-        );
-      }
       if (newData.partyID) {
+        queryBuilder.leftJoin(`${tables.party.name} as party`, function () {
+          this.on(`party.contract_id`, `contract.id`);
+          this.onNotIn("party.deleted", [true]);
+        });
         queryBuilder.where("ref_id", "like", newData.partyID);
+      } else {
+        queryBuilder
+          .leftJoin(`${tables.party.name} as party`, function () {
+            this.on(`party.contract_id`, `contract.id`)
+              .onNotIn("party.deleted", [true])
+              .onNotIn("party.ref_id", ["1000", "KR01", "US01"]);
+          })
+          .groupBy("contract.id"); //매출인 경우 partner가 1개 이상일 수 있음
+      }
+
+      if (newData.contractType) {
+        queryBuilder.where(`contract.type`, "like", newData.contractType);
+      }
+      if (newData.contractID) {
+        queryBuilder.where(`contract.id`, "like", `%${newData.contractID}%`);
       }
       const { contractDate, dateRange, dateType } = newData;
       if (contractDate && contractDate[0] && contractDate[1]) {
         const from = fn.convDate(dayjs, contractDate[0], "YYYYMMDD");
         const to = fn.convDate(dayjs, contractDate[1], "YYYYMMDD");
-        queryBuilder.whereBetween(`prod_date`, [from, to]);
+        queryBuilder.whereBetween(`contract.prod_date`, [from, to]);
       }
       if (dateRange && dateRange[0] && dateRange[1]) {
         const from = fn.convDate(dayjs, dateRange[0], "YYYYMMDD");
         const to = fn.convDate(dayjs, dateRange[1], "YYYYMMDD");
-        queryBuilder.whereBetween(dateType, [from, to]);
-      }
-      if (newData.contractType) {
-        queryBuilder.where(
-          `${tables.contract.name}.type`,
-          "like",
-          newData.contractType
-        );
+        queryBuilder.whereBetween(`contract.${dateType}`, [from, to]);
       }
       if (newData.contractStatus) {
-        queryBuilder.where("status", "like", newData.contractStatus);
+        queryBuilder.where("contract.status", "like", newData.contractStatus);
       }
       if (newData.contractName) {
         queryBuilder.where(
-          `${tables.contract.name}.name`,
+          `contract.name`,
           "like",
           `%${newData.contractName}%`
         );
       }
       if (newData.bukrs) {
-        queryBuilder.whereIn("bukrs", [newData.bukrs]);
+        queryBuilder.whereIn("contract.bukrs", [newData.bukrs]);
       } else if (!(user.bukrs || "").includes("*")) {
         const allowBURKS = [user.bukrs];
         if (user.bukrs === "1000") {
           allowBURKS.push("");
         }
-        queryBuilder.whereIn("bukrs", allowBURKS);
+        queryBuilder.whereIn("contract.bukrs", allowBURKS);
       }
-      queryBuilder.orderBy("created_at", "desc");
+      queryBuilder.orderBy("contract.created_at", "desc");
       const queryResult = await queryBuilder.run();
-      const list = tryit(
-        () => queryResult.body.list.map((it) => ({ ...it })),
-        []
-      );
 
       draft.response.body = {
         request: newData,
-        queryResult,
-        list: list
-          .reduce((acc, curr) => {
-            const isExist = acc.findIndex(({ id }) => id === curr.id);
-            if (isExist >= 0) {
-              const { type, stems10, party_deleted } = curr;
-              if (type === "P" && stems10 === "2" && !party_deleted) {
-                acc[isExist] = curr;
-              }
-              if (type === "S" && stems10 === "1" && !party_deleted) {
-                acc[isExist] = curr;
-              }
-            } else acc.push(curr);
-            return acc;
-          }, [])
-          .map(({ party_name, stems10, type, ...args }) => {
-            let name = "";
-            if (type === "P" && stems10 === "2") {
-              name = party_name;
-            }
-            if (type === "S" && stems10 === "1") {
-              name = party_name;
-            }
-            return { ...args, type, party_name: name };
-          }),
-        // test: fn.convDate(dayjs, newData.contractDate[0], "YYYYMMDD"),
-        E_STATUS: "S",
-        E_MESSAGE: `조회가\n완료되었습니다`,
+        list: tryit(() => queryResult.body.list.map((it) => ({ ...it })), []),
+        E_STATUS: queryResult.statusCode === 200 ? "S" : "F",
+        E_MESSAGE:
+          queryResult.statusCode === 200
+            ? `조회가\n완료되었습니다`
+            : "조회 과정에서 문제가\n발생했습니다",
       };
+      if (draft.response.body.E_STATUS !== "S") {
+        draft.response.body.queryResult = queryResult;
+      }
+      // return;
+      // }
+      // const queryBuilder = sql("mysql", sqlParams)
+      //   .select(tables.contract.name)
+      //   .select(
+      //     `${tables.contract.name}.*`,
+      //     `${tables.party.name}.contract_id`,
+      //     `${tables.party.name}.ref_id`,
+      //     `${tables.party.name}.stems10`,
+      //     `${tables.party.name}.name as party_name`,
+      //     `${tables.party.name}.deleted as party_deleted`
+      //   )
+      //   .leftJoin(
+      //     tables.party.name,
+      //     `${tables.contract.name}.id`,
+      //     "=",
+      //     `${tables.party.name}.contract_id`
+      //   );
+
+      // if (newData.contractID) {
+      //   queryBuilder.where(
+      //     `${tables.contract.name}.id`,
+      //     "like",
+      //     `%${newData.contractID}%`
+      //   );
+      // }
+      // if (newData.partyID) {
+      //   queryBuilder.where("ref_id", "like", newData.partyID);
+      // }
+      // const { contractDate, dateRange, dateType } = newData;
+      // if (contractDate && contractDate[0] && contractDate[1]) {
+      //   const from = fn.convDate(dayjs, contractDate[0], "YYYYMMDD");
+      //   const to = fn.convDate(dayjs, contractDate[1], "YYYYMMDD");
+      //   queryBuilder.whereBetween(`prod_date`, [from, to]);
+      // }
+      // if (dateRange && dateRange[0] && dateRange[1]) {
+      //   const from = fn.convDate(dayjs, dateRange[0], "YYYYMMDD");
+      //   const to = fn.convDate(dayjs, dateRange[1], "YYYYMMDD");
+      //   queryBuilder.whereBetween(dateType, [from, to]);
+      // }
+      // if (newData.contractType) {
+      //   queryBuilder.where(
+      //     `${tables.contract.name}.type`,
+      //     "like",
+      //     newData.contractType
+      //   );
+      // }
+      // if (newData.contractStatus) {
+      //   queryBuilder.where("status", "like", newData.contractStatus);
+      // }
+      // if (newData.contractName) {
+      //   queryBuilder.where(
+      //     `${tables.contract.name}.name`,
+      //     "like",
+      //     `%${newData.contractName}%`
+      //   );
+      // }
+      // if (newData.bukrs) {
+      //   queryBuilder.whereIn("bukrs", [newData.bukrs]);
+      // } else if (!(user.bukrs || "").includes("*")) {
+      //   const allowBURKS = [user.bukrs];
+      //   if (user.bukrs === "1000") {
+      //     allowBURKS.push("");
+      //   }
+      //   queryBuilder.whereIn("bukrs", allowBURKS);
+      // }
+      // queryBuilder.orderBy("created_at", "desc");
+      // const queryResult = await queryBuilder.run();
+      // const list = tryit(
+      //   () => queryResult.body.list.map((it) => ({ ...it })),
+      //   []
+      // );
+
+      // draft.response.body = {
+      //   request: newData,
+      //   queryResult,
+      //   list: list
+      //     .reduce((acc, curr) => {
+      //       const isExist = acc.findIndex(({ id }) => id === curr.id);
+      //       if (isExist >= 0) {
+      //         const { type, stems10, party_deleted } = curr;
+      //         if (type === "P" && stems10 === "2" && !party_deleted) {
+      //           acc[isExist] = curr;
+      //         }
+      //         if (type === "S" && stems10 === "1" && !party_deleted) {
+      //           acc[isExist] = curr;
+      //         }
+      //       } else acc.push(curr);
+      //       return acc;
+      //     }, [])
+      //     .map(({ party_name, stems10, type, ...args }) => {
+      //       let name = "";
+      //       if (type === "P" && stems10 === "2") {
+      //         name = party_name;
+      //       }
+      //       if (type === "S" && stems10 === "1") {
+      //         name = party_name;
+      //       }
+      //       return { ...args, type, party_name: name };
+      //     }),
+      //   E_STATUS: "S",
+      //   E_MESSAGE: `조회가\n완료되었습니다`,
+      // };
       break;
     }
     case "IF-CT-115": {
       // 청구리스트 조회
+      // if (newData.version === "v2") {
       const queryBuilder = sql("mysql", sqlParams)
-        .select(tables.cost_object.name)
+        .select(`${tables.cost_object.name} as bills`)
         .select(
-          `${tables.cost_object.name}.*`,
-          `${tables.contract.name}.id as contract_id`,
-          `${tables.contract.name}.name as contract_name`,
-          `${tables.contract.name}.renewal_ind`,
-          `${tables.contract.name}.bukrs`,
-          `${tables.contract.name}.start_date`,
-          `${tables.contract.name}.end_date`,
-          `${tables.contract.name}.curr_key`,
-          `${tables.party.name}.contract_id`,
-          `${tables.party.name}.ref_id`,
-          `${tables.party.name}.stems10`,
-          `${tables.party.name}.name as party_name`,
-          `${tables.party.name}.deleted as party_deleted`
+          `bills.*`,
+          `contract.id as contract_id`,
+          `contract.name as contract_name`,
+          `contract.renewal_ind`,
+          `contract.bukrs`,
+          `contract.start_date`,
+          `contract.end_date`,
+          `contract.curr_key`,
+          `party.contract_id`,
+          `party.ref_id`,
+          `party.stems10`,
+          `party.name as party_name`,
+          `party.deleted as party_deleted`
         )
-        .leftJoin(
-          tables.contract.name,
-          `${tables.cost_object.name}.contract_id`,
-          "=",
-          `${tables.contract.name}.id`
-        )
-        .leftJoin(
-          tables.party.name,
-          `${tables.cost_object.name}.contract_id`,
-          "=",
-          `${tables.party.name}.contract_id`
-        );
+        .leftJoin(`${tables.contract.name} as contract`, function () {
+          this.on(`contract.id`, `bills.contract_id`);
+          this.onIn(`contract.type`, ["S"]);
+        })
+        .leftJoin(`${tables.party.name} as party`, function () {
+          this.on(`party.contract_id`, `bills.contract_id`);
+          this.onIn("party.stems10", ["1"]);
+          this.onNotIn("party.deleted", [true]);
+        });
 
-      queryBuilder.where("stems10", "like", "1");
       queryBuilder
-        .where(`${tables.contract.name}.type`, "like", "S")
-        .whereNot(`${tables.cost_object.name}.deleted`, true)
-        .whereNot(`${tables.party.name}.deleted`, true);
+        .where(`contract.type`, "like", "S")
+        .whereNot(`bills.deleted`, true);
 
       const { post_date, dateRange, dateType } = newData;
       if (post_date && post_date[0] && post_date[1]) {
@@ -157,35 +233,24 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         const from = fn.convDate(dayjs, dateRange[0], "YYYYMMDD");
         const to = fn.convDate(dayjs, dateRange[1], "YYYYMMDD");
         if (dateType === "post_date") {
-          queryBuilder.whereBetween(`${tables.cost_object.name}.post_date`, [
-            from,
-            to,
-          ]);
+          queryBuilder.whereBetween(`bills.post_date`, [from, to]);
         } else {
           const key = [tables.contract.name, dateType].join(".");
           queryBuilder.whereBetween(key, [from, to]);
         }
       }
       if (newData.contractID) {
-        queryBuilder.where(
-          `${tables.contract.name}.id`,
-          "like",
-          `%${newData.contractID}%`
-        );
+        queryBuilder.where(`contract.id`, "like", `%${newData.contractID}%`);
       }
       if (newData.contractName) {
         queryBuilder.where(
-          `${tables.contract.name}.name`,
+          `contract.name`,
           "like",
           `%${newData.contractName}%`
         );
       }
       if (newData.partyID) {
-        queryBuilder.where(
-          `${tables.party.name}.ref_id`,
-          "like",
-          newData.partyID
-        );
+        queryBuilder.where(`party.ref_id`, "like", newData.partyID);
       }
       if (newData.cost_object_id) {
         queryBuilder.where("cost_object_id", "like", newData.cost_object_id);
@@ -202,52 +267,51 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
       }
 
       const queryResult = await queryBuilder.run();
-      const list = tryit(() => queryResult.body.list, [])
-        .map((it) => ({ ...it }))
-        .filter(
-          ({ bill_from_id, ref_id }) =>
-            bill_from_id === "" || bill_from_id === ref_id
-        )
-        .sort((al, be) => {
-          if (al.post_date !== be.post_date) {
-            return Number(al.post_date) - Number(be.post_date);
-          }
-          if (al.contract_id === be.contract_id) {
-            return Number(al.index) - Number(be.index);
-          } else
-            return (
-              Number(al.contract_id.replace(/[A-z]/g, "")) -
-              Number(be.contract_id.replace(/[A-z]/g, ""))
-            );
-        });
+      const list = tryit(
+        () =>
+          queryResult.body.list
+            .filter(
+              (it) => it.bill_from_id === "" || it.bill_from_id === it.ref_id
+            )
+            .sort((al, be) => {
+              if (al.post_date !== be.post_date) {
+                return Number(al.post_date) - Number(be.post_date);
+              }
+              if (al.contract_id === be.contract_id) {
+                return Number(al.index) - Number(be.index);
+              } else
+                return (
+                  Number(al.contract_id.replace(/[A-z]/g, "")) -
+                  Number(be.contract_id.replace(/[A-z]/g, ""))
+                );
+            }),
+        []
+      );
       const contractIDs = list
         .map(({ contract_id }) => contract_id)
         .filter(
-          (it, idx) => list.findIndex((item) => item.contract_id === it) === idx
+          (id, idx) => list.findIndex((it) => it.contract_id === id) === idx
         );
       const ab_queryResult = await sql("mysql", sqlParams)
         .select(tables.actual_billing.name)
+        .select("contract_id", "id", "parent_id", "fi_number", "dmbtr_supply")
         .whereIn("contract_id", contractIDs)
         .whereNot({ deleted: true })
         .run();
       const actual_billing = tryit(() => ab_queryResult.body.list, []);
 
-      draft.response.body = {
-        request: newData,
-        queryResult,
-        list: list.map(({ id, ...item }) => {
+      const convList = list
+        .map((item) => {
           const fBills = (actual_billing || []).filter(
-            (it) =>
-              it.contract_id === item.contract_id &&
-              (it.id === id || it.parent_id === id) &&
-              it.fi_number
+            ({ contract_id, id, parent_id, fi_number }) =>
+              contract_id === item.contract_id &&
+              (id === item.id || parent_id === item.id) &&
+              fi_number
           );
-          const totalBillAmt =
-            Math.round(
-              fBills.reduce((acc, curr) => {
-                return acc + Number(curr.dmbtr_supply);
-              }, 0) * 100
-            ) / 100;
+          const sumBillAmt = fBills.reduce((acc, { dmbtr_supply }) => {
+            return acc + Number(dmbtr_supply);
+          }, 0);
+          const totalBillAmt = Math.round(sumBillAmt * 100) / 100;
 
           let bill_status, bill_status_text;
           if (totalBillAmt === 0) {
@@ -260,11 +324,194 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             bill_status = "3";
             bill_status_text = "완료";
           }
-          return { ...item, id, bill_status, bill_status_text };
-        }),
+          return { ...item, bill_status, bill_status_text };
+        })
+        .filter(({ bill_status }) => {
+          switch (newData.bill_status) {
+            case "1":
+              return bill_status === "1" || bill_status === "2";
+            case "3":
+              return bill_status === "3";
+            default:
+              return true;
+          }
+        }); // "1": 미완료(부분완료), "3": 완료
+
+      draft.response.body = {
+        request: newData,
+        list: convList,
         E_STATUS: "S",
         E_MESSAGE: `조회가\n완료되었습니다`,
       };
+      if (draft.response.body.E_STATUS !== "S") {
+        draft.response.body.queryResult = queryResult;
+      }
+      //   return;
+      // }
+      // const queryBuilder = sql("mysql", sqlParams)
+      //   .select(tables.cost_object.name)
+      //   .select(
+      //     `${tables.cost_object.name}.*`,
+      //     `${tables.contract.name}.id as contract_id`,
+      //     `${tables.contract.name}.name as contract_name`,
+      //     `${tables.contract.name}.renewal_ind`,
+      //     `${tables.contract.name}.bukrs`,
+      //     `${tables.contract.name}.start_date`,
+      //     `${tables.contract.name}.end_date`,
+      //     `${tables.contract.name}.curr_key`,
+      //     `${tables.party.name}.contract_id`,
+      //     `${tables.party.name}.ref_id`,
+      //     `${tables.party.name}.stems10`,
+      //     `${tables.party.name}.name as party_name`,
+      //     `${tables.party.name}.deleted as party_deleted`
+      //   )
+      //   .leftJoin(
+      //     tables.contract.name,
+      //     `${tables.cost_object.name}.contract_id`,
+      //     "=",
+      //     `${tables.contract.name}.id`
+      //   )
+      //   .leftJoin(
+      //     tables.party.name,
+      //     `${tables.cost_object.name}.contract_id`,
+      //     "=",
+      //     `${tables.party.name}.contract_id`
+      //   );
+
+      // queryBuilder.where("stems10", "like", "1");
+      // queryBuilder
+      //   .where(`${tables.contract.name}.type`, "like", "S")
+      //   .whereNot(`${tables.cost_object.name}.deleted`, true)
+      //   .whereNot(`${tables.party.name}.deleted`, true);
+
+      // const { post_date, dateRange, dateType } = newData;
+      // if (post_date && post_date[0] && post_date[1]) {
+      //   const from = fn.convDate(dayjs, post_date[0], "YYYYMMDD");
+      //   const to = fn.convDate(dayjs, post_date[1], "YYYYMMDD");
+      //   queryBuilder.whereBetween("post_date", [from, to]);
+      // }
+      // if (dateRange && dateRange[0] && dateRange[1]) {
+      //   const from = fn.convDate(dayjs, dateRange[0], "YYYYMMDD");
+      //   const to = fn.convDate(dayjs, dateRange[1], "YYYYMMDD");
+      //   if (dateType === "post_date") {
+      //     queryBuilder.whereBetween(`${tables.cost_object.name}.post_date`, [
+      //       from,
+      //       to,
+      //     ]);
+      //   } else {
+      //     const key = [tables.contract.name, dateType].join(".");
+      //     queryBuilder.whereBetween(key, [from, to]);
+      //   }
+      // }
+      // if (newData.contractID) {
+      //   queryBuilder.where(
+      //     `${tables.contract.name}.id`,
+      //     "like",
+      //     `%${newData.contractID}%`
+      //   );
+      // }
+      // if (newData.contractName) {
+      //   queryBuilder.where(
+      //     `${tables.contract.name}.name`,
+      //     "like",
+      //     `%${newData.contractName}%`
+      //   );
+      // }
+      // if (newData.partyID) {
+      //   queryBuilder.where(
+      //     `${tables.party.name}.ref_id`,
+      //     "like",
+      //     newData.partyID
+      //   );
+      // }
+      // if (newData.cost_object_id) {
+      //   queryBuilder.where("cost_object_id", "like", newData.cost_object_id);
+      // }
+      // if (newData.cost_type_id) {
+      //   queryBuilder.where("cost_type_id", "like", newData.cost_type_id);
+      // }
+      // if (!(user.bukrs || "").includes("*")) {
+      //   const allowBURKS = [user.bukrs];
+      //   if (user.bukrs === "1000") {
+      //     allowBURKS.push("");
+      //   }
+      //   queryBuilder.whereIn("bukrs", allowBURKS);
+      // }
+
+      // const queryResult = await queryBuilder.run();
+      // const list = tryit(() => queryResult.body.list, [])
+      //   .map((it) => ({ ...it }))
+      //   .filter(
+      //     ({ bill_from_id, ref_id }) =>
+      //       bill_from_id === "" || bill_from_id === ref_id
+      //   )
+      //   .sort((al, be) => {
+      //     if (al.post_date !== be.post_date) {
+      //       return Number(al.post_date) - Number(be.post_date);
+      //     }
+      //     if (al.contract_id === be.contract_id) {
+      //       return Number(al.index) - Number(be.index);
+      //     } else
+      //       return (
+      //         Number(al.contract_id.replace(/[A-z]/g, "")) -
+      //         Number(be.contract_id.replace(/[A-z]/g, ""))
+      //       );
+      //   });
+      // const contractIDs = list
+      //   .map(({ contract_id }) => contract_id)
+      //   .filter(
+      //  (it, idx) => list.findIndex((item) => item.contract_id === it) === idx
+      //   );
+      // const ab_queryResult = await sql("mysql", sqlParams)
+      //   .select(tables.actual_billing.name)
+      //   .whereIn("contract_id", contractIDs)
+      //   .whereNot({ deleted: true })
+      //   .run();
+      // const actual_billing = tryit(() => ab_queryResult.body.list, []);
+
+      // const convList = list
+      //   .map(({ id, ...item }) => {
+      //     const fBills = (actual_billing || []).filter(
+      //       (it) =>
+      //         it.contract_id === item.contract_id &&
+      //         (it.id === id || it.parent_id === id) &&
+      //         it.fi_number
+      //     );
+      //     const totalBillAmt =
+      //       Math.round(
+      //         fBills.reduce((acc, curr) => {
+      //           return acc + Number(curr.dmbtr_supply);
+      //         }, 0) * 100
+      //       ) / 100;
+
+      //     let bill_status, bill_status_text;
+      //     if (totalBillAmt === 0) {
+      //       bill_status = "1";
+      //       bill_status_text = "미완료";
+      //     } else if (totalBillAmt !== Number(item.dmbtr_supply)) {
+      //       bill_status = "2";
+      //       bill_status_text = "부분완료";
+      //     } else {
+      //       bill_status = "3";
+      //       bill_status_text = "완료";
+      //     }
+      //     return { ...item, id, bill_status, bill_status_text };
+      //   })
+      //   .filter(
+      //     (it) =>
+      //       !newData.bill_status ||
+      //       (newData.bill_status === "1" &&
+      //         ["1", "2"].includes(it.bill_status)) ||
+      //       newData.bill_status === it.bill_status
+      //   ); // "1": 미완료(부분완료), "3": 완료
+
+      // draft.response.body = {
+      //   request: newData,
+      //   queryResult,
+      //   list: convList,
+      //   E_STATUS: "S",
+      //   E_MESSAGE: `조회가\n완료되었습니다`,
+      // };
       break;
     }
     case "IF-CT-118": {
