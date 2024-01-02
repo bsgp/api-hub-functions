@@ -22,7 +22,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
               .andOn(function () {
                 this.on(function () {
                   //매출인 경우 partner가 1개 이상일 수 있음
-                  this.onIn("party.contract_id", ["S%"]);
+                  this.onIn("party.contract_id", ["S%", "S202300037"]);
                   // .onIn("party.stems10", ["1"])
                   // .onIn("party.index", ["2"]);
                 });
