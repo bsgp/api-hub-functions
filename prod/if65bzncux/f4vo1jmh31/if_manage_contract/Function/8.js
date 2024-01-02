@@ -80,7 +80,10 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           queryResult,
           list: tryit(() => queryResult.body.list.map((it) => ({ ...it })), []),
           E_STATUS: queryResult.statusCode === 200 ? "S" : "F",
-          E_MESSAGE: `조회가\n완료되었습니다`,
+          E_MESSAGE:
+            queryResult.statusCode === 200
+              ? `조회가\n완료되었습니다`
+              : "조회 과정에서 문제가\n발생했습니다",
         };
         return;
       }
