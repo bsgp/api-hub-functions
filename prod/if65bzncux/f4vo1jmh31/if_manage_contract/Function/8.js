@@ -266,7 +266,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
 
         const queryResult = await queryBuilder.run();
         const list = tryit(() => queryResult.body.list, [])
-          .map((it) => ({ ...it }))
+          // .map((it) => ({ ...it }))
           .filter(
             ({ bill_from_id, ref_id }) =>
               bill_from_id === "" || bill_from_id === ref_id
