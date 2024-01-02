@@ -70,7 +70,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
       }
       queryBuilder.orderBy([
         { column: "contract.created_at", order: "desc" },
-        { column: "contract.id" },
+        { column: "contract.id", order: "asc" },
       ]);
       const queryResult = await queryBuilder.run();
 
