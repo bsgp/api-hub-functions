@@ -208,10 +208,13 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             `party.deleted as party_deleted`
           )
           .leftJoin(`${tables.contract.name} as contract`, function () {
-            this.on(`bills.contract_id`, `contract.id`);
+            this.on(`contract.id`, `bills.contract_id`);
           })
           .leftJoin(`${tables.party.name} as party`, function () {
-            this.on(`bills.contract_id`, `party.contract_id`);
+            this.on(`party.contract_id`, `bills.contract_id`).onNotIn(
+              "party.deleted",
+              [true]
+            );
           });
 
         queryBuilder.where("stems10", "like", "1");
