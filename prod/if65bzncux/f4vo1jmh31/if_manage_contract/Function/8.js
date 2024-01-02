@@ -15,13 +15,22 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             `party.stems10`,
             `party.name as party_name`,
             `party.deleted as party_deleted`
-          )
-          .leftJoin(`${tables.party.name} as party`, function () {
-            this.on(`party.contract_id`, `contract.id`)
-              .onNotIn("party.deleted", [true])
-              .onNotIn("party.ref_id", ["1000", "KR01", "US01"]);
-          })
-          .groupBy("contract.id"); //매출인 경우 partner가 1개 이상일 수 있음
+          );
+
+        if (newData.partyID) {
+          queryBuilder.leftJoin(`${tables.party.name} as party`, function () {
+            this.on(`party.contract_id`, `contract.id`);
+          });
+          queryBuilder.where("ref_id", "like", newData.partyID);
+        } else {
+          queryBuilder
+            .leftJoin(`${tables.party.name} as party`, function () {
+              this.on(`party.contract_id`, `contract.id`)
+                .onNotIn("party.deleted", [true])
+                .onNotIn("party.ref_id", ["1000", "KR01", "US01"]);
+            })
+            .groupBy("contract.id"); //매출인 경우 partner가 1개 이상일 수 있음
+        }
 
         if (newData.contractType) {
           queryBuilder.where(`contract.type`, "like", newData.contractType);
@@ -30,9 +39,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         if (newData.contractID) {
           queryBuilder.where(`contract.id`, "like", `%${newData.contractID}%`);
         }
-        if (newData.partyID) {
-          queryBuilder.where("ref_id", "like", newData.partyID);
-        }
+
         const { contractDate, dateRange, dateType } = newData;
         if (contractDate && contractDate[0] && contractDate[1]) {
           const from = fn.convDate(dayjs, contractDate[0], "YYYYMMDD");
