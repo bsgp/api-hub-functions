@@ -84,10 +84,7 @@ module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
           break;
         }
         case "BSGP-0005-3": {
-          updateData = {
-            apr_status: "CNL",
-            gpro_document_no: source[0].id,
-          };
+          updateData = { apr_status: "CNL", gpro_document_no: source[0].id };
           updateData.status = "CDN";
           break;
         }
@@ -223,10 +220,7 @@ module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
       await file.upload(
         "migration/process.json",
         { locked: false },
-        {
-          gzip: true,
-          stage: env.CURRENT_ALIAS,
-        }
+        { gzip: true, stage: env.CURRENT_ALIAS }
       );
       draft.response.body = {
         E_STATUS,
@@ -239,10 +233,7 @@ module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
       break;
     }
     default: {
-      draft.response.body = {
-        E_STATUS: "F",
-        E_MESSAGE: "Wrong interfaceID",
-      };
+      draft.response.body = { E_STATUS: "F", E_MESSAGE: "Wrong interfaceID" };
       break;
     }
   }
