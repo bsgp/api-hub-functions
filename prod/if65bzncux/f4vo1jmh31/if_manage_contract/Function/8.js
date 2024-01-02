@@ -191,9 +191,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
       // 청구리스트 조회
       if (newData.version === "v2") {
         const queryBuilder = sql("mysql", sqlParams)
-          .select(tables.cost_object.name)
+          .select(`${tables.cost_object.name} as bills`)
           .select(
-            `${tables.cost_object.name}.*`,
+            `bills.*`,
             `${tables.contract.name}.id as contract_id`,
             `${tables.contract.name}.name as contract_name`,
             `${tables.contract.name}.renewal_ind`,
@@ -209,13 +209,13 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           )
           .leftJoin(
             tables.contract.name,
-            `${tables.cost_object.name}.contract_id`,
+            `bills.contract_id`,
             "=",
             `${tables.contract.name}.id`
           )
           .leftJoin(
             tables.party.name,
-            `${tables.cost_object.name}.contract_id`,
+            `bills.contract_id`,
             "=",
             `${tables.party.name}.contract_id`
           );
@@ -223,7 +223,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         queryBuilder.where("stems10", "like", "1");
         queryBuilder
           .where(`${tables.contract.name}.type`, "like", "S")
-          .whereNot(`${tables.cost_object.name}.deleted`, true)
+          .whereNot(`bills.deleted`, true)
           .whereNot(`${tables.party.name}.deleted`, true);
 
         const { post_date, dateRange, dateType } = newData;
@@ -236,10 +236,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           const from = fn.convDate(dayjs, dateRange[0], "YYYYMMDD");
           const to = fn.convDate(dayjs, dateRange[1], "YYYYMMDD");
           if (dateType === "post_date") {
-            queryBuilder.whereBetween(`${tables.cost_object.name}.post_date`, [
-              from,
-              to,
-            ]);
+            queryBuilder.whereBetween(`bills.post_date`, [from, to]);
           } else {
             const key = [tables.contract.name, dateType].join(".");
             queryBuilder.whereBetween(key, [from, to]);
