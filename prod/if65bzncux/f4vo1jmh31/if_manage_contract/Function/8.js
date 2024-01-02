@@ -26,19 +26,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
                 this.where("contract.type", "S")
                   .andWhere("party.stems10", "1")
                   .andWhere("party.index", "2")
-                  .andWhere("party.deleted", false)
-                  .except(function () {
-                    this.select("*")
-                      .from(`${tables.contract.name} as contract`)
-                      .whereNotExists(function () {
-                        this.select("*")
-                          .from(`${tables.contract.name} as contract`)
-                          .where("contract.type", "S")
-                          .andWhere("party.stems10", "1")
-                          .andWhere("party.index", "2")
-                          .andWhere("party.deleted", false);
-                      });
-                  });
+                  .andWhere("party.deleted", false);
               })
                 .orWhere(function () {
                   this.where("contract.type", "P")
