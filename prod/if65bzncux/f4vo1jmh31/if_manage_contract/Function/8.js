@@ -19,19 +19,9 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           .leftJoin(`${tables.party.name} as party`, function () {
             this.on(`party.contract_id`, `contract.id`)
               .onNotIn("party.deleted", [true])
-              .andOn(function () {
-                this.on(function () {
-                  //매출인 경우 partner가 1개 이상일 수 있음
-                  this.onIn("party.contract_id", ["S%", "S202300037"]);
-                  // .onIn("party.stems10", ["1"])
-                  // .onIn("party.index", ["2"]);
-                });
-                // .orOn(function () {
-                //   this.onIn("party.contract_id", ["P%"]);
-                //   this.onIn("party.stems10", "2");
-                // });
-              });
-          });
+              .onNotIn("party.ref_id", ["1000", "KR01", "US01"]);
+          })
+          .first(`contract.id`);
 
         // .leftJoin(`${tables.party.name} as party`, function () {
         //   this.on(`party.contract_id`, `contract.id`);
