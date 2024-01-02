@@ -78,10 +78,7 @@ module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
       let updateData;
       switch (gpro_draft_template_no) {
         case "BSGP-0005-2": {
-          updateData = {
-            apr_status: "",
-            gpro_document_no: source[0].id,
-          };
+          updateData = { apr_status: "", gpro_document_no: source[0].id };
           updateData.status = "CDN";
           updateData.seq = (Number(target.seq) + 1).toString();
           break;
