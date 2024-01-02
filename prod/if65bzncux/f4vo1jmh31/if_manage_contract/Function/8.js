@@ -19,8 +19,13 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           .leftJoin(`${tables.party.name} as party`, function () {
             this.on(`party.contract_id`, `contract.id`)
               .onNotIn("party.deleted", [true])
-              .onNotIn("party.ref_id", ["1000", "KR01", "US01"])
-              .onIn("party.index", ["1", "2"]);
+              .on(function () {
+                this.on("contract.type", "S");
+                this.onIn("party.stems10", "1");
+                this.onIn("party.index", "2");
+              });
+            // .onNotIn("party.ref_id", ["1000", "KR01", "US01"])
+            // .onIn("party.index", ["1", "2"]);
           });
         // .where(function () {
         //   this.where(function () {
