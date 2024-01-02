@@ -17,18 +17,18 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             `party.deleted as party_deleted`
           )
           .leftJoin(`${tables.party.name} as party`, function () {
-            this.on(`party.contract_id`, `contract.id`);
-            this.onNotIn("party.deleted", [true]);
-            this.on(function () {
-              //매출인 경우 partner가 1개 이상일 수 있음
-              this.onIn("party.contract_id", ["S%"]);
-              this.onIn("party.stems10", "1");
-              this.onIn("party.index", "2");
-            });
-            this.on(function () {
-              this.onIn("party.contract_id", ["P%"]);
-              this.onIn("party.stems10", "2");
-            });
+            this.on(`party.contract_id`, `contract.id`)
+              .onNotIn("party.deleted", [true])
+              .on(function () {
+                //매출인 경우 partner가 1개 이상일 수 있음
+                this.onIn("party.contract_id", ["S%"]);
+                this.onIn("party.stems10", "1");
+                this.onIn("party.index", "2");
+              })
+              .on(function () {
+                this.onIn("party.contract_id", ["P%"]);
+                this.onIn("party.stems10", "2");
+              });
           });
 
         if (newData.contractType) {
