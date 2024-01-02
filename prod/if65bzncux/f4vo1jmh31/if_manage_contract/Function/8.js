@@ -79,8 +79,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           request: newData,
           queryResult,
           list: tryit(() => queryResult.body.list.map((it) => ({ ...it })), []),
-          E_STATUS: "F",
-          E_MESSAGE: `조회가\n완료되었습니다 v2`,
+          E_STATUS: queryResult.statusCode === 200 ? "S" : "F",
+          E_MESSAGE: `조회가\n완료되었습니다`,
         };
         return;
       }
@@ -182,7 +182,6 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             }
             return { ...args, type, party_name: name };
           }),
-        // test: fn.convDate(dayjs, newData.contractDate[0], "YYYYMMDD"),
         E_STATUS: "S",
         E_MESSAGE: `조회가\n완료되었습니다`,
       };
