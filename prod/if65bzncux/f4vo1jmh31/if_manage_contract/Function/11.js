@@ -114,6 +114,7 @@ module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
       break;
     }
     case "IF-CT-120": {
+      // MIGRATION_CONTRACTS_TO_DB
       let processStatus;
       try {
         processStatus = await file.get("migration/process.json", {
@@ -138,10 +139,7 @@ module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
       await file.upload(
         "migration/process.json",
         { locked: true },
-        {
-          gzip: true,
-          stage: env.CURRENT_ALIAS,
-        }
+        { gzip: true, stage: env.CURRENT_ALIAS }
       );
 
       const { list } = newData;
