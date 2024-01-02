@@ -299,7 +299,7 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
         const actual_billing = tryit(() => ab_queryResult.body.list, []);
 
         const convList = list
-          .map(({ ...item }) => {
+          .map((item) => {
             const fBills = (actual_billing || []).filter(
               ({ contract_id, id, parent_id, fi_number }) =>
                 contract_id === item.contract_id &&
