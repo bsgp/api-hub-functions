@@ -298,12 +298,6 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
           .run();
         const actual_billing = tryit(() => ab_queryResult.body.list, []);
 
-        const { bill_status } = newData;
-        const bill_status_filterFn = (it) =>
-          !bill_status ||
-          (bill_status === "1" && ["1", "2"].includes(it.bill_status)) ||
-          bill_status === it.bill_status;
-
         const convList = list
           .map(({ ...item }) => {
             const fBills = (actual_billing || []).filter(
@@ -330,7 +324,16 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs, user }) => {
             }
             return { ...item, bill_status, bill_status_text };
           })
-          .filter(bill_status_filterFn); // "1": 미완료(부분완료), "3": 완료
+          .filter((it) => {
+            switch (newData.bill_status) {
+              case "1":
+                return ["1", "2"].includes(it.bill_status);
+              case "3":
+                return it.bill_status === "3";
+              default:
+                return true;
+            }
+          }); // "1": 미완료(부분완료), "3": 완료
 
         draft.response.body = {
           request: newData,
