@@ -78,19 +78,13 @@ module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
       let updateData;
       switch (gpro_draft_template_no) {
         case "BSGP-0005-2": {
-          updateData = {
-            apr_status: "",
-            gpro_document_no: source[0].id,
-          };
+          updateData = { apr_status: "", gpro_document_no: source[0].id };
           updateData.status = "CDN";
           updateData.seq = (Number(target.seq) + 1).toString();
           break;
         }
         case "BSGP-0005-3": {
-          updateData = {
-            apr_status: "CNL",
-            gpro_document_no: source[0].id,
-          };
+          updateData = { apr_status: "CNL", gpro_document_no: source[0].id };
           updateData.status = "CDN";
           break;
         }
@@ -114,6 +108,7 @@ module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
       break;
     }
     case "IF-CT-120": {
+      // MIGRATION_CONTRACTS_TO_DB
       let processStatus;
       try {
         processStatus = await file.get("migration/process.json", {
@@ -138,10 +133,7 @@ module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
       await file.upload(
         "migration/process.json",
         { locked: true },
-        {
-          gzip: true,
-          stage: env.CURRENT_ALIAS,
-        }
+        { gzip: true, stage: env.CURRENT_ALIAS }
       );
 
       const { list } = newData;
@@ -228,10 +220,7 @@ module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
       await file.upload(
         "migration/process.json",
         { locked: false },
-        {
-          gzip: true,
-          stage: env.CURRENT_ALIAS,
-        }
+        { gzip: true, stage: env.CURRENT_ALIAS }
       );
       draft.response.body = {
         E_STATUS,
@@ -244,10 +233,7 @@ module.exports = async (draft, { sql, env, tryit, file, fn, user, makeid }) => {
       break;
     }
     default: {
-      draft.response.body = {
-        E_STATUS: "F",
-        E_MESSAGE: "Wrong interfaceID",
-      };
+      draft.response.body = { E_STATUS: "F", E_MESSAGE: "Wrong interfaceID" };
       break;
     }
   }

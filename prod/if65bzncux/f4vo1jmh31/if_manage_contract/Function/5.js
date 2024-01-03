@@ -73,17 +73,15 @@ module.exports = async (draft, { sql, env, tryit, fn, user }) => {
             costObjectList:
               results.contract.type === "P"
                 ? results.cost_object
-                : results.cost_object.map(({ id, ...item }) => {
+                : results.cost_object.map((item) => {
                     const fBills = (results.actual_billing || []).filter(
-                      (it) =>
-                        (it.id === id || it.parent_id === id) && it.fi_number
+                      ({ id, parent_id, fi_number }) =>
+                        (id === item.id || parent_id === item.id) && fi_number
                     );
-                    const totalBillAmt =
-                      Math.round(
-                        fBills.reduce((acc, curr) => {
-                          return acc + Number(curr.dmbtr_supply);
-                        }, 0) * 100
-                      ) / 100;
+                    const sum_dmbtr = fBills.reduce((acc, curr) => {
+                      return acc + Number(curr.dmbtr_supply);
+                    }, 0);
+                    const totalBillAmt = Math.round(sum_dmbtr * 100) / 100;
 
                     let bill_status, bill_status_text;
                     if (totalBillAmt === 0) {
@@ -96,7 +94,7 @@ module.exports = async (draft, { sql, env, tryit, fn, user }) => {
                       bill_status = "3";
                       bill_status_text = "완료";
                     }
-                    return { ...item, id, bill_status, bill_status_text };
+                    return { ...item, bill_status, bill_status_text };
                   }),
             wbsList: results.wbs,
             billList: results.bill,
