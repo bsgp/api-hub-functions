@@ -1,6 +1,7 @@
 /**
  * 외주계약_프로세스 DB Schema 정보
  * drive.google.com/file/d/1YXp3TdJN24BRA3Y0_2ZFSbPSPH2kf_Xw/view?ts=64f6adc3
+ * drive.google.com/file/d/1gCx7oO_4ZwD3XxQhjv6b3w-4g3WUOX9b/view?usp=drive_link
  */
 
 /** TABLE: change */
