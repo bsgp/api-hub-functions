@@ -2,7 +2,7 @@ module.exports = async (draft, { request }) => {
   const routeTo = {
     exit: "Output#2",
     _if: "Function#4",
-    configure: "Function#5",
+    config: "Function#5",
   };
 
   const setFailedResponse = (msg, status = 400) => {
@@ -17,8 +17,8 @@ module.exports = async (draft, { request }) => {
     case "if":
       draft.json.nextNodeKey = routeTo._if;
       break;
-    case "configure":
-      draft.json.nextNodeKey = routeTo.configure;
+    case "config":
+      draft.json.nextNodeKey = routeTo.config;
       break;
     default:
       setFailedResponse(`${request.path} is not invalid api`);
