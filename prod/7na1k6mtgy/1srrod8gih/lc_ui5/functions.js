@@ -151,10 +151,11 @@ module.exports.getMetaByPath = async (path, { dynamodb, tableName, unzip }) => {
   return { ...result, paths: [targetPath] };
 };
 
-const saveMeta = async (body, { dynamodb, tableName, zip, makeid }) => {
+const saveMeta = async (body, { dynamodb, tableName, zip, makeid, userId }) => {
   const { id, description, wrapForms, title } = body;
 
   const data = {
+    updatedBy: userId || "Unknown",
     description,
     title,
     wrapForms,
