@@ -4,7 +4,7 @@ module.exports = async (
 ) => {
   const { interfaceID, tables, newData, userID } = draft.json;
   const sqlParams = { useCustomRole: false, stage: env.CURRENT_ALIAS };
-
+  const objectID = makeid(5);
   switch (interfaceID) {
     case "IF-CT-102": {
       const contract = fn.getDB_Object(newData, { key: "contract", user });
@@ -53,6 +53,7 @@ module.exports = async (
             tableKey: "contract",
             data: { ...contract, id: contractID },
             userID,
+            objectID,
             makeid,
             operation: "I",
           })
@@ -105,6 +106,7 @@ module.exports = async (
                   tableKey,
                   data,
                   userID,
+                  objectID,
                   makeid,
                   operation: "I",
                 })
@@ -217,7 +219,13 @@ module.exports = async (
               const data = { ...after, id: after.id || makeid(5) };
               await sql("mysql", sqlParams)
                 .insert(tables.change.name, [
-                  fn.getChange_Object({ tableKey, data, userID, makeid }),
+                  fn.getChange_Object({
+                    tableKey,
+                    data,
+                    userID,
+                    objectID,
+                    makeid,
+                  }),
                 ])
                 .run();
               return await sql("mysql", sqlParams)
@@ -232,6 +240,7 @@ module.exports = async (
                     tableKey,
                     data: { ...before, deleted: true },
                     userID,
+                    objectID,
                     makeid,
                   }),
                 ])
@@ -247,7 +256,13 @@ module.exports = async (
               const data = after;
               await sql("mysql", sqlParams)
                 .insert(tables.change.name, [
-                  fn.getChange_Object({ tableKey, data, userID, makeid }),
+                  fn.getChange_Object({
+                    tableKey,
+                    data,
+                    userID,
+                    objectID,
+                    makeid,
+                  }),
                 ])
                 .run();
               return await sql("mysql", sqlParams)
