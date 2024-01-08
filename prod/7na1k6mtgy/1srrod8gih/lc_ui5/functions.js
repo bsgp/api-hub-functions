@@ -213,6 +213,12 @@ module.exports.getAllMeta = async ({ dynamodb, tableName }) => {
     { useCustomerRole: false }
   );
 
+  results.forEach((each) => {
+    binaryAttributes.forEach((attrName) => {
+      delete each[attrName];
+    });
+  });
+
   return results;
 };
 
