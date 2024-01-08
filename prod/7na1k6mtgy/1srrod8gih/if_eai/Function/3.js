@@ -1,8 +1,8 @@
 module.exports = async (draft, { request }) => {
   const routeTo = {
     exit: "Output#2",
-    configure: "",
-    _if: "",
+    _if: "Function#4",
+    configure: "Function#5",
   };
 
   const setFailedResponse = (msg, status = 400) => {
