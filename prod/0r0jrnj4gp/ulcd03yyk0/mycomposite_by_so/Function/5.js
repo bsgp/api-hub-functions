@@ -46,7 +46,9 @@ module.exports = async (draft, { lib, odata }) => {
     ).sort((al, be) => Number(al.ID) - Number(be.ID));
     const odIDs = odList.map((od) => od.ID);
     const odURL = getOdataURL(pid, odIDs, "OD");
+    console.log("odURL:", odURL);
     const odData = await odata.get({ url: odURL, username, password });
+    console.log("odData:", odData);
     const od = tryit(() => odData.d.results, []);
 
     const parties = so.Party.map((party) => party.PartyID);
