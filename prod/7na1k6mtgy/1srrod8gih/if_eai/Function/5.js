@@ -1,4 +1,4 @@
-module.exports = async (draft, { request, dynamodb, fn }) => {
+module.exports = async (draft, { request, dynamodb, zip, fn }) => {
   const tableName = "eai_dev";
 
   switch (request.method) {
@@ -13,6 +13,7 @@ module.exports = async (draft, { request, dynamodb, fn }) => {
         const result = await fn.saveConfig(request.body, {
           dynamodb,
           tableName,
+          zip,
         });
         draft.response.body = result;
       }
