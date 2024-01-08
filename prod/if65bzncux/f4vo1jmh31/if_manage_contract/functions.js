@@ -180,12 +180,13 @@ module.exports.getChange_Object = ({
   tableKey,
   data,
   userID,
+  objectID = "", // changed에 동시에 저장되는 값 구분을 위해 추가(binding)
   makeid,
   operation = "U",
 }) => {
   const defaultObj = {
     type: tableKey,
-    id: makeid && makeid(5),
+    id: objectID || (makeid && makeid(5)),
     changed_by: userID,
     operation,
     content: JSON.stringify(data),
