@@ -1,4 +1,5 @@
 module.exports = async (draft, { request, dynamodb, zip, fn }) => {
+  //tableName stage와 맞게 변경 필요
   const tableName = "eai_dev";
 
   switch (request.method) {
