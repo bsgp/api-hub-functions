@@ -22,6 +22,7 @@ module.exports = async (
           tableName,
           zip,
           makeid,
+          userId: request.headers["bsg-support-user-id"],
         });
 
         const result = await fn.getMetaById(saveResult.id, {
