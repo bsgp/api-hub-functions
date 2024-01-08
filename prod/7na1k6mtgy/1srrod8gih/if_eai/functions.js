@@ -1,6 +1,6 @@
 module.exports.saveConfig = async (body, { dynamodb, tableName, zip }) => {
   const { id, config } = body;
-  const data = { ...body, config: zip(JSON.strigify(config)) };
+  const data = { ...body, config: zip(JSON.stringify(config)) };
 
   const result = await dynamodb.insertItem(
     tableName,
