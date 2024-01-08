@@ -122,6 +122,7 @@ module.exports = async (draft, { sql, env, tryit, fn, makeid, file, user }) => {
     return acc;
   }, []);
 
+  const objectID = makeid(5);
   const updateResult = await Promise.all(
     updateList.map(async (item) => {
       const { tableKey, type, before, after } = item;
@@ -151,6 +152,7 @@ module.exports = async (draft, { sql, env, tryit, fn, makeid, file, user }) => {
                 tableKey,
                 data: { ...after, id: uuid },
                 userID,
+                objectID,
                 makeid,
               }),
             ])
@@ -170,6 +172,7 @@ module.exports = async (draft, { sql, env, tryit, fn, makeid, file, user }) => {
                 tableKey,
                 data: { ...before, deleted: true },
                 userID,
+                objectID,
                 makeid,
               }),
             ])
@@ -195,6 +198,7 @@ module.exports = async (draft, { sql, env, tryit, fn, makeid, file, user }) => {
                   tableKey,
                   data: after,
                   userID,
+                  objectID,
                   makeid,
                 }),
               ])
@@ -216,6 +220,7 @@ module.exports = async (draft, { sql, env, tryit, fn, makeid, file, user }) => {
                   tableKey,
                   data: after,
                   userID,
+                  objectID,
                   makeid,
                 }),
               ])
