@@ -412,7 +412,8 @@ module.exports = async (draft, { sql, env, tryit, fn, dayjs }) => {
       const convFn = (type = "") =>
         chagedList
           .filter((list) => list.type === type)
-          .map(({ changed_at, changed_by, content }) => ({
+          .map(({ row_key, changed_at, changed_by, content }) => ({
+            row_key,
             changed_at: fn.convDate(dayjs, changed_at),
             changed_by,
             content: JSON.stringify(content),
