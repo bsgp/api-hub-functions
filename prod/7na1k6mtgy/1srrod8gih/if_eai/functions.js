@@ -1,4 +1,7 @@
-module.exports.saveConfig = async (body, { dynamodb, tableName, zip }) => {
+module.exports.saveConfig = async (
+  body,
+  { dynamodb, tableName, zip, method }
+) => {
   const { id, config } = body;
   const data = { ...body, config: zip(JSON.stringify(config)) };
 
@@ -6,7 +9,7 @@ module.exports.saveConfig = async (body, { dynamodb, tableName, zip }) => {
     tableName,
     { pkid: "config", skid: id },
     data,
-    { useCustomerRole: false }
+    { useCustomerRole: false, asInsert: method === "POST" }
   );
   return result;
 };
