@@ -35,7 +35,8 @@ module.exports.getConfig = async (id, { dynamodb, tableName, unzip }) => {
     { useCustomerRole: false }
   );
 
-  result.config = JSON.parse(unzip(result.config));
-
+  if (result) {
+    result.config = JSON.parse(unzip(result.config));
+  }
   return result;
 };
