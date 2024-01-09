@@ -27,3 +27,15 @@ module.exports.getAllConfigs = async ({ dynamodb, tableName, unzip }) => {
 
   return result;
 };
+
+module.exports.getConfig = async (id, { dynamodb, tableName, unzip }) => {
+  const result = await dynamodb.getItem(
+    tableName,
+    { pkid: "config", skid: id },
+    { useCustomerRole: false }
+  );
+
+  result.config = JSON.parse(unzip(result.config));
+
+  return result;
+};
