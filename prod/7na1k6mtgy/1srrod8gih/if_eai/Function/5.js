@@ -15,17 +15,17 @@ module.exports = async (draft, { request, dynamodb, zip, unzip, fn }) => {
         }
       }
       break;
+    case "PUT":
     case "POST":
       {
         const result = await fn.saveConfig(request.body, {
           dynamodb,
           tableName,
           zip,
+          method: request.method,
         });
         draft.response.body = result;
       }
-      break;
-    case "PUT":
       break;
     default:
     // code
