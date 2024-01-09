@@ -9,6 +9,9 @@ module.exports = async (draft, { request, dynamodb, zip, unzip, fn }) => {
         if (id === "*") {
           const result = await fn.getAllConfigs({ dynamodb, tableName, unzip });
           draft.response.body = result;
+        } else {
+          const result = await fn.getConfig(id, { dynamodb, tableName, unzip });
+          draft.response.body = result;
         }
       }
       break;
