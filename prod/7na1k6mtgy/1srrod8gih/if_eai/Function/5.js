@@ -5,8 +5,11 @@ module.exports = async (draft, { request, dynamodb, zip, unzip, fn }) => {
   switch (request.method) {
     case "GET":
       {
-        const result = await fn.getAllConfigs({ dynamodb, tableName, unzip });
-        draft.response.body = result;
+        const { id } = request.body;
+        if (id === "*") {
+          const result = await fn.getAllConfigs({ dynamodb, tableName, unzip });
+          draft.response.body = result;
+        }
       }
       break;
     case "POST":
