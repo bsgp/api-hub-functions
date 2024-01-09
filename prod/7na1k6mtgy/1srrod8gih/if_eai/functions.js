@@ -21,7 +21,7 @@ module.exports.getAllConfigs = async ({ dynamodb, tableName, unzip }) => {
 
   if (result.length > 0) {
     result = result.map((item) => {
-      return { ...item, config: unzip(item.config) };
+      return { ...item, config: JSON.parse(unzip(item.config)) };
     });
   }
 
