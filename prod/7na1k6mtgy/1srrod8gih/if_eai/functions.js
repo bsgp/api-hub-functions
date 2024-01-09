@@ -10,3 +10,20 @@ module.exports.saveConfig = async (body, { dynamodb, tableName, zip }) => {
   );
   return result;
 };
+
+module.exports.getAllConfigs = async ({ dynamodb, tableName, unzip }) => {
+  let result = await dynamodb.query(
+    tableName,
+    { pkid: "config" },
+    {},
+    { useCustomerRole: false }
+  );
+
+  if (result.length > 0) {
+    result = result.map((item) => {
+      return { ...item, config: unzip(item.config) };
+    });
+  }
+
+  return result;
+};
